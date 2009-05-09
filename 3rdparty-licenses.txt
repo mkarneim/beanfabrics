@@ -1,0 +1,11 @@
+Beanfabrics makes use of the following 3rd party components and images:
+
+1) Some JavaBeans customizers use images from Everaldo Coelho (http://www.everaldo.com/).
+- agt_action_success.png
+- agt_action_fail.png
+- messagebox_warning.png
+These images are released under LGPL.
+
+
+ 	  
+ 
