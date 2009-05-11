@@ -33,8 +33,6 @@ import org.beanfabrics.support.OnChange;
 import org.beanfabrics.support.Operation;
 import org.beanfabrics.swing.BnButton;
 
-import quicktime.sound.SICompletion;
-
 public class AnotherBnTableTestGUI extends JFrame implements View<AnotherBnTableTestGUI.TableModel>, ModelSubscriber {
 	public static void main(String[] args) throws Exception {
 		System.out.println( System.getProperty("java.version"));
