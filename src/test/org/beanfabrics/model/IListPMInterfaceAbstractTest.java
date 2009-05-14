@@ -22,7 +22,7 @@ import org.junit.Test;
 /**
  * @author Michael Karneim
  */
-public abstract class IListPMAbstractInterfaceTest {
+public abstract class IListPMInterfaceAbstractTest {
 	static Class ELEMENT_TYPE;
 	static int INITIAL_NUMBER_OF_ELEMENTS;
 	static int[] INITIAL_SELECTED_ELEMENT_INDEXES; 

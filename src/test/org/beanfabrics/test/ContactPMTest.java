@@ -53,7 +53,7 @@ public class ContactPMTest {
     	assertEquals("contact.addChild.isEnabled()", true, contact.addChild.isEnabled());
 
     	contact.addChild.execute();
-    	assertEquals("contact.children.getInteger()",1, contact.children.getInteger());
+    	assertEquals("contact.children.getInteger()",1, (int)contact.children.getInteger());
 
 	}
 

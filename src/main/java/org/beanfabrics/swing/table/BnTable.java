@@ -182,14 +182,14 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
 		if (isJava5()) {
 			return;
 		}
-		LOG.debug("installing BnTableRowSorter");
+		LOG.debug("trying to install BnTableRowSorter");
 		try {
 			Class rsClass = Class.forName("org.beanfabrics.swing.table.BnTableRowSorter");
 			Method install = rsClass.getMethod("install", new Class[] { BnTable.class });
 			install.invoke(null, new Object[] { this });
 		} catch (ClassNotFoundException ex) {
 			// not found. Ok, we do not install the row sorter
-			LOG.error("Can't install BnTableRowSorter", ex);
+			LOG.warn("Can't install BnTableRowSorter", ex);
 		} catch (Exception ex) {
 			throw new UndeclaredThrowableException(ex);
 		}

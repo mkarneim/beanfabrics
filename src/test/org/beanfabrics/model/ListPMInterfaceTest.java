@@ -12,7 +12,7 @@ import junit.framework.JUnit4TestAdapter;
 /**
  * @author Michael Karneim
  */
-public class ListPMInterfaceTest extends IListPMAbstractInterfaceTest {
+public class ListPMInterfaceTest extends IListPMInterfaceAbstractTest {
 	public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(ListPMInterfaceTest.class);
     }

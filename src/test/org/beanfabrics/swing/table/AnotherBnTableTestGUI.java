@@ -130,7 +130,7 @@ public class AnotherBnTableTestGUI extends JFrame implements View<AnotherBnTable
 
 	}
 
-	private static class TableModel extends AbstractPM {
+	static class TableModel extends AbstractPM {
 		ListPM<RowModel> elements = new ListPM<RowModel>();
 		OperationPM sortByColA = new OperationPM();
 

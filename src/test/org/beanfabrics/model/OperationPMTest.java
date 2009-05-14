@@ -61,13 +61,13 @@ public class OperationPMTest {
 	public void executeFoo() throws Throwable {
 		SamplePM pModel = new SamplePM();
 		pModel.foo.execute();
-		assertEquals("pModel.fooCount.getInteger()", 1, pModel.fooCount.getInteger());
+		assertEquals("pModel.fooCount.getInteger()", 1, (int)pModel.fooCount.getInteger());
 	}
 
 	@Test
 	public void executeBar() throws Throwable {
 		SamplePM pModel = new SamplePM();
 		pModel.bar.execute();
-		assertEquals("pModel.barCount.getInteger()", 1, pModel.barCount.getInteger());
+		assertEquals("pModel.barCount.getInteger()", 1, (int)pModel.barCount.getInteger());
 	}
 }

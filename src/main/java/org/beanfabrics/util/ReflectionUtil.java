@@ -207,7 +207,7 @@ public class ReflectionUtil {
                 	boolean oldValue = m.isAccessible();
                 	m.setAccessible(true);
                 	try {
-                		m.invoke(target, null);
+                		m.invoke(target, (Object[])null);
                 	} finally {
                 		m.setAccessible(oldValue);
                 	}
@@ -323,13 +323,13 @@ public class ReflectionUtil {
 	}
 
 	public static synchronized <T> T newInstance( Class<T> cls) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, InstantiationException {
-    	Constructor<T> constr = cls.getConstructor(null);
+    	Constructor<T> constr = cls.getConstructor((Class[])null);
     	boolean accessible = constr.isAccessible();
 		if (accessible == false) {
 			constr.setAccessible(true);
 		}
 		try {
-			T result = constr.newInstance(null);
+			T result = constr.newInstance((Object[])null);
 			return result;
 		} finally {
 			if (accessible == false) {

@@ -245,9 +245,9 @@ public class OptionsTest {
 		opt.put(2, TWO);
 		opt.put(3, THREE);
 
-		assertEquals("opt.getKey(THREE)", 3, opt.getKey(THREE));
-		assertEquals("opt.getKey(TWO)", 2, opt.getKey(TWO));
-		assertEquals("opt.getKey(ONE)", 1, opt.getKey(ONE));
+		assertEquals("opt.getKey(THREE)", 3, (int)opt.getKey(THREE));
+		assertEquals("opt.getKey(TWO)", 2, (int)opt.getKey(TWO));
+		assertEquals("opt.getKey(ONE)", 1, (int)opt.getKey(ONE));
 
 		try {
 			opt.getKey("foo");

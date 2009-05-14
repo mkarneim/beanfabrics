@@ -247,7 +247,7 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
 	/**
 	 * PresentationModel for the directory browser.
 	 */
-	private static class DirectoryBrowserModel extends AbstractPM {
+	static class DirectoryBrowserModel extends AbstractPM {
 		private File dir;
 		protected final MapPM<File, FileModel> elements = new MapPM<File, FileModel>();
 		protected final TextPM title = new TextPM();
