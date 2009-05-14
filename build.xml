@@ -330,7 +330,7 @@
 	
 
 	<!--#################### Upload target ########################-->
-	<target name="upload" depends="init" description="Upload files to to google code site">
+	<target name="upload" depends="init, init-dist" description="Upload files to to google code site">
 		<path id="ant-googlecode.classpath">
 			<fileset dir="${ant-googlecode.lib.dir}">
 				<include name="*.jar" />
@@ -357,12 +357,16 @@
 	              labels="Type-Project, ${release.label}" />
 		
 		<basename file="${bin.zipfile}" property="bin.zipfile.name"/>
+		<basename file="${src.jarfile}" property="src.jarfile.name"/>
+		<basename file="${javadoc.jarfile}" property="javadoc.jarfile.name"/>
+		<basename file="${classes.jarfile}" property="classes.jarfile.name"/>
+				
 		<gcupload filename="${bin.zipfile}" 
 	              username="${gc.username}" 
 	              password="${gc.password}" 
 	           projectname="${ant.project.name}"    
 	      targetfilename="${bin.zipfile.name}"
-	             summary="${project.title} ${project.version} binaries"
+	             summary="${project.title} ${project.version} binary distribution with ${classes.jarfile.name}, ${javadoc.jarfile.name}, and ${src.jarfile.name}"
 	              labels="Type-Binary, Featured, ${release.label}" />
 	</target>
 
