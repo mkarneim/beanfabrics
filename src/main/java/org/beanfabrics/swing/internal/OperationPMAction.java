@@ -14,6 +14,8 @@ import javax.swing.Icon;
 
 import org.beanfabrics.View;
 import org.beanfabrics.event.WeakPropertyChangeListener;
+import org.beanfabrics.log.Logger;
+import org.beanfabrics.log.LoggerFactory;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.IOperationPM;
 import org.beanfabrics.model.PresentationModel;
@@ -26,6 +28,9 @@ import org.beanfabrics.util.ExceptionUtil;
  */
 @SuppressWarnings("serial")
 public class OperationPMAction extends AbstractAction implements View<IOperationPM> {
+	private static final Logger LOG = LoggerFactory.getLogger(OperationPMAction.class);
+	
+	
 	private IOperationPM pModel;
 	private transient WeakPropertyChangeListener listener = new WeakPropertyChangeListener() {
 		public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -79,6 +84,8 @@ public class OperationPMAction extends AbstractAction implements View<IOperation
 					ExceptionUtil.getInstance().handleException("Error during invocation of pModel", t);
 				}
 			}
+		} else {
+			LOG.warn("OperationPMAction is not connected");
 		}
 	}
 

@@ -35,12 +35,11 @@ import org.beanfabrics.validation.ValidationState;
  */
 public class ValidationSupport implements Support {
 	public static ValidationSupport get(PresentationModel model) {
-		Supportable s = (Supportable)model;
 
-		ValidationSupport support = s.getSupportMap().get( ValidationSupport.class);
+		ValidationSupport support = model.getSupportMap().get( ValidationSupport.class);
 		if ( support == null) {
 			support = new ValidationSupport(model);
-			s.getSupportMap().put(ValidationSupport.class, support);
+			model.getSupportMap().put(ValidationSupport.class, support);
 		}
 		return support;
 	}
