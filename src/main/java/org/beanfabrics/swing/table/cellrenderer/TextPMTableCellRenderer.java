@@ -66,7 +66,6 @@ public class TextPMTableCellRenderer extends DefaultTableCellRenderer {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

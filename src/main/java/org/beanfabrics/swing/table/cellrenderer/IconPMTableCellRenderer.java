@@ -41,7 +41,6 @@ public class IconPMTableCellRenderer extends DefaultTableCellRenderer {
 		}
 	}
 
-
 	@Override
 	protected void setValue(Object value) {
 		if (value != null && value instanceof IIconPM) {
@@ -56,7 +55,6 @@ public class IconPMTableCellRenderer extends DefaultTableCellRenderer {
 		setInheritsPopupMenu(true);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

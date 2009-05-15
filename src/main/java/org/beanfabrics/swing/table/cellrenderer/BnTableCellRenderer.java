@@ -36,6 +36,14 @@ import org.beanfabrics.swing.table.BnTable;
  * @author Michael Karneim
  */
 public class BnTableCellRenderer implements TableCellRenderer {
+	private final TableCellRenderer FALLBACK_RENDERER = new EmptyRenderer();
+	private final List<TableCellRenderer> installedRenderers = new ArrayList<TableCellRenderer>();
+
+	public BnTableCellRenderer() {
+		installDefaultRenderers();
+	}
+
+	/** {@inheritDoc} */
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		for (TableCellRenderer renderer : installedRenderers) {
 			Component comp = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -46,13 +54,6 @@ public class BnTableCellRenderer implements TableCellRenderer {
 		return FALLBACK_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 	}
 
-	private final TableCellRenderer FALLBACK_RENDERER = new EmptyRenderer();
-	private final List<TableCellRenderer> installedRenderers = new ArrayList<TableCellRenderer>();
-
-	public BnTableCellRenderer() {
-		installDefaultRenderers();
-	}
-
 	private void installDefaultRenderers() {
 		installedRenderers.add(new BooleanPMTableCellRenderer());
 		installedRenderers.add(new TextPMTableCellRenderer());
@@ -60,6 +61,6 @@ public class BnTableCellRenderer implements TableCellRenderer {
 	}
 
 	public List<TableCellRenderer> getInstalledRenderers() {
-		return this.installedRenderers;
+		return installedRenderers;
 	}
 }
