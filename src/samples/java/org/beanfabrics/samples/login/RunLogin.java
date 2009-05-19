@@ -5,7 +5,7 @@ import java.awt.EventQueue;
 /**
  * This sample applications runs the LoginDialog.
  */
-public class RunLoginDialog {
+public class RunLogin {
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater( new Runnable() {
