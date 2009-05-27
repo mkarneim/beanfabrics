@@ -159,7 +159,7 @@ public class PathEditor implements PropertyEditor {
 			return pathString;
 		} catch (Exception ex) {
 			ExceptionUtil.getInstance().handleException("Can't call getAsText ", ex);
-			return null;
+			return "";
 		}
 	}
 
