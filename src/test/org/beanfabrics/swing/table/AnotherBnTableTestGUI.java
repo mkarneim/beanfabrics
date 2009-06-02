@@ -6,6 +6,7 @@
 package org.beanfabrics.swing.table;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.util.Date;
 
@@ -13,8 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Link;
@@ -33,14 +32,13 @@ import org.beanfabrics.support.OnChange;
 import org.beanfabrics.support.Operation;
 import org.beanfabrics.swing.BnButton;
 
+@SuppressWarnings("serial")
 public class AnotherBnTableTestGUI extends JFrame implements View<AnotherBnTableTestGUI.TableModel>, ModelSubscriber {
 	public static void main(String[] args) throws Exception {
 		System.out.println( System.getProperty("java.version"));
-
 		//UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName());
-
 		final TableModel model = new TableModel();
-		SwingUtilities.invokeLater( new Runnable() {
+		EventQueue.invokeLater( new Runnable() {
 			public void run() {
 				AnotherBnTableTestGUI frame = new AnotherBnTableTestGUI();
 				frame.setPresentationModel(model);
@@ -50,7 +48,6 @@ public class AnotherBnTableTestGUI extends JFrame implements View<AnotherBnTable
 				frame.setVisible(true);
 			}
 		});
-
 	}
 	private final Link link = new Link(this);
 	private JScrollPane scrollPane;

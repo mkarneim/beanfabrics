@@ -2,20 +2,21 @@
  *  Beanfabrics Framework
  *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
  *  Use is subject to license terms. See license.txt.
- */  
+ */
 package org.beanfabrics.test;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.table.BnTable;
 
+@SuppressWarnings("serial")
 public class ProductListFrame extends JFrame {
 	private ModelProvider provider;
 	private BnButton countryBnButton;
@@ -32,8 +33,7 @@ public class ProductListFrame extends JFrame {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		SwingUtilities.invokeLater( new Runnable() {
-
+		EventQueue.invokeLater( new Runnable() {
 			public void run() {
 				try {
 					ProductListFrame frame = new ProductListFrame();

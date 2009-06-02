@@ -6,6 +6,7 @@
 package org.beanfabrics.swing.list;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -19,7 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
@@ -45,6 +45,7 @@ import org.beanfabrics.swing.BnButton;
 /**
  * @author Michael Karneim
  */
+@SuppressWarnings("serial")
 public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTestGUI.DirectoryBrowserModel>, ModelSubscriber {
 	private static JFileChooser FILE_CHOOSER;
 	private final Link link = new Link(this);
@@ -61,8 +62,7 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
 	public static void main(String[] args) throws Exception {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		FILE_CHOOSER = new JFileChooser();
-		SwingUtilities.invokeLater(new Runnable() {
-
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				AnotherBnListTestGUI f = new AnotherBnListTestGUI();
 				f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

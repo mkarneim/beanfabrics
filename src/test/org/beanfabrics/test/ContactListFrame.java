@@ -2,10 +2,11 @@
  *  Beanfabrics Framework
  *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
  *  Use is subject to license terms. See license.txt.
- */  
+ */
 package org.beanfabrics.test;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.util.Locale;
 
@@ -14,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
 
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.Path;
@@ -23,6 +23,7 @@ import org.beanfabrics.swing.BnLabel;
 import org.beanfabrics.swing.BnTextField;
 import org.beanfabrics.swing.table.BnTable;
 
+@SuppressWarnings("serial")
 public class ContactListFrame extends JFrame {
 	private BnButton insertBnButton;
 	private BnButton doSomethingBnButton;
@@ -153,7 +154,7 @@ public class ContactListFrame extends JFrame {
 
 	public static void main(String[] args) {
 		Locale.setDefault(Locale.UK);
-		SwingUtilities.invokeLater( new Runnable() {
+		EventQueue.invokeLater( new Runnable() {
 			public void run() {
 				ContactListFrame f = new ContactListFrame();
 				f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

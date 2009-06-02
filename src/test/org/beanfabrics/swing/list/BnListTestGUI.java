@@ -7,6 +7,7 @@ package org.beanfabrics.swing.list;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -17,7 +18,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.beanfabrics.Binder;
@@ -52,7 +52,7 @@ public class BnListTestGUI {
 	private MainModel mainModel;
 
 	public static void main(String[] args) throws Exception {
-		Runnable r = new Runnable() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					try {
@@ -72,8 +72,7 @@ public class BnListTestGUI {
 					e.printStackTrace();
 				}
 			}
-		};
-		SwingUtilities.invokeLater(r);
+		});
 	}
 
 	private BnListTestGUI() {

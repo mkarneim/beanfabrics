@@ -12,8 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -110,7 +108,7 @@ public class ListModelSelectionModelAnotherTest {
 	@Test
 	public void moveUpWithTable() throws Exception {
 		final BnTable bnTable = new BnTable();
-//		SwingUtilities.invokeLater(
+//		EventQueue.invokeLater(
 //		new Runnable() {
 //			public void run() {
 //				JFrame f = new JFrame();
@@ -155,7 +153,7 @@ public class ListModelSelectionModelAnotherTest {
 	@Test
 	public void moveDownWithTable() throws Exception {
 		final BnTable bnTable = new BnTable();
-//		SwingUtilities.invokeLater(
+//		EventQueue.invokeLater(
 //		new Runnable() {
 //			public void run() {
 //				JFrame f = new JFrame();
