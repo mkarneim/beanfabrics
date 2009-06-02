@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="beanfabrics" default="main" basedir=".">
 	<description>Build the Beanfabrics library</description>
-	
+
 	<!--#################### Init constant properties ########################-->
 	<property file="build.local.properties" />
 
@@ -9,8 +9,8 @@
 	<property name="project.vendor" value="Michael Karneim, beanfabrics.org" />
 	<property name="project.url" value="http://www.beanfabrics.org" />
 	<property name="project.copyright" value="2009 by Michael Karneim" />
-	
-	
+
+
 	<property name="compile.debug" value="true" />
 	<property name="compile.deprecation" value="false" />
 	<property name="compile.optimize" value="true" />
@@ -28,40 +28,38 @@
 	<property name="src.samples.java.dir" location="${src.dir}/samples/java" />
 
 	<property name="lib.dir" location="${basedir}/lib" />
-		
+
 	<property name="build.dir" location="${basedir}/build" />
 	<property name="build.classes.dir" location="${build.dir}/classes" />
 	<property name="build.java6.classes.dir" location="${build.dir}/classes6" />
 	<property name="build.test.dir" location="${build.dir}/test" />
-	
+
 	<property name="build.bin.dir" location="${build.dir}/bin" />
 	<property name="build.src.dir" location="${build.dir}/src" />
 	<property name="build.project.dir" location="${build.dir}/project" />
 	<property name="build.javadoc.dir" location="${build.dir}/javadoc" />
-	
+
 	<property name="build.manifest.dir" location="${build.dir}/manifest" />
 	<property name="build.manifest.file" location="${build.manifest.dir}/manifest.mf" />
-	
+
 	<property name="dist.dir" location="${basedir}/dist" />
-	
+
 	<property name="script.dir" location="${basedir}/script" />
 	<property name="script.lib.dir" location="${script.dir}/lib" />
 	<property name="ant-googlecode.lib.dir" location="${script.lib.dir}/ant-googlecode" />
 	<property name="javabean-doclet.lib.dir" location="${script.lib.dir}/javabean-doclet" />
-		
-	
-	
+
 	<!-- Filesets and paths -->
 	<fileset id="lib.fileset" dir="${lib.dir}" description="Libraries needed to build this project.">
 		<include name="log4j/log4j-*.jar" />
 		<include name="junit/junit-*.jar" />
 	</fileset>
-	
+
 	<path id="compile.main.classpath" description="Classpath for compiling beanfabrics main runtime-classes">
 		<pathelement path="${currentenv.classpath}" />
 		<fileset refid="lib.fileset" />
 	</path>
-	
+
 	<path id="compile.main.java6.classpath" description="Classpath for compiling beanfabrics main runtime-classes">
 		<pathelement path="${currentenv.classpath}" />
 		<fileset refid="lib.fileset" />
@@ -72,18 +70,18 @@
 		<pathelement path="${currentenv.classpath}" />
 		<pathelement location="${build.classes.dir}" />
 	</path>
-	
+
 	<path id="compile.test.classpath" description="Classpath for compiling beanfabrics test classes">
 		<pathelement path="${currentenv.classpath}" />
 		<pathelement location="${build.classes.dir}" />
 		<fileset refid="lib.fileset" />
 	</path>
-	
+
 	<path id="run.javadoc.classpath" description="Classpath for running javadoc">
 		<pathelement path="${currentenv.classpath}" />
 		<fileset refid="lib.fileset" />
 	</path>
-	
+
 	<path id="run.test.classpath" description="Classpath for running beanfabrics test classes">
 		<pathelement path="${currentenv.classpath}" />
 		<pathelement location="${build.classes.dir}" />
@@ -96,9 +94,9 @@
 		<echo>JVM=${java.runtime.version}</echo>
 		<tstamp>
 			<format property="build.time" pattern="MMM/dd/yyyy hh:mm aa z"/>
-		</tstamp>		
+		</tstamp>
 	</target>
-	
+
 	<target name="init-version" depends="init">
 		<property file="build.version" />
 	    <fail unless="version.major" message="Invalid contents for file 'build.version', missing 'version.major'."/>
@@ -107,29 +105,28 @@
 		<property name="project.version" value="${version.major}.${version.minor}.${version.build}" />
 		<echo message=" ${ant.project.name} ${project.version}"/>
 	</target>
-	
+
 	<target name="init-dist" depends="init, init-version">
-		<property name="classes.jarfile" value="${dist.dir}/${ant.project.name}.jar"/>	
+		<property name="classes.jarfile" value="${dist.dir}/${ant.project.name}.jar"/>
 		<property name="src.jarfile" value="${dist.dir}/${ant.project.name}-src.jar"/>
 		<property name="javadoc.jarfile" value="${dist.dir}/${ant.project.name}-docs.jar"/>
 		<property name="project.zipfile" value="${dist.dir}/${ant.project.name}-${project.version}-project.zip"/>
 		<property name="bin.zipfile" value="${dist.dir}/${ant.project.name}-${project.version}.zip"/>
 	</target>
-	
-	
+
 	<!--#################### Build targets ########################-->
 	<target name="clean" depends="init" description="Clean up all generated files.">
 		<delete dir="${dist.dir}" />
 		<delete dir="${build.dir}" />
 	</target>
-	
+
 	<target name="prepare-classes-dir" depends="init" >
 		<mkdir dir="${build.dir}" />
 		<delete dir="${build.classes.dir}" />
 		<mkdir dir="${build.classes.dir}" />
 		<mkdir dir="${build.classes.dir}/META-INF" />
 		<copy todir="${build.classes.dir}/META-INF" >
-			<fileset dir="${basedir}" 
+			<fileset dir="${basedir}"
 				     includes="build.version readme.txt license.txt 3rdparty-licenses.txt lgpl.txt" />
 		</copy>
 		<copy todir="${build.classes.dir}" >
@@ -138,50 +135,50 @@
 	</target>
 
 	<target name="compile-main" depends="init, prepare-classes-dir" >
-		<javac classpathref="compile.main.classpath" destdir="${build.classes.dir}" 
-			   source="${compile.source}" target="${compile.target}" 
-			   debug="${compile.debug}" deprecation="${compile.deprecation}" 
+		<javac classpathref="compile.main.classpath" destdir="${build.classes.dir}"
+			   source="${compile.source}" target="${compile.target}"
+			   debug="${compile.debug}" deprecation="${compile.deprecation}"
 			   optimize="${compile.optimize}">
 			<src path="${src.main.java.dir}" />
 		</javac>
 	</target>
-	
+
 	<target name="prepare-java6-classes-dir" depends="init" >
 		<mkdir dir="${build.dir}" />
 		<delete dir="${build.java6.classes.dir}" />
 		<mkdir dir="${build.java6.classes.dir}" />
 	</target>
-	
+
 	<target name="compile-main-java6" depends="init, prepare-java6-classes-dir, compile-main">
-		<javac classpathref="compile.main.java6.classpath" destdir="${build.java6.classes.dir}" 
-			   source="1.6" target="1.6" 
-			   debug="${compile.debug}" deprecation="${compile.deprecation}" 
+		<javac classpathref="compile.main.java6.classpath" destdir="${build.java6.classes.dir}"
+			   source="1.6" target="1.6"
+			   debug="${compile.debug}" deprecation="${compile.deprecation}"
 			   optimize="${compile.optimize}">
 			<src path="${src.main.java6.dir}" />
 		</javac>
 	</target>
-	
+
 	<target name="compile-design" depends="init, prepare-classes-dir, compile-main" >
-		<javac classpathref="compile.design.classpath" destdir="${build.classes.dir}" 
-			   source="${compile.source}" target="${compile.target}" 
-			   debug="${compile.debug}" deprecation="${compile.deprecation}" 
+		<javac classpathref="compile.design.classpath" destdir="${build.classes.dir}"
+			   source="${compile.source}" target="${compile.target}"
+			   debug="${compile.debug}" deprecation="${compile.deprecation}"
 			   optimize="${compile.optimize}">
 			<src path="${src.design.java.dir}" />
 		</javac>
 	</target>
-	
+
 	<target name="prepare-test-dir" depends="init" >
 		<delete dir="${build.test.dir}" />
 		<mkdir dir="${build.test.dir}" />
 	</target>
-	
+
 	<target name="compile" depends="init, compile-main, compile-design, compile-main-java6" description="Compile all sources without test">
 	</target>
-	
+
 	<target name="compile-test" depends="init, prepare-test-dir, compile" description="Compile test classes">
-		<javac classpathref="compile.test.classpath" destdir="${build.test.dir}" 
-			   source="${compile.source}" target="${compile.target}" 
-			   debug="${compile.debug}" deprecation="${compile.deprecation}" 
+		<javac classpathref="compile.test.classpath" destdir="${build.test.dir}"
+			   source="${compile.source}" target="${compile.target}"
+			   debug="${compile.debug}" deprecation="${compile.deprecation}"
 			   optimize="${compile.optimize}">
 			<src path="${src.test.dir}" />
 		</javac>
@@ -191,7 +188,7 @@
 			</fileset>
 		</copy>
 	</target>
-	
+
 	<target name="run-test" depends="init">
 		<junit>
 			<classpath refid="run.test.classpath" />
@@ -204,16 +201,16 @@
 			</batchtest>
 		</junit>
 	</target>
-	
+
 	<target name="prepare-javadoc-dir" depends="init" >
 		<mkdir dir="${build.javadoc.dir}" />
 		<copy todir="${build.javadoc.dir}">
 			<fileset dir="${basedir}" includes="build.version readme.txt license.txt lgpl.txt 3rdparty-licenses.txt" />
 		</copy>
 	</target>
-	
+
 	<target name="run-javadoc" depends="init, init-version, prepare-javadoc-dir" description="Run javadoc">
-		<javadoc maxmemory="64m" destdir="${build.javadoc.dir}" classpathref="run.javadoc.classpath" 
+		<javadoc maxmemory="64m" destdir="${build.javadoc.dir}" classpathref="run.javadoc.classpath"
 			     author="true" version="true" use="true" windowtitle="${project.title} ${project.version}">
 			<fileset dir="${src.main.java.dir}" includes="**/*.java" />
 			<fileset dir="${src.main.java6.dir}" includes="**/*.java" />
@@ -223,13 +220,12 @@
 			<tag name="beaninfo" scope="types" enabled="false" />
 		</javadoc>
 	</target>
-	
-	
+
 	<target name="prepare-manifest" depends="init" >
 		<delete dir="${build.manifest.dir}" />
 		<mkdir dir="${build.manifest.dir}" />
 	</target>
-	
+
 	<target name="create-manifest" depends="init, prepare-manifest" >
 		<path id="create.manifest.classpath">
 			<fileset dir="${javabean-doclet.lib.dir}" includes="**/*.jar" />
@@ -243,11 +239,11 @@
 			</doclet>
 		</javadoc>
 	</target>
-	
+
 	<target name="prepare-dist" depends="init, init-dist" >
 		<mkdir dir="${dist.dir}" />
 	</target>
-		
+
 	<target name="create-classes-jar" depends="init, prepare-dist, compile, create-manifest" description="Create jar with all classes">
 		<jar destfile="${classes.jarfile}" manifest="${build.manifest.file}">
 			<fileset dir="${build.classes.dir}"/>
@@ -261,19 +257,19 @@
 			</manifest>
 		</jar>
 	</target>
-	
+
 	<target name="create-javadoc-jar" depends="init, prepare-dist, run-javadoc" description="Creates a ZIP file with javadoc HTML files">
 		<jar destfile="${javadoc.jarfile}">
 			<fileset dir="${build.javadoc.dir}" />
 		</jar>
 	</target>
-	
+
 	<target name="create-src-jar" depends="init, prepare-dist" description="Creates a JAR file with all sources.">
 		<delete dir="${build.src.dir}" />
 		<mkdir dir="${build.src.dir}" />
 		<mkdir dir="${build.src.dir}/META-INF" />
 		<copy todir="${build.src.dir}/META-INF" >
-			<fileset dir="${basedir}" 
+			<fileset dir="${basedir}"
 				     includes="build.version readme.txt license.txt 3rdparty-licenses.txt lgpl.txt" />
 		</copy>
 		<copy todir="${build.src.dir}" >
@@ -315,28 +311,27 @@
 				<exclude name="tmp/**" />
 				<exclude name="old/**" />
 				<exclude name="build/**" />
-				<exclude name="build.local.properties" />		
+				<exclude name="build.local.properties" />
 				<exclude name="build.credentials" />
 			</fileset>
 		</copy>
-		<mkdir dir="${build.project.content.dir}/lib"/>		
+		<mkdir dir="${build.project.content.dir}/lib"/>
 		<zip destfile="${project.zipfile}">
 			<fileset dir="${build.project.dir}"/>
 		</zip>
 	</target>
-	
+
 	<target name="create-zips" depends="init, create-bin-zip, create-project-zip">
 	</target>
-	
 
 	<!--#################### Upload target ########################-->
 	<target name="upload" depends="init, init-dist" description="Upload files to to google code site">
 		<path id="ant-googlecode.classpath">
 			<fileset dir="${ant-googlecode.lib.dir}">
 				<include name="*.jar" />
-			</fileset>	
+			</fileset>
 		</path>
-	    <taskdef name="gcupload" classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask" 
+	    <taskdef name="gcupload" classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask"
 	    	                     classpathref="ant-googlecode.classpath" />
 
 	    <property file="build.credentials" />
@@ -345,43 +340,42 @@
 
 	    <property name="release.label" value="Release-Final"/>
 		<basename file="${src.jarfile}" property="src.jarfile.name"/>
-		
-		
-		<basename file="${project.zipfile}" property="project.zipfile.name"/>		
-	    <gcupload filename="${project.zipfile}" 
-	              username="${gc.username}" 
-	              password="${gc.password}" 
-	           projectname="${ant.project.name}"    
+
+
+		<basename file="${project.zipfile}" property="project.zipfile.name"/>
+	    <gcupload filename="${project.zipfile}"
+	              username="${gc.username}"
+	              password="${gc.password}"
+	           projectname="${ant.project.name}"
 	      targetfilename="${project.zipfile.name}"
 	             summary="${project.title} ${project.version} source distribution: source code, build files, unit tests, sample code"
 	              labels="Type-Project, ${release.label}" />
-		
+
 		<basename file="${bin.zipfile}" property="bin.zipfile.name"/>
 		<basename file="${src.jarfile}" property="src.jarfile.name"/>
 		<basename file="${javadoc.jarfile}" property="javadoc.jarfile.name"/>
 		<basename file="${classes.jarfile}" property="classes.jarfile.name"/>
-				
-		<gcupload filename="${bin.zipfile}" 
-	              username="${gc.username}" 
-	              password="${gc.password}" 
-	           projectname="${ant.project.name}"    
+
+		<gcupload filename="${bin.zipfile}"
+	              username="${gc.username}"
+	              password="${gc.password}"
+	           projectname="${ant.project.name}"
 	      targetfilename="${bin.zipfile.name}"
-	             summary="${project.title} ${project.version} binary distribution: ${classes.jarfile.name}, ${javadoc.jarfile.name}, and ${src.jarfile.name}"
+	             summary="${project.title} ${project.version} binary distribution: ${classes.jarfile.name}, ${javadoc.jarfile.name} and ${src.jarfile.name}"
 	              labels="Type-Binary, Featured, ${release.label}" />
 	</target>
 
-	
 	<!--#################### Main targets ########################-->
 	<target name="dist" depends="init, clean, compile, test, create-zips" description="Create distribution files">
 	</target>
-	
+
 	<target name="test" depends="init, clean, compile, compile-test, run-test" description="Run tests">
 	</target>
-	
+
 	<target name="release" depends="init, dist, upload" description="Release the distribution to googlecode.com">
 	</target>
-	
+
 	<target name="main" depends="init, clean, compile, test" description="Make the Beanfabrics library">
 	</target>
-		
+
 </project>
