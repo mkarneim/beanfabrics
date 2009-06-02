@@ -8,9 +8,7 @@ import javax.swing.UIManager;
 public class RunProperties {
     public static void main(String[] args) throws Exception {
         UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
-        
         EventQueue.invokeLater(new Runnable() {
-        
             public void run() {
                 PropertiesPM model = new PropertiesPM();
                 PropertiesPanel view = new PropertiesPanel();
