@@ -205,7 +205,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 			return sb.toString();
 		} catch (Exception ex) {
 			ExceptionUtil.getInstance().handleException("Can't call getAsText ", ex);
-			return null;
+			return "";
 		}
 	}
 
