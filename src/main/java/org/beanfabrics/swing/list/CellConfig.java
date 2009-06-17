@@ -14,6 +14,9 @@ import org.beanfabrics.Path;
 public class CellConfig {
 	private final Path path;
 
+	public CellConfig(){
+		this(new Path());
+	}
 	/**
 	 * Constructs a <code>CellConfig</code> with the given path.
 	 * @param path the path of the configured pM

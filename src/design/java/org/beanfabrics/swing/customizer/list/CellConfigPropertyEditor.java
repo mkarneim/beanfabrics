@@ -31,6 +31,9 @@ public class CellConfigPropertyEditor implements PropertyEditor {
 	/** A supporter to fire property change events. */
 	private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
+	
+	public CellConfigPropertyEditor() {		
+	}
 	/**
 	 * Set (or change) the object that is to be edited.
 	 * 
@@ -42,7 +45,7 @@ public class CellConfigPropertyEditor implements PropertyEditor {
 		CellConfig newValue = (CellConfig) aValue;
 
 		this.value = newValue;
-		this.support.firePropertyChange("cellConfig", oldValue, newValue);
+		this.support.firePropertyChange(null, null, null);
 	}
 
 	/**
@@ -99,7 +102,7 @@ public class CellConfigPropertyEditor implements PropertyEditor {
 	/**
 	 * Determines whether this property model supports a custom editor.
 	 * 
-	 * @retun <code>true</code> if this property model supports a custom editor,
+	 * @return <code>true</code> if this property model supports a custom editor,
 	 *        otherwise <code>false</code>
 	 */
 	public boolean supportsCustomEditor() {
@@ -137,7 +140,7 @@ public class CellConfigPropertyEditor implements PropertyEditor {
 	 * </pre>
 	 * 
 	 */
-	public String getJavaInitializationString() {
+	public String getJavaInitializationString() {	
 		try {
 			if (this.value == null) {
 				return null;
@@ -158,7 +161,7 @@ public class CellConfigPropertyEditor implements PropertyEditor {
 	 * 
 	 * @return The property value as text.
 	 */
-	public String getAsText() {
+	public String getAsText() {		
 		try {
 			if (this.value == null) {
 				return "";
@@ -170,7 +173,7 @@ public class CellConfigPropertyEditor implements PropertyEditor {
 			return sb.toString();
 		} catch (Exception ex) {
 			ExceptionUtil.getInstance().handleException("Can't call getAsText ", ex);
-			return null;
+			return "";
 		}
 	}
 
@@ -185,14 +188,13 @@ public class CellConfigPropertyEditor implements PropertyEditor {
 			final CellConfig oldValue = this.value;
 			final CellConfig newValue;
 			if (text == null || text.trim().length() == 0) {
-				newValue = null;
+				newValue = null;				
 			} else {
 				int braceStart = text.indexOf("[");
 				int braceEnd = text.indexOf("]");
-				newValue = scan(text.substring(braceStart + 1, braceEnd));
+				newValue = scan(text.substring(braceStart + 1, braceEnd));				
 			}
-			this.support.firePropertyChange("columns", oldValue, newValue);
-
+			setValue(newValue);
 		} catch (Exception e) {
 			ExceptionUtil.getInstance().handleException("Can't call setAsText with param '" + text + "'", e);
 		}

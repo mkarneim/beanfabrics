@@ -41,7 +41,7 @@ public class BnListBeanInfo extends ModelSubscriberBeanInfo {
 					"cellConfig", BEAN_CLASS, "getCellConfig", "setCellConfig");
 			cellConfig.setBound(true);
 			cellConfig.setPropertyEditorClass(CellConfigPropertyEditor.class);
-			return new PropertyDescriptor[]{provider, path};
+			return new PropertyDescriptor[]{provider, path, cellConfig};
 		} catch (IntrospectionException ex) {
 			ExceptionUtil.getInstance().handleException("", ex);
 			return null;

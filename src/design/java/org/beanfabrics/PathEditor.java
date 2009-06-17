@@ -37,7 +37,7 @@ public class PathEditor implements PropertyEditor {
 		final Path old = this.getPath();
 		Path newValue = (Path) value;
 		this.path = newValue;
-		this.support.firePropertyChange("path", old, newValue);
+		this.support.firePropertyChange(null,null,null);
 	}
 
 	/**

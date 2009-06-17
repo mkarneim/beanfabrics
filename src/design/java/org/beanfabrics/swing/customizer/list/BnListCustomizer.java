@@ -28,7 +28,6 @@ import org.beanfabrics.swing.list.CellConfig;
  * @author Michael Karneim
  */
 public class BnListCustomizer extends CustomizerBasePanel implements Customizer, View<BnListCustomizerPM> {
-
 	private PathPanel pathPanel_1;
 	private SeparatorLabel separatorLabel_1;
 	private SeparatorLabel separatorLabel;
@@ -68,7 +67,7 @@ public class BnListCustomizer extends CustomizerBasePanel implements Customizer,
 
 			public void setCellConfig(CellConfig newValue) {
 				CellConfig oldValue = bnList.getCellConfig();
-				bnList.setCellConfig(newValue);
+				bnList.setCellConfig(newValue);				
 				BnListCustomizer.this.firePropertyChange("cellConfig", oldValue, newValue);
 			}
 		});

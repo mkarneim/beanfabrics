@@ -24,7 +24,8 @@ import org.beanfabrics.util.ExceptionUtil;
  * @author Michael Karneim
  */
 public class BnColumnPropertyEditor implements PropertyEditor {
-	private static final String COLUMN = org.beanfabrics.swing.table.BnColumn.class.getName();
+	
+	private static final String BNCOLUMN_CLASSNAME = org.beanfabrics.swing.table.BnColumn.class.getName();
 	private static final String PATH_CLASSNAME = org.beanfabrics.Path.class.getName();
 
 	/** The columns object array that has to be set or changed. */
@@ -48,7 +49,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 		}
 
 		this.columns = newValue;
-		this.support.firePropertyChange("columns", old, newValue);
+		this.support.firePropertyChange(null,null,null);
 	}
 
 	/**
@@ -155,7 +156,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 	public String getJavaInitializationString() {
 		try {
 			StringBuilder sb = new StringBuilder();
-			sb.append("new " + COLUMN + "[] {");
+			sb.append("new " + BNCOLUMN_CLASSNAME + "[] {");
 			if (this.columns == null || this.columns.length == 0) {
 				return null;
 			}
@@ -164,7 +165,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 				if (i > 0) {
 					sb.append(" ,");
 				}
-				sb.append(" new " + COLUMN + "(");
+				sb.append(" new " + BNCOLUMN_CLASSNAME + "(");
 				sb.append(" new "+PATH_CLASSNAME+"(\"").append(this.columns[i].getPath().getPathString() + "\")");
 				sb.append(", \"").append(this.columns[i].getColumnName() + "\"");
 				sb.append(", ").append(this.columns[i].getWidth() );
@@ -234,7 +235,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 				} while (idx > -1);
 				def = found.toArray(new BnColumn[found.size()]);
 			}
-			this.support.firePropertyChange("columns", old, def);
+			setValue(def);
 
 		} catch (Exception e) {
 			ExceptionUtil.getInstance().handleException("Can't call setAsText with param '" + text + "'", e);
