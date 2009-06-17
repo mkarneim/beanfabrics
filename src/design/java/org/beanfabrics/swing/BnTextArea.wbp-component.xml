@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://www.instantiations.com/D2/WBPComponent">
+	<model class="com.instantiations.designer.swing.model.component.ComponentInfo" />
+	<description>The BnTextArea is a view on an ITextPM</description>
+	<!-- CREATION -->
+	<creation>
+		<source><![CDATA[new org.beanfabrics.swing.BnTextArea()]]></source>		
+	</creation>
+	<!-- PROPERTIES -->
+	<properties-preferred names="modelProvider path"/>	
+	<properties-advanced names=""/>
+	<properties-hidden names="UI"/>		
+</component>	

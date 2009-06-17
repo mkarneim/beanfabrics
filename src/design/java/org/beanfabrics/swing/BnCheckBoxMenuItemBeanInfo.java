@@ -16,7 +16,7 @@ public class BnCheckBoxMenuItemBeanInfo extends ModelSubscriberBeanInfo {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Class getBeanClass() {
-		return BnMenuItem.class;
+		return BnCheckBoxMenuItem.class;
 	}
 
 	@Override

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://www.instantiations.com/D2/WBPComponent">
+	<model class="com.instantiations.designer.swing.model.component.ComponentInfo" />
+	<description>The BnIconLabel is a view on an IIconPM</description>
+	<!-- CREATION -->
+	<creation>
+		<source><![CDATA[new org.beanfabrics.swing.BnIconLabel()]]></source>		
+	</creation>
+	<!-- PROPERTIES -->
+	<properties-preferred names="modelProvider path"/>	
+	<properties-advanced names=""/>
+	<properties-hidden names="UI"/>		
+</component>	

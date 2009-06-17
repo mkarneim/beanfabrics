@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://www.instantiations.com/D2/WBPComponent">
+	<model class="com.instantiations.designer.swing.model.component.ComponentInfo" />
+	<description>The BnTable is a view on an IListPM</description>
+	<!-- CREATION -->
+	<creation>
+		<source><![CDATA[new org.beanfabrics.swing.table.BnTable()]]></source>		
+	</creation>
+	<!-- PROPERTIES -->
+	<properties-preferred names="modelProvider path columns"/>	
+	<properties-advanced names=""/>
+	<properties-hidden names="UI"/>		
+</component>	
