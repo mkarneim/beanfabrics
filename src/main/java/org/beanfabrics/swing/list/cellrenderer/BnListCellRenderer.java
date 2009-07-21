@@ -1,9 +1,9 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public methods and fields are documented
+// TODO javadoc - remove this comment only when the class and all non-public
+// methods and fields are documented
 package org.beanfabrics.swing.list.cellrenderer;
 
 import java.awt.Component;
@@ -37,37 +37,37 @@ import org.beanfabrics.swing.list.BnList;
  * href="http://www.beanfabrics.org/index.php/BnListCellRenderer"
  * target="parent">http://www.beanfabrics.org/index.php/BnListCellRenderer</a>
  * </p>
- *
+ * 
  * @author Michael Karneim
  */
 public class BnListCellRenderer implements ListCellRenderer {
-	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-		if (value instanceof PresentationModel) {
-			for (PMListCellRenderer renderer : installedRenderers) {
-				if (renderer.supportsPresentationModel((PresentationModel) value)) {
-					return renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				}
-			}
-		}
-		return FALLBACK_RENDERER.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-	}
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        if (value instanceof PresentationModel) {
+            for (PMListCellRenderer renderer : installedRenderers) {
+                if (renderer.supportsPresentationModel((PresentationModel)value)) {
+                    return renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                }
+            }
+        }
+        return FALLBACK_RENDERER.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+    }
 
-	private final ListCellRenderer FALLBACK_RENDERER = new EmptyRenderer();
-	private final List<PMListCellRenderer> installedRenderers = new ArrayList<PMListCellRenderer>();
+    private final ListCellRenderer FALLBACK_RENDERER = new EmptyRenderer();
+    private final List<PMListCellRenderer> installedRenderers = new ArrayList<PMListCellRenderer>();
 
-	public BnListCellRenderer() {
-		installDefaultRenderers();
-	}
+    public BnListCellRenderer() {
+        installDefaultRenderers();
+    }
 
-	private void installDefaultRenderers() {
-		// TODO (mk) I think a checkbox style renderer makes no sense here since
-		// we can't click on it to change the value
-		// installedRenderers.add( new BooleanPMListCellRenderer());
-		installedRenderers.add(new TextPMListCellRenderer());
-		installedRenderers.add(new IconPMListCellRenderer());
-	}
+    private void installDefaultRenderers() {
+        // TODO (mk) I think a checkbox style renderer makes no sense here since
+        // we can't click on it to change the value
+        // installedRenderers.add( new BooleanPMListCellRenderer());
+        installedRenderers.add(new TextPMListCellRenderer());
+        installedRenderers.add(new IconPMListCellRenderer());
+    }
 
-	public List<PMListCellRenderer> getInstalledRenderers() {
-		return this.installedRenderers;
-	}
+    public List<PMListCellRenderer> getInstalledRenderers() {
+        return this.installedRenderers;
+    }
 }

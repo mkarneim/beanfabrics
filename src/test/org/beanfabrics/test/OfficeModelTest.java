@@ -1,9 +1,9 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
- */  
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
+ */
 package org.beanfabrics.test;
+
 import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
 
@@ -18,34 +18,37 @@ import org.junit.Test;
  * @author Michael Karneim
  */
 public class OfficeModelTest {
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(OfficeModelTest.class);
-	}
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(OfficeModelTest.class);
+    }
 
-	OfficePM model;
+    OfficePM model;
 
-	public OfficeModelTest() {
-	}
+    public OfficeModelTest() {
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		model = new OfficePM();
-		model.name.setText("Software Development");
-		model.address.street.setText("12th Main Street");
-		model.address.appartment.setText("App. No. 14/3");
-		model.address.city.setText("Boston");
-		model.address.country.setText("USA");
-		model.address.zip.setText("02106");
-	}
+    @Before
+    public void setUp()
+        throws Exception {
+        model = new OfficePM();
+        model.name.setText("Software Development");
+        model.address.street.setText("12th Main Street");
+        model.address.appartment.setText("App. No. 14/3");
+        model.address.city.setText("Boston");
+        model.address.country.setText("USA");
+        model.address.zip.setText("02106");
+    }
 
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
+    @AfterClass
+    public static void tearDownClass()
+        throws Exception {
+    }
 
-	@Test
-	public void getText() throws Throwable {
-		assertEquals("model.address.zip.getText()", "02106", model.address.zip.getText());
-		ITextPM zipProp = (ITextPM) PropertySupport.get(model).getProperty( new Path("this.address.zip"));
-		assertEquals("model.address.zip", zipProp, model.address.zip);
-	}
+    @Test
+    public void getText()
+        throws Throwable {
+        assertEquals("model.address.zip.getText()", "02106", model.address.zip.getText());
+        ITextPM zipProp = (ITextPM)PropertySupport.get(model).getProperty(new Path("this.address.zip"));
+        assertEquals("model.address.zip", zipProp, model.address.zip);
+    }
 }

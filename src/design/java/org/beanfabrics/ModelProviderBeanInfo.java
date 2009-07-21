@@ -1,8 +1,7 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
- */  
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
+ */
 package org.beanfabrics;
 
 import java.beans.BeanDescriptor;
@@ -19,45 +18,44 @@ import org.beanfabrics.util.ExceptionUtil;
  * @author Michael Karneim
  */
 public class ModelProviderBeanInfo extends SimpleBeanInfo {
-	private static Class BEAN_CLASS = ModelProvider.class;
-	public BeanDescriptor getBeanDescriptor() {
-		final BeanDescriptor result = new BeanDescriptor(BEAN_CLASS, ModelSubscriberCustomizer.class);
-		result.setValue("EXPLICIT_PROPERTY_CHANGE", Boolean.TRUE); // VE, WindowBuilder
-		return result;
-	}
+    private static Class BEAN_CLASS = ModelProvider.class;
 
-	public PropertyDescriptor[] getPropertyDescriptors() {
-		try {
+    public BeanDescriptor getBeanDescriptor() {
+        final BeanDescriptor result = new BeanDescriptor(BEAN_CLASS, ModelSubscriberCustomizer.class);
+        result.setValue("EXPLICIT_PROPERTY_CHANGE", Boolean.TRUE); // VE, WindowBuilder
+        return result;
+    }
 
-			final PropertyDescriptor pModelType = new PropertyDescriptor("pModelType",
-					BEAN_CLASS, "getPresentationModelType", "setPresentationModelType");
-			final PropertyDescriptor pModel = new PropertyDescriptor("pModel",
-					BEAN_CLASS, "getPresentationModel", "setPresentationModel");
+    public PropertyDescriptor[] getPropertyDescriptors() {
+        try {
 
-			return new PropertyDescriptor[] { pModelType, pModel};
-		} catch (IntrospectionException ex) {
-			ExceptionUtil.getInstance().handleException("getPropertyDescriptors", ex);
-			return null;
-		}
-	}
+            final PropertyDescriptor pModelType = new PropertyDescriptor("pModelType", BEAN_CLASS, "getPresentationModelType", "setPresentationModelType");
+            final PropertyDescriptor pModel = new PropertyDescriptor("pModel", BEAN_CLASS, "getPresentationModel", "setPresentationModel");
 
-	public java.awt.Image getIcon(int iconKind) {
-		switch (iconKind) {
+            return new PropertyDescriptor[] { pModelType, pModel };
+        } catch (IntrospectionException ex) {
+            ExceptionUtil.getInstance().handleException("getPropertyDescriptors", ex);
+            return null;
+        }
+    }
 
-		case BeanInfo.ICON_COLOR_16x16:
-		default:
-			return loadImage("modelprovider16x16.gif");
-		}
-	}
+    public java.awt.Image getIcon(int iconKind) {
+        switch (iconKind) {
 
-	public BeanInfo[] getAdditionalBeanInfo() {
-		final Class superclass = BEAN_CLASS.getSuperclass();
-		try {
-			final BeanInfo superBeanInfo = Introspector.getBeanInfo(superclass);
-			return new BeanInfo[] { superBeanInfo };
-		} catch (IntrospectionException ex) {
-			ExceptionUtil.getInstance().handleException("getAdditionalBeanInfo", ex);
-			return null;
-		}
-	}
+            case BeanInfo.ICON_COLOR_16x16:
+            default:
+                return loadImage("modelprovider16x16.gif");
+        }
+    }
+
+    public BeanInfo[] getAdditionalBeanInfo() {
+        final Class superclass = BEAN_CLASS.getSuperclass();
+        try {
+            final BeanInfo superBeanInfo = Introspector.getBeanInfo(superclass);
+            return new BeanInfo[] { superBeanInfo };
+        } catch (IntrospectionException ex) {
+            ExceptionUtil.getInstance().handleException("getAdditionalBeanInfo", ex);
+            return null;
+        }
+    }
 }

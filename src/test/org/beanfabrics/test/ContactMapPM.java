@@ -1,7 +1,6 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.test;
 
@@ -31,152 +30,168 @@ import org.beanfabrics.validation.ValidationState;
  * @author Michael Karneim
  */
 public class ContactMapPM extends AbstractPM implements ContactFilterPM.Target {
-	private int nextContactId = 0;
+    private int nextContactId = 0;
 
-	@Property public MapPM<Integer, ContactPM> elements = new MapPM<Integer, ContactPM>();
-//	public ListPM<ContactPM> elementsList = new ListPM<ContactPM>(ContactPM.class);
+    @Property
+    public MapPM<Integer, ContactPM> elements = new MapPM<Integer, ContactPM>();
+    //	public ListPM<ContactPM> elementsList = new ListPM<ContactPM>(ContactPM.class);
 
-	@Property public ContactPM selectedContact;
-	@Property public IntegerPM numberOfContactsToCreate = new IntegerPM();
-	@Property public TextPM memory = new TextPM();
-	@Property public TextPM numberOfContacts = new TextPM();
-	@Property public ContactFilterPM filter = new ContactFilterPM();
+    @Property
+    public ContactPM selectedContact;
+    @Property
+    public IntegerPM numberOfContactsToCreate = new IntegerPM();
+    @Property
+    public TextPM memory = new TextPM();
+    @Property
+    public TextPM numberOfContacts = new TextPM();
+    @Property
+    public ContactFilterPM filter = new ContactFilterPM();
 
-	@Property public IOperationPM addContact = new OperationPM();
-	@Property public IOperationPM removeLastContact = new OperationPM();
-	@Property public IOperationPM runGC = new OperationPM();
-	@Property private MapPM<Integer, ContactPM> hidden = new MapPM<Integer, ContactPM>();
-	@Property public IOperationPM doSomething = new OperationPM();
+    @Property
+    public IOperationPM addContact = new OperationPM();
+    @Property
+    public IOperationPM removeLastContact = new OperationPM();
+    @Property
+    public IOperationPM runGC = new OperationPM();
+    @Property
+    private MapPM<Integer, ContactPM> hidden = new MapPM<Integer, ContactPM>();
+    @Property
+    public IOperationPM doSomething = new OperationPM();
 
-	@Property public IOperationPM insertContacts = new OperationPM();
+    @Property
+    public IOperationPM insertContacts = new OperationPM();
 
-	public ContactMapPM() {
-		init();
-	}
+    public ContactMapPM() {
+        init();
+    }
 
-	private void init() {
-		PMManager.setup(this);
-		doSomething.getValidator().add( new ValidationRule() {
-			public ValidationState validate() {
-				if ( ContactMapPM.this.isValid()==false) {
-					return new ValidationState("Some elements in this listCell are not valid");
-				}
-				return null;
-			}
+    private void init() {
+        PMManager.setup(this);
+        doSomething.getValidator().add(new ValidationRule() {
+            public ValidationState validate() {
+                if (ContactMapPM.this.isValid() == false) {
+                    return new ValidationState("Some elements in this listCell are not valid");
+                }
+                return null;
+            }
 
-		});
-		filter.setTarget( this);
-		startMemoryMonitor();
-	}
+        });
+        filter.setTarget(this);
+        startMemoryMonitor();
+    }
 
-	@OnChange(path = "elements")
-	private void updateSelectedContact() {
-		selectedContact = elements.getSelection().getFirst();
-		PropertySupport.get(this).refresh();
-	}
-	@OnChange(path = "elements")
-	private void updateNumberOfContacts() {
-		numberOfContacts.setText(elements.getSelection().size()+" of "+ elements.size()+" selected");
-	}
+    @OnChange(path = "elements")
+    private void updateSelectedContact() {
+        selectedContact = elements.getSelection().getFirst();
+        PropertySupport.get(this).refresh();
+    }
 
-	@Operation
-	public void doSomething() {
-		doSomething.check();
-		JOptionPane.showMessageDialog(null, "Info", "All Right!", JOptionPane.INFORMATION_MESSAGE);
-	}
+    @OnChange(path = "elements")
+    private void updateNumberOfContacts() {
+        numberOfContacts.setText(elements.getSelection().size() + " of " + elements.size() + " selected");
+    }
 
-	public void filter(String text) {
-		HashMap<Integer,ContactPM> show = new HashMap<Integer,ContactPM>();
-		HashMap<Integer,ContactPM> hide = new HashMap<Integer,ContactPM>();
-		for( ContactPM pModel: elements) {
-			String all = pModel.toString();
-			if ( all.indexOf(text)>=0) {
-				// show
-			} else {
-				// hide
-				int key = elements.getKey(pModel);
-				hide.put(key, pModel);
-			}
-		}
-		for( ContactPM pModel: hidden) {
-			String all = pModel.toString();
-			if ( all.indexOf(text)>=0) {
-				// show
-				int key = hidden.getKey(pModel);
-				show.put(key, pModel);
-			} else {
-				// hide
-			}
-		}
+    @Operation
+    public void doSomething() {
+        doSomething.check();
+        JOptionPane.showMessageDialog(null, "Info", "All Right!", JOptionPane.INFORMATION_MESSAGE);
+    }
 
-		elements.removeAllKeys( hide.keySet());
+    public void filter(String text) {
+        HashMap<Integer, ContactPM> show = new HashMap<Integer, ContactPM>();
+        HashMap<Integer, ContactPM> hide = new HashMap<Integer, ContactPM>();
+        for (ContactPM pModel : elements) {
+            String all = pModel.toString();
+            if (all.indexOf(text) >= 0) {
+                // show
+            } else {
+                // hide
+                int key = elements.getKey(pModel);
+                hide.put(key, pModel);
+            }
+        }
+        for (ContactPM pModel : hidden) {
+            String all = pModel.toString();
+            if (all.indexOf(text) >= 0) {
+                // show
+                int key = hidden.getKey(pModel);
+                show.put(key, pModel);
+            } else {
+                // hide
+            }
+        }
 
-		if ( show.size()>0) {
-			elements.putAll( show);
-		}
-		hidden.removeAllKeys( show.keySet());
-		hidden.putAll( hide);
-	}
-	@Operation
-	public void addContact() {
-		addContact.check();
-		int num = numberOfContactsToCreate.getInteger();
-		OrderPreservingMap<Integer,ContactPM> newMap = new OrderPreservingMap<Integer,ContactPM>();
-		for( int i=0; i<num; ++i) {
-			ContactPM pModel = new ContactPM();
-			pModel.lastname.setText("Name "+nextContactId);
-			pModel.birthday.setDate( new Date());
-			newMap.put(nextContactId, pModel);
-			nextContactId++;
+        elements.removeAllKeys(hide.keySet());
 
-		}
-		elements.putAll(newMap);
-		elements.getSelectedKeys().addAll(newMap.keySet());
+        if (show.size() > 0) {
+            elements.putAll(show);
+        }
+        hidden.removeAllKeys(show.keySet());
+        hidden.putAll(hide);
+    }
 
-//		elementsList.addAll(newMap.toCollection());
-	}
-	@Operation
-	public void removeLastContact() {
-		removeLastContact.check();
-		elements.removeAt(elements.size()-1);
-	}
+    @Operation
+    public void addContact() {
+        addContact.check();
+        int num = numberOfContactsToCreate.getInteger();
+        OrderPreservingMap<Integer, ContactPM> newMap = new OrderPreservingMap<Integer, ContactPM>();
+        for (int i = 0; i < num; ++i) {
+            ContactPM pModel = new ContactPM();
+            pModel.lastname.setText("Name " + nextContactId);
+            pModel.birthday.setDate(new Date());
+            newMap.put(nextContactId, pModel);
+            nextContactId++;
 
-	@Operation
-	public void insertContacts() {
-		insertContacts.check();
+        }
+        elements.putAll(newMap);
+        elements.getSelectedKeys().addAll(newMap.keySet());
 
-		int toIndex = elements.getSelection().getMaxIndex();
+        //		elementsList.addAll(newMap.toCollection());
+    }
 
-		ContactPM pModel = new ContactPM();
-		pModel.lastname.setText("Name "+nextContactId);
-		pModel.birthday.setDate( new Date());
-		elements.put(nextContactId, pModel, toIndex+1);
-		nextContactId++;
+    @Operation
+    public void removeLastContact() {
+        removeLastContact.check();
+        elements.removeAt(elements.size() - 1);
+    }
 
-		elements.getSelection().add(pModel);
-//		elementsList.add(pModel);
-	}
+    @Operation
+    public void insertContacts() {
+        insertContacts.check();
 
-	@Operation
-	public void runGC() {
-		System.gc();
-	}
+        int toIndex = elements.getSelection().getMaxIndex();
 
-	private void startMemoryMonitor() {
-		MemoryMonitor mon = new MemoryMonitor();
-		Timer timer = new Timer();
-		timer.schedule(mon, 0, MemoryMonitor.PERIOD);
-	}
+        ContactPM pModel = new ContactPM();
+        pModel.lastname.setText("Name " + nextContactId);
+        pModel.birthday.setDate(new Date());
+        elements.put(nextContactId, pModel, toIndex + 1);
+        nextContactId++;
 
-	private class MemoryMonitor extends TimerTask {
-		static final long PERIOD = 1000 * 4; // 4 seconds
-		public void run() {
-			long totalMem = Runtime.getRuntime().totalMemory();
-			int totalMemMB = (int)Math.round(((double)totalMem)/ (double)(1024 * 1024));
-			long freeMem = Runtime.getRuntime().freeMemory();
+        elements.getSelection().add(pModel);
+        //		elementsList.add(pModel);
+    }
 
-			int percentUsed = (int)((double)100 * (double)(totalMem-freeMem)/totalMem);
-			memory.setText( percentUsed+"% used of "+totalMemMB+"MB");
-		}
-	}
+    @Operation
+    public void runGC() {
+        System.gc();
+    }
+
+    private void startMemoryMonitor() {
+        MemoryMonitor mon = new MemoryMonitor();
+        Timer timer = new Timer();
+        timer.schedule(mon, 0, MemoryMonitor.PERIOD);
+    }
+
+    private class MemoryMonitor extends TimerTask {
+        static final long PERIOD = 1000 * 4; // 4 seconds
+
+        public void run() {
+            long totalMem = Runtime.getRuntime().totalMemory();
+            int totalMemMB = (int)Math.round(((double)totalMem) / (double)(1024 * 1024));
+            long freeMem = Runtime.getRuntime().freeMemory();
+
+            int percentUsed = (int)((double)100 * (double)(totalMem - freeMem) / totalMem);
+            memory.setText(percentUsed + "% used of " + totalMemMB + "MB");
+        }
+    }
 }

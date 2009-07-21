@@ -1,8 +1,7 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
- */  
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
+ */
 package org.beanfabrics.test;
 
 import org.beanfabrics.model.AbstractPM;
@@ -20,67 +19,76 @@ import org.beanfabrics.validation.ValidationState;
  * @author Michael Karneim
  */
 public class CalculatorPM extends AbstractPM {
-	@Property public final TextPM operator = new TextPM();
-	@Property public final IntegerPM result = new IntegerPM();
-	@Property public final IntegerPM input = new IntegerPM();
-	@Property public final IOperationPM plus = new OperationPM();
-	@Property public final IOperationPM minus = new OperationPM();
-	@Property public final IOperationPM showResult = new OperationPM();
+    @Property
+    public final TextPM operator = new TextPM();
+    @Property
+    public final IntegerPM result = new IntegerPM();
+    @Property
+    public final IntegerPM input = new IntegerPM();
+    @Property
+    public final IOperationPM plus = new OperationPM();
+    @Property
+    public final IOperationPM minus = new OperationPM();
+    @Property
+    public final IOperationPM showResult = new OperationPM();
 
-	public CalculatorPM() {
-		init();
-	}
+    public CalculatorPM() {
+        init();
+    }
 
-	private void init() {
-		PMManager.setup(this);
+    private void init() {
+        PMManager.setup(this);
 
-		result.setInteger(0);
-		operator.setText("+");
-		input.setMandatory(true);
-		plus.getValidator().add(new ValidationRule() {
-			public ValidationState validate() {
-				if (!input.isValid()) {
-					return new ValidationState("Enter a number");
-				}
-				return null;
-			}
-		});
-		minus.getValidator().add(new ValidationRule() {
-			public ValidationState validate() {
-				if (!input.isValid()) {
-					return new ValidationState("Enter a number");
-				}
-				return null;
-			}
-		});
-	}
-	@Operation
-	public void plus() {
-		plus.check();
-		this.evaluate();
-		operator.setText("+");
-		input.setInteger(result.getInteger());
-	}
-	@Operation
-	public void minus() {
-		minus.check();
-		this.evaluate();
-		operator.setText("-");
-		input.setInteger(result.getInteger());
-	}
-	@Operation
-	public void showResult() {
-		// TODO (mk) this behaves not really like a pocket calculator
-		showResult.check();
-		this.evaluate();
-		input.setInteger(result.getInteger());
-	}
+        result.setInteger(0);
+        operator.setText("+");
+        input.setMandatory(true);
+        plus.getValidator().add(new ValidationRule() {
+            public ValidationState validate() {
+                if (!input.isValid()) {
+                    return new ValidationState("Enter a number");
+                }
+                return null;
+            }
+        });
+        minus.getValidator().add(new ValidationRule() {
+            public ValidationState validate() {
+                if (!input.isValid()) {
+                    return new ValidationState("Enter a number");
+                }
+                return null;
+            }
+        });
+    }
 
-	private void evaluate() {
-		if (operator.getText().equals("+")) {
-			result.setInteger(result.getInteger() + input.getInteger());
-		} else if (operator.getText().equals("-")) {
-			result.setInteger(result.getInteger() - input.getInteger());
-		}
-	}
+    @Operation
+    public void plus() {
+        plus.check();
+        this.evaluate();
+        operator.setText("+");
+        input.setInteger(result.getInteger());
+    }
+
+    @Operation
+    public void minus() {
+        minus.check();
+        this.evaluate();
+        operator.setText("-");
+        input.setInteger(result.getInteger());
+    }
+
+    @Operation
+    public void showResult() {
+        // TODO (mk) this behaves not really like a pocket calculator
+        showResult.check();
+        this.evaluate();
+        input.setInteger(result.getInteger());
+    }
+
+    private void evaluate() {
+        if (operator.getText().equals("+")) {
+            result.setInteger(result.getInteger() + input.getInteger());
+        } else if (operator.getText().equals("-")) {
+            result.setInteger(result.getInteger() - input.getInteger());
+        }
+    }
 }

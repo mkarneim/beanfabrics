@@ -1,8 +1,7 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
- */  
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
+ */
 package org.beanfabrics.swing;
 
 import static org.junit.Assert.assertEquals;
@@ -24,153 +23,160 @@ import org.junit.Test;
  * @author Marcel Eyke
  */
 public class BnLabelTest {
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(BnLabelTest.class);
-	}
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(BnLabelTest.class);
+    }
 
-	BnLabel lbl;
-	private static class RootModel extends AbstractPM {
-		AModel a = new AModel();
-		public RootModel() {
-			PMManager.setup(this);
-		}
-	}
-	private static class AModel extends AbstractPM {
-		BModel b = new BModel();
-		public AModel() {
-			PMManager.setup(this);
-		}
-	}
-	private static class BModel extends AbstractPM {
-		TextPM c = new TextPM();
-		public BModel() {
-			PMManager.setup(this);
-		}
-	}
-	
-	RootModel root;
-	AModel a;
-	BModel b;
-	TextPM c;
+    BnLabel lbl;
 
-	public BnLabelTest() {
-	}
+    private static class RootModel extends AbstractPM {
+        AModel a = new AModel();
 
-	@Before
-	public void setUp() throws Exception {
-		lbl = new BnLabel();
-		root = new RootModel();
-		a = root.a;
-		b = a.b;
-		c = b.c;
-	}
+        public RootModel() {
+            PMManager.setup(this);
+        }
+    }
 
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
+    private static class AModel extends AbstractPM {
+        BModel b = new BModel();
 
-	@Test
-	public void create() {
-		assertNotNull(lbl);
-	}
+        public AModel() {
+            PMManager.setup(this);
+        }
+    }
 
-	@Test
-	public void bind() {
-		ModelProvider provider = new ModelProvider();
-		provider.setPresentationModel(root);
-		lbl.setPath(new Path("this.a.b.c"));
-		lbl.setModelProvider(provider);
+    private static class BModel extends AbstractPM {
+        TextPM c = new TextPM();
 
-		assertEquals("lbl.isConnected()", true, lbl.isConnected());
-		assertEquals("lbl.getText()", "", lbl.getText());
+        public BModel() {
+            PMManager.setup(this);
+        }
+    }
 
-		c.setText("hello, world!");
-		assertEquals("lbl.getText()", "hello, world!", lbl.getText());
-	}
+    RootModel root;
+    AModel a;
+    BModel b;
+    TextPM c;
 
-	@Test
-	public void bind2() {
-		ModelProvider provider = new ModelProvider();
-		lbl.setPath(new Path("this.a.b.c"));
-		lbl.setModelProvider(provider);
+    public BnLabelTest() {
+    }
 
-		provider.setPresentationModel(root);
+    @Before
+    public void setUp()
+        throws Exception {
+        lbl = new BnLabel();
+        root = new RootModel();
+        a = root.a;
+        b = a.b;
+        c = b.c;
+    }
 
+    @AfterClass
+    public static void tearDownClass()
+        throws Exception {
+    }
 
-		assertEquals("lbl.isConnected()", true, lbl.isConnected());
-		assertEquals("lbl.getText()", "", lbl.getText());
+    @Test
+    public void create() {
+        assertNotNull(lbl);
+    }
 
-		c.setText("hello, world!");
-		assertEquals("lbl.getText()", "hello, world!", lbl.getText());
-	}
+    @Test
+    public void bind() {
+        ModelProvider provider = new ModelProvider();
+        provider.setPresentationModel(root);
+        lbl.setPath(new Path("this.a.b.c"));
+        lbl.setModelProvider(provider);
 
-	@Test
-	public void bind3() {
-		ModelProvider provider = new ModelProvider();
-		lbl.setModelProvider(provider);
-		provider.setPresentationModel(root);
-		lbl.setPath(new Path("this.a.b.c"));
+        assertEquals("lbl.isConnected()", true, lbl.isConnected());
+        assertEquals("lbl.getText()", "", lbl.getText());
 
-		assertEquals("lbl.isConnected()", true, lbl.isConnected());
-		assertEquals("lbl.getText()", "", lbl.getText());
+        c.setText("hello, world!");
+        assertEquals("lbl.getText()", "hello, world!", lbl.getText());
+    }
 
-		c.setText("hello, world!");
-		assertEquals("lbl.getText()", "hello, world!", lbl.getText());
-	}
+    @Test
+    public void bind2() {
+        ModelProvider provider = new ModelProvider();
+        lbl.setPath(new Path("this.a.b.c"));
+        lbl.setModelProvider(provider);
 
-	@Test
-	public void bind4() {
-		ModelProvider provider = new ModelProvider();
-		provider.setPresentationModel(root);
-		lbl.setPath(new Path("this.a.b.c"));
-		lbl.setModelProvider(provider);
+        provider.setPresentationModel(root);
 
-		assertEquals("lbl.isConnected()", true, lbl.isConnected());
-		assertEquals("lbl.getText()", "", lbl.getText());
+        assertEquals("lbl.isConnected()", true, lbl.isConnected());
+        assertEquals("lbl.getText()", "", lbl.getText());
 
-		c.setText("hello, world!");
-		assertEquals("lbl.getText()", "hello, world!", lbl.getText());
-	}
+        c.setText("hello, world!");
+        assertEquals("lbl.getText()", "hello, world!", lbl.getText());
+    }
 
-	@Test
-	public void bind5() {
-		ModelProvider provider = new ModelProvider();
-		lbl.setPath(new Path("this.a.b.c"));
-		lbl.setModelProvider(provider);
-		provider.setPresentationModel(root);
+    @Test
+    public void bind3() {
+        ModelProvider provider = new ModelProvider();
+        lbl.setModelProvider(provider);
+        provider.setPresentationModel(root);
+        lbl.setPath(new Path("this.a.b.c"));
 
-		assertEquals("lbl.isConnected()", true, lbl.isConnected());
-		assertEquals("lbl.getText()", "", lbl.getText());
+        assertEquals("lbl.isConnected()", true, lbl.isConnected());
+        assertEquals("lbl.getText()", "", lbl.getText());
 
-		c.setText("hello, world!");
-		assertEquals("lbl.getText()", "hello, world!", lbl.getText());
-	}
+        c.setText("hello, world!");
+        assertEquals("lbl.getText()", "hello, world!", lbl.getText());
+    }
 
-	@Test
-	public void setPrsentationModel() {
-		BnLabel lbl = new BnLabel();
-		TextPM prop = new TextPM();
-		prop.setText("hello, world!");
-		assertEquals("lbl.isConnected()", false, lbl.isConnected());
-		assertEquals("lbl.getText()", "", lbl.getText());
+    @Test
+    public void bind4() {
+        ModelProvider provider = new ModelProvider();
+        provider.setPresentationModel(root);
+        lbl.setPath(new Path("this.a.b.c"));
+        lbl.setModelProvider(provider);
 
-		lbl.setPresentationModel(prop);
-		assertEquals("lbl.isConnected()", true, lbl.isConnected());
-		assertEquals("lbl.getText()", "hello, world!", lbl.getText());
+        assertEquals("lbl.isConnected()", true, lbl.isConnected());
+        assertEquals("lbl.getText()", "", lbl.getText());
 
-		// connect with icon and text model
-		IconTextPM iconText = new IconTextPM();
-		iconText.setIconUrl(BnLabelTest.class.getResource("sample.gif"));
-		iconText.setText("hello, world!");
-		lbl.setPresentationModel(iconText);
-		assertEquals("lbl.isConnected()", true, lbl.isConnected());
-		assertEquals("lbl.getText()", "hello, world!", lbl.getText());
-		assertNotNull("lbl.getIcon()", lbl.getIcon());
+        c.setText("hello, world!");
+        assertEquals("lbl.getText()", "hello, world!", lbl.getText());
+    }
 
-		// disconnect
-		lbl.setPresentationModel(null);
-		assertEquals("lbl.isConnected()", false, lbl.isConnected());
-		assertEquals("lbl.getText()", "", lbl.getText());
+    @Test
+    public void bind5() {
+        ModelProvider provider = new ModelProvider();
+        lbl.setPath(new Path("this.a.b.c"));
+        lbl.setModelProvider(provider);
+        provider.setPresentationModel(root);
 
-	}
+        assertEquals("lbl.isConnected()", true, lbl.isConnected());
+        assertEquals("lbl.getText()", "", lbl.getText());
+
+        c.setText("hello, world!");
+        assertEquals("lbl.getText()", "hello, world!", lbl.getText());
+    }
+
+    @Test
+    public void setPrsentationModel() {
+        BnLabel lbl = new BnLabel();
+        TextPM prop = new TextPM();
+        prop.setText("hello, world!");
+        assertEquals("lbl.isConnected()", false, lbl.isConnected());
+        assertEquals("lbl.getText()", "", lbl.getText());
+
+        lbl.setPresentationModel(prop);
+        assertEquals("lbl.isConnected()", true, lbl.isConnected());
+        assertEquals("lbl.getText()", "hello, world!", lbl.getText());
+
+        // connect with icon and text model
+        IconTextPM iconText = new IconTextPM();
+        iconText.setIconUrl(BnLabelTest.class.getResource("sample.gif"));
+        iconText.setText("hello, world!");
+        lbl.setPresentationModel(iconText);
+        assertEquals("lbl.isConnected()", true, lbl.isConnected());
+        assertEquals("lbl.getText()", "hello, world!", lbl.getText());
+        assertNotNull("lbl.getIcon()", lbl.getIcon());
+
+        // disconnect
+        lbl.setPresentationModel(null);
+        assertEquals("lbl.isConnected()", false, lbl.isConnected());
+        assertEquals("lbl.getText()", "", lbl.getText());
+
+    }
 }

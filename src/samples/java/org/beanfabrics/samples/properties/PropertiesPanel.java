@@ -41,6 +41,7 @@ public class PropertiesPanel extends JPanel implements View<PropertiesPM>, Model
 
     /**
      * Returns the local {@link ModelProvider} for this class.
+     * 
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalModelProvider() {
@@ -80,6 +81,7 @@ public class PropertiesPanel extends JPanel implements View<PropertiesPM>, Model
     public void setPath(Path path) {
         this.link.setPath(path);
     }
+
     /**
      * @return
      */
@@ -92,6 +94,7 @@ public class PropertiesPanel extends JPanel implements View<PropertiesPM>, Model
         }
         return centerPanel;
     }
+
     /**
      * @return
      */
@@ -99,10 +102,11 @@ public class PropertiesPanel extends JPanel implements View<PropertiesPM>, Model
         if (scrollPane == null) {
             scrollPane = new JScrollPane();
             scrollPane.setViewportView(getBnTable());
-            scrollPane.getViewport().setBackground( getBnTable().getBackground());
+            scrollPane.getViewport().setBackground(getBnTable().getBackground());
         }
         return scrollPane;
     }
+
     /**
      * @return
      */
@@ -110,17 +114,17 @@ public class PropertiesPanel extends JPanel implements View<PropertiesPM>, Model
         if (bnTable == null) {
             bnTable = new BnTable();
             bnTable.setPath(new org.beanfabrics.Path("this"));
-            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] {
-	       new org.beanfabrics.swing.table.BnColumn( new org.beanfabrics.Path("this.key"), "Key", 200, true    )
-	       , new org.beanfabrics.swing.table.BnColumn( new org.beanfabrics.Path("this.value"), "Value", 100, false    )});
+            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.key"), "Key", 200, true),
+                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.value"), "Value", 100, false) });
             bnTable.setModelProvider(getLocalModelProvider());
-            bnTable.setBackground( Color.WHITE);
+            bnTable.setBackground(Color.WHITE);
             bnTable.setShowVerticalLines(true);
             bnTable.setShowHorizontalLines(false);
-            bnTable.setIntercellSpacing( new Dimension(0,0));
+            bnTable.setIntercellSpacing(new Dimension(0, 0));
         }
         return bnTable;
     }
+
     /**
      * @return
      */
@@ -132,6 +136,7 @@ public class PropertiesPanel extends JPanel implements View<PropertiesPM>, Model
         }
         return footerPanel;
     }
+
     /**
      * @return
      */

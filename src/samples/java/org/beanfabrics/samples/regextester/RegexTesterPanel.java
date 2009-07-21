@@ -44,10 +44,10 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
      */
     public RegexTesterPanel() {
         super();
-        final GridBagLayout gridBagLayout = new GridBagLayout();        
-        gridBagLayout.columnWidths = new int[] {0,0,0};
-        gridBagLayout.rowHeights = new int[] {0,0,0,0};
-        
+        final GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
+        gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0 };
+
         setLayout(gridBagLayout);
         final GridBagConstraints gridBagConstraints_1 = new GridBagConstraints();
         gridBagConstraints_1.anchor = GridBagConstraints.NORTHWEST;
@@ -111,12 +111,13 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         gridBagConstraints_8.gridx = 0;
         add(getGroupsLabel(), gridBagConstraints_8);
         add(getScrollPane_1(), gridBagConstraints_7);
-       
+
         //
     }
 
     /**
      * Returns the local {@link ModelProvider} for this class.
+     * 
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalModelProvider() {
@@ -130,7 +131,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
     /** {@inheritDoc} */
     public RegexTesterPM getPresentationModel() {
         return getLocalModelProvider().getPresentationModel();
-        
+
     }
 
     /** {@inheritDoc} */
@@ -157,6 +158,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
     public void setPath(Path path) {
         this.link.setPath(path);
     }
+
     /**
      * @return
      */
@@ -167,6 +169,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         }
         return inputLabel;
     }
+
     /**
      * @return
      */
@@ -177,6 +180,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         }
         return regexLabel;
     }
+
     /**
      * @return
      */
@@ -188,6 +192,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         }
         return regexTextField;
     }
+
     /**
      * @return
      */
@@ -198,6 +203,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         }
         return matchesLabel;
     }
+
     /**
      * @return
      */
@@ -210,6 +216,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         }
         return matchesTextField;
     }
+
     /**
      * @return
      */
@@ -222,6 +229,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         }
         return matchBnButton;
     }
+
     /**
      * @return
      */
@@ -232,6 +240,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         }
         return scrollPane_1;
     }
+
     /**
      * @return
      */
@@ -239,14 +248,13 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         if (bnTable == null) {
             bnTable = new BnTable();
             bnTable.setPath(new org.beanfabrics.Path("this.groups"));
-            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] {
-	       new org.beanfabrics.swing.table.BnColumn( new org.beanfabrics.Path("this.findIndex"), "FindIndex", 80, true    )
-	       , new org.beanfabrics.swing.table.BnColumn( new org.beanfabrics.Path("this.groupIndex"), "GroupIndex", 80, true    )
-	       , new org.beanfabrics.swing.table.BnColumn( new org.beanfabrics.Path("this.text"), "Text", 100, false    )});
+            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.findIndex"), "FindIndex", 80, true),
+                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.groupIndex"), "GroupIndex", 80, true), new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.text"), "Text", 100, false) });
             bnTable.setModelProvider(getLocalModelProvider());
         }
         return bnTable;
     }
+
     /**
      * @return
      */
@@ -257,6 +265,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         }
         return groupsLabel;
     }
+
     /**
      * @return
      */
@@ -269,6 +278,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         }
         return scrollPane;
     }
+
     /**
      * @return
      */

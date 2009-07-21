@@ -1,7 +1,6 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.swing.customizer.list;
 
@@ -23,127 +22,121 @@ import org.beanfabrics.swing.list.BnList;
 import org.beanfabrics.swing.list.CellConfig;
 
 /**
- * The <code>BnListCustomizerPM</code> is the presentation model for the {@link BnListCustomizer}.
- *
+ * The <code>BnListCustomizerPM</code> is the presentation model for the
+ * {@link BnListCustomizer}.
+ * 
  * @author Michael Karneim
  */
 public class BnListCustomizerPM extends AbstractCustomizerPM {
-	protected final PathPM pathToList = new PathPM();
-	protected final PathPM pathToRowCell = new PathPM();
+    protected final PathPM pathToList = new PathPM();
+    protected final PathPM pathToRowCell = new PathPM();
 
-	public interface Functions {
-		void setPathToList( Path path);
-		void setCellConfig( CellConfig cellConfig);
-	}
+    public interface Functions {
+        void setPathToList(Path path);
 
-	private Functions functions;
-	private BnList bnList;
-	private Class<? extends PresentationModel> rootModelType;
-	private Class<? extends PresentationModel> requiredListModelType;
+        void setCellConfig(CellConfig cellConfig);
+    }
 
-	public BnListCustomizerPM() {
-		PMManager.setup(this);
-	}
+    private Functions functions;
+    private BnList bnList;
+    private Class<? extends PresentationModel> rootModelType;
+    private Class<? extends PresentationModel> requiredListModelType;
 
-	public void setFunctions( Functions functions) {
-		this.functions = functions;
-	}
+    public BnListCustomizerPM() {
+        PMManager.setup(this);
+    }
 
-	public void setBnList( BnList bnList) {
-		this.bnList = bnList;
-		IModelProvider ds = this.bnList.getModelProvider();
-		this.rootModelType = ds.getPresentationModelType();
+    public void setFunctions(Functions functions) {
+        this.functions = functions;
+    }
 
-		ViewClassDecorator viewDeco = new ViewClassDecorator(bnList.getClass());
-		this.requiredListModelType = viewDeco.getExpectedModelType();
+    public void setBnList(BnList bnList) {
+        this.bnList = bnList;
+        IModelProvider ds = this.bnList.getModelProvider();
+        this.rootModelType = ds.getPresentationModelType();
 
-		configurePathToList();
-		configurePathToRowCell();
-	}
+        ViewClassDecorator viewDeco = new ViewClassDecorator(bnList.getClass());
+        this.requiredListModelType = viewDeco.getExpectedModelType();
 
-	private void configurePathToList() {
-		PathContext ctx = new PathContext(
-				PMManager.getInstance().getMetadata().getPathInfo(this.rootModelType),
-				PMManager.getInstance().getMetadata().getPresentationModelInfo(this.requiredListModelType),
-				this.bnList.getPath()
-		);
+        configurePathToList();
+        configurePathToRowCell();
+    }
 
-		this.pathToList.setPathContext( ctx);
-	}
+    private void configurePathToList() {
+        PathContext ctx = new PathContext(PMManager.getInstance().getMetadata().getPathInfo(this.rootModelType), PMManager.getInstance().getMetadata().getPresentationModelInfo(this.requiredListModelType), this.bnList.getPath());
 
-	@OnChange(path="pathToList")
-	void applyPathToList() {
-		if ( functions != null && pathToList.isValid()) {
-			functions.setPathToList( pathToList.getPath());
-		}
-		configurePathToRowCell();
-	}
+        this.pathToList.setPathContext(ctx);
+    }
 
-	@OnChange(path="pathToRowCell")
-	void applyCellConfig() {
-		if ( functions != null && pathToRowCell.isValid()) {
-			if ( pathToRowCell.getPath()==null) {
-				functions.setCellConfig(null);
-			} else {
-				CellConfig cfg = new CellConfig( pathToRowCell.getPath());
-				functions.setCellConfig(cfg);
-			}
-		}
-	}
+    @OnChange(path = "pathToList")
+    void applyPathToList() {
+        if (functions != null && pathToList.isValid()) {
+            functions.setPathToList(pathToList.getPath());
+        }
+        configurePathToRowCell();
+    }
 
-	private void configurePathToRowCell() {
-		CellConfig cellConfig = this.bnList==null?null:this.bnList.getCellConfig();
-		Path initialPath = cellConfig == null?null:cellConfig.getPath();
-		Class elementModelType = getElementModelType();
-		System.out.println("BnListCustomizerPM.configurePathToRowCell() elementModelType="+elementModelType);
-		PathInfo rootNodeDesc = elementModelType==null?null:PMManager.getInstance().getMetadata().getPathInfo(elementModelType);
-		PathContext ctx = new PathContext(
-				rootNodeDesc,
-				null,
-				initialPath
-		);
-		this.pathToRowCell.setPathContext( ctx);
-	}
+    @OnChange(path = "pathToRowCell")
+    void applyCellConfig() {
+        if (functions != null && pathToRowCell.isValid()) {
+            if (pathToRowCell.getPath() == null) {
+                functions.setCellConfig(null);
+            } else {
+                CellConfig cfg = new CellConfig(pathToRowCell.getPath());
+                functions.setCellConfig(cfg);
+            }
+        }
+    }
 
-	private Class getElementModelType() {
-		PathInfo pathInfo = getPathInfoOfList();
-		System.out.println("BnListCustomizerPM.getElementModelType() pathInfo="+pathInfo);
-		if ( pathInfo == null) {
-			return null;
-		} else {
-			Type tArg = pathInfo.getTypeArguments(IListPM.class)[0];
-			if ( tArg instanceof Class) {
-				return (Class)tArg;
-			} else if ( tArg instanceof TypeVariable) {
-				// if no actual argument can be found, we just return the first bound.
-				return (Class)((TypeVariable)tArg).getBounds()[0];
-			} else {
-				throw new IllegalStateException("Unexpected type: "+tArg.getClass().getName());
-			}
-		}
-	}
+    private void configurePathToRowCell() {
+        CellConfig cellConfig = this.bnList == null ? null : this.bnList.getCellConfig();
+        Path initialPath = cellConfig == null ? null : cellConfig.getPath();
+        Class elementModelType = getElementModelType();
+        System.out.println("BnListCustomizerPM.configurePathToRowCell() elementModelType=" + elementModelType);
+        PathInfo rootNodeDesc = elementModelType == null ? null : PMManager.getInstance().getMetadata().getPathInfo(elementModelType);
+        PathContext ctx = new PathContext(rootNodeDesc, null, initialPath);
+        this.pathToRowCell.setPathContext(ctx);
+    }
 
-	private PathInfo getPathInfoOfList() {
-		if ( this.bnList==null) {
-			return null;
-		}
-		IModelProvider ds = this.bnList.getModelProvider();
-		if ( ds != null) {
-			Path path = this.bnList.getPath();
-			if ( path != null) {
-				Class cls = ds.getPresentationModelType();
-				if ( cls != null) {
-					PathInfo root = PMManager.getInstance().getMetadata().getPathInfo( cls);
-					return root.getPathInfo( path);
-				}
-			}
-		}
-		IListPM listPM = this.bnList.getPresentationModel();
-		if ( listPM != null) {
-			PathInfo info = PMManager.getInstance().getMetadata().getPathInfo( listPM.getClass());
-			return info;
-		} else {
-			return null;
-		}
-	}
+    private Class getElementModelType() {
+        PathInfo pathInfo = getPathInfoOfList();
+        System.out.println("BnListCustomizerPM.getElementModelType() pathInfo=" + pathInfo);
+        if (pathInfo == null) {
+            return null;
+        } else {
+            Type tArg = pathInfo.getTypeArguments(IListPM.class)[0];
+            if (tArg instanceof Class) {
+                return (Class)tArg;
+            } else if (tArg instanceof TypeVariable) {
+                // if no actual argument can be found, we just return the first bound.
+                return (Class)((TypeVariable)tArg).getBounds()[0];
+            } else {
+                throw new IllegalStateException("Unexpected type: " + tArg.getClass().getName());
+            }
+        }
+    }
+
+    private PathInfo getPathInfoOfList() {
+        if (this.bnList == null) {
+            return null;
+        }
+        IModelProvider ds = this.bnList.getModelProvider();
+        if (ds != null) {
+            Path path = this.bnList.getPath();
+            if (path != null) {
+                Class cls = ds.getPresentationModelType();
+                if (cls != null) {
+                    PathInfo root = PMManager.getInstance().getMetadata().getPathInfo(cls);
+                    return root.getPathInfo(path);
+                }
+            }
+        }
+        IListPM listPM = this.bnList.getPresentationModel();
+        if (listPM != null) {
+            PathInfo info = PMManager.getInstance().getMetadata().getPathInfo(listPM.getClass());
+            return info;
+        } else {
+            return null;
+        }
+    }
 }

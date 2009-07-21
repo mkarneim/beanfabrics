@@ -1,9 +1,9 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public methods and fields are documented
+// TODO javadoc - remove this comment only when the class and all non-public
+// methods and fields are documented
 package org.beanfabrics.swing.table;
 
 import java.util.ArrayList;
@@ -31,168 +31,168 @@ import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.model.SortKey;
 
 /**
- * The <code>BnTableModel</code> is a {@link TableModel} that decorates a {@link IListPM}.
+ * The <code>BnTableModel</code> is a {@link TableModel} that decorates a
+ * {@link IListPM}.
  * <p>
  * To reduce work we decided to extend the {@link AbstractTableModel} in order
  * to get the event listener handling. All other methods are overridden.
  * </p>
+ * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
 public class BnTableModel extends AbstractTableModel {
-	private IListPM list;
+    private IListPM list;
 
-	private List<BnColumn> colDefs = new ArrayList<BnColumn>();
+    private List<BnColumn> colDefs = new ArrayList<BnColumn>();
 
-	private ListListener listener = new WeakListListener() {
-		public void elementsSelected(ElementsSelectedEvent evt) {
-			// ignore
-		}
+    private ListListener listener = new WeakListListener() {
+        public void elementsSelected(ElementsSelectedEvent evt) {
+            // ignore
+        }
 
-		public void elementsDeselected(ElementsDeselectedEvent evt) {
-			// ignore
-		}
+        public void elementsDeselected(ElementsDeselectedEvent evt) {
+            // ignore
+        }
 
-		public void elementChanged(ElementChangedEvent evt) {
-			fireTableRowsUpdated(evt.getIndex(), evt.getIndex());
-		}
+        public void elementChanged(ElementChangedEvent evt) {
+            fireTableRowsUpdated(evt.getIndex(), evt.getIndex());
+        }
 
-		public void elementsReplaced(ElementsReplacedEvent evt) {
-			fireTableRowsUpdated(evt.getBeginIndex(), evt.getBeginIndex()
-					+ evt.getLength() - 1);
-		}
+        public void elementsReplaced(ElementsReplacedEvent evt) {
+            fireTableRowsUpdated(evt.getBeginIndex(), evt.getBeginIndex() + evt.getLength() - 1);
+        }
 
-		public void elementsAdded(ElementsAddedEvent evt) {
-			fireTableRowsInserted(evt.getBeginIndex(), evt.getBeginIndex()
-					+ evt.getLength() - 1);
-		}
+        public void elementsAdded(ElementsAddedEvent evt) {
+            fireTableRowsInserted(evt.getBeginIndex(), evt.getBeginIndex() + evt.getLength() - 1);
+        }
 
-		public void elementsRemoved(ElementsRemovedEvent evt) {
-			fireTableRowsDeleted(evt.getBeginIndex(), evt.getBeginIndex()
-					+ evt.getLength() - 1);
-		}
-	};
+        public void elementsRemoved(ElementsRemovedEvent evt) {
+            fireTableRowsDeleted(evt.getBeginIndex(), evt.getBeginIndex() + evt.getLength() - 1);
+        }
+    };
 
-	public BnTableModel(IListPM aListModel, List<BnColumn> colDefs) {
-		if (aListModel == null) {
-			throw new IllegalArgumentException("aListModel must not be null");
-		}
-		if (colDefs == null) {
-			throw new IllegalArgumentException("colDefs must not be null");
-		}
-		this.list = aListModel;
-		this.colDefs.addAll(colDefs);
-		this.list.addListListener(this.listener);
-	}
+    public BnTableModel(IListPM aListModel, List<BnColumn> colDefs) {
+        if (aListModel == null) {
+            throw new IllegalArgumentException("aListModel must not be null");
+        }
+        if (colDefs == null) {
+            throw new IllegalArgumentException("colDefs must not be null");
+        }
+        this.list = aListModel;
+        this.colDefs.addAll(colDefs);
+        this.list.addListListener(this.listener);
+    }
 
-	/**
-	 * Disconnect <code>this</code> object from the underlying IListPM.
-	 */
-	public void dismiss() {
-		this.list.removeListListener(this.listener);
-	}
+    /**
+     * Disconnect <code>this</code> object from the underlying IListPM.
+     */
+    public void dismiss() {
+        this.list.removeListListener(this.listener);
+    }
 
-	public List<BnColumn> getColDefs() {
-		return Collections.unmodifiableList(colDefs);
-	}
+    public List<BnColumn> getColDefs() {
+        return Collections.unmodifiableList(colDefs);
+    }
 
-	public void setColDefs(List<BnColumn> colDefs) {
-		if (colDefs == null) {
-			throw new IllegalArgumentException("colDefs==null");
-		}
-		this.colDefs.clear();
-		this.colDefs.addAll(colDefs);
-		this.fireTableStructureChanged();
-	}
+    public void setColDefs(List<BnColumn> colDefs) {
+        if (colDefs == null) {
+            throw new IllegalArgumentException("colDefs==null");
+        }
+        this.colDefs.clear();
+        this.colDefs.addAll(colDefs);
+        this.fireTableStructureChanged();
+    }
 
-	public int getColumnCount() {
-		return this.colDefs.size();
-	}
+    public int getColumnCount() {
+        return this.colDefs.size();
+    }
 
-	public int getRowCount() {
-		return this.list.size();
-	}
+    public int getRowCount() {
+        return this.list.size();
+    }
 
-	@Override
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		// we don't support changing a value with this method
-	}
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        // we don't support changing a value with this method
+    }
 
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		final Path path = this.colDefs.get(columnIndex).getPath();
-		PresentationModel rowMdl = this.list.getAt(rowIndex);
-		return PathEvaluation.evaluateOrNull(rowMdl, path);
-	}
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        final Path path = this.colDefs.get(columnIndex).getPath();
+        PresentationModel rowMdl = this.list.getAt(rowIndex);
+        return PathEvaluation.evaluateOrNull(rowMdl, path);
+    }
 
-	@Override
-	public String getColumnName(int column) {
-		final BnColumn def = this.colDefs.get(column);
-		if (def == null)
-			return null;
-		return def.getColumnName();
-	}
+    @Override
+    public String getColumnName(int column) {
+        final BnColumn def = this.colDefs.get(column);
+        if (def == null)
+            return null;
+        return def.getColumnName();
+    }
 
-	public Path getColumnPath(int column) {
-		final BnColumn def = this.colDefs.get(column);
-		if (def == null)
-			return null;
-		return def.getPath();
-	}
+    public Path getColumnPath(int column) {
+        final BnColumn def = this.colDefs.get(column);
+        if (def == null)
+            return null;
+        return def.getPath();
+    }
 
-	@Override
-	public int findColumn(String columnName) {
-		for (int i = 0; i < getColumnCount(); i++) {
-			if (columnName.equals(getColumnName(i))) {
-				return i;
-			}
-		}
-		return -1;
-	}
+    @Override
+    public int findColumn(String columnName) {
+        for (int i = 0; i < getColumnCount(); i++) {
+            if (columnName.equals(getColumnName(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
-	@Override
-	public Class<?> getColumnClass(int columnIndex) {
-		return PresentationModel.class;
-	}
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return PresentationModel.class;
+    }
 
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		// TODO (mk) possibly it makes sense to evaluate also a isWritable flag
-		// of the IListPM and
-		// only return true if both, the IListPM AND the row model are
-		// writable
-		final Object value = this.getValueAt(rowIndex, columnIndex);
-		if (value instanceof ITextPM) {
-			return ((ITextPM) value).isEditable();
-		} else if ( value instanceof IOperationPM) {
-			return ((IOperationPM)value).isEnabled();
-		} else {
-			return false;
-		}
-	}
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        // TODO (mk) possibly it makes sense to evaluate also a isWritable flag
+        // of the IListPM and
+        // only return true if both, the IListPM AND the row model are
+        // writable
+        final Object value = this.getValueAt(rowIndex, columnIndex);
+        if (value instanceof ITextPM) {
+            return ((ITextPM)value).isEditable();
+        } else if (value instanceof IOperationPM) {
+            return ((IOperationPM)value).isEnabled();
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * Returns the underlying presentation model of this {@link TableModel}.
-	 *
-	 * @return the underlying presentation model
-	 */
-	public IListPM getPresentationModel() {
-		return this.list;
-	}
+    /**
+     * Returns the underlying presentation model of this {@link TableModel}.
+     * 
+     * @return the underlying presentation model
+     */
+    public IListPM getPresentationModel() {
+        return this.list;
+    }
 
-	/**
-	 * Returns the {@link SortKey} of the specified column or <code>null</code>
-	 * if that column is not sorted.
-	 * @param col
-	 * @return the {@link SortKey} of the specified column
-	 */
-	public SortKey getSortKey(int col) {
-		Path colPath = getColumnPath(col);
-		Collection<SortKey> sortKeys = list.getSortKeys();
-		for (SortKey sortKey: sortKeys) {
-			if (colPath.equals(sortKey.getSortPath())) {
-				return sortKey;
-			}
-		}
-		return null;
-	}
+    /**
+     * Returns the {@link SortKey} of the specified column or <code>null</code>
+     * if that column is not sorted.
+     * 
+     * @param col
+     * @return the {@link SortKey} of the specified column
+     */
+    public SortKey getSortKey(int col) {
+        Path colPath = getColumnPath(col);
+        Collection<SortKey> sortKeys = list.getSortKeys();
+        for (SortKey sortKey : sortKeys) {
+            if (colPath.equals(sortKey.getSortPath())) {
+                return sortKey;
+            }
+        }
+        return null;
+    }
 }

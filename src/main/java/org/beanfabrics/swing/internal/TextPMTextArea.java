@@ -1,9 +1,9 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public methods and fields are documented
+// TODO javadoc - remove this comment only when the class and all non-public
+// methods and fields are documented
 package org.beanfabrics.swing.internal;
 
 import java.awt.Graphics;
@@ -21,160 +21,159 @@ import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.ErrorImagePainter;
 
 /**
- * The <code>TextPMTextArea</code> is a {@link JTextArea} that is a view on an {@link ITextPM}.
- *
+ * The <code>TextPMTextArea</code> is a {@link JTextArea} that is a view on an
+ * {@link ITextPM}.
+ * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
 public class TextPMTextArea extends JTextArea implements View<ITextPM> {
-	private boolean selectAllOnFocusGainedEnabled = false;
-	private boolean reformatOnFocusLostEnabled = true;
-	private BnPlainDocument document;
-	private final PropertyChangeListener listener = new WeakPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent evt) {
-			refresh();
-		}
-	};
+    private boolean selectAllOnFocusGainedEnabled = false;
+    private boolean reformatOnFocusLostEnabled = true;
+    private BnPlainDocument document;
+    private final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent evt) {
+            refresh();
+        }
+    };
 
-	public TextPMTextArea(int rows, int columns) {
-		super(rows, columns);
-		init();
-	}
+    public TextPMTextArea(int rows, int columns) {
+        super(rows, columns);
+        init();
+    }
 
-	/**
+    /**
 	 *
 	 */
-	public TextPMTextArea() {
-		this.init();
-	}
+    public TextPMTextArea() {
+        this.init();
+    }
 
-	public TextPMTextArea(ITextPM pModel) {
-		this();
-		setPresentationModel(pModel);
-	}
+    public TextPMTextArea(ITextPM pModel) {
+        this();
+        setPresentationModel(pModel);
+    }
 
-	public boolean isSelectAllOnFocusGainedEnabled() {
-		return selectAllOnFocusGainedEnabled;
-	}
+    public boolean isSelectAllOnFocusGainedEnabled() {
+        return selectAllOnFocusGainedEnabled;
+    }
 
-	public void setSelectAllOnFocusGainedEnabled(
-			boolean selectAllOnFocusGainedEnabled) {
-		this.selectAllOnFocusGainedEnabled = selectAllOnFocusGainedEnabled;
-	}
+    public void setSelectAllOnFocusGainedEnabled(boolean selectAllOnFocusGainedEnabled) {
+        this.selectAllOnFocusGainedEnabled = selectAllOnFocusGainedEnabled;
+    }
 
-	public boolean isReformatOnFocusLostEnabled() {
-		return reformatOnFocusLostEnabled;
-	}
+    public boolean isReformatOnFocusLostEnabled() {
+        return reformatOnFocusLostEnabled;
+    }
 
-	public void setReformatOnFocusLostEnabled(boolean reformatOnFocusLostEnabled) {
-		this.reformatOnFocusLostEnabled = reformatOnFocusLostEnabled;
-	}
+    public void setReformatOnFocusLostEnabled(boolean reformatOnFocusLostEnabled) {
+        this.reformatOnFocusLostEnabled = reformatOnFocusLostEnabled;
+    }
 
-	private void init() {
-		this.setEnabled(false);
-		this.addFocusListener(new java.awt.event.FocusAdapter() {
-			public void focusGained(FocusEvent e) {
-				TextPMTextArea.this.onFocusGained();
-			}
-			public void focusLost(FocusEvent e) {
-				TextPMTextArea.this.onFocusLost();
-			}
-		});
-	}
+    private void init() {
+        this.setEnabled(false);
+        this.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(FocusEvent e) {
+                TextPMTextArea.this.onFocusGained();
+            }
 
-	protected void onFocusGained() {
-		this.repaint();
-		if ( this.isSelectAllOnFocusGainedEnabled()) {
-			this.selectAll();
-		}
-	}
+            public void focusLost(FocusEvent e) {
+                TextPMTextArea.this.onFocusLost();
+            }
+        });
+    }
 
-	protected void onFocusLost() {
-		this.repaint();
-		if ( this.isReformatOnFocusLostEnabled() && this.isConnected()) {
-			this.document.getPresentationModel().reformat();
-		}
-	}
+    protected void onFocusGained() {
+        this.repaint();
+        if (this.isSelectAllOnFocusGainedEnabled()) {
+            this.selectAll();
+        }
+    }
 
-	protected Document createDefaultModel() {
-		if (this.document != null && this.document.isConnected())
-			throw new IllegalStateException(
-					"The document was initialized already.");
-		return this.document = new BnPlainDocument();
-	}
+    protected void onFocusLost() {
+        this.repaint();
+        if (this.isReformatOnFocusLostEnabled() && this.isConnected()) {
+            this.document.getPresentationModel().reformat();
+        }
+    }
 
-	public void setDocument(Document document) {
-		if (this.isConnected())
-			throw new IllegalStateException("The document was initialized already.");
-		if (document instanceof BnPlainDocument)
-			this.document = (BnPlainDocument) document;
-		super.setDocument(document);
-	}
+    protected Document createDefaultModel() {
+        if (this.document != null && this.document.isConnected())
+            throw new IllegalStateException("The document was initialized already.");
+        return this.document = new BnPlainDocument();
+    }
 
-	/** {@inheritDoc} */
-	public ITextPM getPresentationModel() {
-		if ( this.document == null) return null;
-		return this.document.getPresentationModel();
-	}
+    public void setDocument(Document document) {
+        if (this.isConnected())
+            throw new IllegalStateException("The document was initialized already.");
+        if (document instanceof BnPlainDocument)
+            this.document = (BnPlainDocument)document;
+        super.setDocument(document);
+    }
 
-	/** {@inheritDoc} */
-	public void setPresentationModel(ITextPM pModel) {
-		if ( this.isConnected())
-			this.document.getPresentationModel().removePropertyChangeListener( this.listener);
-		this.document.setPresentationModel(pModel);
-		if ( pModel != null) {
-			pModel.addPropertyChangeListener(listener);
-		}
-		this.refresh();
-	}
+    /** {@inheritDoc} */
+    public ITextPM getPresentationModel() {
+        if (this.document == null)
+            return null;
+        return this.document.getPresentationModel();
+    }
 
-	/**
-	 * Returns whether this component is connected to the target {@link PresentationModel}
-	 * to synchronize with. This is a convenience method.
-	 *
-	 * @return <code>true</code> when this component is connected, else
-	 *         <code>false</code>
-	 */
-	boolean isConnected() {
-		return this.document != null && this.document.getPresentationModel() != null;
-	}
+    /** {@inheritDoc} */
+    public void setPresentationModel(ITextPM pModel) {
+        if (this.isConnected())
+            this.document.getPresentationModel().removePropertyChangeListener(this.listener);
+        this.document.setPresentationModel(pModel);
+        if (pModel != null) {
+            pModel.addPropertyChangeListener(listener);
+        }
+        this.refresh();
+    }
 
-	/**
-	 * Configures the text field depending on the properties attributes
-	 */
-	protected void refresh() {
-		final ITextPM pModel = this.getPresentationModel();
-		if ( pModel != null) {
-			this.setEnabled( true);
-			this.setToolTipText( pModel.isValid() == false
-					? pModel.getValidationState().getMessage()
-					: pModel.getDescription());
-			this.setEditable( pModel.isEditable());
-		} else {
-			this.setEnabled( false);
-		}
-		this.repaint();
-	}
+    /**
+     * Returns whether this component is connected to the target
+     * {@link PresentationModel} to synchronize with. This is a convenience
+     * method.
+     * 
+     * @return <code>true</code> when this component is connected, else
+     *         <code>false</code>
+     */
+    boolean isConnected() {
+        return this.document != null && this.document.getPresentationModel() != null;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		this.paintErrorIcon(g);
-	}
+    /**
+     * Configures the text field depending on the properties attributes
+     */
+    protected void refresh() {
+        final ITextPM pModel = this.getPresentationModel();
+        if (pModel != null) {
+            this.setEnabled(true);
+            this.setToolTipText(pModel.isValid() == false ? pModel.getValidationState().getMessage() : pModel.getDescription());
+            this.setEditable(pModel.isEditable());
+        } else {
+            this.setEnabled(false);
+        }
+        this.repaint();
+    }
 
-	/**
-	 * Paints an error icon on top of the given {@link Graphics} if this
-	 * component is connected to an {@link PresentationModel} and this <code>PresentationModel</code>
-	 * has an invalid validation state.
-	 *
-	 * @param g
-	 *            the <code>Graphics</code> to paint the error icon to
-	 */
-	protected void paintErrorIcon(Graphics g) {
-		ITextPM pModel = this.getPresentationModel();
-		if (pModel != null && pModel.isValid() == false) {
-			ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, false);
-		}
-	}
+    /** {@inheritDoc} */
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        this.paintErrorIcon(g);
+    }
+
+    /**
+     * Paints an error icon on top of the given {@link Graphics} if this
+     * component is connected to an {@link PresentationModel} and this
+     * <code>PresentationModel</code> has an invalid validation state.
+     * 
+     * @param g the <code>Graphics</code> to paint the error icon to
+     */
+    protected void paintErrorIcon(Graphics g) {
+        ITextPM pModel = this.getPresentationModel();
+        if (pModel != null && pModel.isValid() == false) {
+            ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, false);
+        }
+    }
 }

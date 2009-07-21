@@ -1,7 +1,6 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.swing.customizer.path;
 
@@ -23,55 +22,55 @@ import org.beanfabrics.model.TextPM;
  * @author Michael Karneim
  */
 public class PathBrowserPanelTestGUI {
-	public static void main(String[] args) {
-		PathInfo desc = PMManager.getInstance().getMetadata().getPathInfo( ProjectModel.class);
+    public static void main(String[] args) {
+        PathInfo desc = PMManager.getInstance().getMetadata().getPathInfo(ProjectModel.class);
 
-		final PathBrowserPM model = new PathBrowserPM();
-		model.setPathContext(new PathContext( desc, PMManager.getInstance().getMetadata().getPresentationModelInfo(ITextPM.class), null));
+        final PathBrowserPM model = new PathBrowserPM();
+        model.setPathContext(new PathContext(desc, PMManager.getInstance().getMetadata().getPresentationModelInfo(ITextPM.class), null));
 
-		EventQueue.invokeLater( new Runnable() {
-			public void run() {
-				PathBrowserPanel panel = new PathBrowserPanel();
-				panel.setPresentationModel(model);
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                PathBrowserPanel panel = new PathBrowserPanel();
+                panel.setPresentationModel(model);
 
-				JFrame frame = new JFrame("Path Browser");
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setLayout( new BorderLayout());
-				frame.add( panel, BorderLayout.CENTER);
-				frame.pack();
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-			}
-		});
-	}
+                JFrame frame = new JFrame("Path Browser");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setLayout(new BorderLayout());
+                frame.add(panel, BorderLayout.CENTER);
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+    }
 
-	private static class ProjectModel extends AbstractPM {
-		TextPM name = new TextPM();
-		DatePM dueDate = new DatePM();
-		ContactModel manager = new ContactModel();
-		ListPM<ContactModel> members = new ListPM<ContactModel>();
+    private static class ProjectModel extends AbstractPM {
+        TextPM name = new TextPM();
+        DatePM dueDate = new DatePM();
+        ContactModel manager = new ContactModel();
+        ListPM<ContactModel> members = new ListPM<ContactModel>();
 
-		public ProjectModel() {
-			PMManager.setup(this);
-		}
-	}
+        public ProjectModel() {
+            PMManager.setup(this);
+        }
+    }
 
-	private static class ContactModel extends AbstractPM {
-		TextPM firstname = new TextPM();
-		TextPM lastname = new TextPM();
-		DatePM dateOfBirth = new DatePM();
-		ListPM<EmailAddressModel> emailAddresses = new ListPM<EmailAddressModel>();
+    private static class ContactModel extends AbstractPM {
+        TextPM firstname = new TextPM();
+        TextPM lastname = new TextPM();
+        DatePM dateOfBirth = new DatePM();
+        ListPM<EmailAddressModel> emailAddresses = new ListPM<EmailAddressModel>();
 
-		public ContactModel() {
-			PMManager.setup(this);
-		}
-	}
+        public ContactModel() {
+            PMManager.setup(this);
+        }
+    }
 
-	private static class EmailAddressModel extends TextPM {
-		BooleanPM isMain = new BooleanPM();
+    private static class EmailAddressModel extends TextPM {
+        BooleanPM isMain = new BooleanPM();
 
-		public EmailAddressModel() {
-			PMManager.setup(this);
-		}
-	}
+        public EmailAddressModel() {
+            PMManager.setup(this);
+        }
+    }
 }

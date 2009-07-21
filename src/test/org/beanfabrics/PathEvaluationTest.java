@@ -1,9 +1,9 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics;
+
 /**
  * @author Michael Karneim
  */
@@ -24,44 +24,46 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class PathEvaluationTest {
-	public static junit.framework.Test suite() {
+    public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(PathEvaluationTest.class);
     }
 
-	private static class ProductPM extends AbstractPM {
-    	public final TextPM name = new TextPM();
-    	public ProducerPM producer;
-    	public final DimensionPM dimension = new DimensionPM();
-    	public IntegerPM price;
+    private static class ProductPM extends AbstractPM {
+        public final TextPM name = new TextPM();
+        public ProducerPM producer;
+        public final DimensionPM dimension = new DimensionPM();
+        public IntegerPM price;
 
-    	public ProductPM() {
-    		PMManager.setup(this);
-    	}
+        public ProductPM() {
+            PMManager.setup(this);
+        }
     }
 
     private static class ProducerPM extends AbstractPM {
-    	public final TextPM name = new TextPM();
-    	public final AddressPM address = new AddressPM();
-    	public ProducerPM() {
-    		PMManager.setup(this);
-    	}
+        public final TextPM name = new TextPM();
+        public final AddressPM address = new AddressPM();
+
+        public ProducerPM() {
+            PMManager.setup(this);
+        }
     }
 
     private static class AddressPM extends AbstractPM {
-    	public final TextPM street = new TextPM();
-    	public AddressPM() {
-    		PMManager.setup(this);
-    	}
+        public final TextPM street = new TextPM();
+
+        public AddressPM() {
+            PMManager.setup(this);
+        }
     }
 
     private static class DimensionPM extends AbstractPM {
-    	public final IntegerPM height = new IntegerPM();
-    	public final IntegerPM width = new IntegerPM();
-    	public final IntegerPM length = new IntegerPM();
+        public final IntegerPM height = new IntegerPM();
+        public final IntegerPM width = new IntegerPM();
+        public final IntegerPM length = new IntegerPM();
 
-    	public DimensionPM() {
-    		PMManager.setup(this);
-    	}
+        public DimensionPM() {
+            PMManager.setup(this);
+        }
     }
 
     private ProductPM root;
@@ -70,20 +72,22 @@ public class PathEvaluationTest {
     }
 
     @Before
-    public void setUp() throws Exception {
-    	root = new ProductPM();
-    	root.name.setText("iPod");
-    	root.producer = new ProducerPM();
-    	PropertySupport.get(root).refresh();
-    	root.producer.name.setText("Apple Inc.");
-    	root.producer.address.street.setText("Infinite Loop");
-    	root.dimension.height.setText("103");
-    	root.dimension.width.setText("61");
-    	root.dimension.length.setText("10");
+    public void setUp()
+        throws Exception {
+        root = new ProductPM();
+        root.name.setText("iPod");
+        root.producer = new ProducerPM();
+        PropertySupport.get(root).refresh();
+        root.producer.name.setText("Apple Inc.");
+        root.producer.address.street.setText("Infinite Loop");
+        root.dimension.height.setText("103");
+        root.dimension.width.setText("61");
+        root.dimension.length.setText("10");
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
+    public static void tearDownClass()
+        throws Exception {
     }
 
     @Test
@@ -97,6 +101,7 @@ public class PathEvaluationTest {
         assertEquals("eval.getRoot()", root, eval.getRoot());
         assertEquals("eval.getLastEntry().getProperty()", root, eval.getLastEntry().getValue());
     }
+
     @Test
     public void isCompletelyResolved2() {
         Path path = new Path("this.name");
@@ -104,6 +109,7 @@ public class PathEvaluationTest {
         assertEquals("eval.isCompletelyResolved()", true, eval.isCompletelyResolved());
         assertEquals("eval.getResult().getName()", "name", eval.getResult().getName());
     }
+
     @Test
     public void isCompletelyResolved3() {
         Path path = new Path("name");
@@ -111,6 +117,7 @@ public class PathEvaluationTest {
         assertEquals("eval.isCompletelyResolved()", true, eval.isCompletelyResolved());
         assertEquals("eval.getResult().getName()", "name", eval.getResult().getName());
     }
+
     @Test
     public void isCompletelyResolved4() {
         Path path = new Path("this.dimension.height");
@@ -142,7 +149,7 @@ public class PathEvaluationTest {
     public void evaluateShortPathToNullableProperty() {
         Path path = new Path("this.producer");
         PathEvaluation eval = new PathEvaluation(root, path);
-        assertNotNull("eval",eval);
+        assertNotNull("eval", eval);
         assertEquals("eval.isCompletelyResolved()", true, eval.isCompletelyResolved());
         assertEquals("eval.getResult().getName()", "producer", eval.getResult().getName());
         assertNotNull("eval.getResult()", eval.getResult());
@@ -154,7 +161,7 @@ public class PathEvaluationTest {
     public void evaluateShortPathToNullProperty() {
         Path path = new Path("this.price");
         PathEvaluation eval = new PathEvaluation(root, path);
-        assertNotNull("eval",eval);
+        assertNotNull("eval", eval);
         assertEquals("eval.isCompletelyResolved()", true, eval.isCompletelyResolved());
         assertEquals("eval.getResult().getName()", "price", eval.getResult().getName());
         assertNotNull("eval.getResult()", eval.getResult());
@@ -163,11 +170,11 @@ public class PathEvaluationTest {
 
     @Test
     public void evaluateShortPathToNullModel() {
-    	root.producer = null;
-    	PropertySupport.get(root).refresh();
+        root.producer = null;
+        PropertySupport.get(root).refresh();
         Path path = new Path("this.producer");
         PathEvaluation eval = new PathEvaluation(root, path);
-        assertNotNull("eval",eval);
+        assertNotNull("eval", eval);
         assertEquals("eval.isCompletelyResolved()", true, eval.isCompletelyResolved());
         assertNotNull("eval.getResult()", eval.getResult());
         assertNull("eval.getResult().getProperty()", eval.getResult().getValue());
@@ -178,7 +185,7 @@ public class PathEvaluationTest {
     public void evaluateLongPath() {
         Path path = new Path("this.producer.address.street");
         PathEvaluation eval = new PathEvaluation(root, path);
-        assertNotNull("eval",eval);
+        assertNotNull("eval", eval);
         assertEquals("eval.isCompletelyResolved()", true, eval.isCompletelyResolved());
         assertEquals("eval.getResult().getName()", "street", eval.getResult().getName());
         assertNotNull("eval.getResult()", eval.getResult());
@@ -189,14 +196,14 @@ public class PathEvaluationTest {
     public void evaluateLongInvalidPath() {
         Path path = new Path("this.producer.error.street");
         PathEvaluation eval = new PathEvaluation(root, path);
-        assertNotNull("eval",eval);
+        assertNotNull("eval", eval);
         assertEquals("eval.isCompletelyResolved()", false, eval.isCompletelyResolved());
         assertEquals("eval.getResolvedLength()", 1, eval.getResolvedLength());
         try {
-        	eval.getResult();
-        	fail("expected IllegalStateException");
+            eval.getResult();
+            fail("expected IllegalStateException");
         } catch (IllegalStateException ex) {
-        	// ok.
+            // ok.
         }
     }
 
@@ -204,27 +211,26 @@ public class PathEvaluationTest {
     public void evaluateLongInvalidPath2() {
         Path path = new Path("this.producer.address.street.nr.a.x");
         PathEvaluation eval = new PathEvaluation(root, path);
-        assertNotNull("eval",eval);
+        assertNotNull("eval", eval);
         assertEquals("eval.isCompletelyResolved()", false, eval.isCompletelyResolved());
         assertEquals("eval.getResolvedLength()", 3, eval.getResolvedLength());
     }
 
     @Test
     public void evaluateEmbeddedEditorPath() {
-    	Path path = new Path("this.dimension.height");
-    	PathEvaluation eval = new PathEvaluation(root, path);
-    	assertNotNull("eval",eval);
+        Path path = new Path("this.dimension.height");
+        PathEvaluation eval = new PathEvaluation(root, path);
+        assertNotNull("eval", eval);
         assertEquals("eval.isCompletelyResolved()", true, eval.isCompletelyResolved());
         PresentationModel pModel = eval.getResult().getValue();
         assertEquals("pM", root.dimension.height, pModel);
     }
 
-
-
     @Test
-    public void evaluate() throws EvaluationException {
-    	Path path = new Path("this.producer.name");
-    	PresentationModel result = PathEvaluation.evaluate(root, path);
-    	assertEquals("result", root.producer.name, result);
+    public void evaluate()
+        throws EvaluationException {
+        Path path = new Path("this.producer.name");
+        PresentationModel result = PathEvaluation.evaluate(root, path);
+        assertEquals("result", root.producer.name, result);
     }
 }

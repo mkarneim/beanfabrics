@@ -1,9 +1,9 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
+ * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public methods and fields are documented
+// TODO javadoc - remove this comment only when the class and all non-public
+// methods and fields are documented
 package org.beanfabrics.swing.list.cellrenderer;
 
 import java.awt.BorderLayout;
@@ -32,82 +32,81 @@ import org.beanfabrics.swing.ErrorImagePainter;
 //         we don't extend the DefaultListCellRenderer. See mantis 0000029.
 @SuppressWarnings("serial")
 public class BooleanPMListCellRenderer extends JPanel implements PMListCellRenderer {
-	private CellRendererPane cellRendererPane = new CellRendererPane();
-	private JCheckBox cb = new JCheckBox();
-	private DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
+    private CellRendererPane cellRendererPane = new CellRendererPane();
+    private JCheckBox cb = new JCheckBox();
+    private DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
 
-	private IBooleanPM model;
-	private JComponent rendererComponent;
+    private IBooleanPM model;
+    private JComponent rendererComponent;
 
-	public BooleanPMListCellRenderer() {
-		cb.setHorizontalAlignment(SwingConstants.CENTER);
-		cb.setBorderPainted(false);
-		cb.setOpaque(false);
-		this.setLayout(new BorderLayout());
-		this.add(this.cb, BorderLayout.CENTER);
-	}
-
-	/** {@inheritDoc} */
-	public boolean supportsPresentationModel(PresentationModel pModel) {
-	    return pModel instanceof IBooleanPM;
+    public BooleanPMListCellRenderer() {
+        cb.setHorizontalAlignment(SwingConstants.CENTER);
+        cb.setBorderPainted(false);
+        cb.setOpaque(false);
+        this.setLayout(new BorderLayout());
+        this.add(this.cb, BorderLayout.CENTER);
     }
 
-	/** {@inheritDoc} */
-	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-		if (value instanceof IBooleanPM == false) {
-			return null;
-		}
-		model = (IBooleanPM) value;
-		Boolean bvalue = false;
-		if (model.getBoolean() != null) {
-			bvalue = model.getBoolean();
-		}
-		cb.setSelected(bvalue);
+    /** {@inheritDoc} */
+    public boolean supportsPresentationModel(PresentationModel pModel) {
+        return pModel instanceof IBooleanPM;
+    }
 
-		if (isNimbus()) { // one more work around
-			if (rendererComponent != null) {
-				rendererComponent.setBackground(null);
-			}
-			rendererComponent = (JComponent) defaultRenderer.getListCellRendererComponent(list, "", index, isSelected, cellHasFocus);
-			if (isSelected == false && index % 2 == 1) {
-				rendererComponent.setBackground(Color.white);
-			}
-		} else {
-			rendererComponent = (JComponent) defaultRenderer.getListCellRendererComponent(list, "", index, isSelected, cellHasFocus);
-		}
+    /** {@inheritDoc} */
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        if (value instanceof IBooleanPM == false) {
+            return null;
+        }
+        model = (IBooleanPM)value;
+        Boolean bvalue = false;
+        if (model.getBoolean() != null) {
+            bvalue = model.getBoolean();
+        }
+        cb.setSelected(bvalue);
 
-		return this;
-	}
+        if (isNimbus()) { // one more work around
+            if (rendererComponent != null) {
+                rendererComponent.setBackground(null);
+            }
+            rendererComponent = (JComponent)defaultRenderer.getListCellRendererComponent(list, "", index, isSelected, cellHasFocus);
+            if (isSelected == false && index % 2 == 1) {
+                rendererComponent.setBackground(Color.white);
+            }
+        } else {
+            rendererComponent = (JComponent)defaultRenderer.getListCellRendererComponent(list, "", index, isSelected, cellHasFocus);
+        }
 
-	private boolean isNimbus() {
-		return "Nimbus".equals(UIManager.getLookAndFeel().getID());
-	}
+        return this;
+    }
 
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		cellRendererPane.paintComponent(g, rendererComponent, this, 0, 0, getWidth(), getHeight());
-	}
+    private boolean isNimbus() {
+        return "Nimbus".equals(UIManager.getLookAndFeel().getID());
+    }
 
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		// TODO shouldn't this be moved to the method paintComponent()?
-		this.paintErrorIcon(g);
-	}
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        cellRendererPane.paintComponent(g, rendererComponent, this, 0, 0, getWidth(), getHeight());
+    }
 
-	/**
-	 * Paints an error icon on top of the given {@link Graphics} if this
-	 * component is connected to an {@link PresentationModel} and this <code>PresentationModel</code>
-	 * has an invalid validation state.
-	 *
-	 * @param g
-	 *            the <code>Graphics</code> to paint the error icon to
-	 */
-	protected void paintErrorIcon(Graphics g) {
-		if (model != null && model.isValid() == false) {
-			boolean isRightAligned = cb.getHorizontalAlignment() == SwingConstants.RIGHT || cb.getHorizontalAlignment() == SwingConstants.TRAILING;
-			ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, isRightAligned);
-		}
-	}
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        // TODO shouldn't this be moved to the method paintComponent()?
+        this.paintErrorIcon(g);
+    }
+
+    /**
+     * Paints an error icon on top of the given {@link Graphics} if this
+     * component is connected to an {@link PresentationModel} and this
+     * <code>PresentationModel</code> has an invalid validation state.
+     * 
+     * @param g the <code>Graphics</code> to paint the error icon to
+     */
+    protected void paintErrorIcon(Graphics g) {
+        if (model != null && model.isValid() == false) {
+            boolean isRightAligned = cb.getHorizontalAlignment() == SwingConstants.RIGHT || cb.getHorizontalAlignment() == SwingConstants.TRAILING;
+            ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, isRightAligned);
+        }
+    }
 }
