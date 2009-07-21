@@ -15,11 +15,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.beanfabrics.Observation;
 import org.beanfabrics.Path;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.util.ReflectionUtil;
+import org.beanfabrics.util.ResourceBundleFactory;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 
@@ -34,6 +36,7 @@ import org.beanfabrics.validation.ValidationState;
  * @author Michael Karneim
  */
 public class ValidationSupport implements Support {
+    private static final String KEY_MESSAGE_VALIDATION_FAILED = "message.validationFailed";
     public static ValidationSupport get(PresentationModel model) {
 
         ValidationSupport support = model.getSupportMap().get(ValidationSupport.class);
@@ -43,7 +46,8 @@ public class ValidationSupport implements Support {
         }
         return support;
     }
-
+    
+    private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(ValidationSupport.class);
     private PresentationModel model;
     private Map<Method, ValidationMethodSupport> map = new HashMap<Method, ValidationMethodSupport>();
 
@@ -56,22 +60,24 @@ public class ValidationSupport implements Support {
 
     public void setup(Method method) {
         if (map.containsKey(method) == false) {
-            ValidationMethodSupport support = support(model, method);
+            ValidationMethodSupport support = support(model, method, resourceBundle);
             map.put(method, support);
         }
     }
 
-    private static ValidationMethodSupport support(PresentationModel pModel, Method m) {
-        return new ValidationMethodSupport(pModel, m);
+    private static ValidationMethodSupport support(PresentationModel pModel, Method m, ResourceBundle resourceBundle) {
+        return new ValidationMethodSupport(pModel, m, resourceBundle);
     }
 
     private static class ValidationMethodSupport {
+        private final ResourceBundle resourceBundle;
         private final PresentationModel owner;
         private final List<Observation> obervations = new LinkedList<Observation>();
         private final Method annotatedMethod;
         private final ValidationRule rule;
 
-        private ValidationMethodSupport(PresentationModel owner, Method annotatedMethod) {
+        private ValidationMethodSupport(PresentationModel owner, Method annotatedMethod, ResourceBundle bundle) {
+            this.resourceBundle = bundle;
             Validation anno = annotatedMethod.getAnnotation(Validation.class);
             String message = anno.message();
             boolean validWhen = anno.validWhen();
@@ -105,7 +111,8 @@ public class ValidationSupport implements Support {
         }
 
         private String getDefaultMessage() {
-            return "Validation failed"; // TODO i18n
+            String message = resourceBundle.getString(KEY_MESSAGE_VALIDATION_FAILED);
+            return message;
         }
 
         private class ValidationTargetObservation extends Observation {
