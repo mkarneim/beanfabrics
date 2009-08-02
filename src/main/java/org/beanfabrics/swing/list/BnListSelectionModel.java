@@ -26,7 +26,7 @@ import org.beanfabrics.model.PresentationModel;
 /**
  * The <code>BnListSelectionModel</code> is a {@link ListSelectionModel} that
  * decorates a {@link IListPM}.
- * 
+ *
  * @author Michael Karneim
  */
 public class BnListSelectionModel implements ListSelectionModel {
@@ -40,6 +40,7 @@ public class BnListSelectionModel implements ListSelectionModel {
          * SINGLE_SELECTION. This might annoy some people. We have to think it
          * over.
          */
+        /** {@inheritDoc} */
         public void elementsDeselected(ElementsDeselectedEvent evt) {
             //fireValueChanged(evt.getBeginIndex(), evt.getLength() );
             int index0 = Math.min(leadSelectionIndex, anchorSelectionIndex);
@@ -49,6 +50,7 @@ public class BnListSelectionModel implements ListSelectionModel {
             fireValueChanged(index0, index1 - index0 + 1);
         }
 
+        /** {@inheritDoc} */
         public void elementsSelected(ElementsSelectedEvent evt) {
             //fireValueChanged(evt.getBeginIndex(), evt.getLength() );
             int index0 = Math.min(leadSelectionIndex, anchorSelectionIndex);
@@ -61,10 +63,12 @@ public class BnListSelectionModel implements ListSelectionModel {
             fireValueChanged(index0, index1 - index0 + 1);
         }
 
+        /** {@inheritDoc} */
         public void elementChanged(ElementChangedEvent evt) {
             // we can ignore that
         }
 
+        /** {@inheritDoc} */
         public void elementsAdded(ElementsAddedEvent evt) {
             // TODO (mk) Do we need to do this here ?
             if (leadSelectionIndex >= evt.getBeginIndex()) {
@@ -72,6 +76,7 @@ public class BnListSelectionModel implements ListSelectionModel {
             }
         }
 
+        /** {@inheritDoc} */
         public void elementsRemoved(ElementsRemovedEvent evt) {
             // TODO (mk) Do we need to do this here ?
             if (leadSelectionIndex >= evt.getBeginIndex() && leadSelectionIndex <= evt.getBeginIndex() + evt.getLength()) {
@@ -79,6 +84,7 @@ public class BnListSelectionModel implements ListSelectionModel {
             }
         }
 
+        /** {@inheritDoc} */
         public void elementsReplaced(ElementsReplacedEvent evt) {
             // we can ignore that
         }
@@ -112,6 +118,7 @@ public class BnListSelectionModel implements ListSelectionModel {
         this.list.removeListListener(this.listener);
     }
 
+    /** {@inheritDoc} */
     public void addListSelectionListener(ListSelectionListener l) {
         if (l == null) {
             throw new IllegalArgumentException("l must not be null.");
@@ -119,6 +126,7 @@ public class BnListSelectionModel implements ListSelectionModel {
         eventListeners.add(l);
     }
 
+    /** {@inheritDoc} */
     public void removeListSelectionListener(ListSelectionListener l) {
         if (l == null) {
             throw new IllegalArgumentException("l must not be null.");
@@ -126,10 +134,12 @@ public class BnListSelectionModel implements ListSelectionModel {
         eventListeners.remove(l);
     }
 
+    /** {@inheritDoc} */
     public int getSelectionMode() {
         return this.selectionMode;
     }
 
+    /** {@inheritDoc} */
     public void setSelectionMode(int selectionMode) {
         switch (selectionMode) {
             case SINGLE_SELECTION:
@@ -142,10 +152,12 @@ public class BnListSelectionModel implements ListSelectionModel {
         }
     }
 
+    /** {@inheritDoc} */
     public boolean getValueIsAdjusting() {
         return valueIsAdjusting;
     }
 
+    /** {@inheritDoc} */
     public void setValueIsAdjusting(boolean valueIsAdjusting) {
         // out("BnTableSelectionModel.setValueIsAdjusting("+valueIsAdjusting+")");
         if (valueIsAdjusting == this.valueIsAdjusting) {
@@ -164,46 +176,56 @@ public class BnListSelectionModel implements ListSelectionModel {
         }
     }
 
+    /** {@inheritDoc} */
     public int getMaxSelectionIndex() {
         return list.getSelection().getMaxIndex();
     }
 
+    /** {@inheritDoc} */
     public int getMinSelectionIndex() {
         return list.getSelection().getMinIndex();
     }
 
+    /** {@inheritDoc} */
     public int getAnchorSelectionIndex() {
         return anchorSelectionIndex;
     }
 
+    /** {@inheritDoc} */
     public void setAnchorSelectionIndex(int index) {
         int oldAnchor = this.anchorSelectionIndex;
         this.anchorSelectionIndex = index;
         fireValueChangedBetween(oldAnchor, anchorSelectionIndex);
     }
 
+    /** {@inheritDoc} */
     public int getLeadSelectionIndex() {
         return leadSelectionIndex;
     }
 
+    /** {@inheritDoc} */
     public void setLeadSelectionIndex(int index) {
         int oldLead = this.leadSelectionIndex;
         this.leadSelectionIndex = index;
         fireValueChangedBetween(oldLead, anchorSelectionIndex);
     }
 
+    /** {@inheritDoc} */
     public boolean isSelectedIndex(int index) {
         return list.getSelection().contains(index);
     }
 
+    /** {@inheritDoc} */
     public boolean isSelectionEmpty() {
         return list.getSelection().isEmpty();
     }
 
+    /** {@inheritDoc} */
     public void clearSelection() {
         list.getSelection().clear();
     }
 
+    /** {@inheritDoc} */
     public void setSelectionInterval(int index0, int index1) {
         // To be compatible with standard Swing:
         if (getSelectionMode() == SINGLE_SELECTION) {
@@ -217,6 +239,7 @@ public class BnListSelectionModel implements ListSelectionModel {
         list.getSelection().setInterval(beginIndex, endIndex);
     }
 
+    /** {@inheritDoc} */
     public void addSelectionInterval(int index0, int index1) {
         if (index0 == -1 || index1 == -1) {
             return;
@@ -245,6 +268,7 @@ public class BnListSelectionModel implements ListSelectionModel {
         list.getSelection().addInterval(beginIndex, endIndex);
     }
 
+    /** {@inheritDoc} */
     public void removeSelectionInterval(int index0, int index1) {
         // out("BnTableSelectionModel.removeSelectionInterval("+index0+","+index1+")");
         int beginIndex = Math.min(index0, index1);
@@ -264,10 +288,12 @@ public class BnListSelectionModel implements ListSelectionModel {
         list.getSelection().removeInterval(beginIndex, endIndex);
     }
 
+    /** {@inheritDoc} */
     public void insertIndexInterval(int index, int length, boolean before) {
         // Within beanfabrics we don't need to do anything here.
     }
 
+    /** {@inheritDoc} */
     public void removeIndexInterval(int index0, int index1) {
         // Within beanfabrics we don't need to do anything here.
     }
