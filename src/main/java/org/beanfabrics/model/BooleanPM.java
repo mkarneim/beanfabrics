@@ -59,7 +59,7 @@ public class BooleanPM extends TextPM implements IBooleanPM {
     
 	public void setDefaultBoolean(Boolean b) {
 		if (b == null) {
-			this.setText(null);
+			this.setDefaultText(null);
 		} else {
 			Options<Boolean> options = this.getOptions();
 			String txt = options.get(b);
@@ -68,10 +68,10 @@ public class BooleanPM extends TextPM implements IBooleanPM {
 	}
 
 	public Boolean getDefaultBoolean() throws ConversionException {
-		if (this.isEmpty()) {
+		String strVal = this.getDefaultText();
+		if (strVal == null || strVal.trim().length() == 0){
 			return null;
 		}
-		String strVal = this.getDefaultText();
 		Options<Boolean> options = this.getOptions();
 		try {
 			return options.getKey(strVal);

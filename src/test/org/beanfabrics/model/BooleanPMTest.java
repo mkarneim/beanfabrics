@@ -31,57 +31,103 @@ public class BooleanPMTest {
     @AfterClass
     public static void tearDownClass()
         throws Exception {
-    }
+	}
 
-    @Test
-    public void create() {
-        new BooleanPM();
-    }
+	@Test
+	public void create() {
+		new BooleanPM();
+	}
 
-    @Test
-    public void setBoolean() {
-        BooleanPM model = new BooleanPM();
-        model.setBoolean(true);
-        assertEquals("pM.getText()", model.getOptions().get(true), model.getText());
-        model.setBoolean(false);
-        assertEquals("pM.getText()", model.getOptions().get(false), model.getText());
-        model.setBoolean(null);
-        assertEquals("pM.getText()", "", model.getText());
-    }
+	@Test
+	public void setBoolean() {
+		BooleanPM model = new BooleanPM();
+		model.setBoolean(true);
+		assertEquals("pM.getText()", model.getOptions().get(true), model.getText());
+		model.setBoolean(false);
+		assertEquals("pM.getText()", model.getOptions().get(false), model.getText());
+		model.setBoolean(null);
+		assertEquals("pM.getText()", "", model.getText());
+	}
 
-    @Test
-    public void validate() {
-        BooleanPM model = new BooleanPM();
-        model.setText("hello");
-        assertEquals("pM.isValid()", false, model.isValid());
-        model.setText(model.getOptions().get(true));
-        assertEquals("pM.isValid()", true, model.isValid());
-        model.setText(null);
-        assertEquals("pM.isValid()", false, model.isValid());
-        model.setText(model.getOptions().get(false));
-        assertEquals("pM.isValid()", true, model.isValid());
-    }
+	@Test
+	public void validate() {
+		BooleanPM model = new BooleanPM();
+		model.setText("hello");
+		assertEquals("pM.isValid()", false, model.isValid());
+		model.setText(model.getOptions().get(true));
+		assertEquals("pM.isValid()", true, model.isValid());
+		model.setText(null);
+		assertEquals("pM.isValid()", false, model.isValid());
+		model.setText(model.getOptions().get(false));
+		assertEquals("pM.isValid()", true, model.isValid());
+	}
 
-    @Test
-    public void getBoolean() {
-        BooleanPM model = new BooleanPM();
-        model.setText(model.getOptions().get(true));
-        assertEquals("pM.getBoolean()", true, model.getBoolean());
-        model.setText(model.getOptions().get(false));
-        assertEquals("pM.getBoolean()", false, model.getBoolean());
-        model.setText("");
-        assertEquals("pM.getBoolean()", null, model.getBoolean());
-    }
+	@Test
+	public void getBoolean() {
+		BooleanPM model = new BooleanPM();
+		model.setText(model.getOptions().get(true));
+		assertEquals("pM.getBoolean()", true, model.getBoolean());
+		model.setText(model.getOptions().get(false));
+		assertEquals("pM.getBoolean()", false, model.getBoolean());
+		model.setText("");
+		assertEquals("pM.getBoolean()", null, model.getBoolean());
+	}
 
-    @Test
-    public void getInvalidBoolean() {
-        BooleanPM model = new BooleanPM();
-        model.setText("hello");
-        try {
-            model.getBoolean();
-            fail("expected IllegalStateException");
-        } catch (ConversionException ex) {
-            // ok.
-        }
-    }
+	@Test
+	public void getInvalidBoolean() {
+		BooleanPM model = new BooleanPM();
+		model.setText("hello");
+		try {
+			model.getBoolean();
+			fail("expected IllegalStateException");
+		} catch (ConversionException ex) {
+			// ok.
+		}
+	}
+
+	@Test
+	public void setDefaultBoolean() {
+		BooleanPM model = new BooleanPM();
+		model.setDefaultBoolean(true);
+		assertEquals("pM.getText()", model.getOptions().get(true), model.getDefaultText());
+		model.setDefaultBoolean(false);
+		assertEquals("pM.getText()", model.getOptions().get(false), model.getDefaultText());
+		model.setDefaultBoolean(null);
+		assertEquals("pM.getText()", "", model.getDefaultText());
+	}
+
+	@Test
+	public void getDefaultBoolean() {
+		BooleanPM model = new BooleanPM();
+		model.setDefaultText(model.getOptions().get(true));
+		assertEquals("pM.getBoolean()", true, model.getDefaultBoolean());
+		model.setDefaultText(model.getOptions().get(false));
+		assertEquals("pM.getBoolean()", false, model.getDefaultBoolean());
+		model.setDefaultText(null);
+		assertEquals("pM.getBoolean()", null, model.getDefaultBoolean());
+	}
+
+	@Test
+	public void isModified() {
+		BooleanPM pModel = new BooleanPM();
+		pModel.setBoolean(true);
+		pModel.preset();
+		assertEquals("pModel.isModified()", false, pModel.isModified());
+		pModel.setBoolean(false);
+		assertEquals("pModel.isModified()", true, pModel.isModified());
+		pModel.reset();
+		assertEquals("pModel.isModified()", false, pModel.isModified());
+	}
+
+	@Test
+	public void isModifiedUseSetDefaultBoolean() {
+		BooleanPM model = new BooleanPM();
+		model.setDefaultBoolean(true);
+		model.setBoolean(true);
+		assertEquals("pModel.isModified()", false, model.isModified());
+		model.setBoolean(false);
+		assertEquals("pModel.isModified()", true, model.isModified());
+		model.setBoolean(true);
+		assertEquals("pModel.isModified()", false, model.isModified());
+	}
 }
