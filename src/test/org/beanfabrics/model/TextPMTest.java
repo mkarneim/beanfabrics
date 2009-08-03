@@ -123,7 +123,6 @@ public class TextPMTest {
         assertEquals("pModel.isModified()", true, pModel.isModified());
         pModel.reset();
         assertEquals("pModel.isModified()", false, pModel.isModified());
-
     }
 
     @Test
