@@ -84,13 +84,24 @@ public class TextPM extends AbstractValuePM implements ITextPM {
         this.getPropertyChangeSupport().firePropertyChange("modified", old, this.modified);
     }
 
-    /** {@inheritDoc} */
-    public String getDefaultText() {
+    /**
+     * Get the default text value of this model.
+     * 
+     * @return the default text value
+     */
+    protected String getDefaultText() {
         return defaultText;
     }
 
-    /** {@inheritDoc} */
-    public void setDefaultText(String aText) {
+    /**
+     * Sets the default text value of this model.
+     * <p>
+     * Use {@link #reset()} to set the model's value to it's default value or
+     * {@link #preset()} to set the model's default value to it's current value.
+     * 
+     * @param aText the text to set as default value
+     */
+    protected void setDefaultText(String aText) {
         if (aText == null) {
             aText = "";
         }

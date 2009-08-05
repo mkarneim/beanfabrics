@@ -55,30 +55,7 @@ public class BooleanPM extends TextPM implements IBooleanPM {
         } catch (NoSuchElementException ex) {
             throw new ConversionException("strVal='" + strVal + "' is not a boolean", ex);
         }
-    }
-    
-	public void setDefaultBoolean(Boolean b) {
-		if (b == null) {
-			this.setDefaultText(null);
-		} else {
-			Options<Boolean> options = this.getOptions();
-			String txt = options.get(b);
-			this.setDefaultText(txt);
-		}
-	}
-
-	public Boolean getDefaultBoolean() throws ConversionException {
-		String strVal = this.getDefaultText();
-		if (strVal == null || strVal.trim().length() == 0){
-			return null;
-		}
-		Options<Boolean> options = this.getOptions();
-		try {
-			return options.getKey(strVal);
-		} catch (NoSuchElementException ex) {
-			throw new ConversionException("strVal='" + strVal + "' is not a boolean", ex);
-		}
-	}
+    }    
 
     protected Options<Boolean> createDefaultOptions() {
         Options<Boolean> result = new Options<Boolean>();

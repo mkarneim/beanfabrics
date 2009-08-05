@@ -86,28 +86,6 @@ public class BooleanPMTest {
 	}
 
 	@Test
-	public void setDefaultBoolean() {
-		BooleanPM model = new BooleanPM();
-		model.setDefaultBoolean(true);
-		assertEquals("pM.getText()", model.getOptions().get(true), model.getDefaultText());
-		model.setDefaultBoolean(false);
-		assertEquals("pM.getText()", model.getOptions().get(false), model.getDefaultText());
-		model.setDefaultBoolean(null);
-		assertEquals("pM.getText()", "", model.getDefaultText());
-	}
-
-	@Test
-	public void getDefaultBoolean() {
-		BooleanPM model = new BooleanPM();
-		model.setDefaultText(model.getOptions().get(true));
-		assertEquals("pM.getBoolean()", true, model.getDefaultBoolean());
-		model.setDefaultText(model.getOptions().get(false));
-		assertEquals("pM.getBoolean()", false, model.getDefaultBoolean());
-		model.setDefaultText(null);
-		assertEquals("pM.getBoolean()", null, model.getDefaultBoolean());
-	}
-
-	@Test
 	public void isModified() {
 		BooleanPM pModel = new BooleanPM();
 		pModel.setBoolean(true);
@@ -119,15 +97,4 @@ public class BooleanPMTest {
 		assertEquals("pModel.isModified()", false, pModel.isModified());
 	}
 
-	@Test
-	public void isModifiedUseSetDefaultBoolean() {
-		BooleanPM model = new BooleanPM();
-		model.setDefaultBoolean(true);
-		model.setBoolean(true);
-		assertEquals("pModel.isModified()", false, model.isModified());
-		model.setBoolean(false);
-		assertEquals("pModel.isModified()", true, model.isModified());
-		model.setBoolean(true);
-		assertEquals("pModel.isModified()", false, model.isModified());
-	}
 }
