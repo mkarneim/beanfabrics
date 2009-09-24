@@ -18,7 +18,7 @@ import org.beanfabrics.validation.ValidationState;
  * The <code>TextPM</code> is a presentation model for a text value.
  * <p>
  * The default value is a empty string.
- * 
+ *
  * @author Michael Karneim
  */
 public class TextPM extends AbstractValuePM implements ITextPM {
@@ -86,7 +86,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
 
     /**
      * Get the default text value of this model.
-     * 
+     *
      * @return the default text value
      */
     protected String getDefaultText() {
@@ -98,7 +98,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
      * <p>
      * Use {@link #reset()} to set the model's value to it's default value or
      * {@link #preset()} to set the model's default value to it's current value.
-     * 
+     *
      * @param aText the text to set as default value
      */
     protected void setDefaultText(String aText) {
@@ -119,7 +119,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
     /**
      * If set to <code>true</code> this <code>TextPM</code> is only valid if
      * it's text content is contained in it's options.
-     * 
+     *
      * @param restrictedToOptions
      */
     public void setRestrictedToOptions(boolean restrictedToOptions) {
@@ -181,6 +181,11 @@ public class TextPM extends AbstractValuePM implements ITextPM {
 
     public Comparable getComparable() {
         return new TextComparable();
+    }
+
+    @Override
+    public String toString() {
+    	return text;
     }
 
     protected class TextComparable implements Comparable {
