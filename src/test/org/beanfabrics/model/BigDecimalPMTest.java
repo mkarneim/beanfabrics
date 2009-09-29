@@ -79,21 +79,15 @@ public class BigDecimalPMTest {
     
     @Test
     public void formatting() {
-    	Locale old = Locale.getDefault();
-        try {
-            Locale.setDefault(Locale.US);
-            BigDecimalPM model = new BigDecimalPM();
-        	DecimalFormat format = new DecimalFormat("#.##");
-        	model.setFormat( format);
-            model.setText("125.5678");
-            assertEquals("model.getText()", "125.5678", model.getText());
-            
-            model.reformat();
-            
-            assertEquals("pM.isValid()", true, model.isValid());
-            assertEquals("model.getText()", "125.57", model.getText());
-        } finally {
-            Locale.setDefault(old);
-        }
+        BigDecimalPM model = new BigDecimalPM();
+    	DecimalFormat format = new DecimalFormat("#.##");
+    	model.setFormat( format);
+        model.setText("125.5678");
+        assertEquals("model.getText()", "125.5678", model.getText());
+        
+        model.reformat();
+        
+        assertEquals("pM.isValid()", true, model.isValid());
+        assertEquals("model.getText()", "125.57", model.getText());
     }
 }
