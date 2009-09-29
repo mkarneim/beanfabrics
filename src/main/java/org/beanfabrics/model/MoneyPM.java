@@ -59,7 +59,7 @@ public class MoneyPM extends BigDecimalPM {
         if (old == newFormat) {
             return;
         }
-        this.simplifiedFormat = newFormat;
+        this.simplifiedFormat = (DecimalFormat)newFormat.clone();
         this.revalidate();
         this.getPropertyChangeSupport().firePropertyChange("simplifiedFormat", old, newFormat); //$NON-NLS-1$
     }

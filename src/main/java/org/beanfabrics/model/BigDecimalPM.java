@@ -35,6 +35,10 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         this.getValidator().add(new DefaultValidationRule());
     }
 
+    /**
+     * Parses the content and formats it according to this model's format.
+     * @see #setFormat(DecimalFormat)
+     */
     @Override
     public void reformat() {
         try {
@@ -54,19 +58,28 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         return result;
     }
 
+    /**
+     * Returns the format.
+     * @return the format
+     * @see #reformat()
+     */
     public DecimalFormat getFormat() {
         return format;
     }
 
-    public void setFormat(DecimalFormat newFormat) {
-        if (newFormat.isParseBigDecimal() == false) {
-            throw new IllegalArgumentException("newFormat must parse BigDecimal");
-        }
+    /**
+     * Sets the format of this model. The format will be cloned prior use.
+     * @param newFormat the new format for this model
+     * @see #reformat()
+     */
+    public void setFormat(DecimalFormat newFormat) { 
         Format old = this.format;
         if (old == newFormat) {
             return;
         }
-        this.format = newFormat;
+        DecimalFormat clonedformat = (DecimalFormat)newFormat.clone();
+        clonedformat.setParseBigDecimal(true);
+        this.format = clonedformat;
         this.revalidate();
         this.getPropertyChangeSupport().firePropertyChange("format", old, newFormat); //$NON-NLS-1$
     }

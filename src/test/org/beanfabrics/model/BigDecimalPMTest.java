@@ -7,6 +7,7 @@ package org.beanfabrics.model;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 import junit.framework.JUnit4TestAdapter;
@@ -71,6 +72,26 @@ public class BigDecimalPMTest {
             assertFalse("model.isValid()", model.isValid());
             String message = model.getValidationState().getMessage();
             assertEquals("message", "Dies ist keine korrekte Zahl", message);
+        } finally {
+            Locale.setDefault(old);
+        }
+    }
+    
+    @Test
+    public void formatting() {
+    	Locale old = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.US);
+            BigDecimalPM model = new BigDecimalPM();
+        	DecimalFormat format = new DecimalFormat("#.##");
+        	model.setFormat( format);
+            model.setText("125.5678");
+            assertEquals("model.getText()", "125.5678", model.getText());
+            
+            model.reformat();
+            
+            assertEquals("pM.isValid()", true, model.isValid());
+            assertEquals("model.getText()", "125.57", model.getText());
         } finally {
             Locale.setDefault(old);
         }
