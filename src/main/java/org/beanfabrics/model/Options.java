@@ -27,7 +27,7 @@ import org.beanfabrics.event.OptionsListener;
  * <li>values must be unique</li>
  * <li>values must not be null</li>
  * </ul>
- * 
+ *
  * @param <K> the key type used in this options.
  * @author Michael Karneim
  */
@@ -36,7 +36,7 @@ public class Options<K> {
     private final Map<K, String> map = new LinkedHashMap<K, String>();
     private final List<String> values = new ArrayList<String>();
 
-    private final CopyOnWriteArrayList<OptionsListener> listeners = new CopyOnWriteArrayList<OptionsListener>();
+    private final CopyOnWriteArrayList<OptionsListener> optionsListeners = new CopyOnWriteArrayList<OptionsListener>();
 
     public Map<K, String> toMap() {
         return new LinkedHashMap<K, String>(map);
@@ -177,19 +177,19 @@ public class Options<K> {
         if (l == null) {
             throw new IllegalArgumentException("l must not be null.");
         }
-        listeners.add(l);
+        optionsListeners.add(l);
     }
 
     public void removeOptionsListener(OptionsListener l) {
         if (l == null) {
             throw new IllegalArgumentException("l must not be null.");
         }
-        listeners.remove(l);
+        optionsListeners.remove(l);
     }
 
     protected void fireChanged() {
         OptionsEvent evt = new OptionsEvent(this);
-        for (OptionsListener l : listeners) {
+        for (OptionsListener l : optionsListeners) {
             l.changed(evt);
         }
     }

@@ -22,7 +22,7 @@ public class DefaultContext implements Context {
     private final static Logger LOG = LoggerFactory.getLogger(DefaultContext.class);
 
     private ContextListener parentListener;
-    private final CopyOnWriteArrayList<ContextListener> listener = new CopyOnWriteArrayList<ContextListener>();;
+    private final CopyOnWriteArrayList<ContextListener> contextListeners = new CopyOnWriteArrayList<ContextListener>();;
     private final List<ServiceEntry> serviceEntries = new LinkedList<ServiceEntry>();
     private final List<ServiceEntry> unmodifiableServiceEntries;
     private final List<Context> parents;
@@ -84,40 +84,40 @@ public class DefaultContext implements Context {
         if (l == null) {
             throw new IllegalArgumentException("l must not be null.");
         }
-        listener.add(l);
+        contextListeners.add(l);
     }
 
     public void removeContextListener(ContextListener l) {
         if (l == null) {
             throw new IllegalArgumentException("l must not be null.");
         }
-        listener.remove(l);
+        contextListeners.remove(l);
     }
 
     protected void fireParentAdded(Context parent) {
         ParentAddedEvent evt = new ParentAddedEvent(this, parent);
-        for (ContextListener l : listener) {
+        for (ContextListener l : contextListeners) {
             l.parentAdded(evt);
         }
     }
 
     protected void fireParentRemoved(Context parent) {
         ParentRemovedEvent evt = new ParentRemovedEvent(this, parent);
-        for (ContextListener l : listener) {
+        for (ContextListener l : contextListeners) {
             l.parentRemoved(evt);
         }
     }
 
     protected void fireServiceAdded(ServiceEntry entry) {
         ServiceAddedEvent evt = new ServiceAddedEvent(this, entry);
-        for (ContextListener l : listener) {
+        for (ContextListener l : contextListeners) {
             l.serviceAdded(evt);
         }
     }
 
     protected void fireServiceRemoved(ServiceEntry entry) {
         ServiceRemovedEvent evt = new ServiceRemovedEvent(this, entry);
-        for (ContextListener l : listener) {
+        for (ContextListener l : contextListeners) {
             l.serviceRemoved(evt);
         }
     }

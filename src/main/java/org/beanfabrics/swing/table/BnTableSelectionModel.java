@@ -83,7 +83,7 @@ public class BnTableSelectionModel implements ListSelectionModel {
         }
     };
 
-    private final CopyOnWriteArrayList<ListSelectionListener> eventListener = new CopyOnWriteArrayList<ListSelectionListener>();
+    private final CopyOnWriteArrayList<ListSelectionListener> eventListeners = new CopyOnWriteArrayList<ListSelectionListener>();
     private int selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
     private boolean valueIsAdjusting = false;
 
@@ -117,7 +117,7 @@ public class BnTableSelectionModel implements ListSelectionModel {
         if (l == null) {
             throw new IllegalArgumentException("l must not be null.");
         }
-        eventListener.add(l);
+        eventListeners.add(l);
     }
 
     /** {@inheritDoc} */
@@ -125,7 +125,7 @@ public class BnTableSelectionModel implements ListSelectionModel {
         if (l == null) {
             throw new IllegalArgumentException("l must not be null.");
         }
-        eventListener.remove(l);
+        eventListeners.remove(l);
     }
 
     /** {@inheritDoc} */
@@ -316,11 +316,11 @@ public class BnTableSelectionModel implements ListSelectionModel {
             markDirty(beginIndex);
             markDirty(beginIndex + length - 1);
         }
-        if (eventListener.isEmpty()) {
+        if (eventListeners.isEmpty()) {
             return;
         }
         ListSelectionEvent evt = new ListSelectionEvent(this, beginIndex, beginIndex + length - 1, this.valueIsAdjusting);
-        for (ListSelectionListener l : eventListener) {
+        for (ListSelectionListener l : eventListeners) {
             l.valueChanged(evt);
         }
     }
