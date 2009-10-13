@@ -13,7 +13,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.List;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -21,6 +23,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.event.CellEditorListener;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
 import org.beanfabrics.ModelProvider;
@@ -46,34 +50,55 @@ import org.beanfabrics.swing.table.BnTable;
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
-public class BnTableCellEditor extends AbstractCellEditor implements TableCellEditor {
-    private ActionListener actionListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            fireEditingStopped();
-        }
-    };
-    private int clickCountToStart = 1;
-    private MyBnTextField textField;
-    private MyBnComboBox comboBox;
-    private MyBnCheckBox checkBox;
+public class BnTableCellEditor implements TableCellEditor {
+    
+    private int clickCountToStart = 1;    
     private EmptyPanel emptyPanel;
 
     private JComponent currentComponent;
+    private TableCellEditor currentCellEditor;
+
+    private final List<TableCellEditor> installedEditors = new ArrayList<TableCellEditor>();
 
     public BnTableCellEditor() {
         super();
+        installDefaultEditors();
+    }
+
+    private void installDefaultEditors() {
+        installedEditors.add(new MyBnCheckBoxCellEditor());
+        installedEditors.add(new MyBnComboBoxCellEditor());
+        installedEditors.add(new MyBnTextFieldCellEditor());
+    }
+
+    public List<TableCellEditor> getInstalledEditors() {
+        return installedEditors;
     }
 
     /** {@inheritDoc} */
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        JComponent result = chooseComponentFor((PresentationModel)value);
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {        
+        JComponent result = null;
+        TableCellEditor editor = null;
+        for (TableCellEditor aEd : installedEditors) {
+            Component aComp = aEd.getTableCellEditorComponent(table, value, isSelected, row, column);
+            if (aComp != null && aComp instanceof JComponent) {
+                result = (JComponent)aComp;
+                editor = aEd;
+                break;
+            }
+        }
+        if ( result == null) {
+            result = getEmptyPanel();
+        }
+        
         BnColumn bnCol = getBnColumn(table, column);
-
+                
         if (bnCol.getOperationPath() != null) {
             result = createButtonDecorator(table, row, result, bnCol);
         }
 
         this.setCurrentComponent(result);
+        this.setCurrentCellEditor(editor);
         return result;
     }
 
@@ -93,61 +118,22 @@ public class BnTableCellEditor extends AbstractCellEditor implements TableCellEd
         BnTable bnTable = (BnTable)table;
         BnColumn result = bnTable.getColumns()[column];
         return result;
-    }
-
-    protected JComponent chooseComponentFor(PresentationModel pModel) {
-        final JComponent result;
-        // choose the appropriate component for the given model
-        if (pModel instanceof IBooleanPM) {
-            IBooleanPM booleanModel = (IBooleanPM)pModel;
-            result = getCheckBox(booleanModel);
-        } else if (pModel instanceof ITextPM) {
-            ITextPM textModel = (ITextPM)pModel;
-            if (textModel.getOptions() != null) {
-                result = getComboBox(textModel);
-            } else {
-                result = getTextField(textModel);
-            }
-        } else {
-            result = getEmptyPanel();
-        }
-        return result;
-    }
+    }   
 
     public JComponent getCurrentComponent() {
         return currentComponent;
     }
 
     public void setCurrentComponent(JComponent currentComponent) {
-        this.currentComponent = currentComponent;
+        this.currentComponent = currentComponent;        
+    }   
+
+    public TableCellEditor getCurrentCellEditor() {
+        return currentCellEditor;
     }
 
-    private MyBnTextField getTextField(ITextPM textPM) {
-        if (this.textField == null) {
-            this.textField = new MyBnTextField();
-            this.textField.addActionListener(this.actionListener);
-        }
-        this.textField.setPresentationModel(textPM);
-        return this.textField;
-    }
-
-    private MyBnComboBox getComboBox(ITextPM textPM) {
-        if (this.comboBox == null) {
-            this.comboBox = new MyBnComboBox();
-            this.comboBox.addActionListener(this.actionListener);
-        }
-        this.comboBox.setPresentationModel(textPM);
-
-        return this.comboBox;
-    }
-
-    private MyBnCheckBox getCheckBox(IBooleanPM booleanPM) {
-        if (this.checkBox == null) {
-            this.checkBox = new MyBnCheckBox();
-            this.checkBox.addActionListener(this.actionListener);
-        }
-        this.checkBox.setPresentationModel(booleanPM);
-        return this.checkBox;
+    public void setCurrentCellEditor(TableCellEditor currentCellEditor) {
+        this.currentCellEditor = currentCellEditor;
     }
 
     private EmptyPanel getEmptyPanel() {
@@ -157,51 +143,135 @@ public class BnTableCellEditor extends AbstractCellEditor implements TableCellEd
         return this.emptyPanel;
     }
 
+    
     /** {@inheritDoc} */
     public Object getCellEditorValue() {
         return null; // we don't support getting the value with this method
     }
-
-    @Override
+    /** {@inheritDoc} */
     public boolean isCellEditable(EventObject anEvent) {
         if (anEvent instanceof MouseEvent) {
             return ((MouseEvent)anEvent).getClickCount() >= clickCountToStart;
         }
         return true;
     }
-
-    @Override
+    /** {@inheritDoc} */
     public boolean shouldSelectCell(EventObject anEvent) {
-        return true;
+        return currentCellEditor.shouldSelectCell(anEvent);
     }
-
-    @Override
+    /** {@inheritDoc} */
     public void cancelCellEditing() {
-        fireEditingCanceled();
+        currentCellEditor.cancelCellEditing();
         this.setCurrentComponent(null);
+        this.setCurrentCellEditor(null);
     }
-
-    @Override
+    /** {@inheritDoc} */
     public boolean stopCellEditing() {
-        fireEditingStopped();
+        boolean result = currentCellEditor.stopCellEditing();
         this.setCurrentComponent(null);
-        return true;
+        this.setCurrentCellEditor(null);
+        return result;
     }
+    /** {@inheritDoc} */
+    public void addCellEditorListener(CellEditorListener l) {
+        currentCellEditor.addCellEditorListener(l);
+    }
+    /** {@inheritDoc} */
+    public void removeCellEditorListener(CellEditorListener l) {
+        currentCellEditor.removeCellEditorListener(l);        
+    }
+    
+    
+    
 
-    private static class MyBnTextField extends BnTextField {
-        public MyBnTextField() {
-            this.setSelectAllOnFocusGainedEnabled(false);
-            this.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+    private static class MyBnTextFieldCellEditor extends AbstractCellEditor implements TableCellEditor {
+        private BnTextField textField = new BnTextField();
+        private ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {                
+                fireEditingStopped();
+            }
+        };
+        
+        public MyBnTextFieldCellEditor() {
+            textField.setSelectAllOnFocusGainedEnabled(false);
+            textField.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            textField.addActionListener(this.actionListener);
         }
-    }
-
-    private static class MyBnComboBox extends BnComboBox {
-    }
-
-    private static class MyBnCheckBox extends BnCheckBox {
-        public MyBnCheckBox() {
-            setHorizontalAlignment(SwingConstants.CENTER);
+        
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            if ( value instanceof ITextPM) {
+                textField.setPresentationModel((ITextPM)value);
+                return textField;
+            }
+            return null;
         }
+
+        public Object getCellEditorValue() {
+            // in Beanfabrics we don't need to return a value
+            return null;
+        }
+
+    }
+
+    private static class MyBnComboBoxCellEditor extends AbstractCellEditor implements TableCellEditor {
+        private BnComboBox comboBox = new BnComboBox();
+        private ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fireEditingStopped();
+            }
+        };
+        
+        public MyBnComboBoxCellEditor() {
+            super();
+            comboBox.addActionListener(actionListener);
+        }
+
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            if ( value instanceof ITextPM ) {
+                if (((ITextPM)value).getOptions()!=null) {
+                   comboBox.setPresentationModel((ITextPM)value); 
+                   return comboBox;
+                }
+            }
+            return null;
+        }
+
+        public Object getCellEditorValue() {
+         // in Beanfabrics we don't need to return a value
+            return null;
+        }        
+    }
+
+    private static class MyBnCheckBoxCellEditor extends AbstractCellEditor implements TableCellEditor {
+        private BnCheckBox checkBox = new BnCheckBox();
+        private ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {                
+                fireEditingStopped();
+            }
+        };
+        
+        public MyBnCheckBoxCellEditor() {
+            checkBox.setHorizontalAlignment(SwingConstants.CENTER);
+            checkBox.addActionListener(actionListener);
+        }
+        
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            if ( value instanceof IBooleanPM ) {
+                checkBox.setPresentationModel((IBooleanPM)value);
+                return checkBox;
+            }
+            return null;
+        }
+
+        public Object getCellEditorValue() {
+         // in Beanfabrics we don't need to return a value
+            return null;
+        } 
+        
+        public boolean shouldSelectCell(EventObject anEvent) {
+            return false;
+        }
+                
     }
 
     private static class EmptyPanel extends JPanel {
@@ -235,4 +305,7 @@ public class BnTableCellEditor extends AbstractCellEditor implements TableCellEd
             this.leftComponent.requestFocus();
         }
     }
+
+    
+    
 }
