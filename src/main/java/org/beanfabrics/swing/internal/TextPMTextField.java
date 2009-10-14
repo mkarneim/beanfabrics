@@ -8,10 +8,12 @@ package org.beanfabrics.swing.internal;
 
 import java.awt.Graphics;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.text.Document;
 
@@ -20,6 +22,7 @@ import org.beanfabrics.event.WeakPropertyChangeListener;
 import org.beanfabrics.model.ITextPM;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.ErrorImagePainter;
+import org.beanfabrics.swing.KeyBindingProcessor;
 
 /**
  * The <code>TextPMTextField</code> is a {@link JTextField} that is a view on an
@@ -28,7 +31,8 @@ import org.beanfabrics.swing.ErrorImagePainter;
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
-public class TextPMTextField extends JTextField implements View<ITextPM> {
+public class TextPMTextField extends JTextField implements KeyBindingProcessor, View<ITextPM> {
+    
     private boolean selectAllOnFocusGainedEnabled = true;
     private boolean reformatOnFocusLostEnabled = true;
     private BnPlainDocument document;
@@ -182,5 +186,9 @@ public class TextPMTextField extends JTextField implements View<ITextPM> {
             boolean isRightAligned = this.getHorizontalAlignment() == SwingConstants.RIGHT || this.getHorizontalAlignment() == SwingConstants.TRAILING;
             ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, isRightAligned);
         }
+    }
+    
+    public boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
+        return super.processKeyBinding(ks, e, condition, pressed);
     }
 }

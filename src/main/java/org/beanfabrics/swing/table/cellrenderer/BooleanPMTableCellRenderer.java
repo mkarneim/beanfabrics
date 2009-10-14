@@ -21,6 +21,7 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import org.beanfabrics.model.ConversionException;
 import org.beanfabrics.model.IBooleanPM;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.ErrorImagePainter;
@@ -57,8 +58,14 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
         }
         model = (IBooleanPM)value;
         Boolean bvalue = false;
-        if (model.getBoolean() != null) {
-            bvalue = model.getBoolean();
+        try {
+            Boolean modelBoolean = model.getBoolean();
+            if (modelBoolean != null) {
+                bvalue = modelBoolean;
+            }
+        } catch (ConversionException e) {
+            // can't convert model value to Boolean object
+            // -> handle it as 'false'
         }
         cb.setSelected(bvalue);
 

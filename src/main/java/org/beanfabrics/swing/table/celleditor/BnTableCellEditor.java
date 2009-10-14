@@ -9,9 +9,11 @@ package org.beanfabrics.swing.table.celleditor;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.EventObject;
@@ -22,9 +24,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.CellEditorListener;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 
 import org.beanfabrics.ModelProvider;
@@ -36,6 +41,7 @@ import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.BnCheckBox;
 import org.beanfabrics.swing.BnComboBox;
 import org.beanfabrics.swing.BnTextField;
+import org.beanfabrics.swing.KeyBindingProcessor;
 import org.beanfabrics.swing.table.BnColumn;
 import org.beanfabrics.swing.table.BnTable;
 
@@ -51,8 +57,8 @@ import org.beanfabrics.swing.table.BnTable;
  */
 @SuppressWarnings("serial")
 public class BnTableCellEditor implements TableCellEditor {
-    
-    private int clickCountToStart = 1;    
+
+    private int clickCountToStart = 1;
     private EmptyPanel emptyPanel;
 
     private JComponent currentComponent;
@@ -76,7 +82,7 @@ public class BnTableCellEditor implements TableCellEditor {
     }
 
     /** {@inheritDoc} */
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {        
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         JComponent result = null;
         TableCellEditor editor = null;
         for (TableCellEditor aEd : installedEditors) {
@@ -87,12 +93,12 @@ public class BnTableCellEditor implements TableCellEditor {
                 break;
             }
         }
-        if ( result == null) {
+        if (result == null) {
             result = getEmptyPanel();
         }
-        
+
         BnColumn bnCol = getBnColumn(table, column);
-                
+
         if (bnCol.getOperationPath() != null) {
             result = createButtonDecorator(table, row, result, bnCol);
         }
@@ -118,15 +124,15 @@ public class BnTableCellEditor implements TableCellEditor {
         BnTable bnTable = (BnTable)table;
         BnColumn result = bnTable.getColumns()[column];
         return result;
-    }   
+    }
 
     public JComponent getCurrentComponent() {
         return currentComponent;
     }
 
     public void setCurrentComponent(JComponent currentComponent) {
-        this.currentComponent = currentComponent;        
-    }   
+        this.currentComponent = currentComponent;
+    }
 
     public TableCellEditor getCurrentCellEditor() {
         return currentCellEditor;
@@ -143,11 +149,11 @@ public class BnTableCellEditor implements TableCellEditor {
         return this.emptyPanel;
     }
 
-    
     /** {@inheritDoc} */
     public Object getCellEditorValue() {
         return null; // we don't support getting the value with this method
     }
+
     /** {@inheritDoc} */
     public boolean isCellEditable(EventObject anEvent) {
         if (anEvent instanceof MouseEvent) {
@@ -155,16 +161,19 @@ public class BnTableCellEditor implements TableCellEditor {
         }
         return true;
     }
+
     /** {@inheritDoc} */
     public boolean shouldSelectCell(EventObject anEvent) {
         return currentCellEditor.shouldSelectCell(anEvent);
     }
+
     /** {@inheritDoc} */
     public void cancelCellEditing() {
         currentCellEditor.cancelCellEditing();
         this.setCurrentComponent(null);
         this.setCurrentCellEditor(null);
     }
+
     /** {@inheritDoc} */
     public boolean stopCellEditing() {
         boolean result = currentCellEditor.stopCellEditing();
@@ -172,35 +181,43 @@ public class BnTableCellEditor implements TableCellEditor {
         this.setCurrentCellEditor(null);
         return result;
     }
+
     /** {@inheritDoc} */
     public void addCellEditorListener(CellEditorListener l) {
         currentCellEditor.addCellEditorListener(l);
     }
+
     /** {@inheritDoc} */
     public void removeCellEditorListener(CellEditorListener l) {
-        currentCellEditor.removeCellEditorListener(l);        
+        currentCellEditor.removeCellEditorListener(l);
     }
-    
-    
-    
 
     private static class MyBnTextFieldCellEditor extends AbstractCellEditor implements TableCellEditor {
-        private BnTextField textField = new BnTextField();
-        private ActionListener actionListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {                
+        
+        private ActionListener stopAction = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 fireEditingStopped();
             }
         };
-        
-        public MyBnTextFieldCellEditor() {
-            textField.setSelectAllOnFocusGainedEnabled(false);
-            textField.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-            textField.addActionListener(this.actionListener);
+
+        public MyBnTextFieldCellEditor() {            
         }
         
+        private BnTextField createBnTextField() {
+            BnTextField textField = new BnTextField();
+            textField.setSelectAllOnFocusGainedEnabled(false);
+            //textField.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            textField.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
+            textField.addActionListener(this.stopAction);
+            return textField;
+        }
+
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            if ( value instanceof ITextPM) {
+            if (value instanceof ITextPM) {
+                BnTextField textField = createBnTextField();
                 textField.setPresentationModel((ITextPM)value);
+                textField.setSelectAllOnFocusGainedEnabled(!isSelected);
+                textField.selectAll();
                 return textField;
             }
             return null;
@@ -214,49 +231,76 @@ public class BnTableCellEditor implements TableCellEditor {
     }
 
     private static class MyBnComboBoxCellEditor extends AbstractCellEditor implements TableCellEditor {
-        private BnComboBox comboBox = new BnComboBox();
-        private ActionListener actionListener = new ActionListener() {
+            
+        private ActionListener stopAction = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 fireEditingStopped();
             }
         };
-        
+        private PopupMenuListener popupListener = new PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                // do nothing special
+            }
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                fireEditingStopped();
+            }
+
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                fireEditingCanceled();
+            }
+        };
+
         public MyBnComboBoxCellEditor() {
             super();
-            comboBox.addActionListener(actionListener);
+        }
+
+        private BnComboBox createBnComboBox() {
+            BnComboBox comboBox = new BnComboBox();
+            comboBox.addPopupMenuListener(popupListener);
+            comboBox.registerKeyboardAction(stopAction, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
+            return comboBox;
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            if ( value instanceof ITextPM ) {
-                if (((ITextPM)value).getOptions()!=null) {
-                   comboBox.setPresentationModel((ITextPM)value); 
-                   return comboBox;
+            if (value instanceof ITextPM) {
+                if (((ITextPM)value).getOptions() != null) {
+                    BnComboBox comboBox = createBnComboBox();
+                    comboBox.setPresentationModel((ITextPM)value);
+                    return comboBox;
                 }
             }
             return null;
         }
 
         public Object getCellEditorValue() {
-         // in Beanfabrics we don't need to return a value
+            // in Beanfabrics we don't need to return a value
             return null;
-        }        
+        }
     }
 
     private static class MyBnCheckBoxCellEditor extends AbstractCellEditor implements TableCellEditor {
-        private BnCheckBox checkBox = new BnCheckBox();
-        private ActionListener actionListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {                
+        
+        private ActionListener stopAction = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 fireEditingStopped();
             }
         };
-        
+
         public MyBnCheckBoxCellEditor() {
-            checkBox.setHorizontalAlignment(SwingConstants.CENTER);
-            checkBox.addActionListener(actionListener);
+            
         }
         
+        private BnCheckBox createBnCheckBox() {
+            BnCheckBox checkBox = new BnCheckBox();
+            checkBox.setHorizontalAlignment(SwingConstants.CENTER);
+            checkBox.addActionListener(stopAction);
+            return checkBox;
+        }
+
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            if ( value instanceof IBooleanPM ) {
+            if (value instanceof IBooleanPM) {
+                BnCheckBox checkBox = createBnCheckBox();
                 checkBox.setPresentationModel((IBooleanPM)value);
                 return checkBox;
             }
@@ -264,14 +308,14 @@ public class BnTableCellEditor implements TableCellEditor {
         }
 
         public Object getCellEditorValue() {
-         // in Beanfabrics we don't need to return a value
+            // in Beanfabrics we don't need to return a value
             return null;
-        } 
-        
+        }
+
         public boolean shouldSelectCell(EventObject anEvent) {
             return false;
         }
-                
+
     }
 
     private static class EmptyPanel extends JPanel {
@@ -294,6 +338,7 @@ public class BnTableCellEditor implements TableCellEditor {
             this.add(leftComponent, BorderLayout.CENTER);
             this.add(button, BorderLayout.EAST);
             this.setOpaque(false);
+            this.modelProvider.setPresentationModel(rootModel);
         }
 
         public void dismiss() {
@@ -304,8 +349,23 @@ public class BnTableCellEditor implements TableCellEditor {
         public void requestFocus() {
             this.leftComponent.requestFocus();
         }
+
+        protected boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
+            boolean result = super.processKeyBinding(ks, e, condition, pressed);
+            if (result == false) {
+                if (leftComponent instanceof KeyBindingProcessor) {
+                    ((KeyBindingProcessor)leftComponent).processKeyBinding(ks, e, condition, pressed);
+                }
+
+                //                final KeyEvent newEvt = new KeyEvent(leftComponent, e.getID(), e.getWhen(), e.getModifiers(), e.getKeyCode(), e.getKeyChar(), e.getKeyLocation());
+                //                EventQueue.invokeLater( new Runnable() {
+                //                    public void run() {
+                //                        leftComponent.dispatchEvent( newEvt);         
+                //                    }                    
+                //                });                       
+            }
+            return result;
+        }
     }
 
-    
-    
 }

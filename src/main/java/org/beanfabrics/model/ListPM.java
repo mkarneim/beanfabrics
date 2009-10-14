@@ -615,12 +615,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     protected ValidationRule createDefaultValidationRule() {
         return new DefaultValidationRule();
-    }
-
-    @Override
-    public String toString() {
-        return entries.toString();
-    }
+    }   
 
     private class SelectionImpl implements Selection<T> {
         int selectionSize = 0;

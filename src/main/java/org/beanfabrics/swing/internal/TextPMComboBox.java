@@ -9,6 +9,9 @@ package org.beanfabrics.swing.internal;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Set;
@@ -17,6 +20,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 
 import org.beanfabrics.View;
 import org.beanfabrics.event.WeakPropertyChangeListener;
@@ -25,6 +30,7 @@ import org.beanfabrics.model.ITextPM;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.BnComboBoxEditor;
 import org.beanfabrics.swing.ErrorImagePainter;
+import org.beanfabrics.swing.KeyBindingProcessor;
 
 /**
  * The <code>TextPMComboBox</code> is a {@link JComboBox} that is a view on an
@@ -34,9 +40,10 @@ import org.beanfabrics.swing.ErrorImagePainter;
  * @author Max Gensthaler
  */
 @SuppressWarnings("serial")
-public class TextPMComboBox extends JComboBox implements View<ITextPM> {
+public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  View<ITextPM> {
+    
     private ITextPM pModel;
-
+    
     private final PropertyChangeListener propertyListener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
@@ -44,10 +51,25 @@ public class TextPMComboBox extends JComboBox implements View<ITextPM> {
                 ((TextEditorComboBoxModel)getModel()).refresh(); // informs the textPM listeners (gui)
         }
     };
+    private final ActionListener clearAction = new ActionListener() {
+    
+        public void actionPerformed(ActionEvent e) {
+            int items = getItemCount();
+            for( int i=0; i<items; ++i) {
+                Object item = getItemAt(i);
+                if ( "".equals(item)) {
+                    setSelectedIndex(i);
+                    break;
+                }
+            }        
+        }
+    };
 
-    public TextPMComboBox() {
+    public TextPMComboBox() {        
         this.setEnabled(false);
         this.setModel(this.createDefaultModel());
+        this.registerKeyboardAction(clearAction, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        this.registerKeyboardAction(clearAction, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
     public TextPMComboBox(ITextPM pModel) {
@@ -147,6 +169,15 @@ public class TextPMComboBox extends JComboBox implements View<ITextPM> {
         if (pModel != null && pModel.isValid() == false) {
             ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, false);
         }
+    }
+    
+    /** {@inheritDoc} */
+    public boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {        
+        boolean result = super.processKeyBinding(ks, e, condition, pressed);
+        if ( result == false) {
+            selectWithKeyChar(ks.getKeyChar());            
+        }        
+        return result;
     }
 
     protected class TextEditorComboBoxModel extends AbstractListModel implements ComboBoxModel {
