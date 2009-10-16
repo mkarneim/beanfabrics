@@ -20,12 +20,14 @@ import org.beanfabrics.util.ExceptionUtil;
 public class ModelProviderBeanInfo extends SimpleBeanInfo {
     private static Class BEAN_CLASS = ModelProvider.class;
 
+    @Override
     public BeanDescriptor getBeanDescriptor() {
         final BeanDescriptor result = new BeanDescriptor(BEAN_CLASS, ModelSubscriberCustomizer.class);
         result.setValue("EXPLICIT_PROPERTY_CHANGE", Boolean.TRUE); // VE, WindowBuilder
         return result;
     }
 
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         try {
 
@@ -39,6 +41,7 @@ public class ModelProviderBeanInfo extends SimpleBeanInfo {
         }
     }
 
+    @Override
     public java.awt.Image getIcon(int iconKind) {
         switch (iconKind) {
 
@@ -48,6 +51,7 @@ public class ModelProviderBeanInfo extends SimpleBeanInfo {
         }
     }
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         final Class superclass = BEAN_CLASS.getSuperclass();
         try {

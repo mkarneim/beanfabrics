@@ -23,12 +23,14 @@ public abstract class ModelSubscriberBeanInfo extends SimpleBeanInfo {
 
     protected abstract boolean isPathBound();
 
+    @Override
     public BeanDescriptor getBeanDescriptor() {
         final BeanDescriptor result = new BeanDescriptor(this.getBeanClass(), ModelSubscriberCustomizer.class);
         result.setValue("EXPLICIT_PROPERTY_CHANGE", Boolean.TRUE); // VE & WindowBuilder
         return result;
     }
 
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors() {
         try {
             final PropertyDescriptor provider = new PropertyDescriptor("modelProvider", this.getBeanClass(), "getModelProvider", "setModelProvider");
@@ -45,6 +47,7 @@ public abstract class ModelSubscriberBeanInfo extends SimpleBeanInfo {
         }
     }
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         final Class superclass = this.getBeanClass().getSuperclass();
         try {

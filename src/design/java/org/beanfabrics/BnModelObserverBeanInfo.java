@@ -21,6 +21,7 @@ public class BnModelObserverBeanInfo extends ModelSubscriberBeanInfo {
         return false;
     }
 
+    @Override
     public java.awt.Image getIcon(int iconKind) {
         switch (iconKind) {
             //		case BeanInfo.ICON_COLOR_16x16:

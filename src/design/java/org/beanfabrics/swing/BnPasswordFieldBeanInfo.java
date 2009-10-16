@@ -22,6 +22,7 @@ public class BnPasswordFieldBeanInfo extends ModelSubscriberBeanInfo {
         return false;
     }
 
+    @Override
     public Image getIcon(int iconKind) {
         switch (iconKind) {
             case BeanInfo.ICON_COLOR_16x16:
