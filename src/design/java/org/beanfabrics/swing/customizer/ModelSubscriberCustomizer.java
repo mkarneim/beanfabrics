@@ -25,11 +25,11 @@ import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 /**
  * The <code>ModelSubscriberCustomizer</code> is a Java Beans {@link Customizer}
  * for a {@link ModelSubscriber}.
- * 
+ *
  * @author Michael Karneim
  */
+@SuppressWarnings("serial")
 public class ModelSubscriberCustomizer extends CustomizerBasePanel implements Customizer {
-
     private JPanel panel_1;
     private BnLabel bnLabel;
     private JPanel headerPanel;
@@ -94,7 +94,7 @@ public class ModelSubscriberCustomizer extends CustomizerBasePanel implements Cu
 
     /**
      * Returns the local {@link ModelProvider} for this class.
-     * 
+     *
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {

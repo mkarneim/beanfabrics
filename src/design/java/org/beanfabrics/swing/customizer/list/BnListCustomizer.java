@@ -24,9 +24,10 @@ import org.beanfabrics.swing.list.CellConfig;
 /**
  * The <code>BnListCustomizer</code> is a JavaBeans {@link Customizer} for a
  * {@link BnList}.
- * 
+ *
  * @author Michael Karneim
  */
+@SuppressWarnings("serial")
 public class BnListCustomizer extends CustomizerBasePanel implements Customizer, View<BnListCustomizerPM> {
     private PathPanel pathPanel_1;
     private SeparatorLabel separatorLabel_1;
@@ -83,7 +84,7 @@ public class BnListCustomizer extends CustomizerBasePanel implements Customizer,
 
     /**
      * Returns the local {@link ModelProvider} for this class.
-     * 
+     *
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {
