@@ -39,7 +39,6 @@ public class ValidationTest {
         public void propertyChange(PropertyChangeEvent evt) {
             count++;
         }
-
     }
 
     private static class ProductPM extends AbstractPM {

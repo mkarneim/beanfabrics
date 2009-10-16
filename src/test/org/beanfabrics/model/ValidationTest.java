@@ -11,8 +11,10 @@ import org.junit.Test;
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.*;
 
+/**
+ * @author Michael Karneim
+ */
 public class ValidationTest {
-
 	static class MyPersonPM extends AbstractPM {
 		TextPM name = new TextPM();
 
@@ -40,7 +42,6 @@ public class ValidationTest {
 		pm.name.setText("argh");
 		assertFalse("pm.name.isValid()", pm.name.isValid());
 		assertFalse("pm.isValid()", pm.isValid());
-
 	}
 
 	@Test
@@ -50,19 +51,19 @@ public class ValidationTest {
 		final boolean[] isValid = new boolean[] { true };
 		pm.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				printEvent("",evt);
+				printEvent("", evt);
 				if ("validationState".equals(evt.getPropertyName())) {
 					count[0]++;
 					isValid[0] = pm.isValid();
 				}
-
 			}
+
 			private void printEvent(String prefix, EventObject evt) {
-				System.out.println(prefix+evt);
-				if ( evt instanceof BnPropertyChangeEvent) {
-					printEvent(prefix+"  ", ((BnPropertyChangeEvent)evt).getCause());
+				System.out.println(prefix + evt);
+				if (evt instanceof BnPropertyChangeEvent) {
+					printEvent(prefix + "  ", ((BnPropertyChangeEvent) evt).getCause());
 				}
-            }
+			}
 		});
 
 		pm.name.setText("michael");
@@ -77,5 +78,4 @@ public class ValidationTest {
 		assertEquals("count[0]", 1, count[0]);
 		assertEquals("isValid[0]", false, isValid[0]);
 	}
-
 }
