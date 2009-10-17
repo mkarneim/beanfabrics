@@ -34,4 +34,14 @@ public class CompositeValidationState extends ValidationState {
         return children;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(Object other) {
+        if (!super.equals(other)) {
+        	return false;
+        }
+        assert other != null : "super.equals(Object) should check for other == null";
+        assert other instanceof CompositeValidationState : "super.equals(Object) should check for same class.";
+        return children.equals(((CompositeValidationState)other).getChildren());
+    }
 }
