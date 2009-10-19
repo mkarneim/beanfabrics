@@ -102,6 +102,7 @@
 	    <fail unless="version.major" message="Invalid contents for file 'build.version', missing 'version.major'."/>
 	    <fail unless="version.minor" message="Invalid contents for file 'build.version', missing 'version.minor'."/>
 	    <fail unless="version.build" message="Invalid contents for file 'build.version', missing 'version.build'."/>
+		<fail unless="release.label" message="Invalid contents for file 'release.label', missing 'version.build'."/>
 		<property name="project.version" value="${version.major}.${version.minor}.${version.build}" />
 		<echo message=" ${ant.project.name} ${project.version}"/>
 	</target>
@@ -336,9 +337,8 @@
 
 	    <property file="build.credentials" />
 	    <fail unless="gc.username" message="Missing property 'gc.username' from file 'build.credentials'."/>
-	    <fail unless="gc.password" message="Missing property 'gc.password' from file 'build.credentials'."/>
-
-	    <property name="release.label" value="Release-Final"/>
+	    <fail unless="gc.password" message="Missing property 'gc.password' from file 'build.credentials'."/>		
+	    
 		<basename file="${src.jarfile}" property="src.jarfile.name"/>
 
 
