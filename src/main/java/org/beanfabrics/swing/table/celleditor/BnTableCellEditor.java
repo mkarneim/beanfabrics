@@ -11,25 +11,18 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-import javax.swing.AbstractCellEditor;
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CellEditorListener;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 
 import org.beanfabrics.ModelProvider;
@@ -38,9 +31,6 @@ import org.beanfabrics.model.IBooleanPM;
 import org.beanfabrics.model.ITextPM;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.BnButton;
-import org.beanfabrics.swing.BnCheckBox;
-import org.beanfabrics.swing.BnComboBox;
-import org.beanfabrics.swing.BnTextField;
 import org.beanfabrics.swing.KeyBindingProcessor;
 import org.beanfabrics.swing.table.BnColumn;
 import org.beanfabrics.swing.table.BnTable;
@@ -72,9 +62,9 @@ public class BnTableCellEditor implements TableCellEditor {
     }
 
     private void installDefaultEditors() {
-        installedEditors.add(new MyBnCheckBoxCellEditor());
-        installedEditors.add(new MyBnComboBoxCellEditor());
-        installedEditors.add(new MyBnTextFieldCellEditor());
+        installedEditors.add(new BnCheckBoxCellEditor());
+        installedEditors.add(new BnComboBoxCellEditor());
+        installedEditors.add(new BnTextFieldCellEditor());
     }
 
     public List<TableCellEditor> getInstalledEditors() {
@@ -190,132 +180,6 @@ public class BnTableCellEditor implements TableCellEditor {
     /** {@inheritDoc} */
     public void removeCellEditorListener(CellEditorListener l) {
         currentCellEditor.removeCellEditorListener(l);
-    }
-
-    private static class MyBnTextFieldCellEditor extends AbstractCellEditor implements TableCellEditor {
-        
-        private ActionListener stopAction = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fireEditingStopped();
-            }
-        };
-
-        public MyBnTextFieldCellEditor() {            
-        }
-        
-        private BnTextField createBnTextField() {
-            BnTextField textField = new BnTextField();
-            textField.setSelectAllOnFocusGainedEnabled(false);
-            //textField.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-            textField.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
-            textField.addActionListener(this.stopAction);
-            return textField;
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            if (value instanceof ITextPM) {
-                BnTextField textField = createBnTextField();
-                textField.setPresentationModel((ITextPM)value);
-                textField.setSelectAllOnFocusGainedEnabled(!isSelected);
-                textField.selectAll();
-                return textField;
-            }
-            return null;
-        }
-
-        public Object getCellEditorValue() {
-            // in Beanfabrics we don't need to return a value
-            return null;
-        }
-
-    }
-
-    private static class MyBnComboBoxCellEditor extends AbstractCellEditor implements TableCellEditor {
-            
-        private ActionListener stopAction = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fireEditingStopped();
-            }
-        };
-        private PopupMenuListener popupListener = new PopupMenuListener() {
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                // do nothing special
-            }
-
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                fireEditingStopped();
-            }
-
-            public void popupMenuCanceled(PopupMenuEvent e) {
-                fireEditingCanceled();
-            }
-        };
-
-        public MyBnComboBoxCellEditor() {
-            super();
-        }
-
-        private BnComboBox createBnComboBox() {
-            BnComboBox comboBox = new BnComboBox();
-            comboBox.addPopupMenuListener(popupListener);
-            comboBox.registerKeyboardAction(stopAction, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
-            return comboBox;
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            if (value instanceof ITextPM) {
-                if (((ITextPM)value).getOptions() != null) {
-                    BnComboBox comboBox = createBnComboBox();
-                    comboBox.setPresentationModel((ITextPM)value);
-                    return comboBox;
-                }
-            }
-            return null;
-        }
-
-        public Object getCellEditorValue() {
-            // in Beanfabrics we don't need to return a value
-            return null;
-        }
-    }
-
-    private static class MyBnCheckBoxCellEditor extends AbstractCellEditor implements TableCellEditor {
-        
-        private ActionListener stopAction = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fireEditingStopped();
-            }
-        };
-
-        public MyBnCheckBoxCellEditor() {
-            
-        }
-        
-        private BnCheckBox createBnCheckBox() {
-            BnCheckBox checkBox = new BnCheckBox();
-            checkBox.setHorizontalAlignment(SwingConstants.CENTER);
-            checkBox.addActionListener(stopAction);
-            return checkBox;
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            if (value instanceof IBooleanPM) {
-                BnCheckBox checkBox = createBnCheckBox();
-                checkBox.setPresentationModel((IBooleanPM)value);
-                return checkBox;
-            }
-            return null;
-        }
-
-        public Object getCellEditorValue() {
-            // in Beanfabrics we don't need to return a value
-            return null;
-        }
-
-        public boolean shouldSelectCell(EventObject anEvent) {
-            return false;
-        }
-
     }
 
     private static class EmptyPanel extends JPanel {
