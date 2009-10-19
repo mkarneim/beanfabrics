@@ -9,6 +9,7 @@ package org.beanfabrics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.beanfabrics.event.BnPropertyChangeEvent;
 import org.beanfabrics.event.WeakPropertyChangeListener;
 import org.beanfabrics.model.PresentationModel;
 
@@ -26,7 +27,8 @@ import org.beanfabrics.model.PresentationModel;
 public class BnModelObserver extends AbstractBean implements View<PresentationModel>, ModelSubscriber {
     private final PropertyChangeListener listener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
-            getPropertyChangeSupport().firePropertyChange("presentationModel", null, null);
+            BnPropertyChangeEvent nextEvent = new BnPropertyChangeEvent(BnModelObserver.this, "presentationModel", null, null, evt);
+            getPropertyChangeSupport().firePropertyChange(nextEvent);
         }
     };
     private final Link link = new Link(this);
