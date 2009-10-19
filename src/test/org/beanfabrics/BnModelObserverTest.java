@@ -74,7 +74,7 @@ public class BnModelObserverTest {
         
         observer.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                printEvent("", evt);
+                //printEvent("", evt);
 
                 if ("presentationModel".equals(evt.getPropertyName())) {
                     count[0]++;
