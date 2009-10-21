@@ -57,7 +57,7 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  V
             int items = getItemCount();
             for( int i=0; i<items; ++i) {
                 Object item = getItemAt(i);
-                if ( "".equals(item)) {
+                if ( "".trim().equals(item)) {
                     setSelectedIndex(i);
                     break;
                 }
