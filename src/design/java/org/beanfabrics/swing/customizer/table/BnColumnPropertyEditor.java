@@ -20,7 +20,7 @@ import org.beanfabrics.util.ExceptionUtil;
 /**
  * The <code>BnColumnPropertyEditor</code> is a JavaBeans {@link PropertyEditor}
  * for a {@link BnColumn}.
- * 
+ *
  * @author Michael Karneim
  */
 public class BnColumnPropertyEditor implements PropertyEditor {
@@ -36,7 +36,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Set (or change) the object that is to be edited.
-     * 
+     *
      * @param value The object to be edited.
      */
     public void setValue(Object value) {
@@ -54,8 +54,8 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * If the property value must be one of a set of known tagged values, then
-     * this method should return an array of the tags. 
-     * 
+     * this method should return an array of the tags.
+     *
      * @return An array with the tagged values.
      */
     public String[] getTags() {
@@ -64,7 +64,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Gets the property value.
-     * 
+     *
      * @return the property value
      */
     public Object getValue() {
@@ -74,7 +74,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
     /**
      * A {@link PropertyEditor} may choose to make available a full custom
      * {@link Component} that edits its property value.
-     * 
+     *
      * @return the custom editor component
      */
     public Component getCustomEditor() {
@@ -82,8 +82,8 @@ public class BnColumnPropertyEditor implements PropertyEditor {
     }
 
     /**
-     * Determines whether this property model is paintable. 
-     * 
+     * Determines whether this property model is paintable.
+     *
      * @return <code>true</code> is this property model is paintable, otherwise
      *         <code>false</code>
      */
@@ -93,8 +93,8 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Paint a representation of the value into a given area of screen real
-     * estate. 
-     * 
+     * estate.
+     *
      * @param gfx The graphics object to be painted.
      * @param box The area to be painted to.
      */
@@ -103,7 +103,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Determines whether this property model supports a custom editor.
-     * 
+     *
      * @retun <code>true</code> if this property model supports a custom editor,
      *        otherwise <code>false</code>
      */
@@ -113,7 +113,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Register a listener for the {@link PropertyChangeEvent}.
-     * 
+     *
      * @param listener the listener to be added
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -121,8 +121,8 @@ public class BnColumnPropertyEditor implements PropertyEditor {
     }
 
     /**
-     * Remove a listener for the {@link PropertyChangeEvent}. 
-     * 
+     * Remove a listener for the {@link PropertyChangeEvent}.
+     *
      * @param listener the listener to be removed
      */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
@@ -131,8 +131,9 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * This method is intended for use when generating Java code to set the
-     * value of the property.  return The generated Java code, like:
-     * 
+     * value of the property.
+     *
+     * @return The generated Java code, like:
      * <pre>
      *     new BnColumn[] {
      *       new BnColumn(
@@ -141,9 +142,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
      *         100,
      *         false
      *         ),
-     *       .
-     *       .
-     *       .
+     *       ...
      *     }
      * </pre>
      */
@@ -179,7 +178,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Gets the property value as text.
-     * 
+     *
      * @return The property value as text.
      */
     public String getAsText() {
@@ -206,7 +205,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Set the property value by parsing a given String.
-     * 
+     *
      * @param text The new value for the property.
      */
     public void setAsText(String text) {
