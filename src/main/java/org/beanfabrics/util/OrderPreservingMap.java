@@ -20,7 +20,7 @@ import java.util.Set;
  * The <code>OrderPreservingMap</code> is a {@link Map} that preserves the oder
  * in which the elements where added. It gives access to it's values by a hash
  * key but also by an index.
- * 
+ *
  * @author Michael Karneim
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
@@ -66,10 +66,8 @@ public class OrderPreservingMap<K, V> implements Map<K, V>, Cloneable {
             return;
         }
         if (other instanceof OrderPreservingMap) {
-            // fill in the entries in the given order (if not contained here and
-            // therefor being replaced).
-            // Achtung: Hier wird nicht nur die Reihenfolge, sondern auch der
-            // Index übernommen!
+            // fill in the entries in the given order (if not contained here and therefore being replaced).
+            // Attention: not only copies the ordering but the index, too
             final OrderPreservingMap<? extends K, ? extends V> otherHashMap = (OrderPreservingMap<? extends K, ? extends V>)other;
             final Object[] orderedKeys = otherHashMap.keyArray();
             for (int i = 0; i < orderedKeys.length; i++) {
