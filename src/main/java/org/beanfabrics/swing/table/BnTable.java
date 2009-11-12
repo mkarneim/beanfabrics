@@ -63,7 +63,7 @@ import org.beanfabrics.swing.table.cellrenderer.BnTableCellRenderer;
 public class BnTable extends JTable implements View<IListPM<? extends PresentationModel>>, ModelSubscriber {
     private final static Logger LOG = LoggerFactory.getLogger(BnTable.class);
 
-    private final ListAdapter listListener = new WeakListAdapter() {
+    private transient final ListAdapter listListener = new WeakListAdapter() {
         public void elementsAdded(ElementsAddedEvent evt) {
             cancelCellEditing();
         }

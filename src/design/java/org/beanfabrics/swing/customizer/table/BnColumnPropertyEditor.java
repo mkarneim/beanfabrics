@@ -40,7 +40,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
      * @param value The object to be edited.
      */
     public void setValue(Object value) {
-        final BnColumn[] old = this.getColumns();
+//  	final BnColumn[] old = this.getColumns();
         BnColumn[] newValue = (BnColumn[])value;
 
         //TODO (rk) eclipse workaround, to be checked again

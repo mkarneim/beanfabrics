@@ -36,7 +36,7 @@ import org.beanfabrics.model.PresentationModel;
 public class BnIconLabel extends JLabel implements View<IIconPM>, ModelSubscriber {
     private final Link link = new Link(this);
 
-    private final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }

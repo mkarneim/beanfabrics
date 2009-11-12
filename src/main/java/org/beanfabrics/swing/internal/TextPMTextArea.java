@@ -31,7 +31,7 @@ public class TextPMTextArea extends JTextArea implements View<ITextPM> {
     private boolean selectAllOnFocusGainedEnabled = false;
     private boolean reformatOnFocusLostEnabled = true;
     private BnPlainDocument document;
-    private final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }

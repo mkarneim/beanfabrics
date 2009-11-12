@@ -31,13 +31,13 @@ import org.beanfabrics.model.SortKey;
  * sorting arrow is added to the header.</li>
  * <li>the sorting feature works only for tables with a {@link BnTableModel}.</li>
  * </ul>
- * 
+ *
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
 public class Java5SortingTableHeader extends JTableHeader {
     private final static Logger LOG = LoggerFactory.getLogger(Java5SortingTableHeader.class);
-    private final MouseListener mouseListener = new MouseAdapter() {
+    private transient final MouseListener mouseListener = new MouseAdapter() {
         public void mouseClicked(MouseEvent e) {
             onClick(e);
         }
@@ -59,7 +59,7 @@ public class Java5SortingTableHeader extends JTableHeader {
 
     /**
      * Handles the click event and sorts the table.
-     * 
+     *
      * @param e
      */
     protected void onClick(MouseEvent e) {

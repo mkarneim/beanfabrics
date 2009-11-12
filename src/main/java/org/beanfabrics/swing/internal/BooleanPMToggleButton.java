@@ -31,7 +31,7 @@ public class BooleanPMToggleButton extends JToggleButton implements View<IBoolea
     private IBooleanPM pModel;
     private boolean textSetManually = false;
 
-    private final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }

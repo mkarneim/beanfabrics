@@ -69,7 +69,7 @@ public class BooleanPMListCellRenderer extends JPanel implements PMListCellRende
                 rendererComponent.setBackground(null);
             }
             rendererComponent = (JComponent)defaultRenderer.getListCellRendererComponent(list, "", index, isSelected, cellHasFocus);
-            if (isSelected == false && index % 2 == 1) {
+            if (isSelected == false && index % 2 != 0) {
                 rendererComponent.setBackground(Color.white);
             }
         } else {
@@ -100,7 +100,7 @@ public class BooleanPMListCellRenderer extends JPanel implements PMListCellRende
      * Paints an error icon on top of the given {@link Graphics} if this
      * component is connected to an {@link PresentationModel} and this
      * <code>PresentationModel</code> has an invalid validation state.
-     * 
+     *
      * @param g the <code>Graphics</code> to paint the error icon to
      */
     protected void paintErrorIcon(Graphics g) {

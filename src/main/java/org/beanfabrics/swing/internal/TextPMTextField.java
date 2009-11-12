@@ -32,11 +32,10 @@ import org.beanfabrics.swing.KeyBindingProcessor;
  */
 @SuppressWarnings("serial")
 public class TextPMTextField extends JTextField implements KeyBindingProcessor, View<ITextPM> {
-    
     private boolean selectAllOnFocusGainedEnabled = true;
     private boolean reformatOnFocusLostEnabled = true;
     private BnPlainDocument document;
-    private final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }

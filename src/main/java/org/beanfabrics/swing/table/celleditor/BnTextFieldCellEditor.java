@@ -18,21 +18,22 @@ import javax.swing.table.TableCellEditor;
 import org.beanfabrics.model.ITextPM;
 import org.beanfabrics.swing.BnTextField;
 /**
- * 
+ *
  * @author Michael Karneim
  *
  */
+@SuppressWarnings("serial")
 public class BnTextFieldCellEditor extends AbstractCellEditor implements TableCellEditor {
-    
-    private ActionListener stopAction = new ActionListener() {
+    private transient ActionListener stopAction = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             fireEditingStopped();
         }
     };
 
-    public BnTextFieldCellEditor() {            
+    public BnTextFieldCellEditor() {
+    	//
     }
-    
+
     private BnTextField createBnTextField() {
         BnTextField textField = new BnTextField();
         textField.setSelectAllOnFocusGainedEnabled(false);

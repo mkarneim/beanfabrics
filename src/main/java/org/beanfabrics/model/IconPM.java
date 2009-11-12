@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 
 /**
  * The IconPM is a presentation model for a Swing icon.
- * 
+ *
  * @author Michael Karneim
  */
 // TODO (mk) write TEST
@@ -58,7 +58,11 @@ public class IconPM extends AbstractValuePM implements IIconPM {
      * Hashcode based Comparable.
      */
     private class IconEditorComparable implements Comparable {
-        /** {@inheritDoc} */
+        public Icon getIcon() {
+            return icon;
+        }
+
+		/** {@inheritDoc} */
         public int compareTo(Object o) {
             if (o.getClass() != this.getClass()) {
                 throw new IllegalArgumentException("Can't compare to unexpected comparable: " + o.getClass());
@@ -70,8 +74,20 @@ public class IconPM extends AbstractValuePM implements IIconPM {
             return aVal - bVal;
         }
 
-        public Icon getIcon() {
-            return icon;
+        @Override
+        public boolean equals(Object o) {
+        	if (this == o) {
+        		return true;
+        	}
+        	if (o == null) {
+        		return false;
+        	}
+        	if (o.getClass() != getClass()) {
+        		return false;
+        	}
+        	Icon myIcon = this.getIcon();
+			Icon otherIcon = ((IconEditorComparable) o).getIcon();
+			return (myIcon == otherIcon ? otherIcon == null : myIcon.equals(otherIcon));
         }
     }
 }

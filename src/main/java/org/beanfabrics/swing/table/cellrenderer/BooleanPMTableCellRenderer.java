@@ -28,7 +28,7 @@ import org.beanfabrics.swing.ErrorImagePainter;
 
 /**
  * {@link TableCellRenderer} that renders the value of a {@link IBooleanPM}.
- * 
+ *
  * @author Michael Karneim
  */
 // TODO (mk) this class contains several workarounds for a bug
@@ -74,7 +74,7 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
                 rendererComponent.setBackground(null);
             }
             rendererComponent = (JComponent)defaultRenderer.getTableCellRendererComponent(table, "", isSelected, hasFocus, row, column);
-            if (isSelected == false && row % 2 == 1) {
+            if (isSelected == false && row % 2 != 0) {
                 rendererComponent.setBackground(Color.white);
             }
         } else {
@@ -111,7 +111,7 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
      * Paints an error icon on top of the given {@link Graphics} if this
      * component is connected to an {@link PresentationModel} and this
      * <code>PresentationModel</code> has an invalid validation state.
-     * 
+     *
      * @param g the <code>Graphics</code> to paint the error icon to
      */
     protected void paintErrorIcon(Graphics g) {

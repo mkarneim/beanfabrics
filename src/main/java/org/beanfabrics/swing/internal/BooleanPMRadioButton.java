@@ -32,7 +32,7 @@ import org.beanfabrics.swing.ErrorImagePainter;
 public class BooleanPMRadioButton extends JRadioButton implements View<IBooleanPM> {
     private IBooleanPM pModel;
 
-    private final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }

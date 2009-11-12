@@ -22,9 +22,9 @@ import org.beanfabrics.swing.BnCheckBox;
  * 
  * @author Michael Karneim
  */
+@SuppressWarnings("serial")
 public class BnCheckBoxCellEditor extends AbstractCellEditor implements TableCellEditor {
-    
-    private ActionListener stopAction = new ActionListener() {
+    private transient ActionListener stopAction = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             fireEditingStopped();
         }

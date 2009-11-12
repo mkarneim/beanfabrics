@@ -26,14 +26,14 @@ import org.beanfabrics.swing.BnComboBox;
  * @author Michael Karneim
  *
  */
+@SuppressWarnings("serial")
 public class BnComboBoxCellEditor extends AbstractCellEditor implements TableCellEditor {
-        
-    private ActionListener stopAction = new ActionListener() {
+    private transient ActionListener stopAction = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             fireEditingStopped();
         }
     };
-    private PopupMenuListener popupListener = new PopupMenuListener() {
+    private transient PopupMenuListener popupListener = new PopupMenuListener() {
         public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
             // do nothing special
         }

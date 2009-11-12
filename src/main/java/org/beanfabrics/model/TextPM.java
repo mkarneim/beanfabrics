@@ -203,6 +203,21 @@ public class TextPM extends AbstractValuePM implements ITextPM {
             TextComparable oc = (TextComparable)o;
             return this.text.compareTo(oc.text);
         }
+
+        @Override
+        public boolean equals(Object o) {
+        	if (this == o) {
+        		return true;
+        	}
+        	if (o == null) {
+        		return false;
+        	}
+        	if (o.getClass() != getClass()) {
+        		return false;
+        	}
+        	TextComparable castedObj = (TextComparable) o;
+        	return ((this.text == null ? castedObj.text == null : this.text.equals(castedObj.text)));
+        }
     }
 
     private OptionsListener optionsListener = new OptionsListener() {

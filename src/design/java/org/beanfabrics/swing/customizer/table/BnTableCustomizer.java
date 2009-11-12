@@ -29,7 +29,7 @@ import org.beanfabrics.swing.table.BnTable;
 /**
  * The <code>BnTableCustomizer</code> is a JavaBeans {@link Customizer} for a
  * {@link BnTable}.
- * 
+ *
  * @author Michael Karneim
  */
 public class BnTableCustomizer extends CustomizerBasePanel implements Customizer {
@@ -87,7 +87,7 @@ public class BnTableCustomizer extends CustomizerBasePanel implements Customizer
 
     /**
      * Returns the local {@link ModelProvider} for this class.
-     * 
+     *
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {

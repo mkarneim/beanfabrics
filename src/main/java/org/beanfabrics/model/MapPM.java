@@ -796,7 +796,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         Integer maxSelIndex;
 
         public Integer getMinSelIndex() {
-            if (minSelIndex == UNKNOWN) {
+            if (minSelIndex.intValue() == UNKNOWN.intValue()) {
                 if (isEmpty()) {
                     minSelIndex = NONE;
                 } else {
@@ -811,7 +811,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         }
 
         public Integer getMaxSelIndex() {
-            if (maxSelIndex == UNKNOWN) {
+            if (maxSelIndex.intValue() == UNKNOWN.intValue()) {
                 if (isEmpty()) {
                     maxSelIndex = NONE;
                 } else {

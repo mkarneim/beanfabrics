@@ -44,23 +44,22 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  V
     
     private ITextPM pModel;
     
-    private final PropertyChangeListener propertyListener = new WeakPropertyChangeListener() {
+    private transient final PropertyChangeListener propertyListener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
             if ("options".equals(evt.getPropertyName()))
                 ((TextEditorComboBoxModel)getModel()).refresh(); // informs the textPM listeners (gui)
         }
     };
-    private final ActionListener clearAction = new ActionListener() {
-    
+    private transient final ActionListener clearAction = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            int items = getItemCount();
-            for( int i=0; i<items; ++i) {
-                Object item = getItemAt(i);
-                if ( "".trim().equals(item)) {
-                    setSelectedIndex(i);
-                    break;
-                }
+			int items = getItemCount();
+			for (int i = 0; i < items; ++i) {
+				Object item = getItemAt(i);
+				if ("".trim().equals(item)) {
+					setSelectedIndex(i);
+					break;
+				}
             }        
         }
     };

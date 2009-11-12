@@ -33,7 +33,7 @@ public class BnListModel extends AbstractListModel {
     private final IListPM list;
     private final CellConfig cellConfig;
 
-    private ListListener listener = new WeakListListener() {
+    private transient ListListener listener = new WeakListListener() {
         public void elementsSelected(ElementsSelectedEvent evt) {
             // ignore
         }

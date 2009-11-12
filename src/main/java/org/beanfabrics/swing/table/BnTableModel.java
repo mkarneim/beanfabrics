@@ -46,7 +46,7 @@ public class BnTableModel extends AbstractTableModel {
 
     private List<BnColumn> colDefs = new ArrayList<BnColumn>();
 
-    private ListListener listener = new WeakListListener() {
+    private transient ListListener listener = new WeakListListener() {
         public void elementsSelected(ElementsSelectedEvent evt) {
             // ignore
         }

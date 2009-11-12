@@ -34,14 +34,28 @@ public class CompositeValidationState extends ValidationState {
         return children;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public boolean equals(Object other) {
-        if (!super.equals(other)) {
-        	return false;
-        }
-        assert other != null : "super.equals(Object) should check for other == null";
-        assert other instanceof CompositeValidationState : "super.equals(Object) should check for same class.";
-        return children.equals(((CompositeValidationState)other).getChildren());
+    public boolean equals(Object o) {
+    	if (this == o) {
+    		return true;
+    	}
+    	if (!super.equals(o)) {
+    		return false;
+    	}
+    	if (o == null) {
+    		return false;
+    	}
+    	if (o.getClass() != getClass()) {
+    		return false;
+    	}
+    	CompositeValidationState castedObj = (CompositeValidationState) o;
+    	return ((this.children == null ? castedObj.children == null : this.children.equals(castedObj.children)));
+    }
+
+	@Override
+    public int hashCode() {
+    	int hashCode = super.hashCode();
+    	hashCode = 31 * hashCode + (children == null ? 0 : children.hashCode());
+    	return hashCode;
     }
 }
