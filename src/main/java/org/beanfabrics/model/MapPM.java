@@ -49,7 +49,7 @@ import org.beanfabrics.validation.ValidationState;
  * @author Michael Karneim
  */
 public class MapPM<K, V extends PresentationModel> extends AbstractPM implements IMapPM<K, V> {
-    private static final Integer UNKNOWN = null;
+    
     private static final int NONE = -1;
 
     private final OrderPreservingMap<K, V> entries = new OrderPreservingMap<K, V>();
@@ -800,7 +800,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         Integer maxSelIndex;
 
         public Integer getMinSelIndex() {
-            if (minSelIndex.intValue() == UNKNOWN.intValue()) {
+            if (minSelIndex == null) {
                 if (isEmpty()) {
                     minSelIndex = NONE;
                 } else {
@@ -810,12 +810,12 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
                 }
             }
             Integer result = minSelIndex;
-            minSelIndex = UNKNOWN; // TODO (mk) enable caching for minSelIndex
+            minSelIndex = null; // TODO (mk) enable caching for minSelIndex
             return result;
         }
 
         public Integer getMaxSelIndex() {
-            if (maxSelIndex.intValue() == UNKNOWN.intValue()) {
+            if (maxSelIndex == null) {
                 if (isEmpty()) {
                     maxSelIndex = NONE;
                 } else {
@@ -825,7 +825,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
                 }
             }
             Integer result = maxSelIndex;
-            maxSelIndex = UNKNOWN; // TODO (mk) enable caching for maxSelIndex
+            maxSelIndex = null; // TODO (mk) enable caching for maxSelIndex
             return result;
         }
 
