@@ -319,6 +319,10 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         sortBy(newSortKeys);
     }
 
+    public void sortBy(Collection<SortKey> newSortKeys) {
+    	sortBy( newSortKeys.toArray(new SortKey[newSortKeys.size()]));
+    }
+    
     public void sortBy(SortKey... newSortKeys) {
         OrderPreservingMap<K, V> map = new OrderPreservingMap<K, V>(entries);
         new SortingHelper().sortBy(map, newSortKeys);

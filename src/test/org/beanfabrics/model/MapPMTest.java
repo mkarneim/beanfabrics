@@ -1194,8 +1194,33 @@ public class MapPMTest {
         assertEquals("map.getSelection().size()", 0, counter.elementsDeselected);
 
     }
+    
+    public void removeElementRemovesSelection() {
+    	MapPM map = new MapPM();
+        final int NUM = 10;
+        populate(map, NUM);
+        map.getSelection().addAll();
+        assertEquals("map.getSelection().size()", 10, map.getSelection().size());
+        
+        map.remove(map.getAt(2));
+        assertEquals("map.getSelection().size()", 9, map.getSelection().size());
+    }
+    
+    public void removeElementRemovesSelection2() {
+    	MapPM map = new MapPM();
+    	
+    	DummyPM[] elems = populate(map, 5);
+    	
+        map.getSelection().add(elems[2]);
+        map.getSelection().add(elems[3]);
+        assertEquals("map.getSelection().size()", 2, map.getSelection().size());
+        
+        map.remove(elems[2]);
+        assertEquals("map.getSelection().size()", 1, map.getSelection().size());
+    }
+    
 
-    private void populate(MapPM map, int number) {
+    private DummyPM[] populate(MapPM map, int number) {
         DummyPM[] elems = new DummyPM[10];
         for (int i = 0; i < elems.length; ++i) {
             elems[i] = new DummyPM();
@@ -1203,6 +1228,7 @@ public class MapPMTest {
             map.put(i, elems[i]);
         }
         assertEquals("map.size()", number, map.size());
+        return elems;
     }
 
     private static class EventCounter implements ListListener {

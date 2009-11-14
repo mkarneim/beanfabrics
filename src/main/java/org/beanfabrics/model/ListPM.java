@@ -413,6 +413,10 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         sortBy(newSortKeys);
     }
 
+    public void sortBy(Collection<SortKey> newSortKeys) {
+    	sortBy( newSortKeys.toArray(new SortKey[newSortKeys.size()]));
+    }
+    
     public void sortBy(SortKey... newSortKeys) {
         ArrayList<T> list = new ArrayList<T>();
         for (Entry entry : entries) {

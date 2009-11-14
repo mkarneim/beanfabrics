@@ -93,6 +93,8 @@ public interface IListPM<T extends PresentationModel> extends PresentationModel,
 
     public void sortBy(boolean ascending, Path... path);
 
+    public void sortBy(Collection<SortKey> newSortKeys);
+    
     public void sortBy(SortKey... sortKeys);
 
     /**
