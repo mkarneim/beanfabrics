@@ -1195,6 +1195,7 @@ public class MapPMTest {
 
     }
     
+    @Test
     public void removeElementRemovesSelection() {
     	MapPM map = new MapPM();
         final int NUM = 10;
@@ -1206,6 +1207,7 @@ public class MapPMTest {
         assertEquals("map.getSelection().size()", 9, map.getSelection().size());
     }
     
+    @Test
     public void removeElementRemovesSelection2() {
     	MapPM map = new MapPM();
     	
@@ -1219,9 +1221,29 @@ public class MapPMTest {
         assertEquals("map.getSelection().size()", 1, map.getSelection().size());
     }
     
+    @Test
+    public void removeElementRemovesSelection3() {
+    	MapPM map = new MapPM();
+    	
+    	DummyPM[] elems = populate(map, 10);
+    	
+    	map.getSelection().addAll();
+        assertEquals("map.getSelection().size()", 10, map.getSelection().size());
+        
+        for( int i=0; i<elems.length; ++i) {
+        	if ( i % 2 == 0) {
+        		map.put(i, elems[i]);
+        	} else {
+        		map.remove(elems[i]);
+        	}
+        }
+        
+        assertEquals("map.getSelection().size()", 5, map.getSelection().size());
+    }
+    
 
     private DummyPM[] populate(MapPM map, int number) {
-        DummyPM[] elems = new DummyPM[10];
+        DummyPM[] elems = new DummyPM[number];
         for (int i = 0; i < elems.length; ++i) {
             elems[i] = new DummyPM();
             elems[i].id.setInteger(i);

@@ -416,7 +416,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         if (index == -1) {
             return false;
         } else {
-            selectedKeys.remove(elem);
+            selection.remove(elem);
             entries.remove(index);
             onRemove(elem);
             Collection<PresentationModel> removedCol = new ArrayList<PresentationModel>();
