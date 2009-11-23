@@ -13,6 +13,8 @@ import java.beans.PropertyChangeSupport;
 import java.beans.PropertyEditor;
 import java.util.LinkedList;
 
+import javax.swing.SwingConstants;
+
 import org.beanfabrics.Path;
 import org.beanfabrics.swing.table.BnColumn;
 import org.beanfabrics.util.ExceptionUtil;
@@ -20,7 +22,7 @@ import org.beanfabrics.util.ExceptionUtil;
 /**
  * The <code>BnColumnPropertyEditor</code> is a JavaBeans {@link PropertyEditor}
  * for a {@link BnColumn}.
- *
+ * 
  * @author Michael Karneim
  */
 public class BnColumnPropertyEditor implements PropertyEditor {
@@ -36,11 +38,11 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Set (or change) the object that is to be edited.
-     *
+     * 
      * @param value The object to be edited.
      */
     public void setValue(Object value) {
-//  	final BnColumn[] old = this.getColumns();
+        //  	final BnColumn[] old = this.getColumns();
         BnColumn[] newValue = (BnColumn[])value;
 
         //TODO (rk) eclipse workaround, to be checked again
@@ -55,7 +57,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
     /**
      * If the property value must be one of a set of known tagged values, then
      * this method should return an array of the tags.
-     *
+     * 
      * @return An array with the tagged values.
      */
     public String[] getTags() {
@@ -64,7 +66,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Gets the property value.
-     *
+     * 
      * @return the property value
      */
     public Object getValue() {
@@ -74,7 +76,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
     /**
      * A {@link PropertyEditor} may choose to make available a full custom
      * {@link Component} that edits its property value.
-     *
+     * 
      * @return the custom editor component
      */
     public Component getCustomEditor() {
@@ -83,7 +85,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Determines whether this property model is paintable.
-     *
+     * 
      * @return <code>true</code> is this property model is paintable, otherwise
      *         <code>false</code>
      */
@@ -94,7 +96,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
     /**
      * Paint a representation of the value into a given area of screen real
      * estate.
-     *
+     * 
      * @param gfx The graphics object to be painted.
      * @param box The area to be painted to.
      */
@@ -103,7 +105,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Determines whether this property model supports a custom editor.
-     *
+     * 
      * @retun <code>true</code> if this property model supports a custom editor,
      *        otherwise <code>false</code>
      */
@@ -113,7 +115,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Register a listener for the {@link PropertyChangeEvent}.
-     *
+     * 
      * @param listener the listener to be added
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -122,7 +124,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Remove a listener for the {@link PropertyChangeEvent}.
-     *
+     * 
      * @param listener the listener to be removed
      */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
@@ -132,9 +134,10 @@ public class BnColumnPropertyEditor implements PropertyEditor {
     /**
      * This method is intended for use when generating Java code to set the
      * value of the property.
-     *
+     * 
      * @return The generated Java code, like:
-     * <pre>
+     * 
+     *         <pre>
      *     new BnColumn[] {
      *       new BnColumn(
      *         new Path(&quot;pathString&quot;),
@@ -165,6 +168,34 @@ public class BnColumnPropertyEditor implements PropertyEditor {
                 sb.append(", ").append(this.columns[i].isWidthFixed());
                 if (this.columns[i].getOperationPath() != null) {
                     sb.append(", new " + PATH_CLASSNAME + "(\"").append(this.columns[i].getOperationPath().getPathString() + "\")");
+                } else if (this.columns[i].getAlignment() != null) {
+                    sb.append(", ").append("null");
+                }
+
+                if (this.columns[i].getAlignment() != null) {
+                    String code;
+                    switch (this.columns[i].getAlignment().intValue()) {
+                        case SwingConstants.LEADING:
+                            code = "SwingConstants.LEADING";
+                            break;
+                        case SwingConstants.LEFT:
+                            code = "SwingConstants.LEFT";
+                            break;
+                        case SwingConstants.TRAILING:
+                            code = "SwingConstants.TRAILING";
+                            break;
+                        case SwingConstants.RIGHT:
+                            code = "SwingConstants.RIGHT";
+                            break;
+                        case SwingConstants.CENTER:
+                            code = "SwingConstants.CENTER";
+                            break;
+                        default:
+                            code = null;
+                    }
+                    if (code != null) {
+                        sb.append(", ").append(code);
+                    }
                 }
                 sb.append("    )");
             }
@@ -178,7 +209,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Gets the property value as text.
-     *
+     * 
      * @return The property value as text.
      */
     public String getAsText() {
@@ -194,6 +225,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
                 sb.append(",").append(this.columns[i].getWidth());
                 sb.append(",").append(this.columns[i].isWidthFixed());
                 sb.append(",").append(this.columns[i].getOperationPath());
+                sb.append(",").append(this.columns[i].getAlignment());
                 sb.append("]");
             }
             return sb.toString();
@@ -205,7 +237,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
 
     /**
      * Set the property value by parsing a given String.
-     *
+     * 
      * @param text The new value for the property.
      */
     public void setAsText(String text) {
@@ -246,6 +278,7 @@ public class BnColumnPropertyEditor implements PropertyEditor {
             int width;
             boolean widthFixed;
             String operationPathString;
+            Integer alignment;
             switch (tokens.length) {
                 case 2:
                     pathString = tokens[0];
@@ -264,6 +297,14 @@ public class BnColumnPropertyEditor implements PropertyEditor {
                     widthFixed = Boolean.parseBoolean(tokens[3]);
                     operationPathString = tokens[4];
                     return new BnColumn(Path.parse(pathString), columnName, width, widthFixed, Path.parse(operationPathString));
+                case 6:
+                    pathString = tokens[0];
+                    columnName = tokens[1];
+                    width = Integer.parseInt(tokens[2]);
+                    widthFixed = Boolean.parseBoolean(tokens[3]);
+                    operationPathString = tokens[4];
+                    alignment = "null".equals(tokens[5]) ? null : Integer.parseInt(tokens[5]);
+                    return new BnColumn(Path.parse(pathString), columnName, width, widthFixed, Path.parse(operationPathString), alignment);
             }
             return null;
         }

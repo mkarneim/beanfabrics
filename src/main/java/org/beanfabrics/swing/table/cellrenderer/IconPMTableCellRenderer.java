@@ -17,6 +17,8 @@ import javax.swing.table.TableCellRenderer;
 import org.beanfabrics.model.IIconPM;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.ErrorImagePainter;
+import org.beanfabrics.swing.table.BnColumn;
+import org.beanfabrics.swing.table.BnTable;
 
 /**
  * The <code>IconPMTableCellRenderer</code> is a {@link TableCellRenderer} for
@@ -27,6 +29,7 @@ import org.beanfabrics.swing.ErrorImagePainter;
 @SuppressWarnings("serial")
 public class IconPMTableCellRenderer extends DefaultTableCellRenderer {
     private IIconPM model;
+    private BnColumn column;
 
     public IconPMTableCellRenderer() {
         super();
@@ -36,10 +39,19 @@ public class IconPMTableCellRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (value instanceof IIconPM) {
+            this.column = getBnColumn(table, column);
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         } else {
             return null;
         }
+    }
+
+    private BnColumn getBnColumn(JTable table, int columnIndex) {
+        if (table instanceof BnTable) {
+            BnTable bnTable = (BnTable)table;
+            return bnTable.getColumns()[bnTable.convertColumnIndexToModel(columnIndex)];
+        }
+        return null;
     }
 
     @Override
@@ -48,10 +60,14 @@ public class IconPMTableCellRenderer extends DefaultTableCellRenderer {
             model = (IIconPM)value;
             setIcon(model.getIcon());
             setToolTipText(model.isValid() == false ? model.getValidationState().getMessage() : model.getDescription());
+            if (column != null && column.getAlignment() != null) {
+                this.setHorizontalAlignment(column.getAlignment());
+            }
         } else {
             model = null;
             setIcon(null);
             setToolTipText(null);
+            this.setHorizontalAlignment(SwingConstants.CENTER);
         }
         setInheritsPopupMenu(true);
     }

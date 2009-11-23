@@ -9,6 +9,6 @@
 	<classpathentry kind="lib" path="lib/log4j/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="script/lib/ant-googlecode/ant-googlecode-0.0.2.jar"/>
 	<classpathentry kind="lib" path="script/lib/javabean-doclet/javabean-doclet-0.0.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.5.0_10"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -93,7 +93,7 @@ public class BnTableCustomizerTestGUI extends JFrame {
         if (closeButton == null) {
             closeButton = new JButton();
             closeButton.addActionListener(new ActionListener() {
-                public void actionPerformed(final ActionEvent e) {
+                public void actionPerformed(final ActionEvent e) {                    
                     dispose();
                 }
             });

@@ -6,6 +6,8 @@
 // methods and fields are documented
 package org.beanfabrics.swing.table;
 
+import javax.swing.SwingConstants;
+
 import org.beanfabrics.Path;
 
 /**
@@ -21,6 +23,7 @@ public class BnColumn {
     private int width;
     private boolean widthFixed;
     private final Path operationPath;
+    private final Integer alignment;
 
     public BnColumn() {
         this(new Path(), "empty column");
@@ -39,12 +42,17 @@ public class BnColumn {
     }
 
     public BnColumn(Path path, String columnName, int width, boolean widthFixed, Path operationPath) {
+        this(path, columnName, width, widthFixed, operationPath, null);
+    }
+
+    public BnColumn(Path path, String columnName, int width, boolean widthFixed, Path operationPath, Integer alignment) {
         super();
         this.path = path;
         this.columnName = columnName;
         this.width = width;
         this.widthFixed = widthFixed;
         this.operationPath = operationPath;
+        this.alignment = alignment;
     }
 
     public Path getPath() {
@@ -75,6 +83,10 @@ public class BnColumn {
         return this.operationPath;
     }
 
+    public Integer getAlignment() {
+        return alignment;
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#hashCode()
      */
@@ -86,6 +98,7 @@ public class BnColumn {
         result = prime * result + ((operationPath == null) ? 0 : operationPath.hashCode());
         result = prime * result + ((path == null) ? 0 : path.hashCode());
         result = prime * result + width;
+        result = prime * result + ((alignment == null) ? 0 : alignment.hashCode());
         result = prime * result + (widthFixed ? 1231 : 1237);
         return result;
     }
@@ -118,6 +131,11 @@ public class BnColumn {
         } else if (!path.equals(other.path))
             return false;
         if (width != other.width)
+            return false;
+        if (alignment == null) {
+            if (other.alignment != null)
+                return false;
+        } else if (!alignment.equals(other.alignment))
             return false;
         if (widthFixed != other.widthFixed)
             return false;

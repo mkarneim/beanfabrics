@@ -18,6 +18,8 @@ import org.beanfabrics.model.IIconPM;
 import org.beanfabrics.model.ITextPM;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.ErrorImagePainter;
+import org.beanfabrics.swing.table.BnColumn;
+import org.beanfabrics.swing.table.BnTable;
 
 /**
  * The <code>TextPMTableCellRenderer</code> is a {@link TableCellRenderer} that
@@ -28,14 +30,24 @@ import org.beanfabrics.swing.ErrorImagePainter;
 @SuppressWarnings("serial")
 public class TextPMTableCellRenderer extends DefaultTableCellRenderer {
     private ITextPM model;
+    private BnColumn column;
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (value instanceof ITextPM) {
+            this.column = getBnColumn(table, column);
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         } else {
             return null;
         }
+    }
+
+    private BnColumn getBnColumn(JTable table, int columnIndex) {
+        if (table instanceof BnTable) {
+            BnTable bnTable = (BnTable)table;
+            return bnTable.getColumns()[bnTable.convertColumnIndexToModel(columnIndex)];
+        }
+        return null;
     }
 
     /**
@@ -57,9 +69,18 @@ public class TextPMTableCellRenderer extends DefaultTableCellRenderer {
             } else {
                 this.setIcon(null);
             }
+
+            if (column != null) {
+                if (column.getAlignment() != null) {
+                    this.setHorizontalAlignment(column.getAlignment());
+                } else {
+                    this.setHorizontalAlignment(SwingConstants.LEADING);
+                }
+            }
         } else {
             this.setText("");
             this.setToolTipText(null);
+            this.setHorizontalAlignment(SwingConstants.LEADING);
             if (this.getIcon() != null) {
                 this.setIcon(null);
             }

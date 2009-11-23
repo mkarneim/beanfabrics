@@ -27,6 +27,7 @@ public class ColumnPM extends AbstractPM {
     protected final IntegerPM width = new IntegerPM();
     protected final BooleanPM fixedWidth = new BooleanPM();
     protected final PathPM operationPath = new PathPM();
+    protected final HorizontalAlignmentPM alignment = new HorizontalAlignmentPM();
 
     private ColumnContext columnContext;
 
@@ -37,6 +38,7 @@ public class ColumnPM extends AbstractPM {
         width.setMandatory(true);
         fixedWidth.setMandatory(true);
         operationPath.setMandatory(false);
+        alignment.setMandatory(false);
     }
 
     public void setColumnContext(ColumnContext columnContext) {
@@ -48,10 +50,11 @@ public class ColumnPM extends AbstractPM {
         this.fixedWidth.setBoolean(col.isWidthFixed());
         PresentationModelInfo opTypeDesc = PMManager.getInstance().getMetadata().getPresentationModelInfo(IOperationPM.class);
         this.operationPath.setPathContext(new PathContext(columnContext.elementRoot, opTypeDesc, col.getOperationPath()));
+        this.alignment.setText(this.alignment.getOptions().get(col.getAlignment()));
     }
 
     public BnColumn getBnColumn() {
-        BnColumn result = new BnColumn(this.path.getPath(), this.columnName.getText(), this.width.getInteger(), this.fixedWidth.getBoolean(), this.operationPath.getPath());
+        BnColumn result = new BnColumn(this.path.getPath(), this.columnName.getText(), this.width.getInteger(), this.fixedWidth.getBoolean(), this.operationPath.getPath(), (Integer)this.alignment.getOptions().getKey(this.alignment.getText()));
         return result;
     }
 
