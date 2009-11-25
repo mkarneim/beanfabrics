@@ -29,6 +29,9 @@ import org.beanfabrics.event.ElementsReplacedEvent;
 import org.beanfabrics.event.ElementsSelectedEvent;
 import org.beanfabrics.event.ListEvent;
 import org.beanfabrics.event.ListListener;
+import org.beanfabrics.swing.table.BnColumn;
+import org.beanfabrics.swing.table.BnTable;
+import org.beanfabrics.swing.table.BnTableModel;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -1273,6 +1276,87 @@ public class MapPMTest {
         assertEquals("sortKeysArray[0].getSortPath()", new Path("text"), sortKeysArray[0].getSortPath());
         assertEquals("sortKeysArray[1].getSortPath()", new Path("id"), sortKeysArray[1].getSortPath());
         
+    }
+    
+    @Test
+    public void multiplePuts() {
+        MapPM map = new MapPM();
+        DummyPM[] elems = populate(map, 10);
+        
+        EventCounter counter = new EventCounter();
+        map.addListListener(counter);
+        
+        map.put(1, elems[1]);
+        
+        assertEquals("counter.elementsAdded", 0, counter.elementsAdded);
+        assertEquals("counter.elementChanged", 0, counter.elementChanged);
+        assertEquals("counter.elementsRemoved", 0, counter.elementsRemoved);
+        assertEquals("counter.elementsSelected", 0, counter.elementsSelected);
+        assertEquals("counter.elementsDeselected", 0, counter.elementsDeselected);
+    }
+    
+    @Test
+    public void multiplePutsWithSelection() {
+        MapPM map = new MapPM();
+        DummyPM[] elems = populate(map, 10);
+        map.getSelection().addAll();
+        
+        EventCounter counter = new EventCounter();
+        map.addListListener(counter);
+        
+        map.put(1, elems[1]);
+        
+        assertEquals("counter.elementsAdded", 0, counter.elementsAdded);
+        assertEquals("counter.elementChanged", 0, counter.elementChanged);
+        assertEquals("counter.elementsRemoved", 0, counter.elementsRemoved);
+        assertEquals("counter.elementsSelected", 0, counter.elementsSelected);
+        assertEquals("counter.elementsDeselected", 0, counter.elementsDeselected);
+    }
+    
+    @Test
+    public void multiplePutsWithSelectionAndBnTableModel() {
+        MapPM map = new MapPM();
+        DummyPM[] elems = populate(map, 10);
+        map.getSelection().addAll();
+        
+        EventCounter counter = new EventCounter();
+        map.addListListener(counter);
+        
+        List<BnColumn> cols = new ArrayList<BnColumn>();
+        cols.add( new BnColumn(new Path("id"), "ID"));
+        BnTableModel model = new BnTableModel(map, cols);
+        
+        map.put(1, elems[1]);
+        
+        assertEquals("counter.elementsAdded", 0, counter.elementsAdded);
+        assertEquals("counter.elementChanged", 0, counter.elementChanged);
+        assertEquals("counter.elementsRemoved", 0, counter.elementsRemoved);
+        assertEquals("counter.elementsSelected", 0, counter.elementsSelected);
+        assertEquals("counter.elementsDeselected", 0, counter.elementsDeselected);
+    }
+    
+    @Test
+    public void multiplePutsWithSelectionAndBnTable() {
+        MapPM map = new MapPM();
+        DummyPM[] elems = populate(map, 10);
+        map.getSelection().addAll();
+        
+        EventCounter counter = new EventCounter();
+        map.addListListener(counter);
+        
+        List<BnColumn> cols = new ArrayList<BnColumn>();
+        cols.add( new BnColumn(new Path("id"), "ID"));
+        BnTable table = new BnTable();
+        table.setPresentationModel(map);
+        table.setColumns( cols.toArray( new BnColumn[cols.size()]));
+        
+        map.put(1, elems[1]);
+        
+        assertEquals("counter.elementsAdded", 0, counter.elementsAdded);
+        assertEquals("counter.elementChanged", 0, counter.elementChanged);
+        assertEquals("counter.elementsRemoved", 0, counter.elementsRemoved);
+        assertEquals("counter.elementsSelected", 0, counter.elementsSelected);
+        assertEquals("counter.elementsDeselected", 0, counter.elementsDeselected);
     }
 
     private DummyPM[] populate(MapPM map, int number) {

@@ -186,11 +186,15 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         }
 
         V result = entries.put(key, newElement);
+        if ( result == newElement) {
+            return result;
+        }
         onAdd(newElement);
         int index = indexOfKey(key);
         if (result != null) {
             // an old element with equal key has been replaced
             onRemove(result);
+            
             support.fireElementsReplaced(index, result);
         } else {
             // a new element was added
