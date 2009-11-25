@@ -31,7 +31,7 @@ class SortingHelper {
             return;
         }
         List<Map.Entry<K, V>> list = new ArrayList<Map.Entry<K, V>>(map.entrySet());
-        List<SortKey> reverseKeys = Arrays.asList(sortKeys);
+        List<SortKey> reverseKeys = new ArrayList( Arrays.asList(sortKeys));
         Collections.reverse(reverseKeys);
         for (SortKey key : reverseKeys) {
             Path path = key.getSortPath();

@@ -20,6 +20,7 @@ import java.util.ListIterator;
 
 import junit.framework.JUnit4TestAdapter;
 
+import org.beanfabrics.Path;
 import org.beanfabrics.event.ElementChangedEvent;
 import org.beanfabrics.event.ElementsAddedEvent;
 import org.beanfabrics.event.ElementsDeselectedEvent;
@@ -42,17 +43,29 @@ public class MapPMTest {
 
     private static class DummyPM extends AbstractPM {
         IntegerPM id = new IntegerPM();
+        TextPM text = new TextPM();
 
-        public DummyPM() {
+        public DummyPM() {          
+            String str = Character.toString((char)(Math.random()*26+(int)'A'));
+            text.setText(str);
             PMManager.setup(this);
         }
 
         public DummyPM(String id) {
+            this();
             this.id.setText(id);
         }
 
         public String getId() {
             return "id=" + id.getText() + "";
+        }
+        
+        public void setText(String value) {
+            this.text.setText(value);
+        }
+        
+        public String getText() {
+            return text.getText();
         }
     }
 
@@ -1241,6 +1254,26 @@ public class MapPMTest {
         assertEquals("map.getSelection().size()", 5, map.getSelection().size());
     }
     
+    @Test
+    public void getSortKey() {
+        MapPM map = new MapPM();
+        DummyPM[] elems = populate(map, 10);
+        
+        Collection<SortKey> sortKeys = map.getSortKeys();
+        assertNotNull("sortKeys", sortKeys);
+        assertEquals("sortKeys.size()", 0, sortKeys.size());
+        
+        map.sortBy( new SortKey( true, new Path("text")), new SortKey( true, new Path("id")));
+        sortKeys = map.getSortKeys();
+        
+        assertNotNull("sortKeys", sortKeys);
+        assertEquals("sortKeys.size()", 2, sortKeys.size());
+        
+        SortKey[] sortKeysArray = (SortKey[]) sortKeys.toArray( new SortKey[sortKeys.size()]);
+        assertEquals("sortKeysArray[0].getSortPath()", new Path("text"), sortKeysArray[0].getSortPath());
+        assertEquals("sortKeysArray[1].getSortPath()", new Path("id"), sortKeysArray[1].getSortPath());
+        
+    }
 
     private DummyPM[] populate(MapPM map, int number) {
         DummyPM[] elems = new DummyPM[number];
