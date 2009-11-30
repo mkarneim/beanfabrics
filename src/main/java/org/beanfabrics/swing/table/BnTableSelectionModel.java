@@ -153,7 +153,7 @@ public class BnTableSelectionModel implements ListSelectionModel {
 
     /** {@inheritDoc} */
     public void setValueIsAdjusting(boolean valueIsAdjusting) {
-        //		out("BnTableSelectionModel.setValueIsAdjusting("+valueIsAdjusting+")");
+        //              out("BnTableSelectionModel.setValueIsAdjusting("+valueIsAdjusting+")");
         if (valueIsAdjusting == this.valueIsAdjusting) {
             return;
         }
@@ -182,7 +182,7 @@ public class BnTableSelectionModel implements ListSelectionModel {
 
     /** {@inheritDoc} */
     public int getAnchorSelectionIndex() {
-        //		out("BnTableSelectionModel.getAnchorSelectionIndex() "+anchorSelectionIndex);
+        //              out("BnTableSelectionModel.getAnchorSelectionIndex() "+anchorSelectionIndex);
         // Return the first index argument from the most recent call to
         // setSelectionInterval(), addSelectionInterval() or removeSelectionInterval().
         return anchorSelectionIndex;
@@ -190,7 +190,7 @@ public class BnTableSelectionModel implements ListSelectionModel {
 
     /** {@inheritDoc} */
     public void setAnchorSelectionIndex(int index) {
-        //		out("BnTableSelectionModel.setAnchorSelectionIndex("+index+")###");
+        //              out("BnTableSelectionModel.setAnchorSelectionIndex("+index+")###");
         int oldAnchor = this.anchorSelectionIndex;
         this.anchorSelectionIndex = index;
         fireValueChangedBetween(oldAnchor, anchorSelectionIndex);
@@ -198,14 +198,14 @@ public class BnTableSelectionModel implements ListSelectionModel {
 
     /** {@inheritDoc} */
     public int getLeadSelectionIndex() {
-        //		out("BnTableSelectionModel.getLeadSelectionIndex() "+leadSelectionIndex);
+        //              out("BnTableSelectionModel.getLeadSelectionIndex() "+leadSelectionIndex);
 
         return leadSelectionIndex;
     }
 
     /** {@inheritDoc} */
     public void setLeadSelectionIndex(int index) {
-        //		out("BnTableSelectionModel.setLeadSelectionIndex("+index+")###");
+        //              out("BnTableSelectionModel.setLeadSelectionIndex("+index+")###");
         int oldLead = this.leadSelectionIndex;
         this.leadSelectionIndex = index;
         fireValueChangedBetween(oldLead, anchorSelectionIndex);
@@ -228,7 +228,7 @@ public class BnTableSelectionModel implements ListSelectionModel {
 
     /** {@inheritDoc} */
     public void setSelectionInterval(int index0, int index1) {
-        //		out("BnTableSelectionModel.setSelectionInterval("+index0+","+index1+")");
+        //              out("BnTableSelectionModel.setSelectionInterval("+index0+","+index1+")");
 
         // To be compatible with standard Swing:
         if (getSelectionMode() == SINGLE_SELECTION) {
@@ -245,7 +245,7 @@ public class BnTableSelectionModel implements ListSelectionModel {
 
     /** {@inheritDoc} */
     public void addSelectionInterval(int index0, int index1) {
-        //		out("BnTableSelectionModel.addSelectionInterval("+index0+","+index1+")");
+        //              out("BnTableSelectionModel.addSelectionInterval("+index0+","+index1+")");
         if (index0 == -1 || index1 == -1) {
             return;
         }
@@ -276,7 +276,7 @@ public class BnTableSelectionModel implements ListSelectionModel {
 
     /** {@inheritDoc} */
     public void removeSelectionInterval(int index0, int index1) {
-        //		out("BnTableSelectionModel.removeSelectionInterval("+index0+","+index1+")");
+        //              out("BnTableSelectionModel.removeSelectionInterval("+index0+","+index1+")");
         int beginIndex = Math.min(index0, index1);
         int endIndex = Math.max(index0, index1);
 
@@ -348,20 +348,20 @@ public class BnTableSelectionModel implements ListSelectionModel {
         }
     }
 
-    //	long lasttime = 0;
-    //	String lasttext = "";
-    //	private void out( String text) {
-    //		long now = System.currentTimeMillis();
-    //		if ( now - lasttime > 1000) {
-    //			System.out.println();
-    //		}
-    //		lasttime = now;
-    //		if ( lasttext.equals(text)) {
-    //			System.out.print(".");
-    //		} else {
-    //			lasttext = text;
-    //			System.out.print("\n"+text);
-    //		}
-    //		System.out.flush();
-    //	}
+    //  long lasttime = 0;
+    //  String lasttext = "";
+    //  private void out( String text) {
+    //          long now = System.currentTimeMillis();
+    //          if ( now - lasttime > 1000) {
+    //                  System.out.println();
+    //          }
+    //          lasttime = now;
+    //          if ( lasttext.equals(text)) {
+    //                  System.out.print(".");
+    //          } else {
+    //                  lasttext = text;
+    //                  System.out.print("\n"+text);
+    //          }
+    //          System.out.flush();
+    //  }
 }

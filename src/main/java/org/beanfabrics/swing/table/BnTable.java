@@ -85,7 +85,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     private final AutoResizeExtension autoResizeExtension = createAutoResizeExtension();
 
     public BnTable() {
-        this.setSurrendersFocusOnKeystroke(true);
+        this.setSurrendersFocusOnKeystroke(true);        
         this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
 
@@ -155,26 +155,24 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         }
 
         this.setModel(new BnTableModel(currListMdl, this.columns));
-
+        
+        // install the row sorter        
+        {
+            // When intalling a row sorter in jre1.6 the selection model is cleared
+            // To prevent this to change the presentation model we temporary install a dummy selection model
+            int oldSelectionMode = getSelectionModel().getSelectionMode();
+            setSelectionModel(createDefaultSelectionModel());
+            setSelectionMode(oldSelectionMode);
+        }
+        installRowSorter();
+        // now install the real selection model 
         int currentSelectionMode = getSelectionModel().getSelectionMode();
         BnTableSelectionModel newModel = new BnTableSelectionModel(currListMdl);
         newModel.setSelectionMode(currentSelectionMode);
 
         this.setSelectionModel(newModel);
 
-        this.autoResizeExtension.resizeColumns();
-        // (rk) jdk 1.6
-        // final javax.swing.table.TableRowSorter<BnTableModel> sorter =
-        // new javax.swing.table.TableRowSorter<BnTableModel>(model);
-        // this.setRowSorter(sorter);
-
-        // for( int i=0; i< this.getColumnCount(); ++i) {
-        // Object id = null;
-        // id = getColumnName(i);
-        // TableCellRenderer r = getColumn(id).getHeaderRenderer();
-        // System.out.println(r);
-        // }
-        installRowSorter();
+        this.autoResizeExtension.resizeColumns();                
     }
 
     private void installRowSorter() {
@@ -257,8 +255,6 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
             this.presentationModel.removeListListener(listListener);
         }
 
-        uninstallRowSorter();
-
         // process selection model
         ListSelectionModel selModel = getSelectionModel();
         int currentSelectionMode = selModel.getSelectionMode();
@@ -274,6 +270,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         }
         setModel(createDefaultDataModel());
 
+        uninstallRowSorter();
     }
 
     public BnColumn[] getColumns() {
