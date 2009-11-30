@@ -158,9 +158,9 @@ public class BnTableTest {
         setup();
         assertEquals("table.getRowCount()", this.groupModel.persons.size(), table.getRowCount());
         assertEquals("table.getColumnCount()", this.def.length, table.getColumnCount());
-        this.table.setModel(new DefaultTableModel());
+        this.table.setPresentationModel(null);
         assertEquals("table.getRowCount()", 0, table.getRowCount());
-        assertEquals("table.getColumnCount()", 0, table.getColumnCount());
+        assertEquals("table.getColumnCount()", this.def.length, table.getColumnCount());
     }
 
     @Test
