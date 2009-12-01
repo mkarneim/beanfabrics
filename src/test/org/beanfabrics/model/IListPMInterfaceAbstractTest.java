@@ -4,16 +4,15 @@
  */
 package org.beanfabrics.model;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
+import org.beanfabrics.Path;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,7 +35,9 @@ public abstract class IListPMInterfaceAbstractTest {
 
     public static class RowPM extends AbstractPM {
         IntegerPM id = new IntegerPM();
-
+        TextPM name = new TextPM();
+        IntegerPM section = new IntegerPM();
+        
         public RowPM() {
             PMManager.setup(this);
         }
@@ -48,13 +49,27 @@ public abstract class IListPMInterfaceAbstractTest {
     @Before
     public void setUp()
         throws Exception {
+        Random rnd = new Random(3341);
         elements = new ArrayList<RowPM>(INITIAL_NUMBER_OF_ELEMENTS);
         for (int i = 0; i < INITIAL_NUMBER_OF_ELEMENTS; ++i) {
             RowPM row = new RowPM();
             row.id.setInteger(i);
+            row.name.setText( createRandomText(rnd));
+            row.section.setInteger( i%2);
             elements.add(row);
         }
         this.list = create(elements, INITIAL_SELECTED_ELEMENT_INDEXES);
+    }
+
+    private String createRandomText(Random rnd) {
+        final int len = 4;
+        StringBuffer buf = new StringBuffer();
+        for( int i=0; i<len; ++i) {
+            double rndNum = rnd.nextDouble();
+            int index = (int)(24.0d*rndNum) + 'a';
+            buf.append( Character.toString((char)index));
+        }
+        return buf.toString();
     }
 
     protected abstract IListPM<RowPM> create(Collection<RowPM> elements, int[] selectedIndexes)
@@ -135,6 +150,23 @@ public abstract class IListPMInterfaceAbstractTest {
             assertEquals("[i='" + i + "'] it.hasNext()", true, it.hasNext());
             RowPM element = it.next();
             assertSame("[i='" + i + "'] element", elements.get(i), element);
+        }
+    }
+    
+    @Test
+    public void sortIsStable() {
+        list.sortBy( true, new Path("name"));
+        list.sortBy( true, new Path("section"));
+        
+        Iterator<RowPM> it = list.iterator();
+        RowPM curr = null;
+        RowPM last = null;
+        for (int i = 0; i < elements.size(); ++i) {
+            curr = it.next();
+            if ( last != null && last.section.getText().equals( curr.section.getText())) {
+                assertTrue("Element #"+i+" '"+curr.name.getText()+"' should be after element #"+(i-1)+" '"+last.name.getText()+"'", curr.name.getText().compareTo( last.name.getText()) >= 0);
+            }    
+            last = curr;
         }
     }
 }

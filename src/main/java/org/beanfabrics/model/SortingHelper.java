@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.beanfabrics.Path;
 import org.beanfabrics.PathEvaluation;
@@ -30,7 +29,15 @@ class SortingHelper {
         if (map.isEmpty()) {
             return;
         }
-        List<Map.Entry<K, V>> list = new ArrayList<Map.Entry<K, V>>(map.entrySet());
+        final int len = map.size();
+        List<Entry<K, V>> list = new ArrayList<Entry<K,V>>(len);
+        for( int i=0; i<len; ++i) {
+            K key = map.getKey(i);
+            V value = map.get(i);
+            Entry<K, V> entry = new Entry<K, V>(key, value);
+            list.add(entry);
+        }
+        
         List<SortKey> reverseKeys = new ArrayList( Arrays.asList(sortKeys));
         Collections.reverse(reverseKeys);
         for (SortKey key : reverseKeys) {
@@ -39,7 +46,7 @@ class SortingHelper {
             Collections.sort(list, new EntryComparator(new PathComparator(new ModelComparatorImpl(ascending ? 1 : -1), path)));
         }
         Collection<K> keys = new LinkedList<K>();
-        for (Map.Entry<K, V> entry : list) {
+        for (Entry<K, V> entry : list) {
             keys.add(entry.getKey());
         }
         map.reorder(keys);
@@ -49,7 +56,7 @@ class SortingHelper {
         if (list.isEmpty()) {
             return; // nothing to do
         }
-        List<SortKey> reverseKeys = Arrays.asList(sortKeys);
+        List<SortKey> reverseKeys = new ArrayList(Arrays.asList(sortKeys));
         Collections.reverse(reverseKeys);
         for (SortKey key : reverseKeys) {
             Path path = key.getSortPath();
@@ -124,6 +131,22 @@ class SortingHelper {
         }
     }
 
+    private static class Entry<K,V> {
+        K key;
+        V value;
+        public Entry(K key, V value) {
+            super();
+            this.key = key;
+            this.value = value;
+        }
+        public K getKey() {
+            return key;
+        }
+        public V getValue() {
+            return value;
+        }
+    }
+    
     private static class EntryComparator implements Comparator {
         final PathComparator delegate;
 
@@ -132,8 +155,8 @@ class SortingHelper {
         }
 
         public int compare(Object o1, Object o2) {
-            Map.Entry e1 = (Map.Entry)o1;
-            Map.Entry e2 = (Map.Entry)o2;
+            Entry e1 = (Entry)o1;
+            Entry e2 = (Entry)o2;
             PresentationModel row1 = (PresentationModel)e1.getValue();
             PresentationModel row2 = (PresentationModel)e2.getValue();
 
