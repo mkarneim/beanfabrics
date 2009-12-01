@@ -37,8 +37,10 @@ import org.beanfabrics.util.ReflectionUtil;
  * @author Max Gensthaler
  */
 public class PropertySupport implements Support {
-    private static final String DEFAULT_NAME = "#default";
 
+    private static final String DEFAULT_NAME = "#default";
+    private static final Map<Class, List<PropertyDeclaration>> DECLARATION_CACHE = new HashMap<Class, List<PropertyDeclaration>>();
+    
     public static PropertySupport get(PresentationModel model) {
         Supportable s = (Supportable)model;
 
@@ -364,8 +366,12 @@ public class PropertySupport implements Support {
     }
 
     public static List<PropertyDeclaration> findAllPropertyDeclarations(Class cls) {
-        List<PropertyDeclaration> result = new LinkedList<PropertyDeclaration>();
-        findAllPropertyDeclarations(cls, result);
+        List<PropertyDeclaration> result = DECLARATION_CACHE.get(cls);
+        if (result == null) {
+            result = new LinkedList<PropertyDeclaration>();
+            findAllPropertyDeclarations(cls, result);
+            DECLARATION_CACHE.put(cls, result);
+        }
         return result;
     }
 
