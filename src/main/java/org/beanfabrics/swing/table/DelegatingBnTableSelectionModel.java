@@ -27,10 +27,10 @@ import org.beanfabrics.util.Interval;
 
 /**
  * Temporary class.<p>! DO NOT USE !</p>
- * 
+ *
  * The <code>DelegatingBnTableSelectionModel</code> is a {@link ListSelectionModel} that
  * decorates a {@link IListPM}.
- * 
+ *
  * @author Michael Karneim
  */
 class DelegatingBnTableSelectionModel implements ListSelectionModel {
@@ -38,13 +38,11 @@ class DelegatingBnTableSelectionModel implements ListSelectionModel {
     private IListPM<? extends PresentationModel> list;
 
     private final ListSelectionListener delegateListener = new ListSelectionListener() {
-        @Override
         public void valueChanged(ListSelectionEvent e) {
             fireValueChanged(e.getFirstIndex(), e.getLastIndex()-e.getFirstIndex()+1, e.getValueIsAdjusting());
         }
     };
-    
-    
+
     private final ListListener listener = new WeakListListener() {
         /* TODO (mk) currently we don't care about the selection mode
          * when receiving and forwarding events from the IListPM
@@ -53,7 +51,7 @@ class DelegatingBnTableSelectionModel implements ListSelectionModel {
          * This might annoy some people. We have to think it over.
          */
         public void elementsDeselected(ElementsDeselectedEvent evt) {
-            delegate.removeSelectionInterval(evt.getBeginIndex(), evt.getBeginIndex()+evt.getLength()-1);            
+            delegate.removeSelectionInterval(evt.getBeginIndex(), evt.getBeginIndex()+evt.getLength()-1);
         }
 
         public void elementsSelected(ElementsSelectedEvent evt) {
@@ -86,13 +84,13 @@ class DelegatingBnTableSelectionModel implements ListSelectionModel {
             throw new IllegalArgumentException("pModel must not be null");
         }
         this.list = pModel;
-        
+
         int[] indexes = this.list.getSelection().getIndexes();
         Interval[] intervals = Interval.createIntervals(indexes);
         for( Interval interval: intervals) {
             delegate.addSelectionInterval(interval.startIndex, interval.endIndex);
         }
-        
+
         this.list.addListListener(this.listener);
         this.delegate.addListSelectionListener(this.delegateListener);
     }
@@ -119,15 +117,15 @@ class DelegatingBnTableSelectionModel implements ListSelectionModel {
         }
         eventListeners.remove(l);
     }
-    
+
     protected void fireValueChangedBetween(int index0, int index1, boolean valueIsAdjusting) {
         int beginIndex = Math.min(index0, index1);
         int endIndex = Math.max(index0, index1);
         int len = endIndex - beginIndex;
         fireValueChanged(beginIndex, len, valueIsAdjusting);
     }
-    
-    protected void fireValueChanged(int beginIndex, int length, boolean valueIsAdjusting) {        
+
+    protected void fireValueChanged(int beginIndex, int length, boolean valueIsAdjusting) {
         if (eventListeners.isEmpty()) {
             return;
         }
@@ -223,5 +221,4 @@ class DelegatingBnTableSelectionModel implements ListSelectionModel {
     public void setValueIsAdjusting(boolean valueIsAdjusting) {
         delegate.setValueIsAdjusting(valueIsAdjusting);
     }
-
 }
