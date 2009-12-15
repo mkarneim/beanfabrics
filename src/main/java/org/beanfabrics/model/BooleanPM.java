@@ -57,6 +57,16 @@ public class BooleanPM extends TextPM implements IBooleanPM {
         }
     }    
 
+	public void setDefaultBoolean(Boolean b) {
+		if (b == null) {
+			this.setDefaultText(null);
+		} else {
+			Options<Boolean> options = this.getOptions();
+			String txt = options.get(b);
+			this.setDefaultText(txt);
+		}
+	}
+
     protected Options<Boolean> createDefaultOptions() {
         Options<Boolean> result = new Options<Boolean>();
         result.put(true, resourceBundle.getString(KEY_TEXT_TRUE));

@@ -88,6 +88,14 @@ public class DatePM extends TextPM implements IDatePM {
         }
     }
 
+	public void setDefaultDate(Date date) {
+		if (date == null) {
+			this.setDefaultText(null);
+		} else {
+			this.setDefaultText(format.format(date));
+		}
+	}
+
     public Comparable getComparable() {
         return new DateComparable();
     }
@@ -129,7 +137,25 @@ public class DatePM extends TextPM implements IDatePM {
                 }
             }
         }
-    }
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!super.equals(o)) {
+				return false;
+			}
+			if (o == null) {
+				return false;
+			}
+			if (o.getClass() != getClass()) {
+				return false;
+			}
+			DateComparable castedObj = (DateComparable) o;
+			return ((this.time == null ? castedObj.time == null : this.time.equals(castedObj.time)));
+		}
+	}
 
     protected class DefaultValidationRule implements ValidationRule {
         public ValidationState validate() {

@@ -104,6 +104,14 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         return result;
     }
 
+	public void setDefaultBigDecimal(BigDecimal value) {
+		if (value == null) {
+			setDefaultText(null);
+		} else {
+			setDefaultText(format.format(value));
+		}
+	}
+
     public void setBigInteger(BigInteger value) {
         if (value == null) {
             setBigDecimal(null);
@@ -124,6 +132,14 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
             }
         }
     }
+
+	public void setDefaultBigInteger(BigInteger value) {
+		if (value == null) {
+			setDefaultBigDecimal(null);
+		} else {
+			setDefaultBigDecimal(new BigDecimal(value));
+		}
+	}
 
     private BigDecimal convert(String text) {
         if (format.isParseBigDecimal() == false) {
@@ -172,7 +188,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
             }
         }
 
-        /** {@inheritDoc} */
+        @Override
         public int compareTo(Object o) {
             if (o == null) {
                 throw new IllegalArgumentException("o==null");
@@ -196,5 +212,23 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
                 }
             }
         }
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!super.equals(o)) {
+				return false;
+			}
+			if (o == null) {
+				return false;
+			}
+			if (o.getClass() != getClass()) {
+				return false;
+			}
+			BigDecimalComparable castedObj = (BigDecimalComparable) o;
+			return ((this.bd == null ? castedObj.bd == null : this.bd.equals(castedObj.bd)));
+		}
     }
 }
