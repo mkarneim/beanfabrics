@@ -67,8 +67,8 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  V
     public TextPMComboBox() {        
         this.setEnabled(false);
         this.setModel(this.createDefaultModel());
-        this.registerKeyboardAction(clearAction, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
-        this.registerKeyboardAction(clearAction, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        this.registerKeyboardAction(clearAction, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), JComponent.WHEN_FOCUSED);
+        this.registerKeyboardAction(clearAction, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), JComponent.WHEN_FOCUSED);
     }
 
     public TextPMComboBox(ITextPM pModel) {
