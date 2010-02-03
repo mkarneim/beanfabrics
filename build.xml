@@ -8,7 +8,7 @@
 	<property name="project.title" value="Beanfabrics" />
 	<property name="project.vendor" value="Michael Karneim, beanfabrics.org" />
 	<property name="project.url" value="http://www.beanfabrics.org" />
-	<property name="project.copyright" value="2009 by Michael Karneim" />
+	<property name="project.copyright" value="2010 by Michael Karneim" />
 
 
 	<property name="compile.debug" value="true" />
