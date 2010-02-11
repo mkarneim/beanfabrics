@@ -7,11 +7,13 @@ package org.beanfabrics.util;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,33 +77,79 @@ import java.util.Map;
  */
 public class GenericsUtil {
     /**
-     * Get the actual type arguments a field has used to parameterize it's
+     * Get the actual type arguments a method has used to parameterize it's
      * generic type.
      * 
-     * @param genericClass
      * @param ownerClass
+     * @param genericReturnType
      * @param fieldName
      * @return a list of the actual type arguments.
      */
-    public static List<Type> getFieldTypeArguments(Class<?> genericClass, Class<?> ownerClass, String fieldName) {
-        Collection<Field> fields = ReflectionUtil.getAllFields(ownerClass, fieldName, genericClass);
+    public static List<Type> getMethodReturnTypeArguments(Class<?> ownerClass, String methodName, Class<?>[] parameterTypes, Class<?> genericReturnType) {
+        Collection<Method> methods = ReflectionUtil.getAllMethods(ownerClass, methodName, parameterTypes, genericReturnType);
+        if (methods.isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+        // we will take the first element since it is the most appropriate method
+        Method method = methods.iterator().next();
+        return getMethodReturnTypeArguments(method, genericReturnType);
+    }
+
+    private static List<Type> getMethodReturnTypeArguments(Method method, Class<?> genericReturnType) {
+        Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
+
+        internalGetMethodReturnTypeArguments(genericReturnType, method, resolvedTypes);
+
+        // finally, for each type parameter of baseClass,
+        // determine (if possible) the raw class
+        Type[] typeParameters = genericReturnType.getTypeParameters();
+        List<Type> typeArguments = new ArrayList<Type>();
+
+        // resolve types by chasing down type variables.
+        for (Type baseType : typeParameters) {
+            while (resolvedTypes.containsKey(baseType)) {
+                baseType = resolvedTypes.get(baseType);
+            }
+            typeArguments.add(baseType);
+        }
+
+        return typeArguments;
+    }
+
+    private static void internalGetMethodReturnTypeArguments(Class<?> baseClass, Method method, Map<Type, Type> resolvedTypes) {
+        Type returnType = method.getGenericReturnType();
+        internalGetTypeArguments(baseClass, returnType, resolvedTypes);
+    }
+
+    /**
+     * Get the actual type arguments a field has used to parameterize it's
+     * generic type.
+     * 
+     * @param ownerClass
+     * @param fieldName
+     * @param genericFieldType
+     * @return a list of the actual type arguments.
+     */
+    public static List<Type> getFieldTypeArguments(Class<?> ownerClass, String fieldName, Class<?> genericFieldType) {
+        Collection<Field> fields = ReflectionUtil.getAllFields(ownerClass, fieldName, genericFieldType);
         if (fields.isEmpty()) {
-            throw new IllegalArgumentException("Class " + ownerClass.getName() + " nor it's superclasses do declare a field '" + fieldName + "' with type '" + genericClass.getName() + "'");
+            return Collections.EMPTY_LIST;
+            //throw new IllegalArgumentException("Class " + ownerClass.getName() + " nor it's superclasses do declare a field '" + fieldName + "' with type '" + genericClass.getName() + "'");
         } else if (fields.size() > 1) {
             throw new IllegalArgumentException("Ambiguous field name '" + fieldName + "' in class " + ownerClass.getName());
         }
         Field field = fields.iterator().next();
-        return getFieldTypeArguments(genericClass, field);
+        return getFieldTypeArguments(field, genericFieldType);
     }
 
-    private static List<Type> getFieldTypeArguments(Class<?> genericClass, Field field) {
+    private static List<Type> getFieldTypeArguments(Field field, Class<?> genericFieldType) {
         Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
 
-        internalGetFieldTypeArguments(genericClass, field, resolvedTypes);
+        internalGetFieldTypeArguments(genericFieldType, field, resolvedTypes);
 
         // finally, for each type parameter of baseClass,
         // determine (if possible) the raw class
-        Type[] typeParameters = genericClass.getTypeParameters();
+        Type[] typeParameters = genericFieldType.getTypeParameters();
         List<Type> typeArguments = new ArrayList<Type>();
 
         // resolve types by chasing down type variables.

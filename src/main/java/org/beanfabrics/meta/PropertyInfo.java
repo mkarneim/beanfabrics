@@ -39,8 +39,17 @@ public class PropertyInfo {
     }
 
     public Type[] getTypeArguments(Class genericClass) {
-        List<Type> typeArgs = GenericsUtil.getFieldTypeArguments(genericClass, getOwner().getJavaType(), this.name);
+        List<Type> typeArgs = GenericsUtil.getFieldTypeArguments(getOwner().getJavaType(), this.name, genericClass);
+        if (typeArgs.size() == 0) {
+            // no field
+            //-> any matching method?
+            typeArgs = GenericsUtil.getMethodReturnTypeArguments(getOwner().getJavaType(), getGetterName(), new Class[] {}, genericClass);
+        }
         return (Type[])typeArgs.toArray(new Type[0]);
+    }
+
+    private String getGetterName() {
+        return "get" + this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
     }
 
     @Override

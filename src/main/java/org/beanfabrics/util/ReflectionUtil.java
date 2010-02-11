@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,10 @@ public class ReflectionUtil {
         boolean accept(Field field);
     }
 
+    public interface MethodFilter {
+        boolean accept(Method method);
+    }
+
     /**
      * Returns all declared fields of the given {@link Class} and it's
      * superclasses.
@@ -48,7 +53,7 @@ public class ReflectionUtil {
      * superclasses that have the given name and are assignable to the given
      * type.
      * 
-     * @param cls the (super)class of the returned fields
+     * @param cls the class that owns the returned fields
      * @param fieldName name of the returned fields or <code>null</code> for no
      *            name filtering
      * @param fieldType the generic type of the returned fields or
@@ -59,7 +64,7 @@ public class ReflectionUtil {
         LinkedList<Field> result = new LinkedList<Field>();
         findAllFields(cls, result, new FieldFilter() {
             public boolean accept(Field field) {
-                return (fieldName == null || fieldName.equals(field.getName())) && (fieldType == null || fieldType.isAssignableFrom(fieldType));
+                return (fieldName == null || fieldName.equals(field.getName())) && (fieldType == null || fieldType.isAssignableFrom(field.getType()));
             }
         });
         return result;
@@ -142,6 +147,31 @@ public class ReflectionUtil {
     }
 
     /**
+     * Returns all declared methods of the given {@link Class} and it's
+     * superclasses that have the given name and have a return type assignable
+     * to the given type.
+     * 
+     * @param cls the class that owns the returned methods
+     * @param methodName name of the returned methods or <code>null</code> for
+     *            no name filtering
+     * @param parameterTypes the parameter types of the returned methods or
+     *            <code>null</code> for no parameter types filtering
+     * @param returnType the generic type of the returned methods or
+     *            <code>null</code> for no type filtering
+     * @return all declared methods that match the given filter arguments
+     */
+    public static Collection<Method> getAllMethods(Class cls, final String methodName, final Class[] parameterTypes, final Class returnType) {
+        LinkedList<Method> result = new LinkedList<Method>();
+        findAllMethods(cls, result, new MethodFilter() {
+            public boolean accept(Method method) {
+                return (methodName == null || methodName.equals(method.getName())) && (returnType == null || returnType.isAssignableFrom(method.getReturnType()))
+                        && (parameterTypes == null || Arrays.equals(parameterTypes, method.getParameterTypes()));
+            }
+        });
+        return result;
+    }
+
+    /**
      * Returns all Methods of the given {@link Class} and it's superclasses
      * which are annotated with the given <code>annotationType</code>.
      * 
@@ -153,6 +183,23 @@ public class ReflectionUtil {
         LinkedList<Method> result = new LinkedList<Method>();
         findAllMethods(cls, annotationType, result);
         return result;
+    }
+
+    private static void findAllMethods(Class cls, Collection<? super Method> result, MethodFilter filter) {
+        Method[] declMethods = cls.getDeclaredMethods();
+        for (Method f : declMethods) {
+            if (filter == null || filter.accept(f)) {
+                result.add(f);
+            }
+        }
+        Class superCls = cls.getSuperclass();
+        if (superCls != null) {
+            findAllMethods(superCls, result, filter);
+        }
+        Class[] interfaces = cls.getInterfaces();
+        for (Class i : interfaces) {
+            findAllMethods(i, result, filter);
+        }
     }
 
     private static void findAllMethods(Class cls, Class annoType, Collection<? super Method> result) {
@@ -352,4 +399,5 @@ public class ReflectionUtil {
             }
         }
     }
+
 }

@@ -409,7 +409,20 @@ public class GenericsUtilTest {
 
     @Test
     public void testClassWithStringList() {
-        List<Type> list = util.getFieldTypeArguments(Collection.class, ClassWithStringList.class, "list");
+        List<Type> list = util.getFieldTypeArguments(ClassWithStringList.class, "list", Collection.class);
+        assertEquals("list.size()", 1, list.size());
+        assertEquals("list.get(0)", String.class, list.get(0));
+    }
+
+    private static class ClassWithStringListMethod {
+        public List<String> getList() {
+            return null;
+        };
+    }
+
+    @Test
+    public void testClassWithStringListMethod() {
+        List<Type> list = util.getMethodReturnTypeArguments(ClassWithStringListMethod.class, "getList", new Class[] {}, Collection.class);
         assertEquals("list.size()", 1, list.size());
         assertEquals("list.get(0)", String.class, list.get(0));
     }
@@ -420,7 +433,7 @@ public class GenericsUtilTest {
 
     @Test
     public void testClassWithList() {
-        List<Type> list = util.getFieldTypeArguments(Collection.class, ClassWithList.class, "list");
+        List<Type> list = util.getFieldTypeArguments(ClassWithList.class, "list", Collection.class);
         assertEquals("list.size()", 1, list.size());
         assertEquals("TypeVariable.class.isAssignableFrom(list.get(0).getClass())", true, TypeVariable.class.isAssignableFrom(list.get(0).getClass()));
         TypeVariable<?> typeVar = (TypeVariable<?>)list.get(0);
@@ -433,7 +446,7 @@ public class GenericsUtilTest {
 
     @Test
     public void testClassWithNumberList() {
-        List<Type> list = util.getFieldTypeArguments(Collection.class, ClassWithNumberList.class, "list");
+        List<Type> list = util.getFieldTypeArguments(ClassWithNumberList.class, "list", Collection.class);
         assertEquals("TypeVariable.class.isAssignableFrom(list.get(0).getClass())", true, TypeVariable.class.isAssignableFrom(list.get(0).getClass()));
         TypeVariable<?> typeVar = (TypeVariable<?>)list.get(0);
         assertEquals("typeVar.getBounds()[0]", Number.class, typeVar.getBounds()[0]);
@@ -441,7 +454,7 @@ public class GenericsUtilTest {
 
     @Test
     public void testClassWithNumberList2() {
-        List<Type> list = util.getFieldTypeArguments(List.class, ClassWithNumberList.class, "list");
+        List<Type> list = util.getFieldTypeArguments(ClassWithNumberList.class, "list", List.class);
         assertEquals("TypeVariable.class.isAssignableFrom(list.get(0).getClass())", true, TypeVariable.class.isAssignableFrom(list.get(0).getClass()));
         TypeVariable<?> typeVar = (TypeVariable<?>)list.get(0);
         assertEquals("typeVar.getBounds()[0]", Number.class, typeVar.getBounds()[0]);
@@ -454,7 +467,7 @@ public class GenericsUtilTest {
     @Test
     // WARNING: This test still fails
     public void testClassWithConcreteNumberList() {
-        List<Type> list = util.getFieldTypeArguments(Collection.class, ClassWithConcreteNumberList.class, "list");
+        List<Type> list = util.getFieldTypeArguments(ClassWithConcreteNumberList.class, "list", Collection.class);
         assertEquals("list.size()", 1, list.size());
         assertEquals("list.get(0)", Long.class, list.get(0));
     }
@@ -467,14 +480,14 @@ public class GenericsUtilTest {
     @Test
     // WARNING: This test still fails
     public void testClassWithMap() {
-        List<Type> list = util.getFieldTypeArguments(Collection.class, ClassWithMap.class, "map");
+        List<Type> list = util.getFieldTypeArguments(ClassWithMap.class, "map", Collection.class);
         assertEquals("list.size()", 1, list.size());
         assertEquals("list.get(0)", Integer.class, list.get(0));
     }
 
     @Test
     public void testClassWithMap2() {
-        List<Type> list = util.getFieldTypeArguments(Map.class, ClassWithMap.class, "map");
+        List<Type> list = util.getFieldTypeArguments(ClassWithMap.class, "map", Map.class);
         assertEquals("list.size()", 2, list.size());
         assertEquals("list.get(0)", String.class, list.get(0));
         assertEquals("list.get(1)", Integer.class, list.get(1));
