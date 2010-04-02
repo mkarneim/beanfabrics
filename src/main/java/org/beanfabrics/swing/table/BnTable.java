@@ -80,16 +80,32 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     private final Link link = new Link(this);
     private IListPM<? extends PresentationModel> presentationModel;
     private List<BnColumn> columns = Collections.EMPTY_LIST;
-
+    private boolean cellEditingAllowed; 
+    
     // Extensions
     private final AutoResizeExtension autoResizeExtension = createAutoResizeExtension();
 
     public BnTable() {
         this.setSurrendersFocusOnKeystroke(true);        
         this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        this.setCellEditingAllowed(true);
     }
 
-    /** {@inheritDoc} */
+    public boolean isCellEditingAllowed() {
+		return cellEditingAllowed;
+	}
+
+	public void setCellEditingAllowed(boolean editingAllowed) {
+		this.cellEditingAllowed = editingAllowed;
+		if ( isConnected()) {
+			TableModel tblModel = getModel();
+	        if (tblModel instanceof BnTableModel) {
+	            ((BnTableModel)tblModel).setCellEditingAllowed( this.cellEditingAllowed);
+	        }
+		}
+	}
+
+	/** {@inheritDoc} */
     public IListPM<? extends PresentationModel> getPresentationModel() {
         return this.presentationModel;
     }
@@ -154,7 +170,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
             this.presentationModel.addListListener(listListener);
         }
 
-        this.setModel(new BnTableModel(currListMdl, this.columns));
+        this.setModel(new BnTableModel(currListMdl, this.columns, this.cellEditingAllowed));
         
         // install the row sorter        
         {

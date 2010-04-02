@@ -43,7 +43,8 @@ import org.beanfabrics.model.SortKey;
 @SuppressWarnings("serial")
 public class BnTableModel extends AbstractTableModel {
     private IListPM list;
-
+    private boolean cellEditingAllowed;
+    
     private List<BnColumn> colDefs = new ArrayList<BnColumn>();
 
     private transient ListListener listener = new WeakListListener() {
@@ -72,7 +73,7 @@ public class BnTableModel extends AbstractTableModel {
         }
     };
 
-    public BnTableModel(IListPM aListModel, List<BnColumn> colDefs) {
+    public BnTableModel(IListPM aListModel, List<BnColumn> colDefs, boolean editingAllowed) {
         if (aListModel == null) {
             throw new IllegalArgumentException("aListModel must not be null");
         }
@@ -80,6 +81,7 @@ public class BnTableModel extends AbstractTableModel {
             throw new IllegalArgumentException("colDefs must not be null");
         }
         this.list = aListModel;
+        this.cellEditingAllowed = editingAllowed;
         this.colDefs.addAll(colDefs);
         this.list.addListListener(this.listener);
     }
@@ -90,8 +92,20 @@ public class BnTableModel extends AbstractTableModel {
     public void dismiss() {
         this.list.removeListListener(this.listener);
     }
+    
+    public void setCellEditingAllowed(boolean editingAllowed) {
+    	boolean oldValue = this.cellEditingAllowed;
+		this.cellEditingAllowed = editingAllowed;
+		if ( oldValue != this.cellEditingAllowed) {
+			this.fireTableStructureChanged();
+		}
+	}
+    
+    public boolean isCellEditingAllowed() {
+		return cellEditingAllowed;
+	}
 
-    public List<BnColumn> getColDefs() {
+	public List<BnColumn> getColDefs() {
         return Collections.unmodifiableList(colDefs);
     }
 
@@ -155,17 +169,17 @@ public class BnTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        // TODO (mk) possibly it makes sense to evaluate also a isWritable flag
-        // of the IListPM and
-        // only return true if both, the IListPM AND the row model are
-        // writable
-        final Object value = this.getValueAt(rowIndex, columnIndex);
-        if (value instanceof ITextPM) {
-            return ((ITextPM)value).isEditable();
-        } else if (value instanceof IOperationPM) {
-            return ((IOperationPM)value).isEnabled();
+        if ( !cellEditingAllowed) {
+        	return false;
         } else {
-            return false;
+	        final Object value = this.getValueAt(rowIndex, columnIndex);
+	        if (value instanceof ITextPM) {
+	            return ((ITextPM)value).isEditable();
+	        } else if (value instanceof IOperationPM) {
+	            return ((IOperationPM)value).isEnabled();
+	        } else {
+	            return false;
+	        }
         }
     }
 
@@ -195,4 +209,6 @@ public class BnTableModel extends AbstractTableModel {
         }
         return null;
     }
+
+	
 }

@@ -1324,7 +1324,7 @@ public class MapPMTest {
         
         List<BnColumn> cols = new ArrayList<BnColumn>();
         cols.add( new BnColumn(new Path("id"), "ID"));
-        BnTableModel model = new BnTableModel(map, cols);
+        BnTableModel model = new BnTableModel(map, cols, true);
         
         map.put(1, elems[1]);
         

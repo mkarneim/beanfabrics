@@ -119,7 +119,7 @@ public class CompositePresentationModelTest {
         colDefs.add(new BnColumn(new Path("address.street"), "Street"));
         colDefs.add(new BnColumn(new Path("address.city.name"), "City"));
 
-        BnTableModel tableModel = new BnTableModel(list, colDefs);
+        BnTableModel tableModel = new BnTableModel(list, colDefs, true);
 
         assertEquals("tableModel.getRowCount()", 10, tableModel.getRowCount());
 

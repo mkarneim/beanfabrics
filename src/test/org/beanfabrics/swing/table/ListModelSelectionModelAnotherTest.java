@@ -100,7 +100,7 @@ public class ListModelSelectionModelAnotherTest {
     @Test
     public void moveUpWithSelectionModelAndTableModel() {
         doAssertionsBeforeTest();
-        new BnTableModel(listModel, defsList);
+        new BnTableModel(listModel, defsList, true);
         BnTableSelectionModel selModel = new BnTableSelectionModel(listModel);
         moveSelectionUp();
         doAssertionsAfterMoveUp(selModel);
@@ -146,7 +146,7 @@ public class ListModelSelectionModelAnotherTest {
     @Test
     public void moveDownWithSelectionModelAndTableModel() {
         doAssertionsBeforeTest();
-        new BnTableModel(listModel, defsList);
+        new BnTableModel(listModel, defsList, true);
         BnTableSelectionModel selModel = new BnTableSelectionModel(listModel);
         moveSelectionDown();
         doAssertionsAfterMoveDown(selModel);

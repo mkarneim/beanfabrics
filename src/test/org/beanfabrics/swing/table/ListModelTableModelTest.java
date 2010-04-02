@@ -68,25 +68,25 @@ public class ListModelTableModelTest {
 
     @Test
     public void testListPropertyTableModel() {
-        final BnTableModel model = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel model = new BnTableModel(this.mapProperty, this.def, true);
         assertNotNull(model);
     }
 
     @Test
     public void testGetColumnCount() {
-        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def, true);
         assertEquals("pModel.getColumnCount()", 1, pModel.getColumnCount());
     }
 
     @Test
     public void testGetRowCount() {
-        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def, true);
         assertEquals("pModel.getRowCount()", 2, pModel.getRowCount());
     }
 
     @Test
     public void testGetValueAt() {
-        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def, true);
         final Object o = pModel.getValueAt(0, 0);
         assertNotNull(o);
         assertTrue(o instanceof TextPM);
@@ -96,7 +96,7 @@ public class ListModelTableModelTest {
 
     @Test
     public void testAddRow() {
-        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def, true);
         final MyModel pModel1 = new MyModel();
         pModel1.text.setText("!");
         this.mapProperty.put("pModel", pModel1);
@@ -105,14 +105,14 @@ public class ListModelTableModelTest {
 
     @Test
     public void testDeleteRow() {
-        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def, true);
         this.mapProperty.removeKey("pModel1");
         assertEquals("pModel.getRowCount()", 1, pModel.getRowCount());
     }
 
     @Test
     public void testReplaceRow() {
-        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def, true);
         final MyModel pModel1 = new MyModel();
         pModel1.text.setText("!");
         this.mapProperty.put("pModel1", pModel1);
@@ -121,7 +121,7 @@ public class ListModelTableModelTest {
 
     @Test
     public void testUpdateRow() {
-        final BnTableModel model = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel model = new BnTableModel(this.mapProperty, this.def, true);
         this.mapProperty.getAt(0).text.setText("Salute");
         final TextPM pModel = (TextPM)model.getValueAt(0, 0);
         assertEquals("pModel.getText()", "Salute", pModel.getText());
@@ -129,25 +129,25 @@ public class ListModelTableModelTest {
 
     @Test
     public void testGetColumnName() {
-        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def, true);
         assertEquals("pModel.getColumnName( 0)", "Text", pModel.getColumnName(0));
     }
 
     @Test
     public void testFindColumn() {
-        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def, true);
         assertEquals("pModel.findColumn(\"text\")", 0, pModel.findColumn("Text"));
     }
 
     @Test
     public void testGetColumnClass() {
-        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def, true);
         assertEquals("pModel.getColumnClass(0)", PresentationModel.class, pModel.getColumnClass(0));
     }
 
     @Test
     public void testIsCellEditable() {
-        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def);
+        final BnTableModel pModel = new BnTableModel(this.mapProperty, this.def, true);
         assertTrue("pModel.isCellEditable( 0,0)", pModel.isCellEditable(0, 0));
         final MyModel pModel1 = this.mapProperty.getAt(0);
         pModel1.text.setEditable(false);
