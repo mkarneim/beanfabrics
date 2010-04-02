@@ -279,7 +279,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
 
     public void addColumn(BnColumn newCol) {
         if (this.columns != null) {
-            final List<BnColumn> list = new ArrayList<BnColumn>();
+            final List<BnColumn> list = new ArrayList<BnColumn>(this.columns);
             list.add(newCol);
             this.setColumns(list.toArray(new BnColumn[list.size()]));
         } else {
