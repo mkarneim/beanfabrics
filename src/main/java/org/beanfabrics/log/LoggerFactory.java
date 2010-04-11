@@ -23,7 +23,7 @@ import java.util.Map;
  * "org.beanfabrics.log.LoggerFactory.loggerclass" to the <code>Logger</code>'s
  * classname.
  * </ul>
- * 
+ *
  * @see <a href="http://www.beanfabrics.org/index.php/Logging_Example">Logging
  *      Example</a>
  * @author Michael Karneim
@@ -40,7 +40,7 @@ public class LoggerFactory {
      * Use this method to access <code>internalFactory</code> so that it is
      * constructed at first access not at construction time of
      * <code>LoggerFactory</code>.
-     * 
+     *
      * @return the <code>internalFactory</code>
      */
     private static ReflectiveFactory getInternalFactory() {
@@ -52,7 +52,7 @@ public class LoggerFactory {
 
     /**
      * Returns a the {@link Logger} instance for a certain {@link Class}.
-     * 
+     *
      * @param clazz the <code>Class</code> the <code>Logger</code> is for
      * @return the <code>Logger</code> instance
      */
@@ -69,7 +69,7 @@ public class LoggerFactory {
     /**
      * Set the {@link Class} implementing the {@link Logger}. This class will be
      * used to create new instances by {@link #getLogger(Class)}.
-     * 
+     *
      * @param clazz the <code>Class</code> implementing the {@link Logger}
      * @throws IllegalArgumentException if <code>clazz</code> is
      *             <code>null</code>, does not implement {@link Logger} or has
@@ -106,8 +106,14 @@ public class LoggerFactory {
                 if (loggerclassSysProp != null) {
                     clazz = Class.forName(loggerclassSysProp);
                 } else {
-                    Class.forName("org.apache.log4j.Logger");
-                    clazz = Class.forName("org.beanfabrics.log.Log4JLogger");
+                	try {
+                		// first try if log4j is available
+                		Class.forName("org.apache.log4j.Logger");
+                		clazz = Class.forName("org.beanfabrics.log.Log4JLogger");
+                	} catch (ClassNotFoundException e) {
+                		// else take java logging framework
+                		clazz = Class.forName("org.beanfabrics.log.Jdk14Logger");
+                	}
                 }
                 constr = clazz.getConstructor(new Class[] { Class.class });
             } catch (ClassCastException e) {
