@@ -7,7 +7,7 @@ package org.beanfabrics.log;
 /**
  * A {@link Logger} that delegates all logging to <a
  * href="http://logging.apache.org/log4j/">Apache log4j</a>.
- * 
+ *
  * @author Michael Karneim
  */
 public class Log4JLogger implements Logger {
@@ -15,7 +15,7 @@ public class Log4JLogger implements Logger {
 
     /**
      * Constructs a <code>Log4JLogger</code> for a given {@link Class}.
-     * 
+     *
      * @param clazz the <code>Class</code> to log for
      */
     @SuppressWarnings("unchecked")
@@ -30,7 +30,6 @@ public class Log4JLogger implements Logger {
 
     /** {@inheritDoc} */
     public void trace(Object msg) {
-        System.out.println("Log4JLogger.trace()");
         delegate.trace(msg);
     }
 
