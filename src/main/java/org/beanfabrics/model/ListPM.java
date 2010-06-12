@@ -98,7 +98,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     /**
      * The sort keys reflect the sorting state of this list.
      */
-    private Collection<SortKey> sortKeys = Collections.EMPTY_LIST;
+    private Collection<SortKey> sortKeys = Collections.emptyList();
 
     /**
      * Constructs an empty list with an initial capacity of ten.
@@ -416,7 +416,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     public void sortBy(Collection<SortKey> newSortKeys) {
     	sortBy( newSortKeys.toArray(new SortKey[newSortKeys.size()]));
     }
-    
+
     public void sortBy(SortKey... newSortKeys) {
         ArrayList<T> list = new ArrayList<T>();
         for (Entry entry : entries) {
@@ -433,7 +433,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     private void setSortKeys(SortKey[] newSortKeys) {
         Collection<SortKey> oldValue = this.sortKeys;
         if (newSortKeys == null) {
-            this.sortKeys = Collections.EMPTY_LIST;
+            this.sortKeys = Collections.emptyList();
         } else {
             this.sortKeys = Collections.unmodifiableCollection(Arrays.asList(newSortKeys));
         }
@@ -619,7 +619,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     protected ValidationRule createDefaultValidationRule() {
         return new DefaultValidationRule();
-    }   
+    }
 
     private class SelectionImpl implements Selection<T> {
         int selectionSize = 0;

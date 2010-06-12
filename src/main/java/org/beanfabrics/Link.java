@@ -14,7 +14,7 @@ import org.beanfabrics.model.PresentationModel;
  * The Link is a view decorator that helps connecting a {@link View} to a
  * {@link PresentationModel} provided by a {@link IModelProvider} at a given
  * {@link Path}.
- * 
+ *
  * @author Michael Karneim
  */
 public class Link implements ModelSubscriber {
@@ -41,7 +41,7 @@ public class Link implements ModelSubscriber {
 
     /**
      * Creates a Link for the given view.
-     * 
+     *
      * @param view
      */
     public Link(View view) {
@@ -87,7 +87,7 @@ public class Link implements ModelSubscriber {
 
     /**
      * Returns the view.
-     * 
+     *
      * @return the view
      */
     public View getView() {
@@ -115,7 +115,9 @@ public class Link implements ModelSubscriber {
                 view.setPresentationModel(model);
                 return;
             } else {
-                LOG.warn("Can't set UI model of " + view.getClass().getName() + ". Expected model type is " + getExpectedModelType().getName() + ", but got " + model.getClass().getName() + ". Setting UI model to null.");
+            	if (LOG.isWarnEnabled()) {
+            		LOG.warn("Can't set UI model of " + view.getClass().getName() + ". Expected model type is " + getExpectedModelType().getName() + ", but got " + model.getClass().getName() + ". Setting UI model to null.");
+            	}
                 view.setPresentationModel(null);
             }
         }

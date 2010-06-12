@@ -83,7 +83,9 @@ public class Java5SortingTableHeader extends JTableHeader {
 
             listPM.sortBy(newSortKey);
         } else {
-            LOG.error("Can't sort unknown table model: " + tblModel.getClass().getName());
+        	if (LOG.isErrorEnabled()) {
+        		LOG.error("Can't sort unknown table model: " + tblModel.getClass().getName());
+        	}
         }
     }
 

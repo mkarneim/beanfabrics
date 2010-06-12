@@ -72,14 +72,14 @@ import java.util.Map;
  * </ul>
  * This class is inspired by Ian Robertson, see
  * http://www.artima.com/weblogs/viewpost.jsp?thread=208860
- * 
+ *
  * @author Michael Karneim
  */
 public class GenericsUtil {
     /**
      * Get the actual type arguments a method has used to parameterize it's
      * generic type.
-     * 
+     *
      * @param ownerClass
      * @param genericReturnType
      * @param fieldName
@@ -88,7 +88,7 @@ public class GenericsUtil {
     public static List<Type> getMethodReturnTypeArguments(Class<?> ownerClass, String methodName, Class<?>[] parameterTypes, Class<?> genericReturnType) {
         Collection<Method> methods = ReflectionUtil.getAllMethods(ownerClass, methodName, parameterTypes, genericReturnType);
         if (methods.isEmpty()) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         // we will take the first element since it is the most appropriate method
         Method method = methods.iterator().next();
@@ -124,7 +124,7 @@ public class GenericsUtil {
     /**
      * Get the actual type arguments a field has used to parameterize it's
      * generic type.
-     * 
+     *
      * @param ownerClass
      * @param fieldName
      * @param genericFieldType
@@ -133,7 +133,7 @@ public class GenericsUtil {
     public static List<Type> getFieldTypeArguments(Class<?> ownerClass, String fieldName, Class<?> genericFieldType) {
         Collection<Field> fields = ReflectionUtil.getAllFields(ownerClass, fieldName, genericFieldType);
         if (fields.isEmpty()) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
             //throw new IllegalArgumentException("Class " + ownerClass.getName() + " nor it's superclasses do declare a field '" + fieldName + "' with type '" + genericClass.getName() + "'");
         } else if (fields.size() > 1) {
             throw new IllegalArgumentException("Ambiguous field name '" + fieldName + "' in class " + ownerClass.getName());
@@ -171,7 +171,7 @@ public class GenericsUtil {
     /**
      * Get the actual type arguments a child class has used to extend a generic
      * class.
-     * 
+     *
      * @param genericClass the generic class (or interface)
      * @param childClass the child class
      * @return a list of the actual type arguments.
@@ -241,7 +241,7 @@ public class GenericsUtil {
     /**
      * Get the underlying class for a type, or null if the type is a variable
      * type.
-     * 
+     *
      * @param type the type
      * @return the underlying class
      */

@@ -45,11 +45,11 @@ import org.beanfabrics.validation.ValidationState;
  * The MapPM is a map of presentation models. Basically it provides methods for
  * adding, removing, accessing and iterating elements and informs listeners
  * about changes. It also maintains a {@link Selection}.
- * 
+ *
  * @author Michael Karneim
  */
 public class MapPM<K, V extends PresentationModel> extends AbstractPM implements IMapPM<K, V> {
-    
+
     private static final int NONE = -1;
 
     private final OrderPreservingMap<K, V> entries = new OrderPreservingMap<K, V>();
@@ -100,7 +100,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     /**
      * The sort keys reflect the sorting state of this list.
      */
-    private Collection<SortKey> sortKeys = Collections.EMPTY_LIST;
+    private Collection<SortKey> sortKeys = Collections.emptyList();
 
     public MapPM() {
         this.support.addListListener(this.selfListener);
@@ -194,7 +194,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         if (result != null) {
             // an old element with equal key has been replaced
             onRemove(result);
-            
+
             support.fireElementsReplaced(index, result);
         } else {
             // a new element was added
@@ -308,7 +308,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     /**
      * Sorts the entries of this map by comparing the {@link PresentationModel}s
      * at the end of the given paths.
-     * 
+     *
      * @param ascending if true, the resulting order will be ascending,
      *            otherwise descending.
      * @param paths one or more Path objects must be specified to define which
@@ -326,7 +326,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     public void sortBy(Collection<SortKey> newSortKeys) {
     	sortBy( newSortKeys.toArray(new SortKey[newSortKeys.size()]));
     }
-    
+
     public void sortBy(SortKey... newSortKeys) {
         OrderPreservingMap<K, V> map = new OrderPreservingMap<K, V>(entries);
         new SortingHelper().sortBy(map, newSortKeys);
@@ -340,7 +340,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     private void setSortKeys(SortKey[] newSortKeys) {
         Collection<SortKey> oldValue = this.sortKeys;
         if (newSortKeys == null) {
-            this.sortKeys = Collections.EMPTY_LIST;
+            this.sortKeys = Collections.emptyList();
         } else {
             this.sortKeys = Collections.unmodifiableCollection(Arrays.asList(newSortKeys));
         }
@@ -545,7 +545,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     /**
      * Returns a set of all keys of the elements in the given collection. For
      * elements that are not in this map no key is inserted into the result.
-     * 
+     *
      * @param col
      * @return a set of all keys of the elements in the given collection
      */
@@ -784,7 +784,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         /**
          * Returns a new Collection with all selected elements. Modification on
          * this collection will not influence the original selection.
-         * 
+         *
          * @return a new Collection with all selected elements.
          */
         public Collection<V> toCollection() {
@@ -1037,7 +1037,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         /**
          * Returns a new Collection with all selected keys. Modification on this
          * collection will not influence the original selection.
-         * 
+         *
          * @return a new Collection with all selected keys.
          */
         public Collection<K> toCollection() {

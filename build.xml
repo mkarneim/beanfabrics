@@ -51,8 +51,11 @@
 
 	<!-- Filesets and paths -->
 	<fileset id="lib.fileset" dir="${lib.dir}" description="Libraries needed to build this project.">
-		<include name="log4j/log4j-*.jar" />
+		<include name="slf4j/slf4j-*.jar" />
 		<include name="junit/junit-*.jar" />
+	</fileset>
+	<fileset id="lib.runtime.fileset" dir="${lib.dir}" description="Libraries needed to run this project.">
+		<include name="logback/logback-*.jar" />
 	</fileset>
 
 	<path id="compile.main.classpath" description="Classpath for compiling beanfabrics main runtime-classes">
@@ -87,6 +90,7 @@
 		<pathelement location="${build.classes.dir}" />
 		<pathelement location="${build.test.dir}" />
 		<fileset refid="lib.fileset" />
+		<fileset refid="lib.runtime.fileset" />
 	</path>
 
 	<!--#################### Init dynamic properties ########################-->
@@ -337,8 +341,8 @@
 
 	    <property file="build.credentials" />
 	    <fail unless="gc.username" message="Missing property 'gc.username' from file 'build.credentials'."/>
-	    <fail unless="gc.password" message="Missing property 'gc.password' from file 'build.credentials'."/>		
-	    
+	    <fail unless="gc.password" message="Missing property 'gc.password' from file 'build.credentials'."/>
+
 		<basename file="${src.jarfile}" property="src.jarfile.name"/>
 
 

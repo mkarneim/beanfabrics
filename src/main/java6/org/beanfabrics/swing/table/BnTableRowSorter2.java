@@ -14,8 +14,8 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.log.Logger;
-import org.beanfabrics.log.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.beanfabrics.model.IListPM;
 
 /**

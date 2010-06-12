@@ -55,7 +55,7 @@ import org.beanfabrics.swing.table.cellrenderer.BnTableCellRenderer;
  * href="http://www.beanfabrics.org/index.php/BnTable"
  * target="parent">http://www.beanfabrics.org/index.php/BnTable</a>
  * </p>
- * 
+ *
  * @author Michael Karneim
  * @beaninfo
  */
@@ -79,14 +79,14 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     };
     private final Link link = new Link(this);
     private IListPM<? extends PresentationModel> presentationModel;
-    private List<BnColumn> columns = Collections.EMPTY_LIST;
-    private boolean cellEditingAllowed; 
-    
+    private List<BnColumn> columns = Collections.emptyList();
+    private boolean cellEditingAllowed;
+
     // Extensions
     private final AutoResizeExtension autoResizeExtension = createAutoResizeExtension();
 
     public BnTable() {
-        this.setSurrendersFocusOnKeystroke(true);        
+        this.setSurrendersFocusOnKeystroke(true);
         this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         this.setCellEditingAllowed(true);
     }
@@ -145,7 +145,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     /**
      * Returns whether this component is connected to the target
      * {@link AbstractPM} to synchronize with.
-     * 
+     *
      * @return <code>true</code> when this component is connected, else
      *         <code>false</code>
      */
@@ -171,8 +171,8 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         }
 
         this.setModel(new BnTableModel(currListMdl, this.columns, this.cellEditingAllowed));
-        
-        // install the row sorter        
+
+        // install the row sorter
         {
             // When intalling a row sorter in jre1.6 the selection model is cleared
             // To prevent this to change the presentation model we temporary install a dummy selection model
@@ -181,14 +181,14 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
             setSelectionMode(oldSelectionMode);
         }
         installRowSorter();
-        // now install the real selection model 
+        // now install the real selection model
         int currentSelectionMode = getSelectionModel().getSelectionMode();
         BnTableSelectionModel newModel = new BnTableSelectionModel(currListMdl);
         newModel.setSelectionMode(currentSelectionMode);
 
         this.setSelectionModel(newModel);
 
-        this.autoResizeExtension.resizeColumns();                
+        this.autoResizeExtension.resizeColumns();
     }
 
     private void installRowSorter() {
@@ -197,14 +197,18 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         if (isJava5()) {
             return;
         }
-        LOG.debug("trying to install BnTableRowSorter");
+        if (LOG.isDebugEnabled()) {
+        	LOG.debug("trying to install BnTableRowSorter");
+        }
         try {
             Class rsClass = Class.forName("org.beanfabrics.swing.table.BnTableRowSorter");
             Method install = rsClass.getMethod("install", new Class[] { BnTable.class });
             install.invoke(null, new Object[] { this });
         } catch (ClassNotFoundException ex) {
             // not found. Ok, we do not install the row sorter
-            LOG.warn("Can't install BnTableRowSorter", ex);
+        	if (LOG.isWarnEnabled()) {
+        		LOG.warn("Can't install BnTableRowSorter", ex);
+        	}
         } catch (Exception ex) {
             throw new UndeclaredThrowableException(ex);
         }
@@ -214,14 +218,18 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         if (isJava5()) {
             return;
         }
-        LOG.debug("uninstalling BnTableRowSorter");
+        if (LOG.isDebugEnabled()) {
+        	LOG.debug("uninstalling BnTableRowSorter");
+        }
         try {
             Class rsClass = Class.forName("org.beanfabrics.swing.table.BnTableRowSorter");
             Method uninstall = rsClass.getMethod("uninstall", new Class[] { BnTable.class });
             uninstall.invoke(null, new Object[] { this });
         } catch (ClassNotFoundException ex) {
             // not found. ignore.
-            LOG.error("Can't uninstall BnTableRowSorter", ex);
+        	if (LOG.isErrorEnabled()) {
+        		LOG.error("Can't uninstall BnTableRowSorter", ex);
+        	}
         } catch (Exception ex) {
             throw new UndeclaredThrowableException(ex);
         }
@@ -231,7 +239,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
      * Returns the default table header object, which is dependent on the Java
      * version. In Java 5 a {@link Java5SortingTableHeader} is returned. In Java
      * 6 and later the standard {@link JTableHeader} is returned.
-     * 
+     *
      * @return the default table header object
      * @see JTableHeader
      */
@@ -333,7 +341,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     /**
      * Extension that auto-resizes the columns according to the settings of the
      * columns.
-     * 
+     *
      * @author Michael Karneim
      */
     class AutoResizeExtension {
@@ -366,7 +374,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         /**
          * This extension is only enabled if the standard auto resize mode is
          * off.
-         * 
+         *
          * @return <code>true</code> if this extension is enabled, else
          *         <code>false</code>
          */

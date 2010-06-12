@@ -7,146 +7,115 @@
 package org.beanfabrics.log;
 
 /**
+ * Beanfabrics classes use instances of this logger to log errors, warnings,
+ * infos ...
+ * <p>
+ * Beanfabrics uses this 'own' <code>LoggerFactory</code> and
+ * <code>Logger</code> to be runtime independent of any foreign library.
+ *
+ * @see <a href="http://www.beanfabrics.org/index.php/Logging_Example">Logging
+ *      Example</a>
+ * @author Max Gensthaler
  * @author Michael Karneim
  */
 public interface Logger {
-    /**
-     * Helps to trace the application, i.e. by writing to the logger at the
-     * beginning of the method:
-     * 
-     * <pre>
-     * if (LOG.isTraceEnabled()) {
-     *     LOG.trace(&quot;enter Logger.trace(Object,Throwable)&quot;
-     * }
-     * </pre>
-     * 
-     * @param msg message to log
-     * @param t <code>Throwable</code> to log
-     * @see #isTraceEnabled()
-     */
-    public void trace(Object msg, Throwable t);
+	/**
+	 * Returns if the TRACE level is enabled for this instance.
+	 *
+	 * @return <code>true</code> if the TRACE level is enabled, else
+	 *         <code>false</code>
+	 */
+	public boolean isTraceEnabled();
 
-    /**
-     * Helps to trace the application, i.e. by writing to the logger at the
-     * beginning of the method:
-     * 
-     * <pre>
-     * if (LOG.isTraceEnabled()) {
-     *     LOG.trace(&quot;enter Logger.trace(Object)&quot;
-     * }
-     * </pre>
-     * 
-     * @param msg message to log
-     * @see #isTraceEnabled()
-     */
-    public void trace(Object msg);
+	/**
+	 * Logs a message at the TRACE level.
+	 *
+	 * @param msg
+	 *            message to log
+	 */
+	public void trace(String msg);
 
-    /**
-     * Writes debug messages which under normal circumstances (if debug mode is
-     * not enabled) should not be shown.
-     * 
-     * @param msg message to log
-     * @param t <code>Throwable</code> to log
-     * @see #isDebugEnabled()
-     */
-    public void debug(Object msg, Throwable t);
+	/**
+	 * Returns if the DEBUG level is enabled for this instance.
+	 *
+	 * @return <code>true</code> if the DEBUG level is enabled, else
+	 *         <code>false</code>
+	 */
+	public boolean isDebugEnabled();
 
-    /**
-     * Writes debug messages which under normal circumstances (if debug mode is
-     * not enabled) should not be shown.
-     * 
-     * @param msg message to log
-     * @see #isDebugEnabled()
-     */
-    public void debug(Object msg);
+	/**
+	 * Logs a message at the DEBUG level.
+	 *
+	 * @param msg
+	 *            message to log
+	 */
+	public void debug(String msg);
 
-    /**
-     * Writes information messages.
-     * 
-     * @param msg message to log
-     * @param t <code>Throwable</code> to log
-     * @see #isDebugEnabled()
-     */
-    public void info(Object msg, Throwable t);
+	/**
+	 * Returns if the INFO level is enabled for this instance.
+	 *
+	 * @return <code>true</code> if the INFO level is enabled, else
+	 *         <code>false</code>
+	 */
+	public boolean isInfoEnabled();
 
-    /**
-     * Writes information messages.
-     * 
-     * @param msg message to log
-     * @see #isInfoEnabled()
-     */
-    public void info(Object msg);
+	/**
+	 * Logs a message at the INFO level.
+	 *
+	 * @param msg
+	 *            message to log
+	 */
+	public void info(String msg);
 
-    /**
-     * Writes warning messages.
-     * 
-     * @param msg message to log
-     * @param t <code>Throwable</code> to log
-     * @see #isInfoEnabled()
-     */
-    public void warn(Object msg, Throwable t);
+	/**
+	 * Returns if the WARN level is enabled for this instance.
+	 *
+	 * @return <code>true</code> if the WARN level is enabled, else
+	 *         <code>false</code>
+	 */
+	public boolean isWarnEnabled();
 
-    /**
-     * Writes warning messages.
-     * 
-     * @param msg message to log
-     */
-    public void warn(Object msg);
+	/**
+	 * Logs a message at the WARN level.
+	 *
+	 * @param msg
+	 *            message to log
+	 */
+	public void warn(String msg);
 
-    /**
-     * Writes error messages.
-     * 
-     * @param msg message to log
-     * @param t <code>Throwable</code> to log
-     */
-    public void error(Object msg, Throwable t);
+	/**
+	 * Logs an {@link Throwable} at the WARN level
+	 *
+	 * @param msg
+	 *            the message to log
+	 * @param t
+	 *            the <code>Throwable</code> to log
+	 */
+	public void warn(String msg, Throwable t);
 
-    /**
-     * Writes error messages.
-     * 
-     * @param msg message to log
-     */
-    public void error(Object msg);
+	/**
+	 * Returns if the ERROR level is enabled for this instance.
+	 *
+	 * @return <code>true</code> if the ERROR level is enabled, else
+	 *         <code>false</code>
+	 */
+	public boolean isErrorEnabled();
 
-    /**
-     * Writes fatal error messages.
-     * 
-     * @param msg message to log
-     * @param t <code>Throwable</code> to log
-     */
-    public void fatal(Object msg, Throwable t);
+	/**
+	 * Logs a message at the ERROR level.
+	 *
+	 * @param msg
+	 *            message to log
+	 */
+	public void error(String msg);
 
-    /**
-     * Writes fatal error messages.
-     * 
-     * @param msg message to log
-     */
-    public void fatal(Object msg);
-
-    /**
-     * Returns if the trace level is enabled. Should be checked before any call
-     * of {@link #trace(Object)} or {@link #trace(Object,Throwable)}.
-     * 
-     * @return <code>true</code> if the trace level is enabled, else
-     *         <code>false</code>
-     */
-    public boolean isTraceEnabled();
-
-    /**
-     * Returns if the debug level is enabled. Should be checked before any call
-     * of {@link #debug(Object)} or {@link #debug(Object,Throwable)}.
-     * 
-     * @return <code>true</code> if the debug level is enabled, else
-     *         <code>false</code>
-     */
-    public boolean isDebugEnabled();
-
-    /**
-     * Returns if the info level is enabled. Should be checked before any call
-     * of {@link #info(Object)} or {@link #info(Object,Throwable)}.
-     * 
-     * @return <code>true</code> if the info level is enabled, else
-     *         <code>false</code>
-     */
-    public boolean isInfoEnabled();
+	/**
+	 * Logs an {@link Throwable} at the ERROR level
+	 *
+	 * @param msg
+	 *            the message to log
+	 * @param t
+	 *            the <code>Throwable</code> to log
+	 */
+	public void error(String msg, Throwable t);
 }

@@ -4,83 +4,86 @@
  */
 package org.beanfabrics.log;
 
-import java.util.logging.Level;
-
 /**
- * A {@link Logger} that delegates all logging to the Java
- * {@link java.util.logging.Logger}.
+ * A {@link Logger} that delegates all logging to <a
+ * href="http://www.slf4j.org">Simple Logging Facade for Java</a>.
+ * <p>
+ * To use the SLF4J remember to import the required libraries to <a
+ * href="http://www.slf4j.org/manual.html#binding">bind with the intended
+ * logging framework at deployment time</a>.
  *
  * @author Max Gensthaler
  */
-public class Jdk14Logger implements Logger {
-    private final java.util.logging.Logger delegate;
+public class Slf4jLogger implements Logger {
+    private final org.slf4j.Logger delegate;
 
     /**
-     * Constructs a <code>Jdk14Logger</code> for a given {@link Class}.
+     * Constructs a <code>Log4JLogger</code> for a given {@link Class}.
      *
      * @param clazz the <code>Class</code> to log for
      */
-    public Jdk14Logger(Class clazz) {
-        delegate = java.util.logging.Logger.getLogger(clazz.getName());
+    @SuppressWarnings("unchecked")
+    public Slf4jLogger(Class clazz) {
+        delegate = org.slf4j.LoggerFactory.getLogger(clazz);
     }
 
     /** {@inheritDoc} */
 	public boolean isTraceEnabled() {
-		return delegate.isLoggable(Level.FINEST);
+		return delegate.isTraceEnabled();
 	}
 
 	/** {@inheritDoc} */
 	public void trace(String msg) {
-		delegate.log(Level.FINEST, msg);
+		delegate.trace(msg);
 	}
 
 	/** {@inheritDoc} */
 	public boolean isDebugEnabled() {
-		return delegate.isLoggable(Level.FINE);
+		return delegate.isDebugEnabled();
 	}
 
 	/** {@inheritDoc} */
 	public void debug(String msg) {
-		delegate.log(Level.FINE, msg);
+		delegate.debug(msg);
 	}
 
     /** {@inheritDoc} */
 	public boolean isInfoEnabled() {
-		return delegate.isLoggable(Level.INFO);
+		return delegate.isInfoEnabled();
 	}
 
 	/** {@inheritDoc} */
 	public void info(String msg) {
-		delegate.log(Level.INFO, msg);
+		delegate.info(msg);
 	}
 
 	/** {@inheritDoc} */
 	public boolean isWarnEnabled() {
-		return delegate.isLoggable(Level.WARNING);
+		return delegate.isWarnEnabled();
 	}
 
 	/** {@inheritDoc} */
 	public void warn(String msg) {
-		delegate.log(Level.WARNING, msg);
+		delegate.warn(msg);
 	}
 
 	/** {@inheritDoc} */
 	public void warn(String msg, Throwable t) {
-		delegate.log(Level.WARNING, msg, t);
+		delegate.warn(msg, t);
 	}
 
 	/** {@inheritDoc} */
 	public boolean isErrorEnabled() {
-		return delegate.isLoggable(Level.SEVERE);
+		return delegate.isErrorEnabled();
 	}
 
 	/** {@inheritDoc} */
 	public void error(String msg) {
-		delegate.log(Level.SEVERE, msg);
+		delegate.error(msg);
 	}
 
     /** {@inheritDoc} */
 	public void error(String msg, Throwable t) {
-		delegate.log(Level.SEVERE, msg, t);
+		delegate.error(msg, t);
 	}
 }
