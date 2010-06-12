@@ -46,7 +46,7 @@ import org.beanfabrics.swing.BnButton;
  * @author Max Gensthaler
  */
 public class BnListTestGUI {
-    private static BnListTestGUI instance = null;
+    private static final BnListTestGUI INSTANCE = new BnListTestGUI();
     private MainFrame mainFrame;
     private MainModel mainModel;
 
@@ -79,10 +79,7 @@ public class BnListTestGUI {
     }
 
     public static BnListTestGUI getInstance() {
-        if (instance == null) {
-            instance = new BnListTestGUI();
-        }
-        return instance;
+        return INSTANCE;
     }
 
     public MainFrame getMainFrame() {

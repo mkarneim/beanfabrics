@@ -25,19 +25,19 @@ import org.beanfabrics.util.ReflectionUtil;
  * @author Michael Karneim
  */
 public class PMManager {
-    private static PMManager instance = new PMManager();
+    private static final PMManager INSTANCE = new PMManager();
+    private final MetadataRegistry metadata = new MetadataRegistry();
 
     public static void setup(PresentationModel model) {
         getInstance().processPresentationModel(model);
     }
 
     public static PMManager getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
-    private final MetadataRegistry metadata = new MetadataRegistry();
-
     private PMManager() {
+    	//
     }
 
     public MetadataRegistry getMetadata() {
@@ -60,7 +60,6 @@ public class PMManager {
         List<Member> members = ReflectionUtil.getAllMembers(cls);
         members = SupportUtil.sortMembers(members);
         processMembers(model, members);
-
     }
 
     private void processClasses(PresentationModel model, List<Class> classes) {
@@ -165,5 +164,4 @@ public class PMManager {
             throw new UndeclaredThrowableException(e);
         }
     }
-
 }

@@ -35,13 +35,10 @@ public class ErrorImagePainter {
     private final Insets margin = new Insets(2, 4, 2, 4);
     private final Dimension dimension;
 
-    private static ErrorImagePainter instance;
+    private static final ErrorImagePainter INSTANCE = new ErrorImagePainter();
 
     public static ErrorImagePainter getInstance() {
-        if (instance == null) {
-            instance = new ErrorImagePainter();
-        }
-        return instance;
+        return INSTANCE;
     }
 
     private ErrorImagePainter() {

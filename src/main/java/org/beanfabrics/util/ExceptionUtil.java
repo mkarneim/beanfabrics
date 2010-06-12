@@ -10,12 +10,11 @@ package org.beanfabrics.util;
  * The <code>ExceptionUtil</code> is a singleton that provides access to an
  * {@link IExceptionHandler} which is used by the Beanfabrics framework to
  * handle exceptions.
- * 
+ *
  * @author Max Gensthaler
  */
 public class ExceptionUtil {
-    private static ExceptionUtil instance;
-
+    private static final ExceptionUtil INSTANCE = new ExceptionUtil();
     private IExceptionHandler exceptionHandler;
 
     private ExceptionUtil() {
@@ -23,10 +22,7 @@ public class ExceptionUtil {
     }
 
     public static ExceptionUtil getInstance() {
-        if (instance == null) {
-            instance = new ExceptionUtil();
-        }
-        return instance;
+        return INSTANCE;
     }
 
     public void handleException(String message, Throwable t) {
