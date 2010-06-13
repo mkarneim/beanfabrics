@@ -1,8 +1,8 @@
 /*
- *  Beanfabrics Framework
- *  Copyright (C) 2009 by Michael Karneim, beanfabrics.org
- *  Use is subject to license terms. See license.txt.
- */  
+ * Beanfabrics Framework
+ * Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
+ */
 package org.beanfabrics.swing.table;
 
 import java.beans.PropertyChangeEvent;
@@ -14,27 +14,30 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 
 import org.beanfabrics.Path;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.beanfabrics.log.Logger;
+import org.beanfabrics.log.LoggerFactory;
 import org.beanfabrics.model.IListPM;
+import org.beanfabrics.swing.table.BnTable;
+import org.beanfabrics.swing.table.BnTableModel;
+import org.beanfabrics.swing.table.BnTableRowSorter;
 
 /**
  * @author Michael Karneim
  */
 public class BnTableRowSorter2 extends RowSorter<BnTableModel> {
 	private final static Logger LOG = LoggerFactory.getLogger(BnTableRowSorter.class);
-	
+
 	public static BnTableRowSorter2 install(BnTable table) {
-		BnTableModel model = (BnTableModel)table.getModel();
+		BnTableModel model = (BnTableModel) table.getModel();
 		BnTableRowSorter2 rowSorter = new BnTableRowSorter2(model);
 		table.setRowSorter(rowSorter);
 		return rowSorter;
 	}
 
-	public static void uninstall( BnTable table) {
+	public static void uninstall(BnTable table) {
 		RowSorter rowSorter = table.getRowSorter();
-		if ( rowSorter instanceof BnTableRowSorter) {
-			((BnTableRowSorter2)rowSorter).dismiss();
+		if (rowSorter instanceof BnTableRowSorter) {
+			((BnTableRowSorter2) rowSorter).dismiss();
 		}
 		table.setRowSorter(null);
 	}
@@ -43,7 +46,7 @@ public class BnTableRowSorter2 extends RowSorter<BnTableModel> {
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
 			onSortKeysChanged();
-	
+
 		}
 	};
 	private final BnTableModel model;
@@ -87,35 +90,35 @@ public class BnTableRowSorter2 extends RowSorter<BnTableModel> {
 		System.out.println("BnTableRowSorter.getSortKeys()");
 		return viewSortKeys;
 	}
-	
+
 	private void updateViewSortKeys() {
 		System.out.println("BnTableRowSorter.updateViewSortKeys()");
 		final int colNum = model.getColumnCount();
 
 		RowSorter.SortKey[] viewSortKeys = new RowSorter.SortKey[colNum];
-		for( int col = 0; col<colNum; ++col) {
-			org.beanfabrics.model.SortKey modelSortKey = model.getSortKey( col);
-			if ( modelSortKey == null) {
+		for (int col = 0; col < colNum; ++col) {
+			org.beanfabrics.model.SortKey modelSortKey = model.getSortKey(col);
+			if (modelSortKey == null) {
 				viewSortKeys[col] = new RowSorter.SortKey(col, SortOrder.UNSORTED);
 			} else {
-				SortOrder sortOrder = modelSortKey.isAscending()?SortOrder.ASCENDING:SortOrder.DESCENDING;
+				SortOrder sortOrder = modelSortKey.isAscending() ? SortOrder.ASCENDING : SortOrder.DESCENDING;
 				RowSorter.SortKey viewSortKey = new RowSorter.SortKey(col, sortOrder);
 				viewSortKeys[col] = viewSortKey;
 			}
 		}
-		
-		if ( LOG.isDebugEnabled()) {
+
+		if (LOG.isDebugEnabled()) {
 			StringBuffer buf = new StringBuffer();
-			for( int i=0; i<viewSortKeys.length; ++i) {
-				if ( i>0) {
+			for (int i = 0; i < viewSortKeys.length; ++i) {
+				if (i > 0) {
 					buf.append("\t");
 				}
-				buf.append( viewSortKeys[i].getColumn()+":"+viewSortKeys[i].getSortOrder().name());
+				buf.append(viewSortKeys[i].getColumn() + ":" + viewSortKeys[i].getSortOrder().name());
 			}
-			LOG.debug( buf.toString());
+			LOG.debug(buf.toString());
 		}
-		
-		this.viewSortKeys = Arrays.asList( viewSortKeys);
+
+		this.viewSortKeys = Arrays.asList(viewSortKeys);
 	}
 
 	@Override
@@ -132,14 +135,14 @@ public class BnTableRowSorter2 extends RowSorter<BnTableModel> {
 	@Override
 	public void toggleSortOrder(int column) {
 		System.out.println("BnTableRowSorter.toggleSortOrder()");
-		
+
 		org.beanfabrics.model.SortKey modelSortKey = model.getSortKey(column);
 		org.beanfabrics.model.SortKey newModelSortKey;
-		if ( modelSortKey == null) {
+		if (modelSortKey == null) {
 			Path path = model.getColumnPath(column);
-			newModelSortKey = new org.beanfabrics.model.SortKey(/*ascending=*/true, path);
+			newModelSortKey = new org.beanfabrics.model.SortKey(/* ascending= */true, path);
 		} else {
-			newModelSortKey = new org.beanfabrics.model.SortKey( !modelSortKey.isAscending(), modelSortKey.getSortPath());
+			newModelSortKey = new org.beanfabrics.model.SortKey(!modelSortKey.isAscending(), modelSortKey.getSortPath());
 		}
 		fireSortOrderChanged();
 		list.sortBy(newModelSortKey);
@@ -148,10 +151,10 @@ public class BnTableRowSorter2 extends RowSorter<BnTableModel> {
 	private void sortExistingData(List<? extends RowSorter.SortKey> viewSortKeys) {
 		org.beanfabrics.model.SortKey[] modelSortKeys = new org.beanfabrics.model.SortKey[viewSortKeys.size()];
 		int i = 0;
-		for( RowSorter.SortKey viewSortKey : viewSortKeys) {
+		for (RowSorter.SortKey viewSortKey : viewSortKeys) {
 			Path path = model.getColumnPath(viewSortKey.getColumn());
-			boolean ascending = viewSortKey.getSortOrder()==SortOrder.ASCENDING;
-			modelSortKeys[i] = new org.beanfabrics.model.SortKey(ascending, path );
+			boolean ascending = viewSortKey.getSortOrder() == SortOrder.ASCENDING;
+			modelSortKeys[i] = new org.beanfabrics.model.SortKey(ascending, path);
 			i++;
 		}
 		fireSortOrderChanged();
@@ -166,8 +169,8 @@ public class BnTableRowSorter2 extends RowSorter<BnTableModel> {
 		fireSortOrderChanged();
 		fireRowSorterChanged(null);
 	}
-	
-	/// Callback methods that we don't use in Beanfabrics:
+
+	// / Callback methods that we don't use in Beanfabrics:
 
 	@Override
 	public void modelStructureChanged() {
