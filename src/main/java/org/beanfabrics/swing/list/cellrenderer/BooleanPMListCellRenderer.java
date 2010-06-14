@@ -82,6 +82,22 @@ public class BooleanPMListCellRenderer extends JPanel implements PMListCellRende
     private boolean isNimbus() {
         return "Nimbus".equals(UIManager.getLookAndFeel().getID());
     }
+    
+    @Override
+    public void setBackground(Color bg) {        
+        super.setBackground(bg);
+        if ( rendererComponent != null) {
+            rendererComponent.setBackground(bg);
+        }
+    }
+    
+    @Override
+    public void setForeground(Color fg) {        
+        super.setForeground(fg);
+        if ( rendererComponent != null) {
+            rendererComponent.setForeground(fg);
+        }
+    }
 
     @Override
     public void paintComponent(Graphics g) {

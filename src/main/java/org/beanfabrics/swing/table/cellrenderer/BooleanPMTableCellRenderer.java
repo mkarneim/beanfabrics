@@ -47,7 +47,7 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
         super();
         cb.setHorizontalAlignment(SwingConstants.CENTER);
         cb.setBorderPainted(false);
-        cb.setOpaque(false);
+        cb.setOpaque(false);        
         this.setLayout(new BorderLayout());
         this.add(this.cb, BorderLayout.CENTER);
     }
@@ -79,13 +79,28 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
             }
         } else {
             rendererComponent = (JComponent)defaultRenderer.getTableCellRendererComponent(table, "", isSelected, hasFocus, row, column);
-        }
-
+        }        
         return this;
     }
 
     private boolean isNimbus() {
         return "Nimbus".equals(UIManager.getLookAndFeel().getID());
+    }
+
+    @Override
+    public void setBackground(Color bg) {        
+        super.setBackground(bg);
+        if ( rendererComponent != null) {
+            rendererComponent.setBackground(bg);
+        }
+    }
+    
+    @Override
+    public void setForeground(Color fg) {        
+        super.setForeground(fg);
+        if ( rendererComponent != null) {
+            rendererComponent.setForeground(fg);
+        }
     }
 
     /**
