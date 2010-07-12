@@ -73,7 +73,7 @@ class SortingHelper {
         }
 
         public int compare(PresentationModel o1, PresentationModel o2) {
-            if (o1 instanceof IValuePM && o2 instanceof IValuePM) {
+            if ((o1 == null || o1 instanceof IValuePM) && (o2 == null || o2 instanceof IValuePM)) {
                 return compare((IValuePM)o1, (IValuePM)o2);
             } else {
                 // TODO (mk) we will support also comparison between other model types
@@ -86,6 +86,9 @@ class SortingHelper {
         public int compare(IValuePM pModel1, IValuePM pModel2) {
             final int result;
             if (pModel1 == null) {
+                if ( pModel2 == null) {
+                    return 0;
+                }
                 result = -1;
             } else {
                 Comparable c1 = pModel1.getComparable();
