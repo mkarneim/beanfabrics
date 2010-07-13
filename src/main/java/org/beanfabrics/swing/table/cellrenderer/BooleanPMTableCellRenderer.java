@@ -68,6 +68,7 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
             // -> handle it as 'false'
         }
         cb.setSelected(bvalue);
+        cb.setEnabled( table.getModel().isCellEditable(row, column));
 
         if (isNimbus()) { // one more work around
             if (rendererComponent != null) {
