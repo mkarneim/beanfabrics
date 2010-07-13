@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -26,11 +26,13 @@ import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.util.Interval;
 
 /**
- * Temporary class.<p>! DO NOT USE !</p>
- *
- * The <code>DelegatingBnTableSelectionModel</code> is a {@link ListSelectionModel} that
- * decorates a {@link IListPM}.
- *
+ * Temporary class.
+ * <p>
+ * ! DO NOT USE !
+ * </p>
+ * The <code>DelegatingBnTableSelectionModel</code> is a
+ * {@link ListSelectionModel} that decorates a {@link IListPM}.
+ * 
  * @author Michael Karneim
  */
 class DelegatingBnTableSelectionModel implements ListSelectionModel {
@@ -39,7 +41,7 @@ class DelegatingBnTableSelectionModel implements ListSelectionModel {
 
     private final ListSelectionListener delegateListener = new ListSelectionListener() {
         public void valueChanged(ListSelectionEvent e) {
-            fireValueChanged(e.getFirstIndex(), e.getLastIndex()-e.getFirstIndex()+1, e.getValueIsAdjusting());
+            fireValueChanged(e.getFirstIndex(), e.getLastIndex() - e.getFirstIndex() + 1, e.getValueIsAdjusting());
         }
     };
 
@@ -51,11 +53,11 @@ class DelegatingBnTableSelectionModel implements ListSelectionModel {
          * This might annoy some people. We have to think it over.
          */
         public void elementsDeselected(ElementsDeselectedEvent evt) {
-            delegate.removeSelectionInterval(evt.getBeginIndex(), evt.getBeginIndex()+evt.getLength()-1);
+            delegate.removeSelectionInterval(evt.getBeginIndex(), evt.getBeginIndex() + evt.getLength() - 1);
         }
 
         public void elementsSelected(ElementsSelectedEvent evt) {
-            delegate.addSelectionInterval(evt.getBeginIndex(), evt.getBeginIndex()+evt.getLength()-1);
+            delegate.addSelectionInterval(evt.getBeginIndex(), evt.getBeginIndex() + evt.getLength() - 1);
         }
 
         public void elementChanged(ElementChangedEvent evt) {
@@ -87,7 +89,7 @@ class DelegatingBnTableSelectionModel implements ListSelectionModel {
 
         int[] indexes = this.list.getSelection().getIndexes();
         Interval[] intervals = Interval.createIntervals(indexes);
-        for( Interval interval: intervals) {
+        for (Interval interval : intervals) {
             delegate.addSelectionInterval(interval.startIndex, interval.endIndex);
         }
 

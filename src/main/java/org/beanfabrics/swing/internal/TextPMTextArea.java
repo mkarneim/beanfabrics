@@ -1,25 +1,18 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
 // methods and fields are documented
 package org.beanfabrics.swing.internal;
 
-import java.awt.Color;
-import java.awt.Container;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JViewport;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 
 import org.beanfabrics.View;

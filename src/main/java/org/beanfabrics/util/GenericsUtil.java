@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.util;
@@ -72,14 +72,14 @@ import java.util.Map;
  * </ul>
  * This class is inspired by Ian Robertson, see
  * http://www.artima.com/weblogs/viewpost.jsp?thread=208860
- *
+ * 
  * @author Michael Karneim
  */
 public class GenericsUtil {
     /**
      * Get the actual type arguments a method has used to parameterize it's
      * generic type.
-     *
+     * 
      * @param ownerClass
      * @param genericReturnType
      * @param fieldName
@@ -124,7 +124,7 @@ public class GenericsUtil {
     /**
      * Get the actual type arguments a field has used to parameterize it's
      * generic type.
-     *
+     * 
      * @param ownerClass
      * @param fieldName
      * @param genericFieldType
@@ -171,7 +171,7 @@ public class GenericsUtil {
     /**
      * Get the actual type arguments a child class has used to extend a generic
      * class.
-     *
+     * 
      * @param genericClass the generic class (or interface)
      * @param childClass the child class
      * @return a list of the actual type arguments.
@@ -241,7 +241,7 @@ public class GenericsUtil {
     /**
      * Get the underlying class for a type, or null if the type is a variable
      * type.
-     *
+     * 
      * @param type the type
      * @return the underlying class
      */

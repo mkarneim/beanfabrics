@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.support;
@@ -13,9 +13,9 @@ import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.Path;
-
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.TextPM;

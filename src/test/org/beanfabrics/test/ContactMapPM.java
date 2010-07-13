@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.test;
@@ -18,8 +18,8 @@ import org.beanfabrics.model.MapPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.TextPM;
-import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.OnChange;
+import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.Property;
 import org.beanfabrics.support.PropertySupport;
 import org.beanfabrics.util.OrderPreservingMap;

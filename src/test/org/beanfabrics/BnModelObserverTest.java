@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.EventObject;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -15,9 +16,8 @@ import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.TextPM;
 import org.beanfabrics.support.Validation;
 import org.junit.Test;
-import java.util.EventObject;
+
 /**
- * 
  * @author Michael Karneim
  */
 public class BnModelObserverTest {
@@ -65,13 +65,12 @@ public class BnModelObserverTest {
 
         final int[] count = new int[1];
         final boolean[] isValid = new boolean[] { true };
-        
 
         pm.name.setText("michael");
         assertTrue("pm.name.isValid()", pm.name.isValid());
-        assertTrue("pm.isValid()", pm.isValid());        
+        assertTrue("pm.isValid()", pm.isValid());
         assertEquals("isValid[0]", true, isValid[0]);
-        
+
         observer.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 //printEvent("", evt);

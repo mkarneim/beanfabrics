@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -55,7 +55,7 @@ import org.beanfabrics.swing.table.cellrenderer.BnTableCellRenderer;
  * href="http://www.beanfabrics.org/index.php/BnTable"
  * target="parent">http://www.beanfabrics.org/index.php/BnTable</a>
  * </p>
- *
+ * 
  * @author Michael Karneim
  * @beaninfo
  */
@@ -92,20 +92,20 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     }
 
     public boolean isCellEditingAllowed() {
-		return cellEditingAllowed;
-	}
+        return cellEditingAllowed;
+    }
 
-	public void setCellEditingAllowed(boolean editingAllowed) {
-		this.cellEditingAllowed = editingAllowed;
-		if ( isConnected()) {
-			TableModel tblModel = getModel();
-	        if (tblModel instanceof BnTableModel) {
-	            ((BnTableModel)tblModel).setCellEditingAllowed( this.cellEditingAllowed);
-	        }
-		}
-	}
+    public void setCellEditingAllowed(boolean editingAllowed) {
+        this.cellEditingAllowed = editingAllowed;
+        if (isConnected()) {
+            TableModel tblModel = getModel();
+            if (tblModel instanceof BnTableModel) {
+                ((BnTableModel)tblModel).setCellEditingAllowed(this.cellEditingAllowed);
+            }
+        }
+    }
 
-	/** {@inheritDoc} */
+    /** {@inheritDoc} */
     public IListPM<? extends PresentationModel> getPresentationModel() {
         return this.presentationModel;
     }
@@ -145,7 +145,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     /**
      * Returns whether this component is connected to the target
      * {@link AbstractPM} to synchronize with.
-     *
+     * 
      * @return <code>true</code> when this component is connected, else
      *         <code>false</code>
      */
@@ -198,7 +198,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
             return;
         }
         if (LOG.isDebugEnabled()) {
-        	LOG.debug("trying to install BnTableRowSorter");
+            LOG.debug("trying to install BnTableRowSorter");
         }
         try {
             Class rsClass = Class.forName("org.beanfabrics.swing.table.BnTableRowSorter");
@@ -206,9 +206,9 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
             install.invoke(null, new Object[] { this });
         } catch (ClassNotFoundException ex) {
             // not found. Ok, we do not install the row sorter
-        	if (LOG.isWarnEnabled()) {
-        		LOG.warn("Can't install BnTableRowSorter", ex);
-        	}
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Can't install BnTableRowSorter", ex);
+            }
         } catch (Exception ex) {
             throw new UndeclaredThrowableException(ex);
         }
@@ -219,7 +219,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
             return;
         }
         if (LOG.isDebugEnabled()) {
-        	LOG.debug("uninstalling BnTableRowSorter");
+            LOG.debug("uninstalling BnTableRowSorter");
         }
         try {
             Class rsClass = Class.forName("org.beanfabrics.swing.table.BnTableRowSorter");
@@ -227,9 +227,9 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
             uninstall.invoke(null, new Object[] { this });
         } catch (ClassNotFoundException ex) {
             // not found. ignore.
-        	if (LOG.isErrorEnabled()) {
-        		LOG.error("Can't uninstall BnTableRowSorter", ex);
-        	}
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Can't uninstall BnTableRowSorter", ex);
+            }
         } catch (Exception ex) {
             throw new UndeclaredThrowableException(ex);
         }
@@ -239,7 +239,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
      * Returns the default table header object, which is dependent on the Java
      * version. In Java 5 a {@link Java5SortingTableHeader} is returned. In Java
      * 6 and later the standard {@link JTableHeader} is returned.
-     *
+     * 
      * @return the default table header object
      * @see JTableHeader
      */
@@ -341,7 +341,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     /**
      * Extension that auto-resizes the columns according to the settings of the
      * columns.
-     *
+     * 
      * @author Michael Karneim
      */
     class AutoResizeExtension {
@@ -374,7 +374,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         /**
          * This extension is only enabled if the standard auto resize mode is
          * off.
-         *
+         * 
          * @return <code>true</code> if this extension is enabled, else
          *         <code>false</code>
          */

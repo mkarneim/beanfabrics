@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.support;
@@ -18,9 +18,8 @@ import org.beanfabrics.validation.ValidationState;
  * {@link ValidationState}. It must not declare any parameter types.
  * <p>
  * For a more precise description of the validation framework, please see <a
- * href
- * ="http://www.beanfabrics.org/wiki/index.php/Validation_Tutorial">Beanfabrics
- * tutorial on the validation framework</a>
+ * href ="http://www.beanfabrics.org/wiki/index.php/Validation_Tutorial">
+ * Beanfabrics tutorial on the validation framework</a>
  * </p>
  * 
  * @see org.beanfabrics.support.SortOrder

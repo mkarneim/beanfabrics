@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -36,7 +36,7 @@ public class BooleanPMListCellRenderer extends JPanel implements PMListCellRende
     private JCheckBox cb = new JCheckBox();
     private DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
     private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
-    
+
     private IBooleanPM model;
     private JComponent rendererComponent;
 
@@ -83,19 +83,19 @@ public class BooleanPMListCellRenderer extends JPanel implements PMListCellRende
     private boolean isNimbus() {
         return "Nimbus".equals(UIManager.getLookAndFeel().getID());
     }
-    
+
     @Override
-    public void setBackground(Color bg) {        
+    public void setBackground(Color bg) {
         super.setBackground(bg);
-        if ( rendererComponent != null) {
+        if (rendererComponent != null) {
             rendererComponent.setBackground(bg);
         }
     }
-    
+
     @Override
-    public void setForeground(Color fg) {        
+    public void setForeground(Color fg) {
         super.setForeground(fg);
-        if ( rendererComponent != null) {
+        if (rendererComponent != null) {
             rendererComponent.setForeground(fg);
         }
     }
@@ -105,37 +105,36 @@ public class BooleanPMListCellRenderer extends JPanel implements PMListCellRende
         super.paintComponent(g);
         cellRendererPane.paintComponent(g, rendererComponent, this, 0, 0, getWidth(), getHeight());
     }
-    
 
     private ErrorIconPainter createDefaultErrorIconPainter() {
-        ErrorIconPainter result = new ErrorIconPainter();     
+        ErrorIconPainter result = new ErrorIconPainter();
         return result;
     }
-    
+
     public ErrorIconPainter getErrorIconPainter() {
         return errorIconPainter;
     }
 
     public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
-        if ( aErrorIconPainter == null) {
+        if (aErrorIconPainter == null) {
             throw new IllegalArgumentException("aErrorIconPainter == null");
         }
         this.errorIconPainter = aErrorIconPainter;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void paintChildren(Graphics g) {
         super.paintChildren(g);
-        if ( shouldPaintErrorIcon()) {
+        if (shouldPaintErrorIcon()) {
             errorIconPainter.paint(g, this);
         }
     }
-    
-    private boolean shouldPaintErrorIcon() {        
-        if ( model == null) {
+
+    private boolean shouldPaintErrorIcon() {
+        if (model == null) {
             return false;
         }
-        return (model.isValid() == false);       
+        return (model.isValid() == false);
     }
 }

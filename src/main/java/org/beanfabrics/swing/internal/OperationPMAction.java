@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -24,7 +24,7 @@ import org.beanfabrics.util.ExceptionUtil;
 /**
  * The <code>OperationPMAction</code> is an {@link Action} that is a view on an
  * {@link IOperationPM}.
- *
+ * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
@@ -67,7 +67,7 @@ public class OperationPMAction extends AbstractAction implements View<IOperation
      * Returns whether this component is connected to the target
      * {@link PresentationModel} to synchronize with. This is a convenience
      * method.
-     *
+     * 
      * @return <code>true</code> when this component is connected, else
      *         <code>false</code>
      */
@@ -85,9 +85,9 @@ public class OperationPMAction extends AbstractAction implements View<IOperation
                 }
             }
         } else {
-        	if (LOG.isWarnEnabled()) {
-        		LOG.warn("OperationPMAction is not connected");
-        	}
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("OperationPMAction is not connected");
+            }
         }
     }
 

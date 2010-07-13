@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -37,6 +37,7 @@ import org.beanfabrics.validation.ValidationState;
  */
 public class ValidationSupport implements Support {
     private static final String KEY_MESSAGE_VALIDATION_FAILED = "message.validationFailed";
+
     public static ValidationSupport get(PresentationModel model) {
 
         ValidationSupport support = model.getSupportMap().get(ValidationSupport.class);
@@ -46,7 +47,7 @@ public class ValidationSupport implements Support {
         }
         return support;
     }
-    
+
     private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(ValidationSupport.class);
     private PresentationModel model;
     private Map<Method, ValidationMethodSupport> map = new HashMap<Method, ValidationMethodSupport>();

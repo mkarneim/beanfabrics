@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -15,13 +15,12 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 /**
  * The <code>OrderPreservingMap</code> is a {@link Map} that preserves the oder
  * in which the elements where added. It gives access to it's values by a hash
  * key but also by an index.
- *
+ * 
  * @author Michael Karneim
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
@@ -75,8 +74,8 @@ public class OrderPreservingMap<K, V> implements Map<K, V>, Cloneable {
                 this.put((K)orderedKeys[i], (V)other.get(orderedKeys[i]));
             }
         } else {
-        	for (Entry<? extends K,? extends V> entry : other.entrySet()) {
-	            this.put(entry.getKey(), entry.getValue());
+            for (Entry<? extends K, ? extends V> entry : other.entrySet()) {
+                this.put(entry.getKey(), entry.getValue());
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.model;
@@ -24,8 +24,8 @@ import org.beanfabrics.ModelProvider;
 import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
 import org.beanfabrics.View;
-import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.OnChange;
+import org.beanfabrics.support.Operation;
 import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.BnComboBox;
 import org.beanfabrics.swing.BnTextField;

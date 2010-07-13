@@ -2,8 +2,8 @@ package org.beanfabrics.samples.login;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import org.beanfabrics.ModelProvider;
 
+import org.beanfabrics.ModelProvider;
 import org.beanfabrics.View;
 import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.BnPasswordField;

@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -44,7 +44,7 @@ import org.beanfabrics.model.SortKey;
 public class BnTableModel extends AbstractTableModel {
     private IListPM list;
     private boolean cellEditingAllowed;
-    
+
     private List<BnColumn> colDefs = new ArrayList<BnColumn>();
 
     private transient ListListener listener = new WeakListListener() {
@@ -92,20 +92,20 @@ public class BnTableModel extends AbstractTableModel {
     public void dismiss() {
         this.list.removeListListener(this.listener);
     }
-    
-    public void setCellEditingAllowed(boolean editingAllowed) {
-    	boolean oldValue = this.cellEditingAllowed;
-		this.cellEditingAllowed = editingAllowed;
-		if ( oldValue != this.cellEditingAllowed) {
-			this.fireTableStructureChanged();
-		}
-	}
-    
-    public boolean isCellEditingAllowed() {
-		return cellEditingAllowed;
-	}
 
-	public List<BnColumn> getColDefs() {
+    public void setCellEditingAllowed(boolean editingAllowed) {
+        boolean oldValue = this.cellEditingAllowed;
+        this.cellEditingAllowed = editingAllowed;
+        if (oldValue != this.cellEditingAllowed) {
+            this.fireTableStructureChanged();
+        }
+    }
+
+    public boolean isCellEditingAllowed() {
+        return cellEditingAllowed;
+    }
+
+    public List<BnColumn> getColDefs() {
         return Collections.unmodifiableList(colDefs);
     }
 
@@ -169,17 +169,17 @@ public class BnTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        if ( !cellEditingAllowed) {
-        	return false;
+        if (!cellEditingAllowed) {
+            return false;
         } else {
-	        final Object value = this.getValueAt(rowIndex, columnIndex);
-	        if (value instanceof ITextPM) {
-	            return ((ITextPM)value).isEditable();
-	        } else if (value instanceof IOperationPM) {
-	            return ((IOperationPM)value).isEnabled();
-	        } else {
-	            return false;
-	        }
+            final Object value = this.getValueAt(rowIndex, columnIndex);
+            if (value instanceof ITextPM) {
+                return ((ITextPM)value).isEditable();
+            } else if (value instanceof IOperationPM) {
+                return ((IOperationPM)value).isEnabled();
+            } else {
+                return false;
+            }
         }
     }
 
@@ -210,5 +210,4 @@ public class BnTableModel extends AbstractTableModel {
         return null;
     }
 
-	
 }

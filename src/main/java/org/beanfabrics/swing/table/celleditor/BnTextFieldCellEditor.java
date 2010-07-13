@@ -1,9 +1,10 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documentedpackage org.beanfabrics.swing.table.celleditor;
+// methods and fields are documentedpackage
+// org.beanfabrics.swing.table.celleditor;
 package org.beanfabrics.swing.table.celleditor;
 
 import java.awt.Component;
@@ -17,10 +18,9 @@ import javax.swing.table.TableCellEditor;
 
 import org.beanfabrics.model.ITextPM;
 import org.beanfabrics.swing.BnTextField;
+
 /**
- *
  * @author Michael Karneim
- *
  */
 @SuppressWarnings("serial")
 public class BnTextFieldCellEditor extends AbstractCellEditor implements TableCellEditor {
@@ -31,7 +31,7 @@ public class BnTextFieldCellEditor extends AbstractCellEditor implements TableCe
     };
 
     public BnTextFieldCellEditor() {
-    	//
+        //
     }
 
     private BnTextField createBnTextField() {

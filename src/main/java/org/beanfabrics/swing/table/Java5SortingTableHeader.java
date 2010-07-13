@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -31,7 +31,7 @@ import org.beanfabrics.model.SortKey;
  * sorting arrow is added to the header.</li>
  * <li>the sorting feature works only for tables with a {@link BnTableModel}.</li>
  * </ul>
- *
+ * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
@@ -59,7 +59,7 @@ public class Java5SortingTableHeader extends JTableHeader {
 
     /**
      * Handles the click event and sorts the table.
-     *
+     * 
      * @param e
      */
     protected void onClick(MouseEvent e) {
@@ -83,9 +83,9 @@ public class Java5SortingTableHeader extends JTableHeader {
 
             listPM.sortBy(newSortKey);
         } else {
-        	if (LOG.isErrorEnabled()) {
-        		LOG.error("Can't sort unknown table model: " + tblModel.getClass().getName());
-        	}
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Can't sort unknown table model: " + tblModel.getClass().getName());
+            }
         }
     }
 

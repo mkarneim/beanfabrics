@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -94,7 +94,7 @@ public interface IListPM<T extends PresentationModel> extends PresentationModel,
     public void sortBy(boolean ascending, Path... path);
 
     public void sortBy(Collection<SortKey> newSortKeys);
-    
+
     public void sortBy(SortKey... sortKeys);
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -125,7 +125,7 @@ public class BooleanPMRadioButton extends JRadioButton implements View<IBooleanP
     }
 
     private ErrorIconPainter createDefaultErrorIconPainter() {
-        ErrorIconPainter result = new ErrorIconPainter();  
+        ErrorIconPainter result = new ErrorIconPainter();
         result.setHorizontalAlignment(getHorizontalTextPosition());
         return result;
     }
@@ -135,44 +135,49 @@ public class BooleanPMRadioButton extends JRadioButton implements View<IBooleanP
     }
 
     public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
-        if ( aErrorIconPainter == null) {
+        if (aErrorIconPainter == null) {
             throw new IllegalArgumentException("aErrorIconPainter == null");
         }
         this.errorIconPainter = aErrorIconPainter;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void paintChildren(Graphics g) {
         super.paintChildren(g);
-        if ( shouldPaintErrorIcon()) {
+        if (shouldPaintErrorIcon()) {
             errorIconPainter.paint(g, this);
         }
     }
 
-    private boolean shouldPaintErrorIcon() {        
+    private boolean shouldPaintErrorIcon() {
         IValuePM pModel = this.getPresentationModel();
-        if ( pModel == null) {
+        if (pModel == null) {
             return false;
         }
-        return (pModel.isValid() == false);       
+        return (pModel.isValid() == false);
     }
 
     @Override
     public void setHorizontalTextPosition(int textPosition) {
         super.setHorizontalTextPosition(textPosition);
-        if ( errorIconPainter != null) {
+        if (errorIconPainter != null) {
             this.errorIconPainter.setHorizontalAlignment(invertHorizontalTextPosition(textPosition));
         }
     }
 
     private int invertHorizontalTextPosition(int textPosition) {
-        switch ( textPosition) {
-            case SwingConstants.LEFT: return SwingConstants.RIGHT;            
-            case SwingConstants.RIGHT: return SwingConstants.LEFT;
-            case SwingConstants.LEADING: return SwingConstants.TRAILING;
-            case SwingConstants.TRAILING: return SwingConstants.LEADING;
-            default: return textPosition;
+        switch (textPosition) {
+            case SwingConstants.LEFT:
+                return SwingConstants.RIGHT;
+            case SwingConstants.RIGHT:
+                return SwingConstants.LEFT;
+            case SwingConstants.LEADING:
+                return SwingConstants.TRAILING;
+            case SwingConstants.TRAILING:
+                return SwingConstants.LEADING;
+            default:
+                return textPosition;
         }
     }
 }

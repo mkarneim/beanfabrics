@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -55,17 +55,17 @@ public class BooleanPM extends TextPM implements IBooleanPM {
         } catch (NoSuchElementException ex) {
             throw new ConversionException("strVal='" + strVal + "' is not a boolean", ex);
         }
-    }    
+    }
 
-	public void setDefaultBoolean(Boolean b) {
-		if (b == null) {
-			this.setDefaultText(null);
-		} else {
-			Options<Boolean> options = this.getOptions();
-			String txt = options.get(b);
-			this.setDefaultText(txt);
-		}
-	}
+    public void setDefaultBoolean(Boolean b) {
+        if (b == null) {
+            this.setDefaultText(null);
+        } else {
+            Options<Boolean> options = this.getOptions();
+            String txt = options.get(b);
+            this.setDefaultText(txt);
+        }
+    }
 
     protected Options<Boolean> createDefaultOptions() {
         Options<Boolean> result = new Options<Boolean>();

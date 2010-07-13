@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -37,6 +37,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
 
     /**
      * Parses the content and formats it according to this model's format.
+     * 
      * @see #setFormat(DecimalFormat)
      */
     @Override
@@ -60,6 +61,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
 
     /**
      * Returns the format.
+     * 
      * @return the format
      * @see #reformat()
      */
@@ -69,10 +71,11 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
 
     /**
      * Sets the format of this model. The format will be cloned prior use.
+     * 
      * @param newFormat the new format for this model
      * @see #reformat()
      */
-    public void setFormat(DecimalFormat newFormat) { 
+    public void setFormat(DecimalFormat newFormat) {
         Format old = this.format;
         if (old == newFormat) {
             return;
@@ -104,13 +107,13 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         return result;
     }
 
-	public void setDefaultBigDecimal(BigDecimal value) {
-		if (value == null) {
-			setDefaultText(null);
-		} else {
-			setDefaultText(format.format(value));
-		}
-	}
+    public void setDefaultBigDecimal(BigDecimal value) {
+        if (value == null) {
+            setDefaultText(null);
+        } else {
+            setDefaultText(format.format(value));
+        }
+    }
 
     public void setBigInteger(BigInteger value) {
         if (value == null) {
@@ -133,13 +136,13 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         }
     }
 
-	public void setDefaultBigInteger(BigInteger value) {
-		if (value == null) {
-			setDefaultBigDecimal(null);
-		} else {
-			setDefaultBigDecimal(new BigDecimal(value));
-		}
-	}
+    public void setDefaultBigInteger(BigInteger value) {
+        if (value == null) {
+            setDefaultBigDecimal(null);
+        } else {
+            setDefaultBigDecimal(new BigDecimal(value));
+        }
+    }
 
     private BigDecimal convert(String text) {
         if (format.isParseBigDecimal() == false) {
@@ -213,22 +216,22 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
             }
         }
 
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (!super.equals(o)) {
-				return false;
-			}
-			if (o == null) {
-				return false;
-			}
-			if (o.getClass() != getClass()) {
-				return false;
-			}
-			BigDecimalComparable castedObj = (BigDecimalComparable) o;
-			return ((this.bd == null ? castedObj.bd == null : this.bd.equals(castedObj.bd)));
-		}
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (o == null) {
+                return false;
+            }
+            if (o.getClass() != getClass()) {
+                return false;
+            }
+            BigDecimalComparable castedObj = (BigDecimalComparable)o;
+            return ((this.bd == null ? castedObj.bd == null : this.bd.equals(castedObj.bd)));
+        }
     }
 }

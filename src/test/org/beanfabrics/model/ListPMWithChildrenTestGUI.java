@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.model;
@@ -13,8 +13,8 @@ import javax.swing.JScrollPane;
 
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.Path;
-import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.OnChange;
+import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.Validation;
 import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.BnTextField;

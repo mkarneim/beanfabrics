@@ -1,9 +1,10 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documentedpackage org.beanfabrics.swing.table.celleditor;
+// methods and fields are documentedpackage
+// org.beanfabrics.swing.table.celleditor;
 package org.beanfabrics.swing.table.celleditor;
 
 import java.awt.Component;
@@ -18,8 +19,8 @@ import javax.swing.table.TableCellEditor;
 
 import org.beanfabrics.model.IBooleanPM;
 import org.beanfabrics.swing.BnCheckBox;
+
 /**
- * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
@@ -31,9 +32,9 @@ public class BnCheckBoxCellEditor extends AbstractCellEditor implements TableCel
     };
 
     public BnCheckBoxCellEditor() {
-        
+
     }
-    
+
     private BnCheckBox createBnCheckBox() {
         BnCheckBox checkBox = new BnCheckBox();
         checkBox.setHorizontalAlignment(SwingConstants.CENTER);

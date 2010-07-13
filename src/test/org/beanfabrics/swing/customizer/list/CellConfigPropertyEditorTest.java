@@ -1,13 +1,13 @@
 package org.beanfabrics.swing.customizer.list;
 
+import static junit.framework.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
+
 import org.beanfabrics.Path;
 import org.beanfabrics.swing.list.CellConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import junit.framework.JUnit4TestAdapter;
-import static junit.framework.Assert.*;
 
 public class CellConfigPropertyEditorTest {
     public static junit.framework.Test suite() {

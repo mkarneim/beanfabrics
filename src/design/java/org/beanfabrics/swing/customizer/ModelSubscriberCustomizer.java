@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.swing.customizer;
@@ -25,7 +25,7 @@ import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 /**
  * The <code>ModelSubscriberCustomizer</code> is a Java Beans {@link Customizer}
  * for a {@link ModelSubscriber}.
- *
+ * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
@@ -94,7 +94,7 @@ public class ModelSubscriberCustomizer extends CustomizerBasePanel implements Cu
 
     /**
      * Returns the local {@link ModelProvider} for this class.
-     *
+     * 
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {

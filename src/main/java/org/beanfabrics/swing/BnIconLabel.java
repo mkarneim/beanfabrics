@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.swing;
@@ -141,36 +141,36 @@ public class BnIconLabel extends JLabel implements View<IIconPM>, ModelSubscribe
     }
 
     private ErrorIconPainter createDefaultErrorIconPainter() {
-        ErrorIconPainter result = new ErrorIconPainter();        
+        ErrorIconPainter result = new ErrorIconPainter();
         return result;
     }
-    
+
     public ErrorIconPainter getErrorIconPainter() {
         return errorIconPainter;
     }
 
     public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
-        if ( aErrorIconPainter == null) {
+        if (aErrorIconPainter == null) {
             throw new IllegalArgumentException("aErrorIconPainter == null");
         }
         this.errorIconPainter = aErrorIconPainter;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void paintChildren(Graphics g) {
         super.paintChildren(g);
-        if ( shouldPaintErrorIcon()) {
+        if (shouldPaintErrorIcon()) {
             errorIconPainter.paint(g, this);
         }
     }
-    
-    private boolean shouldPaintErrorIcon() {        
+
+    private boolean shouldPaintErrorIcon() {
         IIconPM pModel = this.getPresentationModel();
-        if ( pModel == null) {
+        if (pModel == null) {
             return false;
         }
-        return (pModel.isValid() == false);       
+        return (pModel.isValid() == false);
     }
 
     /** {@inheritDoc} */

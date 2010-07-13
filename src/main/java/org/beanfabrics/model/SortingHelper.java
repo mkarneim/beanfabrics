@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -30,15 +30,15 @@ class SortingHelper {
             return;
         }
         final int len = map.size();
-        List<Entry<K, V>> list = new ArrayList<Entry<K,V>>(len);
-        for( int i=0; i<len; ++i) {
+        List<Entry<K, V>> list = new ArrayList<Entry<K, V>>(len);
+        for (int i = 0; i < len; ++i) {
             K key = map.getKey(i);
             V value = map.get(i);
             Entry<K, V> entry = new Entry<K, V>(key, value);
             list.add(entry);
         }
-        
-        List<SortKey> reverseKeys = new ArrayList( Arrays.asList(sortKeys));
+
+        List<SortKey> reverseKeys = new ArrayList(Arrays.asList(sortKeys));
         Collections.reverse(reverseKeys);
         for (SortKey key : reverseKeys) {
             Path path = key.getSortPath();
@@ -86,7 +86,7 @@ class SortingHelper {
         public int compare(IValuePM pModel1, IValuePM pModel2) {
             final int result;
             if (pModel1 == null) {
-                if ( pModel2 == null) {
+                if (pModel2 == null) {
                     return 0;
                 }
                 result = -1;
@@ -134,22 +134,25 @@ class SortingHelper {
         }
     }
 
-    private static class Entry<K,V> {
+    private static class Entry<K, V> {
         K key;
         V value;
+
         public Entry(K key, V value) {
             super();
             this.key = key;
             this.value = value;
         }
+
         public K getKey() {
             return key;
         }
+
         public V getValue() {
             return value;
         }
     }
-    
+
     private static class EntryComparator implements Comparator {
         final PathComparator delegate;
 

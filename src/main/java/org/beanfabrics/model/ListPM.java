@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -42,7 +42,7 @@ import org.beanfabrics.validation.ValidationState;
  * The ListPM is a list of presentation models. Basically it provides methods
  * for adding, removing, accessing and iterating elements and informs listeners
  * about changes. It also maintains a {@link Selection}.
- *
+ * 
  * @author Michael Karneim
  */
 public class ListPM<T extends PresentationModel> extends AbstractPM implements IListPM<T> {
@@ -109,7 +109,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     /**
      * Constructs an empty list with the specified initial capacity.
-     *
+     * 
      * @param initialCapacity the initial capacity of the list.
      */
     public ListPM(int initialCapacity) {
@@ -118,7 +118,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     /**
      * Constructs a <code>ListPM</code> with the specified list of entries.
-     *
+     * 
      * @param list the initial list of entries
      */
     public ListPM(ArrayList<Entry> list) {
@@ -127,7 +127,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     /**
      * Constructs a <code>ListPM</code> with the specified list of entries.
-     *
+     * 
      * @param list the initial list of entries
      */
     protected ListPM(List<Entry> list) {
@@ -398,7 +398,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     /**
      * Sorts the entries of this list pM by comparing the cells at the end of
      * the given paths.
-     *
+     * 
      * @param ascending if true, the resulting order will be ascending,
      *            otherwise descending.
      * @param paths one or more Path objects must be specified to define which
@@ -414,7 +414,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     }
 
     public void sortBy(Collection<SortKey> newSortKeys) {
-    	sortBy( newSortKeys.toArray(new SortKey[newSortKeys.size()]));
+        sortBy(newSortKeys.toArray(new SortKey[newSortKeys.size()]));
     }
 
     public void sortBy(SortKey... newSortKeys) {
@@ -490,7 +490,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     /**
      * Returns a sorted array of all indices of the given elements starting with
      * the smallest index.
-     *
+     * 
      * @param col all elements to get the index from
      * @return a sorted array of all indices of the given elements
      */
@@ -882,7 +882,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         /**
          * Returns the index of the next selected element AFTER the given index,
          * or -1 if no element is found.
-         *
+         * 
          * @param index
          * @return the index of the next selected element after the given index,
          *         or -1 if no element is found.
@@ -1254,7 +1254,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         /**
          * Returns a new Collection with all selected elements. Modification on
          * this collection will not influence the original selection.
-         *
+         * 
          * @return a new Collection with all selected elements.
          */
         public Collection<T> toCollection() {
@@ -1279,7 +1279,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     /**
      * This validation rule defines that this model is invalid whenever a list
      * element is invalid.
-     *
+     * 
      * @author Michael Karneim
      */
     public class DefaultValidationRule implements ValidationRule {

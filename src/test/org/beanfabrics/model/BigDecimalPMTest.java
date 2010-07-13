@@ -1,10 +1,11 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -76,17 +77,17 @@ public class BigDecimalPMTest {
             Locale.setDefault(old);
         }
     }
-    
+
     @Test
     public void formatting() {
         BigDecimalPM model = new BigDecimalPM();
-    	DecimalFormat format = new DecimalFormat("#.##");
-    	model.setFormat( format);
+        DecimalFormat format = new DecimalFormat("#.##");
+        model.setFormat(format);
         model.setText("125.5678");
         assertEquals("model.getText()", "125.5678", model.getText());
-        
+
         model.reformat();
-        
+
         assertEquals("pM.isValid()", true, model.isValid());
         assertEquals("model.getText()", "125.57", model.getText());
     }

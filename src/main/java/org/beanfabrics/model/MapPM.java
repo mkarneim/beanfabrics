@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -45,7 +45,7 @@ import org.beanfabrics.validation.ValidationState;
  * The MapPM is a map of presentation models. Basically it provides methods for
  * adding, removing, accessing and iterating elements and informs listeners
  * about changes. It also maintains a {@link Selection}.
- *
+ * 
  * @author Michael Karneim
  */
 public class MapPM<K, V extends PresentationModel> extends AbstractPM implements IMapPM<K, V> {
@@ -186,7 +186,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         }
 
         V result = entries.put(key, newElement);
-        if ( result == newElement) {
+        if (result == newElement) {
             return result;
         }
         onAdd(newElement);
@@ -308,7 +308,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     /**
      * Sorts the entries of this map by comparing the {@link PresentationModel}s
      * at the end of the given paths.
-     *
+     * 
      * @param ascending if true, the resulting order will be ascending,
      *            otherwise descending.
      * @param paths one or more Path objects must be specified to define which
@@ -324,7 +324,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     }
 
     public void sortBy(Collection<SortKey> newSortKeys) {
-    	sortBy( newSortKeys.toArray(new SortKey[newSortKeys.size()]));
+        sortBy(newSortKeys.toArray(new SortKey[newSortKeys.size()]));
     }
 
     public void sortBy(SortKey... newSortKeys) {
@@ -545,7 +545,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     /**
      * Returns a set of all keys of the elements in the given collection. For
      * elements that are not in this map no key is inserted into the result.
-     *
+     * 
      * @param col
      * @return a set of all keys of the elements in the given collection
      */
@@ -784,7 +784,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         /**
          * Returns a new Collection with all selected elements. Modification on
          * this collection will not influence the original selection.
-         *
+         * 
          * @return a new Collection with all selected elements.
          */
         public Collection<V> toCollection() {
@@ -1037,7 +1037,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         /**
          * Returns a new Collection with all selected keys. Modification on this
          * collection will not influence the original selection.
-         *
+         * 
          * @return a new Collection with all selected keys.
          */
         public Collection<K> toCollection() {

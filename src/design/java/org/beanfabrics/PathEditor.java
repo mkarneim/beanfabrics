@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics;
@@ -16,7 +16,7 @@ import org.beanfabrics.util.ExceptionUtil;
 /**
  * The <code>PathEditor</code> is a {@link PropertyEditor} for a {@link Path}
  * object.
- *
+ * 
  * @author Michael Karneim
  */
 public class PathEditor implements PropertyEditor {
@@ -30,11 +30,11 @@ public class PathEditor implements PropertyEditor {
 
     /**
      * Set (or change) the object that is to be edited.
-     *
+     * 
      * @param value The object to be edited.
      */
     public void setValue(Object value) {
-//  	final Path old = this.getPath();
+        //  	final Path old = this.getPath();
         Path newValue = (Path)value;
         this.path = newValue;
         this.support.firePropertyChange(null, null, null);
@@ -43,7 +43,7 @@ public class PathEditor implements PropertyEditor {
     /**
      * If the property value must be one of a set of known tagged values, then
      * this method should return an array of the tags.
-     *
+     * 
      * @return An array with the tagged values.
      */
     public String[] getTags() {
@@ -52,7 +52,7 @@ public class PathEditor implements PropertyEditor {
 
     /**
      * Gets the property value.
-     *
+     * 
      * @return The property value.
      */
     public Object getValue() {
@@ -62,7 +62,7 @@ public class PathEditor implements PropertyEditor {
     /**
      * A {@link PropertyEditor} may choose to make available a full custom
      * {@link Component} that edits its property value.
-     *
+     * 
      * @return the custom editor component
      */
     public Component getCustomEditor() {
@@ -71,7 +71,7 @@ public class PathEditor implements PropertyEditor {
 
     /**
      * Determines whether this property model is paintable.
-     *
+     * 
      * @return <code>true</code> is this property model is paintable, otherwise
      *         <code>false</code>
      */
@@ -82,7 +82,7 @@ public class PathEditor implements PropertyEditor {
     /**
      * Paint a representation of the value into a given area of screen real
      * estate.
-     *
+     * 
      * @param gfx The graphics object to be painted.
      * @param box the area to be painted to
      */
@@ -91,7 +91,7 @@ public class PathEditor implements PropertyEditor {
 
     /**
      * Determines whether this property model supports a custom editor.
-     *
+     * 
      * @retun <code>true</code> if this property model supports a custom editor,
      *        otherwise <code>false</code>
      */
@@ -101,7 +101,7 @@ public class PathEditor implements PropertyEditor {
 
     /**
      * Register a listener for the PropertyChange event.
-     *
+     * 
      * @param listener the listener to be added
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -110,7 +110,7 @@ public class PathEditor implements PropertyEditor {
 
     /**
      * Remove a listener for the PropertyChange event.
-     *
+     * 
      * @param listener The listener to be removed.
      */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
@@ -120,9 +120,10 @@ public class PathEditor implements PropertyEditor {
     /**
      * This method is intended for use when generating Java code to set the
      * value of the property.
-     *
+     * 
      * @return The generated Java code, like:
-     * <pre>
+     * 
+     *         <pre>
      * new Path(&quot;this.person.address.street&quot;)
      * </pre>
      */
@@ -144,7 +145,7 @@ public class PathEditor implements PropertyEditor {
 
     /**
      * Gets the property value as text.
-     *
+     * 
      * @return The property value as text.
      */
     public String getAsText() {
@@ -161,7 +162,7 @@ public class PathEditor implements PropertyEditor {
 
     /**
      * Set the property value by parsing a given String.
-     *
+     * 
      * @param text The new value for the property.
      */
     public void setAsText(String text) {

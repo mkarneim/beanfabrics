@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -27,7 +27,7 @@ import org.beanfabrics.swing.ErrorIconPainter;
 
 /**
  * {@link TableCellRenderer} that renders the value of a {@link IBooleanPM}.
- *
+ * 
  * @author Michael Karneim
  */
 // TODO (mk) this class contains several workarounds for a bug
@@ -39,7 +39,7 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
     private JCheckBox cb = new JCheckBox();
     private DefaultTableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
     private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
-    
+
     private IBooleanPM model;
     private JComponent rendererComponent;
 
@@ -47,7 +47,7 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
         super();
         cb.setHorizontalAlignment(SwingConstants.CENTER);
         cb.setBorderPainted(false);
-        cb.setOpaque(false);        
+        cb.setOpaque(false);
         this.setLayout(new BorderLayout());
         this.add(this.cb, BorderLayout.CENTER);
     }
@@ -68,7 +68,7 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
             // -> handle it as 'false'
         }
         cb.setSelected(bvalue);
-        cb.setEnabled( table.getModel().isCellEditable(row, column));
+        cb.setEnabled(table.getModel().isCellEditable(row, column));
 
         if (isNimbus()) { // one more work around
             if (rendererComponent != null) {
@@ -80,7 +80,7 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
             }
         } else {
             rendererComponent = (JComponent)defaultRenderer.getTableCellRendererComponent(table, "", isSelected, hasFocus, row, column);
-        }        
+        }
         return this;
     }
 
@@ -89,17 +89,17 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
     }
 
     @Override
-    public void setBackground(Color bg) {        
+    public void setBackground(Color bg) {
         super.setBackground(bg);
-        if ( rendererComponent != null) {
+        if (rendererComponent != null) {
             rendererComponent.setBackground(bg);
         }
     }
-    
+
     @Override
-    public void setForeground(Color fg) {        
+    public void setForeground(Color fg) {
         super.setForeground(fg);
-        if ( rendererComponent != null) {
+        if (rendererComponent != null) {
             rendererComponent.setForeground(fg);
         }
     }
@@ -124,36 +124,35 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
     }
 
     private ErrorIconPainter createDefaultErrorIconPainter() {
-        ErrorIconPainter result = new ErrorIconPainter();     
+        ErrorIconPainter result = new ErrorIconPainter();
         return result;
     }
-    
+
     public ErrorIconPainter getErrorIconPainter() {
         return errorIconPainter;
     }
 
     public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
-        if ( aErrorIconPainter == null) {
+        if (aErrorIconPainter == null) {
             throw new IllegalArgumentException("aErrorIconPainter == null");
         }
         this.errorIconPainter = aErrorIconPainter;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void paintChildren(Graphics g) {
         super.paintChildren(g);
-        if ( shouldPaintErrorIcon()) {
+        if (shouldPaintErrorIcon()) {
             errorIconPainter.paint(g, this);
         }
     }
-    
-    private boolean shouldPaintErrorIcon() {        
-        if ( model == null) {
+
+    private boolean shouldPaintErrorIcon() {
+        if (model == null) {
             return false;
         }
-        return (model.isValid() == false);       
+        return (model.isValid() == false);
     }
-    
-    
+
 }

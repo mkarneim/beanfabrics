@@ -1,11 +1,10 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.swing;
 
 import java.awt.Graphics;
-import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -82,7 +81,7 @@ public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
         this.setModelProvider(provider);
         this.setPath(new Path());
     }
-    
+
     /**
      * Returns whether this component is connected to the target
      * {@link AbstractPM} to synchronize with.
@@ -142,54 +141,59 @@ public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
     }
 
     private ErrorIconPainter createDefaultErrorIconPainter() {
-        ErrorIconPainter result = new ErrorIconPainter();     
+        ErrorIconPainter result = new ErrorIconPainter();
         result.setHorizontalAlignment(invertHorizontalAlignment(getHorizontalAlignment()));
         return result;
     }
-    
+
     public ErrorIconPainter getErrorIconPainter() {
         return errorIconPainter;
     }
 
     public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
-        if ( aErrorIconPainter == null) {
+        if (aErrorIconPainter == null) {
             throw new IllegalArgumentException("aErrorIconPainter == null");
         }
         this.errorIconPainter = aErrorIconPainter;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void paintChildren(Graphics g) {
         super.paintChildren(g);
-        if ( shouldPaintErrorIcon()) {
+        if (shouldPaintErrorIcon()) {
             errorIconPainter.paint(g, this);
         }
     }
-    
-    private boolean shouldPaintErrorIcon() {        
+
+    private boolean shouldPaintErrorIcon() {
         ITextPM pModel = this.getPresentationModel();
-        if ( pModel == null) {
+        if (pModel == null) {
             return false;
         }
-        return (pModel.isValid() == false);       
+        return (pModel.isValid() == false);
     }
-    
+
     @Override
     public void setHorizontalAlignment(int alignment) {
         super.setHorizontalAlignment(alignment);
-        if ( errorIconPainter != null) {
+        if (errorIconPainter != null) {
             this.errorIconPainter.setHorizontalAlignment(invertHorizontalAlignment(alignment));
         }
     }
-    
+
     private int invertHorizontalAlignment(int alignment) {
-        switch ( alignment) {
-            case SwingConstants.LEFT: return SwingConstants.RIGHT;            
-            case SwingConstants.RIGHT: return SwingConstants.LEFT;
-            case SwingConstants.LEADING: return SwingConstants.TRAILING;
-            case SwingConstants.TRAILING: return SwingConstants.LEADING;
-            default: return alignment;
+        switch (alignment) {
+            case SwingConstants.LEFT:
+                return SwingConstants.RIGHT;
+            case SwingConstants.RIGHT:
+                return SwingConstants.LEFT;
+            case SwingConstants.LEADING:
+                return SwingConstants.TRAILING;
+            case SwingConstants.TRAILING:
+                return SwingConstants.LEADING;
+            default:
+                return alignment;
         }
     }
 

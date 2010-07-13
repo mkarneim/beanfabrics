@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -9,7 +9,6 @@ package org.beanfabrics.swing.table.celleditor;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -21,7 +20,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 

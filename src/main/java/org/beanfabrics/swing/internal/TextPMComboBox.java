@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -38,11 +38,11 @@ import org.beanfabrics.swing.KeyBindingProcessor;
  * @author Max Gensthaler
  */
 @SuppressWarnings("serial")
-public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  View<ITextPM> {
-    private static final Point DEFAULT_ERROR_ICON_OFFSET = new Point(-20,0);
+public class TextPMComboBox extends JComboBox implements KeyBindingProcessor, View<ITextPM> {
+    private static final Point DEFAULT_ERROR_ICON_OFFSET = new Point(-20, 0);
     private ITextPM pModel;
     private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
-    
+
     private transient final PropertyChangeListener propertyListener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
@@ -52,18 +52,18 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  V
     };
     private transient final ActionListener clearAction = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-			int items = getItemCount();
-			for (int i = 0; i < items; ++i) {
-				Object item = getItemAt(i);
-				if ("".trim().equals(item)) {
-					setSelectedIndex(i);
-					break;
-				}
-            }        
+            int items = getItemCount();
+            for (int i = 0; i < items; ++i) {
+                Object item = getItemAt(i);
+                if ("".trim().equals(item)) {
+                    setSelectedIndex(i);
+                    break;
+                }
+            }
         }
     };
 
-    public TextPMComboBox() {        
+    public TextPMComboBox() {
         this.setEnabled(false);
         this.setModel(this.createDefaultModel());
         this.registerKeyboardAction(clearAction, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), JComponent.WHEN_FOCUSED);
@@ -74,7 +74,7 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  V
         this();
         setPresentationModel(pModel);
     }
-    
+
     /** {@inheritDoc} */
     public ITextPM getPresentationModel() {
         return pModel;
@@ -135,10 +135,10 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  V
     protected TextEditorComboBoxModel createDefaultModel() {
         return new TextEditorComboBoxModel();
     }
-    
+
     private ErrorIconPainter createDefaultErrorIconPainter() {
-        ErrorIconPainter result = new ErrorIconPainter();    
-        result.setOffset( DEFAULT_ERROR_ICON_OFFSET);
+        ErrorIconPainter result = new ErrorIconPainter();
+        result.setOffset(DEFAULT_ERROR_ICON_OFFSET);
         return result;
     }
 
@@ -147,17 +147,17 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  V
     }
 
     public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
-        if ( aErrorIconPainter == null) {
+        if (aErrorIconPainter == null) {
             throw new IllegalArgumentException("aErrorIconPainter == null");
         }
         this.errorIconPainter = aErrorIconPainter;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void paintChildren(Graphics g) {
         super.paintChildren(g);
-        if ( shouldPaintErrorIcon()) {
+        if (shouldPaintErrorIcon()) {
             errorIconPainter.paint(g, this);
         }
     }
@@ -167,18 +167,18 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  V
             return false; // editable => error icon gets painted by BnComboBoxEditor
         }
         ITextPM pModel = this.getPresentationModel();
-        if ( pModel == null) {
+        if (pModel == null) {
             return false;
         }
-        return (pModel.isValid() == false);       
+        return (pModel.isValid() == false);
     }
-    
+
     /** {@inheritDoc} */
-    public boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {        
+    public boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
         boolean result = super.processKeyBinding(ks, e, condition, pressed);
-        if ( result == false) {
-            selectWithKeyChar(ks.getKeyChar());            
-        }        
+        if (result == false) {
+            selectWithKeyChar(ks.getKeyChar());
+        }
         return result;
     }
 

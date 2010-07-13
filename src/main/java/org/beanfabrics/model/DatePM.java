@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -88,13 +88,13 @@ public class DatePM extends TextPM implements IDatePM {
         }
     }
 
-	public void setDefaultDate(Date date) {
-		if (date == null) {
-			this.setDefaultText(null);
-		} else {
-			this.setDefaultText(format.format(date));
-		}
-	}
+    public void setDefaultDate(Date date) {
+        if (date == null) {
+            this.setDefaultText(null);
+        } else {
+            this.setDefaultText(format.format(date));
+        }
+    }
 
     public Comparable getComparable() {
         return new DateComparable();
@@ -138,24 +138,24 @@ public class DatePM extends TextPM implements IDatePM {
             }
         }
 
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (!super.equals(o)) {
-				return false;
-			}
-			if (o == null) {
-				return false;
-			}
-			if (o.getClass() != getClass()) {
-				return false;
-			}
-			DateComparable castedObj = (DateComparable) o;
-			return ((this.time == null ? castedObj.time == null : this.time.equals(castedObj.time)));
-		}
-	}
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!super.equals(o)) {
+                return false;
+            }
+            if (o == null) {
+                return false;
+            }
+            if (o.getClass() != getClass()) {
+                return false;
+            }
+            DateComparable castedObj = (DateComparable)o;
+            return ((this.time == null ? castedObj.time == null : this.time.equals(castedObj.time)));
+        }
+    }
 
     protected class DefaultValidationRule implements ValidationRule {
         public ValidationState validate() {

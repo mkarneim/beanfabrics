@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.swing.customizer.table;
@@ -120,8 +120,7 @@ public class ColumnListPanel extends JPanel implements View<ColumnListPM>, Model
             bnTable = new BnTable();
             bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.path"), "path", 120, false, new org.beanfabrics.Path("this.path.choosePath")),
                     new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.columnName"), "columnName", 100, true), new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.width"), "width", 55, true),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.fixedWidth"), "fixedWidth", 45, true),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.alignment"), "alignment", 45, true),
+                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.fixedWidth"), "fixedWidth", 45, true), new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.alignment"), "alignment", 45, true),
                     new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.operationPath"), "operationPath", 80, true, new org.beanfabrics.Path("this.operationPath.choosePath")) });
             bnTable.setPath(new org.beanfabrics.Path("this"));
             bnTable.setModelProvider(getLocalProvider());

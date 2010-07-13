@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.model;
@@ -48,8 +48,8 @@ public class MapPMTest {
         IntegerPM id = new IntegerPM();
         TextPM text = new TextPM();
 
-        public DummyPM() {          
-            String str = Character.toString((char)(Math.random()*26+(int)'A'));
+        public DummyPM() {
+            String str = Character.toString((char)(Math.random() * 26 + (int)'A'));
             text.setText(str);
             PMManager.setup(this);
         }
@@ -62,11 +62,11 @@ public class MapPMTest {
         public String getId() {
             return "id=" + id.getText() + "";
         }
-        
+
         public void setText(String value) {
             this.text.setText(value);
         }
-        
+
         public String getText() {
             return text.getText();
         }
@@ -1210,148 +1210,148 @@ public class MapPMTest {
         assertEquals("map.getSelection().size()", 0, counter.elementsDeselected);
 
     }
-    
+
     @Test
     public void removeElementRemovesSelection() {
-    	MapPM map = new MapPM();
+        MapPM map = new MapPM();
         final int NUM = 10;
         populate(map, NUM);
         map.getSelection().addAll();
         assertEquals("map.getSelection().size()", 10, map.getSelection().size());
-        
+
         map.remove(map.getAt(2));
         assertEquals("map.getSelection().size()", 9, map.getSelection().size());
     }
-    
+
     @Test
     public void removeElementRemovesSelection2() {
-    	MapPM map = new MapPM();
-    	
-    	DummyPM[] elems = populate(map, 5);
-    	
+        MapPM map = new MapPM();
+
+        DummyPM[] elems = populate(map, 5);
+
         map.getSelection().add(elems[2]);
         map.getSelection().add(elems[3]);
         assertEquals("map.getSelection().size()", 2, map.getSelection().size());
-        
+
         map.remove(elems[2]);
         assertEquals("map.getSelection().size()", 1, map.getSelection().size());
     }
-    
+
     @Test
     public void removeElementRemovesSelection3() {
-    	MapPM map = new MapPM();
-    	
-    	DummyPM[] elems = populate(map, 10);
-    	
-    	map.getSelection().addAll();
+        MapPM map = new MapPM();
+
+        DummyPM[] elems = populate(map, 10);
+
+        map.getSelection().addAll();
         assertEquals("map.getSelection().size()", 10, map.getSelection().size());
-        
-        for( int i=0; i<elems.length; ++i) {
-        	if ( i % 2 == 0) {
-        		map.put(i, elems[i]);
-        	} else {
-        		map.remove(elems[i]);
-        	}
+
+        for (int i = 0; i < elems.length; ++i) {
+            if (i % 2 == 0) {
+                map.put(i, elems[i]);
+            } else {
+                map.remove(elems[i]);
+            }
         }
-        
+
         assertEquals("map.getSelection().size()", 5, map.getSelection().size());
     }
-    
+
     @Test
     public void getSortKey() {
         MapPM map = new MapPM();
         DummyPM[] elems = populate(map, 10);
-        
+
         Collection<SortKey> sortKeys = map.getSortKeys();
         assertNotNull("sortKeys", sortKeys);
         assertEquals("sortKeys.size()", 0, sortKeys.size());
-        
-        map.sortBy( new SortKey( true, new Path("text")), new SortKey( true, new Path("id")));
+
+        map.sortBy(new SortKey(true, new Path("text")), new SortKey(true, new Path("id")));
         sortKeys = map.getSortKeys();
-        
+
         assertNotNull("sortKeys", sortKeys);
         assertEquals("sortKeys.size()", 2, sortKeys.size());
-        
-        SortKey[] sortKeysArray = (SortKey[]) sortKeys.toArray( new SortKey[sortKeys.size()]);
+
+        SortKey[] sortKeysArray = (SortKey[])sortKeys.toArray(new SortKey[sortKeys.size()]);
         assertEquals("sortKeysArray[0].getSortPath()", new Path("text"), sortKeysArray[0].getSortPath());
         assertEquals("sortKeysArray[1].getSortPath()", new Path("id"), sortKeysArray[1].getSortPath());
-        
+
     }
-    
+
     @Test
     public void multiplePuts() {
         MapPM map = new MapPM();
         DummyPM[] elems = populate(map, 10);
-        
+
         EventCounter counter = new EventCounter();
         map.addListListener(counter);
-        
+
         map.put(1, elems[1]);
-        
+
         assertEquals("counter.elementsAdded", 0, counter.elementsAdded);
         assertEquals("counter.elementChanged", 0, counter.elementChanged);
         assertEquals("counter.elementsRemoved", 0, counter.elementsRemoved);
         assertEquals("counter.elementsSelected", 0, counter.elementsSelected);
         assertEquals("counter.elementsDeselected", 0, counter.elementsDeselected);
     }
-    
+
     @Test
     public void multiplePutsWithSelection() {
         MapPM map = new MapPM();
         DummyPM[] elems = populate(map, 10);
         map.getSelection().addAll();
-        
+
         EventCounter counter = new EventCounter();
         map.addListListener(counter);
-        
+
         map.put(1, elems[1]);
-        
+
         assertEquals("counter.elementsAdded", 0, counter.elementsAdded);
         assertEquals("counter.elementChanged", 0, counter.elementChanged);
         assertEquals("counter.elementsRemoved", 0, counter.elementsRemoved);
         assertEquals("counter.elementsSelected", 0, counter.elementsSelected);
         assertEquals("counter.elementsDeselected", 0, counter.elementsDeselected);
     }
-    
+
     @Test
     public void multiplePutsWithSelectionAndBnTableModel() {
         MapPM map = new MapPM();
         DummyPM[] elems = populate(map, 10);
         map.getSelection().addAll();
-        
+
         EventCounter counter = new EventCounter();
         map.addListListener(counter);
-        
+
         List<BnColumn> cols = new ArrayList<BnColumn>();
-        cols.add( new BnColumn(new Path("id"), "ID"));
+        cols.add(new BnColumn(new Path("id"), "ID"));
         BnTableModel model = new BnTableModel(map, cols, true);
-        
+
         map.put(1, elems[1]);
-        
+
         assertEquals("counter.elementsAdded", 0, counter.elementsAdded);
         assertEquals("counter.elementChanged", 0, counter.elementChanged);
         assertEquals("counter.elementsRemoved", 0, counter.elementsRemoved);
         assertEquals("counter.elementsSelected", 0, counter.elementsSelected);
         assertEquals("counter.elementsDeselected", 0, counter.elementsDeselected);
     }
-    
+
     @Test
     public void multiplePutsWithSelectionAndBnTable() {
         MapPM map = new MapPM();
         DummyPM[] elems = populate(map, 10);
         map.getSelection().addAll();
-        
+
         EventCounter counter = new EventCounter();
         map.addListListener(counter);
-        
+
         List<BnColumn> cols = new ArrayList<BnColumn>();
-        cols.add( new BnColumn(new Path("id"), "ID"));
+        cols.add(new BnColumn(new Path("id"), "ID"));
         BnTable table = new BnTable();
         table.setPresentationModel(map);
-        table.setColumns( cols.toArray( new BnColumn[cols.size()]));
-        
+        table.setColumns(cols.toArray(new BnColumn[cols.size()]));
+
         map.put(1, elems[1]);
-        
+
         assertEquals("counter.elementsAdded", 0, counter.elementsAdded);
         assertEquals("counter.elementChanged", 0, counter.elementChanged);
         assertEquals("counter.elementsRemoved", 0, counter.elementsRemoved);

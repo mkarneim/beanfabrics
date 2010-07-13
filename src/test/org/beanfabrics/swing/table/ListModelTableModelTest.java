@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.swing.table;
@@ -17,8 +17,8 @@ import junit.framework.JUnit4TestAdapter;
 import org.beanfabrics.Path;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.MapPM;
-import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.model.PMManager;
+import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.model.TextPM;
 import org.junit.Before;
 import org.junit.Test;

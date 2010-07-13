@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.swing.customizer.list;
@@ -24,7 +24,7 @@ import org.beanfabrics.swing.list.CellConfig;
 /**
  * The <code>BnListCustomizer</code> is a JavaBeans {@link Customizer} for a
  * {@link BnList}.
- *
+ * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
@@ -84,7 +84,7 @@ public class BnListCustomizer extends CustomizerBasePanel implements Customizer,
 
     /**
      * Returns the local {@link ModelProvider} for this class.
-     *
+     * 
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {

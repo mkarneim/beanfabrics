@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -40,7 +40,7 @@ public class PropertySupport implements Support {
 
     private static final String DEFAULT_NAME = "#default";
     private static final Map<Class, List<PropertyDeclaration>> DECLARATION_CACHE = new HashMap<Class, List<PropertyDeclaration>>();
-    
+
     public static PropertySupport get(PresentationModel model) {
         Supportable s = (Supportable)model;
 

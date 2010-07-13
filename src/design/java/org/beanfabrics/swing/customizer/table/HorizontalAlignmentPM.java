@@ -8,12 +8,12 @@ import org.beanfabrics.model.TextPM;
 
 public class HorizontalAlignmentPM extends TextPM {
     private static final Options<Integer> opts = createOptions();
-    
+
     public HorizontalAlignmentPM() {
         setOptions(opts);
         PMManager.setup(this);
     }
-    
+
     private static Options<Integer> createOptions() {
         Options<Integer> result = new Options<Integer>();
         result.put(null, "");

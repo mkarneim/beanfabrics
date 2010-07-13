@@ -34,124 +34,124 @@ import org.junit.Test;
  * <p>
  * To fulfill this condition {@link CompositeValidationState#equals(Object)} had
  * to override it's super implementation.
- *
+ * 
  * @author Max Gensthaler
  */
 public class CompositeValidationStateTest {
-	static interface UIService {
-		public String[] getServerProjects();
-	}
-
-	static class AgentsModel extends AbstractPM {
-		@Service
-		protected UIService uiService;
-
-		protected final ProjectModel selectedProject = new ProjectModel();
-		protected final TextPM selectedAgent = new TextPM();
-
-		public AgentsModel() {
-			init();
-		    PMManager.setup(this);
-	    }
-
-		private void init() {
-			this.selectedProject.setMandatory(true);
-			this.selectedAgent.setMandatory(true);
-		}
-
-		@OnChange(path="this.selectedProject")
-		protected void updateSelectedAgent() {
-			boolean b = this.selectedProject.isValid();
-			this.selectedAgent.setEditable(b);
-		}
-	}
-
-	static class ProjectModel extends TextPM {
-    	public ProjectModel() {
-    		PMManager.setup(this);
-        }
-
-    	@Service
-    	public void setUIService(UIService uiService) {
-    		String[] serverProjects = uiService.getServerProjects();
-    		// create options
-    		Options<String> projectOpts = new Options<String>();
-    		for (String project : serverProjects) {
-    			projectOpts.put(project, project);
-    		}
-    		this.setOptions(projectOpts);
-    		// init text value
-    		if (serverProjects.length == 1) {
-    			this.setText(serverProjects[0]);
-    			this.setEditable(false);
-    		}
-        }
-
-    	@Override
-    	public void revalidate() {
-    		if (getOptions() == null || getOptions().size() == 0) {
-    			setValidationState(new ValidationState("create server project"));
-    		} else {
-    			super.revalidate();
-    		}
-    	}
+    static interface UIService {
+        public String[] getServerProjects();
     }
 
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(CompositeValidationStateTest.class);
-	}
+    static class AgentsModel extends AbstractPM {
+        @Service
+        protected UIService uiService;
 
-	@Test
-	public void fireEvents() {
-		final AgentsModel pm = new AgentsModel();
+        protected final ProjectModel selectedProject = new ProjectModel();
+        protected final TextPM selectedAgent = new TextPM();
 
-		ModelProvider prov = new ModelProvider();
-		prov.setPresentationModel(pm);
+        public AgentsModel() {
+            init();
+            PMManager.setup(this);
+        }
 
-		final BnModelObserver ob = new BnModelObserver();
-		ob.setPath(new Path("this"));
-		ob.setModelProvider(prov);
+        private void init() {
+            this.selectedProject.setMandatory(true);
+            this.selectedAgent.setMandatory(true);
+        }
 
-		final int[] count = new int[1];
-		final boolean[] isValid = new boolean[] { true };
-		ob.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-//				printEvent("", evt);
+        @OnChange(path = "this.selectedProject")
+        protected void updateSelectedAgent() {
+            boolean b = this.selectedProject.isValid();
+            this.selectedAgent.setEditable(b);
+        }
+    }
 
-				if ("presentationModel".equals(evt.getPropertyName())) {
-					count[0]++;
-					isValid[0] = ob.getPresentationModel().isValid();
-				}
-			}
+    static class ProjectModel extends TextPM {
+        public ProjectModel() {
+            PMManager.setup(this);
+        }
 
-//			private void printEvent(String prefix, EventObject evt) {
-//				System.out.println(prefix + evt);
-//				if (evt instanceof BnPropertyChangeEvent) {
-//					printEvent(prefix + "  ", ((BnPropertyChangeEvent) evt).getCause());
-//				}
-//			}
-		});
+        @Service
+        public void setUIService(UIService uiService) {
+            String[] serverProjects = uiService.getServerProjects();
+            // create options
+            Options<String> projectOpts = new Options<String>();
+            for (String project : serverProjects) {
+                projectOpts.put(project, project);
+            }
+            this.setOptions(projectOpts);
+            // init text value
+            if (serverProjects.length == 1) {
+                this.setText(serverProjects[0]);
+                this.setEditable(false);
+            }
+        }
 
-		pm.getContext().addService(UIService.class, new UIService() {
-			public String[] getServerProjects() {
-				return new String[] {"testproject"};
-			}
-		});
-		assertEquals("pm.selectedProject.getText()", "testproject", pm.selectedProject.getText());
-		assertTrue("pm.selectedProject.isValid()", pm.selectedProject.isValid());
+        @Override
+        public void revalidate() {
+            if (getOptions() == null || getOptions().size() == 0) {
+                setValidationState(new ValidationState("create server project"));
+            } else {
+                super.revalidate();
+            }
+        }
+    }
 
-//		assertEquals("old validation message before fix", "create server project",   getFirstNonCompositeState(pm.getValidationState()).getMessage());
-		assertEquals("validation message",                "This value is mandatory", getFirstNonCompositeState(pm.getValidationState()).getMessage());
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(CompositeValidationStateTest.class);
+    }
 
-		assertFalse("pm.isValid()", pm.isValid());
-		assertEquals("count[0]", 9, count[0]);
-		assertFalse("isValid[0]", isValid[0]);
-	}
+    @Test
+    public void fireEvents() {
+        final AgentsModel pm = new AgentsModel();
 
-	private ValidationState getFirstNonCompositeState(ValidationState validationState) {
-		while (validationState instanceof CompositeValidationState) {
-			validationState = ((CompositeValidationState)validationState).getChildren().get(0);
-		}
-		return validationState;
-	}
+        ModelProvider prov = new ModelProvider();
+        prov.setPresentationModel(pm);
+
+        final BnModelObserver ob = new BnModelObserver();
+        ob.setPath(new Path("this"));
+        ob.setModelProvider(prov);
+
+        final int[] count = new int[1];
+        final boolean[] isValid = new boolean[] { true };
+        ob.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                //				printEvent("", evt);
+
+                if ("presentationModel".equals(evt.getPropertyName())) {
+                    count[0]++;
+                    isValid[0] = ob.getPresentationModel().isValid();
+                }
+            }
+
+            //			private void printEvent(String prefix, EventObject evt) {
+            //				System.out.println(prefix + evt);
+            //				if (evt instanceof BnPropertyChangeEvent) {
+            //					printEvent(prefix + "  ", ((BnPropertyChangeEvent) evt).getCause());
+            //				}
+            //			}
+        });
+
+        pm.getContext().addService(UIService.class, new UIService() {
+            public String[] getServerProjects() {
+                return new String[] { "testproject" };
+            }
+        });
+        assertEquals("pm.selectedProject.getText()", "testproject", pm.selectedProject.getText());
+        assertTrue("pm.selectedProject.isValid()", pm.selectedProject.isValid());
+
+        //		assertEquals("old validation message before fix", "create server project",   getFirstNonCompositeState(pm.getValidationState()).getMessage());
+        assertEquals("validation message", "This value is mandatory", getFirstNonCompositeState(pm.getValidationState()).getMessage());
+
+        assertFalse("pm.isValid()", pm.isValid());
+        assertEquals("count[0]", 9, count[0]);
+        assertFalse("isValid[0]", isValid[0]);
+    }
+
+    private ValidationState getFirstNonCompositeState(ValidationState validationState) {
+        while (validationState instanceof CompositeValidationState) {
+            validationState = ((CompositeValidationState)validationState).getChildren().get(0);
+        }
+        return validationState;
+    }
 }

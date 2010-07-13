@@ -1,8 +1,8 @@
 package org.beanfabrics.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.text.DecimalFormat;
 import java.util.Locale;
 
 import junit.framework.JUnit4TestAdapter;
@@ -11,7 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class IntegerPMTest {
-	public static junit.framework.Test suite() {
+    public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(BigDecimalPMTest.class);
     }
 
@@ -26,22 +26,22 @@ public class IntegerPMTest {
     public static void tearDownClass() {
         Locale.setDefault(oldLocale);
     }
-    
+
     @Test
     public void setDefaultText() {
-    	IntegerPM model = new IntegerPM();
-    	
+        IntegerPM model = new IntegerPM();
+
         Long defaultValue = 1000l;
         Long currentValue = 500l;
-        
-        model.setLong( defaultValue);
+
+        model.setLong(defaultValue);
         model.preset();
-        model.setLong( currentValue);
-        
+        model.setLong(currentValue);
+
         assertTrue("model.isModified()", model.isModified());
-        
+
         model.reset();
-        
+
         assertFalse("model.isModified()", model.isModified());
     }
 

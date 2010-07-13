@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2009 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.swing.customizer.table;
@@ -9,8 +9,8 @@ import org.beanfabrics.meta.PathInfo;
 import org.beanfabrics.model.ListPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
-import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.OnChange;
+import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.Validation;
 import org.beanfabrics.swing.customizer.path.PathChooserPM;
 import org.beanfabrics.swing.customizer.path.PathContext;
