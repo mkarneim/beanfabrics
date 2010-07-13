@@ -19,7 +19,7 @@ import org.beanfabrics.View;
 import org.beanfabrics.event.WeakPropertyChangeListener;
 import org.beanfabrics.model.ITextPM;
 import org.beanfabrics.model.PresentationModel;
-import org.beanfabrics.swing.ErrorImagePainter;
+import org.beanfabrics.swing.ErrorIconPainter;
 
 /**
  * The <code>TextPMPasswordField</code> is a view on an {@link ITextPM}.
@@ -36,6 +36,7 @@ public class TextPMPasswordField extends JPasswordField implements View<ITextPM>
             refresh();
         }
     };
+    private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
 
     /**
 	 *
@@ -151,25 +152,55 @@ public class TextPMPasswordField extends JPasswordField implements View<ITextPM>
         this.repaint();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        this.paintErrorIcon(g);
+    private ErrorIconPainter createDefaultErrorIconPainter() {
+        ErrorIconPainter result = new ErrorIconPainter();     
+        result.setHorizontalAlignment(invertHorizontalAlignment(getHorizontalAlignment()));
+        return result;
+    }
+    
+    public ErrorIconPainter getErrorIconPainter() {
+        return errorIconPainter;
     }
 
-    /**
-     * Paints an error icon on top of the given {@link Graphics} if this
-     * component is connected to an {@link PresentationModel} and this
-     * <code>PresentationModel</code> has an invalid validation state.
-     * 
-     * @param g the <code>Graphics</code> to paint the error icon to
-     */
-    protected void paintErrorIcon(Graphics g) {
-        final ITextPM pModel = this.getPresentationModel();
-        if (pModel != null && pModel.isValid() == false) {
-            boolean isRightAligned = this.getHorizontalAlignment() == SwingConstants.RIGHT || this.getHorizontalAlignment() == SwingConstants.TRAILING;
-            ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, isRightAligned);
+    public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
+        if ( aErrorIconPainter == null) {
+            throw new IllegalArgumentException("aErrorIconPainter == null");
+        }
+        this.errorIconPainter = aErrorIconPainter;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public void paintChildren(Graphics g) {
+        super.paintChildren(g);
+        if ( shouldPaintErrorIcon()) {
+            errorIconPainter.paint(g, this);
+        }
+    }
+    
+    private boolean shouldPaintErrorIcon() {        
+        ITextPM pModel = this.getPresentationModel();
+        if ( pModel == null) {
+            return false;
+        }
+        return (pModel.isValid() == false);       
+    }
+    
+    @Override
+    public void setHorizontalAlignment(int alignment) {
+        super.setHorizontalAlignment(alignment);
+        if ( errorIconPainter != null) {
+            this.errorIconPainter.setHorizontalAlignment(invertHorizontalAlignment(alignment));
+        }
+    }
+    
+    private int invertHorizontalAlignment(int alignment) {
+        switch ( alignment) {
+            case SwingConstants.LEFT: return SwingConstants.RIGHT;            
+            case SwingConstants.RIGHT: return SwingConstants.LEFT;
+            case SwingConstants.LEADING: return SwingConstants.TRAILING;
+            case SwingConstants.TRAILING: return SwingConstants.LEADING;
+            default: return alignment;
         }
     }
 }

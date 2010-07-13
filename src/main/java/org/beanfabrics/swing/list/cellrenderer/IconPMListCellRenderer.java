@@ -16,7 +16,7 @@ import javax.swing.SwingConstants;
 
 import org.beanfabrics.model.IIconPM;
 import org.beanfabrics.model.PresentationModel;
-import org.beanfabrics.swing.ErrorImagePainter;
+import org.beanfabrics.swing.ErrorIconPainter;
 
 /**
  * The <code>IconPMListCellRenderer</code> is a {@link ListCellRenderer} for an
@@ -28,6 +28,7 @@ import org.beanfabrics.swing.ErrorImagePainter;
 @SuppressWarnings("serial")
 public class IconPMListCellRenderer extends DefaultListCellRenderer implements PMListCellRenderer {
     private IIconPM model;
+    private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
 
     public IconPMListCellRenderer() {
         setHorizontalAlignment(SwingConstants.CENTER);
@@ -54,23 +55,59 @@ public class IconPMListCellRenderer extends DefaultListCellRenderer implements P
         return this;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        this.paintErrorIcon(g);
+    private ErrorIconPainter createDefaultErrorIconPainter() {
+        ErrorIconPainter result = new ErrorIconPainter();
+        result.setHorizontalAlignment(invertHorizontalAlignment(getHorizontalAlignment()));
+        return result;
     }
 
-    /**
-     * Paints an error icon on top of the given {@link Graphics} if this
-     * component is connected to an {@link PresentationModel} and this
-     * <code>PresentationModel</code> has an invalid validation state.
-     * 
-     * @param g the <code>Graphics</code> to paint the error icon to
-     */
-    protected void paintErrorIcon(Graphics g) {
-        if (model != null && model.isValid() == false) {
-            boolean isRightAligned = this.getHorizontalAlignment() == SwingConstants.RIGHT || this.getHorizontalAlignment() == SwingConstants.TRAILING;
-            ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, isRightAligned);
+    public ErrorIconPainter getErrorIconPainter() {
+        return errorIconPainter;
+    }
+
+    public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
+        if (aErrorIconPainter == null) {
+            throw new IllegalArgumentException("aErrorIconPainter == null");
+        }
+        this.errorIconPainter = aErrorIconPainter;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void paintChildren(Graphics g) {
+        super.paintChildren(g);
+        if (shouldPaintErrorIcon()) {
+            errorIconPainter.paint(g, this);
+        }
+    }
+
+    private boolean shouldPaintErrorIcon() {
+        if (model == null) {
+            return false;
+        }
+        return (model.isValid() == false);
+    }
+
+    @Override
+    public void setHorizontalAlignment(int alignment) {
+        super.setHorizontalAlignment(alignment);
+        if (errorIconPainter != null) {
+            this.errorIconPainter.setHorizontalAlignment(invertHorizontalAlignment(alignment));
+        }
+    }
+
+    private int invertHorizontalAlignment(int alignment) {
+        switch (alignment) {
+            case SwingConstants.LEFT:
+                return SwingConstants.RIGHT;
+            case SwingConstants.RIGHT:
+                return SwingConstants.LEFT;
+            case SwingConstants.LEADING:
+                return SwingConstants.TRAILING;
+            case SwingConstants.TRAILING:
+                return SwingConstants.LEADING;
+            default:
+                return alignment;
         }
     }
 }

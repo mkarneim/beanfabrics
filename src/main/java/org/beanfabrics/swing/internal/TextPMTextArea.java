@@ -6,19 +6,27 @@
 // methods and fields are documented
 package org.beanfabrics.swing.internal;
 
+import java.awt.Color;
+import java.awt.Container;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JViewport;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 
 import org.beanfabrics.View;
 import org.beanfabrics.event.WeakPropertyChangeListener;
 import org.beanfabrics.model.ITextPM;
 import org.beanfabrics.model.PresentationModel;
-import org.beanfabrics.swing.ErrorImagePainter;
+import org.beanfabrics.swing.ErrorIconPainter;
 
 /**
  * The <code>TextPMTextArea</code> is a {@link JTextArea} that is a view on an
@@ -36,6 +44,7 @@ public class TextPMTextArea extends JTextArea implements View<ITextPM> {
             refresh();
         }
     };
+    private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
 
     public TextPMTextArea(int rows, int columns) {
         super(rows, columns);
@@ -156,24 +165,38 @@ public class TextPMTextArea extends JTextArea implements View<ITextPM> {
         this.repaint();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        this.paintErrorIcon(g);
+    private ErrorIconPainter createDefaultErrorIconPainter() {
+        ErrorIconPainter result = new ErrorIconPainter();
+        result.setVerticalAlignment(SwingConstants.TOP);
+        return result;
     }
 
-    /**
-     * Paints an error icon on top of the given {@link Graphics} if this
-     * component is connected to an {@link PresentationModel} and this
-     * <code>PresentationModel</code> has an invalid validation state.
-     * 
-     * @param g the <code>Graphics</code> to paint the error icon to
-     */
-    protected void paintErrorIcon(Graphics g) {
-        ITextPM pModel = this.getPresentationModel();
-        if (pModel != null && pModel.isValid() == false) {
-            ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, false);
+    public ErrorIconPainter getErrorIconPainter() {
+        return errorIconPainter;
+    }
+
+    public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
+        if (aErrorIconPainter == null) {
+            throw new IllegalArgumentException("aErrorIconPainter == null");
+        }
+        this.errorIconPainter = aErrorIconPainter;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void paintChildren(Graphics g) {
+        super.paintChildren(g);
+        if (shouldPaintErrorIcon()) {
+            errorIconPainter.paint(g, this);
         }
     }
+
+    private boolean shouldPaintErrorIcon() {
+        ITextPM pModel = this.getPresentationModel();
+        if (pModel == null) {
+            return false;
+        }
+        return (pModel.isValid() == false);
+    }
+
 }

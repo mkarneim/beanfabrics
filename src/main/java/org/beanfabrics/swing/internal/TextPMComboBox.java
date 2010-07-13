@@ -6,9 +6,8 @@
 // methods and fields are documented
 package org.beanfabrics.swing.internal;
 
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -18,7 +17,6 @@ import java.util.Set;
 
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
@@ -29,7 +27,7 @@ import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.ITextPM;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.BnComboBoxEditor;
-import org.beanfabrics.swing.ErrorImagePainter;
+import org.beanfabrics.swing.ErrorIconPainter;
 import org.beanfabrics.swing.KeyBindingProcessor;
 
 /**
@@ -41,8 +39,9 @@ import org.beanfabrics.swing.KeyBindingProcessor;
  */
 @SuppressWarnings("serial")
 public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  View<ITextPM> {
-    
+    private static final Point DEFAULT_ERROR_ICON_OFFSET = new Point(-20,0);
     private ITextPM pModel;
+    private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
     
     private transient final PropertyChangeListener propertyListener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
@@ -75,7 +74,7 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  V
         this();
         setPresentationModel(pModel);
     }
-
+    
     /** {@inheritDoc} */
     public ITextPM getPresentationModel() {
         return pModel;
@@ -136,38 +135,42 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor,  V
     protected TextEditorComboBoxModel createDefaultModel() {
         return new TextEditorComboBoxModel();
     }
-
-    private Dimension getArrowButtonSize() {
-        for (int i = 0; i < this.getComponentCount(); i++) {
-            final Component c = this.getComponent(i);
-            if (c instanceof JButton) {
-                return c.getSize();
-            }
-        }
-        return null;
+    
+    private ErrorIconPainter createDefaultErrorIconPainter() {
+        ErrorIconPainter result = new ErrorIconPainter();    
+        result.setOffset( DEFAULT_ERROR_ICON_OFFSET);
+        return result;
     }
 
+    public ErrorIconPainter getErrorIconPainter() {
+        return errorIconPainter;
+    }
+
+    public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
+        if ( aErrorIconPainter == null) {
+            throw new IllegalArgumentException("aErrorIconPainter == null");
+        }
+        this.errorIconPainter = aErrorIconPainter;
+    }
+    
     /** {@inheritDoc} */
     @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        this.paintErrorIcon(g);
+    public void paintChildren(Graphics g) {
+        super.paintChildren(g);
+        if ( shouldPaintErrorIcon()) {
+            errorIconPainter.paint(g, this);
+        }
     }
 
-    /**
-     * Paints an error icon on top of the given {@link Graphics} if this
-     * component is connected to an {@link PresentationModel} and this
-     * <code>PresentationModel</code> has an invalid validation state.
-     * 
-     * @param g the <code>Graphics</code> to paint the error icon to
-     */
-    protected void paintErrorIcon(Graphics g) {
-        if (this.isEditable())
-            return; // editable => error icon gets painted by BnComboBoxEditor
-        ITextPM pModel = this.getPresentationModel();
-        if (pModel != null && pModel.isValid() == false) {
-            ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, false);
+    private boolean shouldPaintErrorIcon() {
+        if (this.isEditable()) {
+            return false; // editable => error icon gets painted by BnComboBoxEditor
         }
+        ITextPM pModel = this.getPresentationModel();
+        if ( pModel == null) {
+            return false;
+        }
+        return (pModel.isValid() == false);       
     }
     
     /** {@inheritDoc} */

@@ -23,8 +23,7 @@ import javax.swing.table.TableCellRenderer;
 
 import org.beanfabrics.model.ConversionException;
 import org.beanfabrics.model.IBooleanPM;
-import org.beanfabrics.model.PresentationModel;
-import org.beanfabrics.swing.ErrorImagePainter;
+import org.beanfabrics.swing.ErrorIconPainter;
 
 /**
  * {@link TableCellRenderer} that renders the value of a {@link IBooleanPM}.
@@ -39,7 +38,8 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
     private CellRendererPane cellRendererPane = new CellRendererPane();
     private JCheckBox cb = new JCheckBox();
     private DefaultTableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
-
+    private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
+    
     private IBooleanPM model;
     private JComponent rendererComponent;
 
@@ -120,20 +120,40 @@ public class BooleanPMTableCellRenderer extends JPanel implements TableCellRende
     public void paint(Graphics g) {
         super.paint(g);
         // TODO shouldn't this be moved to the method paintComponent()
-        this.paintErrorIcon(g);
+        //this.paintErrorIcon(g);
     }
 
-    /**
-     * Paints an error icon on top of the given {@link Graphics} if this
-     * component is connected to an {@link PresentationModel} and this
-     * <code>PresentationModel</code> has an invalid validation state.
-     *
-     * @param g the <code>Graphics</code> to paint the error icon to
-     */
-    protected void paintErrorIcon(Graphics g) {
-        if (model != null && model.isValid() == false) {
-            boolean isRightAligned = cb.getHorizontalAlignment() == SwingConstants.RIGHT || cb.getHorizontalAlignment() == SwingConstants.TRAILING;
-            ErrorImagePainter.getInstance().paintTrailingErrorImage(g, this, isRightAligned);
+    private ErrorIconPainter createDefaultErrorIconPainter() {
+        ErrorIconPainter result = new ErrorIconPainter();     
+        return result;
+    }
+    
+    public ErrorIconPainter getErrorIconPainter() {
+        return errorIconPainter;
+    }
+
+    public void setErrorIconPainter(ErrorIconPainter aErrorIconPainter) {
+        if ( aErrorIconPainter == null) {
+            throw new IllegalArgumentException("aErrorIconPainter == null");
+        }
+        this.errorIconPainter = aErrorIconPainter;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public void paintChildren(Graphics g) {
+        super.paintChildren(g);
+        if ( shouldPaintErrorIcon()) {
+            errorIconPainter.paint(g, this);
         }
     }
+    
+    private boolean shouldPaintErrorIcon() {        
+        if ( model == null) {
+            return false;
+        }
+        return (model.isValid() == false);       
+    }
+    
+    
 }
