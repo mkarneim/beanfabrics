@@ -24,7 +24,6 @@
 	<property name="src.main.resources.dir" location="${src.dir}/main/resources" />
 	<property name="src.design.java.dir" location="${src.dir}/design/java" />
 	<property name="src.test.dir" location="${src.dir}/test" />
-	<property name="src.meta-inf.dir" location="${src.dir}/META-INF" />
 	<property name="src.samples.java.dir" location="${src.dir}/samples/java" />
 
 	<property name="lib.dir" location="${basedir}/lib" />
