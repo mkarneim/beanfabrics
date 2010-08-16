@@ -55,8 +55,8 @@ public class PathPM extends TextPM {
             }
         });
         chooserMdl.setPathContext(this.getPathContext());
-
-        CustomizerUtil.openPathChooserDialog(chooserMdl);
+        chooserMdl.getContext().addParent(this.getContext());
+        CustomizerUtil.get().openPathChooserDialog(chooserMdl);
     }
 
     @Validation(path = "choosePath")

@@ -9,7 +9,6 @@ import org.beanfabrics.meta.PathInfo;
 import org.beanfabrics.model.ListPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
-import org.beanfabrics.support.OnChange;
 import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.Validation;
 import org.beanfabrics.swing.customizer.path.PathChooserPM;
@@ -30,20 +29,11 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     protected final OperationPM moveUp = new OperationPM();
     protected final OperationPM moveDown = new OperationPM();
 
-    public interface Functions {
-        void apply(BnColumn[] cols);
-    }
-
-    private Functions functions;
     private PathInfo elementRoot;
 
     public ColumnListPM() {
         super();
         PMManager.setup(this);
-    }
-
-    public void setFunctions(Functions functions) {
-        this.functions = functions;
     }
 
     public void setColumnListContext(ColumnListContext clContext) {
@@ -60,7 +50,7 @@ public class ColumnListPM extends ListPM<ColumnPM> {
         revalidateProperties();
     }
 
-    private BnColumn[] getData() {
+    public BnColumn[] getData() {
         BnColumn[] result = new BnColumn[this.size()];
         int i = 0;
         for (ColumnPM cell : this) {
@@ -68,13 +58,6 @@ public class ColumnListPM extends ListPM<ColumnPM> {
             i++;
         }
         return result;
-    }
-
-    @OnChange
-    private void apply() {
-        if (isValid() && this.functions != null) {
-            this.functions.apply(this.getData());
-        }
     }
 
     @Operation
@@ -86,9 +69,9 @@ public class ColumnListPM extends ListPM<ColumnPM> {
             }
         });
         chooserMdl.setPathContext(new PathContext(this.elementRoot, null, new Path()));
-        CustomizerUtil.openPathChooserDialog(chooserMdl);
+        chooserMdl.getContext().addParent(this.getContext());
+        CustomizerUtil.get().openPathChooserDialog(chooserMdl);
 
-        this.apply();
     }
 
     @Validation(path = "addColumn", message = "Unknown element type")
@@ -123,7 +106,6 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     public void removeColumns() {
         this.removeAll(this.getSelection());
 
-        this.apply();
     }
 
     @Operation
@@ -131,7 +113,6 @@ public class ColumnListPM extends ListPM<ColumnPM> {
         moveUp.check();
         int index = getSelection().getMinIndex();
         swap(index, index - 1);
-        apply();
     }
 
     @Validation(path = "moveUp")
@@ -151,7 +132,6 @@ public class ColumnListPM extends ListPM<ColumnPM> {
         moveDown.check();
         int index = getSelection().getMinIndex();
         swap(index, index + 1);
-        apply();
     }
 
     @Validation(path = "moveDown")

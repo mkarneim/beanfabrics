@@ -43,6 +43,7 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
     private Class<? extends PresentationModel> requiredListModelType;
 
     public BnListCustomizerPM() {
+        //this.title.setText("This is the Beanfabrics customizer for the "+BnList.class.getName()+" component.");
         PMManager.setup(this);
     }
 

@@ -6,15 +6,19 @@ package org.beanfabrics.swing.customizer.path;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dialog;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Link;
@@ -33,6 +37,15 @@ import org.beanfabrics.swing.customizer.util.CustomizerUtil;
  */
 @SuppressWarnings("serial")
 public class PathChooserDialog extends JDialog implements View<PathChooserPM>, ModelSubscriber {
+
+    public static PathChooserDialog create(Window parent) {
+        if (parent instanceof Dialog) {
+            return new PathChooserDialog((Dialog)parent);
+        } else {
+            return new PathChooserDialog((Frame)parent);
+        }
+    }
+
     private JButton cancelButton;
     private BnButton okBnButton;
     private JPanel buttonPanel;
@@ -41,12 +54,18 @@ public class PathChooserDialog extends JDialog implements View<PathChooserPM>, M
     private final Link link = new Link(this);
     private ModelProvider localProvider;
 
-    /**
-     * Constructs a new <code>PathChooserDialog</code>.
-     */
-    public PathChooserDialog() {
-        super();
-        setLayout(new BorderLayout());
+    private PathChooserDialog(Dialog dialog) {
+        super(dialog);
+        init();
+    }
+
+    private PathChooserDialog(Frame frame) {
+        super(frame);
+        init();
+    }
+
+    private void init() {
+        getContentPane().setLayout(new BorderLayout());
         getContentPane().add(getCenterPanel(), BorderLayout.CENTER);
         this.setBackground(this.getDefaultBackground());
         //
@@ -55,6 +74,7 @@ public class PathChooserDialog extends JDialog implements View<PathChooserPM>, M
     /**
      * Returns the local {@link ModelProvider} for this class.
      * 
+     * @wbp.nonvisual location=10,430
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {
@@ -117,21 +137,23 @@ public class PathChooserDialog extends JDialog implements View<PathChooserPM>, M
     private JPanel getButtonPanel() {
         if (buttonPanel == null) {
             buttonPanel = new JPanel();
+            buttonPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
             final GridBagLayout gridBagLayout = new GridBagLayout();
-            gridBagLayout.columnWidths = new int[] { 7, 0 };
+            gridBagLayout.columnWidths = new int[] { 0, 7 };
             buttonPanel.setLayout(gridBagLayout);
             final GridBagConstraints gridBagConstraints = new GridBagConstraints();
-            gridBagConstraints.gridx = 2;
-            gridBagConstraints.insets = new Insets(4, 4, 4, 4);
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.insets = new Insets(4, 4, 4, 5);
+            buttonPanel.add(getOkBnButton(), gridBagConstraints);
             final GridBagConstraints gridBagConstraints_1 = new GridBagConstraints();
-            gridBagConstraints_1.anchor = GridBagConstraints.WEST;
+            gridBagConstraints_1.anchor = GridBagConstraints.EAST;
             gridBagConstraints_1.weightx = 1;
             gridBagConstraints_1.weighty = 0;
-            gridBagConstraints_1.insets = new Insets(4, 4, 4, 4);
+            gridBagConstraints_1.insets = new Insets(4, 4, 4, 0);
             gridBagConstraints_1.gridy = 0;
-            gridBagConstraints_1.gridx = 0;
+            gridBagConstraints_1.gridx = 1;
             buttonPanel.add(getCancelButton(), gridBagConstraints_1);
-            buttonPanel.add(getOkBnButton(), gridBagConstraints);
         }
         return buttonPanel;
     }

@@ -6,21 +6,22 @@ package org.beanfabrics.swing.customizer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.beans.Customizer;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
-import org.beanfabrics.swing.BnLabel;
-import org.beanfabrics.swing.customizer.path.PathBrowserPanel;
+import org.beanfabrics.swing.customizer.path.PathPanel;
 import org.beanfabrics.swing.customizer.util.CustomizerBasePanel;
 import org.beanfabrics.swing.customizer.util.CustomizerUtil;
+import org.beanfabrics.swing.customizer.util.TitlePanel;
 
 /**
  * The <code>ModelSubscriberCustomizer</code> is a Java Beans {@link Customizer}
@@ -29,23 +30,22 @@ import org.beanfabrics.swing.customizer.util.CustomizerUtil;
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
-public class ModelSubscriberCustomizer extends CustomizerBasePanel implements Customizer {
-    private JPanel panel_1;
-    private BnLabel bnLabel;
-    private JPanel headerPanel;
-    private PathBrowserPanel pathChooserPanel;
+public class ModelSubscriberCustomizer extends CustomizerBasePanel<ModelSubscriberCustomizerPM> implements Customizer {
     private JPanel centerPanel;
     private ModelProvider localProvider;
-    private ModelSubscriberCustomizerPM pModel;
+    private ModelSubscriberCustomizerPM modelSubscriberCustomizerPM;
+    private JLabel lblPathToPresentation;
+    private PathPanel pathPanel;
+    private TitlePanel titlePanel;
 
     public ModelSubscriberCustomizer() {
-        this.pModel = new ModelSubscriberCustomizerPM();
-        this.getLocalProvider().setPresentationModel(this.pModel);
+        setPresentationModel(getModelSubscriberCustomizerPM());
         this.setLayout(new BorderLayout());
         this.add(this.getCenterPanel());
         setBackground(this.getDefaultBackground());
 
         CustomizerUtil.get().setupGUI(this);
+        add(getTitlePanel(), BorderLayout.NORTH);
     }
 
     public void setObject(Object bean) {
@@ -61,40 +61,46 @@ public class ModelSubscriberCustomizer extends CustomizerBasePanel implements Cu
     }
 
     public void setModelSubscriber(final ModelSubscriber aSubscriber) {
-        this.pModel.setFunctions(new ModelSubscriberCustomizerPM.Functions() {
+        this.getPresentationModel().setFunctions(new ModelSubscriberCustomizerPM.Functions() {
             public void setPath(Path path) {
                 Path oldValue = aSubscriber.getPath();
                 aSubscriber.setPath(path);
                 ModelSubscriberCustomizer.this.firePropertyChange("path", oldValue, path);
             }
         });
-        this.pModel.setModelSubscriber(aSubscriber);
+        this.getPresentationModel().setModelSubscriber(aSubscriber);
     }
 
     private JPanel getCenterPanel() {
         if (centerPanel == null) {
             centerPanel = new JPanel();
-            centerPanel.setLayout(new BorderLayout());
-            centerPanel.add(getPathChooserPanel(), BorderLayout.CENTER);
-            centerPanel.add(getHeaderPanel(), BorderLayout.NORTH);
+            centerPanel.setBorder(new EmptyBorder(4, 4, 4, 4));
             centerPanel.setOpaque(false);
+            GridBagLayout gbl_centerPanel = new GridBagLayout();
+            gbl_centerPanel.columnWidths = new int[] { 0, 0, 0 };
+            gbl_centerPanel.rowHeights = new int[] { 0, 0, 0 };
+            gbl_centerPanel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+            gbl_centerPanel.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+            centerPanel.setLayout(gbl_centerPanel);
+            GridBagConstraints gbc_lblPathToPresentation = new GridBagConstraints();
+            gbc_lblPathToPresentation.insets = new Insets(0, 0, 5, 5);
+            gbc_lblPathToPresentation.gridx = 0;
+            gbc_lblPathToPresentation.gridy = 0;
+            centerPanel.add(getLblPathToPresentation(), gbc_lblPathToPresentation);
+            GridBagConstraints gbc_pathPanel = new GridBagConstraints();
+            gbc_pathPanel.insets = new Insets(0, 0, 5, 0);
+            gbc_pathPanel.fill = GridBagConstraints.BOTH;
+            gbc_pathPanel.gridx = 1;
+            gbc_pathPanel.gridy = 0;
+            centerPanel.add(getPathPanel(), gbc_pathPanel);
         }
         return centerPanel;
-    }
-
-    private PathBrowserPanel getPathChooserPanel() {
-        if (pathChooserPanel == null) {
-            pathChooserPanel = new PathBrowserPanel();
-            pathChooserPanel.setPath(new org.beanfabrics.Path("this.pathBrowser"));
-            pathChooserPanel.setModelProvider(getLocalProvider());
-            pathChooserPanel.setOpaque(false);
-        }
-        return pathChooserPanel;
     }
 
     /**
      * Returns the local {@link ModelProvider} for this class.
      * 
+     * @wbp.nonvisual location=10,430
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {
@@ -105,48 +111,13 @@ public class ModelSubscriberCustomizer extends CustomizerBasePanel implements Cu
         return localProvider;
     }
 
-    private JPanel getHeaderPanel() {
-        if (headerPanel == null) {
-            headerPanel = new JPanel();
-            final GridBagLayout gridBagLayout = new GridBagLayout();
-            gridBagLayout.rowHeights = new int[] { 7, 7 };
-            gridBagLayout.columnWidths = new int[] { 7 };
-            headerPanel.setLayout(gridBagLayout);
-            headerPanel.setBackground(Color.WHITE);
-            final GridBagConstraints gridBagConstraints = new GridBagConstraints();
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.fill = GridBagConstraints.BOTH;
-            gridBagConstraints.weightx = 1;
-            gridBagConstraints.insets = new Insets(4, 4, 4, 4);
-            final GridBagConstraints gridBagConstraints_1 = new GridBagConstraints();
-            gridBagConstraints_1.ipady = 64;
-            gridBagConstraints_1.insets = new Insets(4, 4, 4, 4);
-            gridBagConstraints_1.gridy = 0;
-            gridBagConstraints_1.gridx = 0;
-            headerPanel.add(getPanel_1(), gridBagConstraints_1);
-            headerPanel.add(getBnLabel(), gridBagConstraints);
-        }
-        return headerPanel;
+    public void setPresentationModel(ModelSubscriberCustomizerPM aPm) {
+        super.setPresentationModel(aPm);
+        getLocalProvider().setPresentationModel(aPm);
     }
 
-    private BnLabel getBnLabel() {
-        if (bnLabel == null) {
-            bnLabel = new BnLabel();
-            bnLabel.setPreferredSize(new Dimension(500, 0));
-            bnLabel.setPath(new org.beanfabrics.Path("this.status"));
-            bnLabel.setModelProvider(getLocalProvider());
-            bnLabel.setText("New BnLabel");
-        }
-        return bnLabel;
-    }
-
-    private JPanel getPanel_1() {
-        if (panel_1 == null) {
-            panel_1 = new JPanel();
-            panel_1.setOpaque(false);
-        }
-        return panel_1;
+    public ModelSubscriberCustomizerPM getPresentationModel() {
+        return getLocalProvider().getPresentationModel();
     }
 
     private Color getDefaultBackground() {
@@ -155,5 +126,40 @@ public class ModelSubscriberCustomizer extends CustomizerBasePanel implements Cu
         } else {
             return getBackground();
         }
+    }
+
+    /**
+     * @wbp.nonvisual location=-4,481
+     */
+    private ModelSubscriberCustomizerPM getModelSubscriberCustomizerPM() {
+        if (modelSubscriberCustomizerPM == null) {
+            modelSubscriberCustomizerPM = new ModelSubscriberCustomizerPM();
+        }
+        return modelSubscriberCustomizerPM;
+    }
+
+    private JLabel getLblPathToPresentation() {
+        if (lblPathToPresentation == null) {
+            lblPathToPresentation = new JLabel("Path to Presentation Model");
+        }
+        return lblPathToPresentation;
+    }
+
+    private PathPanel getPathPanel() {
+        if (pathPanel == null) {
+            pathPanel = new PathPanel();
+            pathPanel.setPath(new Path("this.path"));
+            pathPanel.setModelProvider(getLocalProvider());
+        }
+        return pathPanel;
+    }
+
+    private TitlePanel getTitlePanel() {
+        if (titlePanel == null) {
+            titlePanel = new TitlePanel();
+            titlePanel.setPath(new Path("this.title"));
+            titlePanel.setModelProvider(getLocalProvider());
+        }
+        return titlePanel;
     }
 }

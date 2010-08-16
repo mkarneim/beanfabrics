@@ -12,12 +12,16 @@ import org.beanfabrics.Path;
 import org.beanfabrics.ViewClassDecorator;
 import org.beanfabrics.meta.PathInfo;
 import org.beanfabrics.model.IListPM;
+import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.support.OnChange;
+import org.beanfabrics.support.Operation;
+import org.beanfabrics.support.Validation;
 import org.beanfabrics.swing.customizer.path.PathContext;
 import org.beanfabrics.swing.customizer.path.PathPM;
 import org.beanfabrics.swing.customizer.util.AbstractCustomizerPM;
+import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 import org.beanfabrics.swing.table.BnColumn;
 import org.beanfabrics.swing.table.BnTable;
 
@@ -29,7 +33,8 @@ import org.beanfabrics.swing.table.BnTable;
  */
 public class BnTableCustomizerPM extends AbstractCustomizerPM {
     protected final PathPM path = new PathPM();
-    protected final ColumnListPM columns = new ColumnListPM();
+
+    protected final OperationPM configureColumns = new OperationPM();
 
     public interface Functions {
         void setPath(Path path);
@@ -44,12 +49,6 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
 
     public BnTableCustomizerPM() {
         PMManager.setup(this);
-
-        this.columns.setFunctions(new ColumnListPM.Functions() {
-            public void apply(BnColumn[] cols) {
-                functions.setBnColumns(cols);
-            }
-        });
     }
 
     public void setFunctions(Functions functions) {
@@ -72,7 +71,6 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
         this.requiredModelType = viewDeco.getExpectedModelType();
 
         configurePath();
-        configureColumns();
         revalidateProperties();
     }
 
@@ -80,18 +78,38 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
         this.path.setPathContext(this.getPathContext());
     }
 
-    private void configureColumns() {
+    @Validation(path = "configureColumns")
+    public boolean canConfigureColumns() {
+        return path.isValid();
+    }
+
+    @Operation
+    public void configureColumns() {
+        configureColumns.check();
+
+        final ColumnListContext columnListContext;
         Class elementModelType = getElementModelType();
         if (elementModelType == null) {
-            ColumnListContext columnListContext = new ColumnListContext(null, bnTable.getColumns());
-            this.columns.setColumnListContext(columnListContext);
+            columnListContext = new ColumnListContext(null, bnTable.getColumns());
         } else {
             PathInfo elementRootPathInfo = PMManager.getInstance().getMetadata().getPathInfo(elementModelType);
-
-            ColumnListContext columnListContext = new ColumnListContext(elementRootPathInfo, bnTable.getColumns());
-            this.columns.setColumnListContext(columnListContext);
+            columnListContext = new ColumnListContext(elementRootPathInfo, bnTable.getColumns());
         }
-        revalidateProperties();
+
+        ColumnListConfigurationPM pm = new ColumnListConfigurationPM(new ColumnListConfigurationPM.Model() {
+
+            public ColumnListContext getColumnListContext() {
+                return columnListContext;
+            }
+
+            public void apply(BnColumn[] cols) {
+                functions.setBnColumns(cols);
+            }
+        });
+        pm.getContext().addParent(this.getContext());
+
+        CustomizerUtil.get().openColumnListConfigurationDialog(pm);
+
     }
 
     private Class getElementModelType() {
@@ -141,7 +159,6 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
     void applyPath() {
         if (functions != null && path.isValid()) {
             functions.setPath(path.getPath());
-            configureColumns();
         }
     }
 }

@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.beanfabrics.model.PresentationModel;
+
 /**
  * The <code>CustomizerBasePanel</code> is the base class for JavaBeans
  * Customizers in Beanfabrics. It provides methods for showing messages on the
@@ -20,8 +22,15 @@ import javax.swing.JTextArea;
  * 
  * @author Michael Karneim
  */
-public class CustomizerBasePanel extends JPanel {
+public class CustomizerBasePanel<T extends PresentationModel> extends JPanel {
+    private T pModel;
+
     public CustomizerBasePanel() {
+    }
+
+    protected void setPresentationModel(T aPm) {
+        this.pModel = aPm;
+        this.pModel.getContext().addService(RootWindowLocator.class, CustomizerUtil.get().getRootWindowLocator(this));
     }
 
     protected void showMessage(String message) {

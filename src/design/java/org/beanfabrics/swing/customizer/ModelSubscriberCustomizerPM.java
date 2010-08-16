@@ -4,10 +4,7 @@
  */
 package org.beanfabrics.swing.customizer;
 
-import java.net.URL;
-
 import org.beanfabrics.IModelProvider;
-import org.beanfabrics.ModelProvider;
 import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
 import org.beanfabrics.View;
@@ -15,12 +12,11 @@ import org.beanfabrics.ViewClassDecorator;
 import org.beanfabrics.meta.MetadataRegistry;
 import org.beanfabrics.meta.PathInfo;
 import org.beanfabrics.meta.PresentationModelInfo;
-import org.beanfabrics.model.IconTextPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.support.OnChange;
-import org.beanfabrics.swing.customizer.path.PathBrowserPM;
 import org.beanfabrics.swing.customizer.path.PathContext;
+import org.beanfabrics.swing.customizer.path.PathPM;
 import org.beanfabrics.swing.customizer.util.AbstractCustomizerPM;
 
 /**
@@ -30,9 +26,8 @@ import org.beanfabrics.swing.customizer.util.AbstractCustomizerPM;
  * @author Michael Karneim
  */
 public class ModelSubscriberCustomizerPM extends AbstractCustomizerPM {
-    private static final URL ICON_BEANFABRICS = ModelSubscriberCustomizerPM.class.getResource("/org/beanfabrics/swing/beanfabrics48c.png");
-    PathBrowserPM pathBrowser = new PathBrowserPM();
-    IconTextPM status = new IconTextPM();
+
+    protected final PathPM path = new PathPM();
 
     public interface Functions {
         public void setPath(Path path);
@@ -44,8 +39,6 @@ public class ModelSubscriberCustomizerPM extends AbstractCustomizerPM {
 
     public ModelSubscriberCustomizerPM() {
         PMManager.setup(this);
-        status.setEditable(false);
-        status.setIconUrl(ICON_BEANFABRICS);
     }
 
     public void setFunctions(Functions functions) {
@@ -73,30 +66,13 @@ public class ModelSubscriberCustomizerPM extends AbstractCustomizerPM {
 
         Path path = this.subscriber.getPath();
 
-        this.pathBrowser.setPathContext(new PathContext(rootPathInfo, requiredModelInfo, path));
-
-        String classname = this.subscriber.getClass().getName();
-        String statusText = "This is the Beanfabrics JavaBeans customizer for the selected " + getBasename(classname) + " bean." + " \nThis bean can subscribe to an instance of <b>" + getBasename(requiredModelInfo.getJavaType().getName()) + "</b> "
-                + "provided by the assigned " + getBasename(ModelProvider.class.getName()) + " and specified by a " + getBasename(Path.class.getName()) + "." + " \nPlease specify that " + getBasename(Path.class.getName()) + " here.";
-        this.status.setText("<html><font face=\"arial,sansserif\">" + statusText + "</font></html>");
+        this.path.setPathContext(new PathContext(rootPathInfo, requiredModelInfo, path));
     }
 
-    @OnChange(path = "pathBrowser.currentPath")
-    void updateJavaBean() {
-        if (pathBrowser != null && functions != null && pathBrowser.isPathValid()) {
-            functions.setPath(pathBrowser.getCurrentPath());
-        }
-    }
-
-    private static String getBasename(String classname) {
-        int idx = classname.lastIndexOf('$');
-        if (idx == -1) {
-            idx = classname.lastIndexOf('.');
-        }
-        if (idx == -1) {
-            return classname;
-        } else {
-            return classname.substring(idx + 1);
+    @OnChange(path = "path")
+    void applyPath() {
+        if (functions != null && path.isValid()) {
+            functions.setPath(path.getPath());
         }
     }
 

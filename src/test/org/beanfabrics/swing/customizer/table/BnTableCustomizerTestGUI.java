@@ -21,6 +21,7 @@ import org.beanfabrics.model.IntegerPM;
 import org.beanfabrics.model.ListPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.TextPM;
+import org.beanfabrics.swing.table.BnColumn;
 import org.beanfabrics.swing.table.BnTable;
 
 /**
@@ -111,14 +112,9 @@ public class BnTableCustomizerTestGUI extends JFrame {
                 provider.setPresentationModelType(BrowserPM.class);
 
                 bean.setModelProvider(provider);
-                bean.setPath(new Path("this.lastSearchPatterns"));
-                //
-                //				bean.setColumns( new BnColumn[] {
-                //						new BnColumn(new Path("street"), "Street")
-                //						,new BnColumn(new Path("country"), "Country")
-                //						,new BnColumn(new Path("zip"), "ZIP")
-                //						,new BnColumn(new Path("city"), "City")
-                //				} );
+                bean.setPath(new Path("this.files"));
+
+                bean.setColumns(new BnColumn[] { new BnColumn(new Path("name"), "Name") });
                 // then create the customizer frame
                 BnTableCustomizerTestGUI f = new BnTableCustomizerTestGUI();
                 f.bnTableCustomizer.setObject(bean);

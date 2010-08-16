@@ -18,10 +18,10 @@ import javax.swing.border.EmptyBorder;
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
+import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.customizer.path.PathPanel;
 import org.beanfabrics.swing.customizer.util.CustomizerBasePanel;
 import org.beanfabrics.swing.customizer.util.CustomizerUtil;
-import org.beanfabrics.swing.customizer.util.SeparatorLabel;
 import org.beanfabrics.swing.customizer.util.TitlePanel;
 import org.beanfabrics.swing.table.BnColumn;
 import org.beanfabrics.swing.table.BnTable;
@@ -32,21 +32,19 @@ import org.beanfabrics.swing.table.BnTable;
  * 
  * @author Michael Karneim
  */
-public class BnTableCustomizer extends CustomizerBasePanel implements Customizer {
-    private SeparatorLabel label_1;
-    private SeparatorLabel label;
+public class BnTableCustomizer extends CustomizerBasePanel<BnTableCustomizerPM> implements Customizer {
     private TitlePanel titlePanel;
-    private ColumnListPanel columnListPanel;
     private PathPanel pathPanel;
     private JPanel headerPanel;
     private JPanel centerPanel;
     private ModelProvider localProvider;
-    private BnTableCustomizerPM pModel;
+    private BnButton bnbtnConfigureColumn;
+    private BnTableCustomizerPM bnTableCustomizerPM;
+    private JLabel lblPathToPresentation;
+    private JLabel lblVisibleColumns;
 
     public BnTableCustomizer() {
-
-        this.pModel = new BnTableCustomizerPM();
-        this.getLocalProvider().setPresentationModel(this.pModel);
+        setPresentationModel(getBnTableCustomizerPM());
         this.setLayout(new BorderLayout());
         add(getCenterPanel(), BorderLayout.CENTER);
         add(getTitlePanel(), BorderLayout.NORTH);
@@ -68,7 +66,7 @@ public class BnTableCustomizer extends CustomizerBasePanel implements Customizer
     }
 
     public void setBnTable(final BnTable bnTable) {
-        this.pModel.setFunctions(new BnTableCustomizerPM.Functions() {
+        this.getBnTableCustomizerPM().setFunctions(new BnTableCustomizerPM.Functions() {
 
             public void setPath(Path newValue) {
                 Path oldValue = bnTable.getPath();
@@ -82,17 +80,19 @@ public class BnTableCustomizer extends CustomizerBasePanel implements Customizer
                 BnTableCustomizer.this.firePropertyChange("columns", oldValue, newValue);
             }
         });
-        this.pModel.setBnTable(bnTable);
+        this.getBnTableCustomizerPM().setBnTable(bnTable);
     }
 
     /**
      * Returns the local {@link ModelProvider} for this class.
      * 
+     * @wbp.nonvisual location=16,357
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {
         if (localProvider == null) {
-            localProvider = new ModelProvider(); // @wb:location=16,477
+            localProvider = new ModelProvider(); // @wb:location=16,577
+            localProvider.setPresentationModel(getBnTableCustomizerPM());
             localProvider.setPresentationModelType(BnTableCustomizerPM.class);
         }
         return localProvider;
@@ -101,46 +101,43 @@ public class BnTableCustomizer extends CustomizerBasePanel implements Customizer
     private JPanel getCenterPanel() {
         if (centerPanel == null) {
             centerPanel = new JPanel();
+            centerPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
             final GridBagLayout gridBagLayout = new GridBagLayout();
-            gridBagLayout.rowHeights = new int[] { 7, 7, 0, 7 };
+            gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 1.0 };
+            gridBagLayout.rowHeights = new int[] { 0, 7, 0 };
             centerPanel.setLayout(gridBagLayout);
+            GridBagConstraints gbc_lblPathToPresentation = new GridBagConstraints();
+            gbc_lblPathToPresentation.insets = new Insets(0, 0, 5, 5);
+            gbc_lblPathToPresentation.gridx = 0;
+            gbc_lblPathToPresentation.gridy = 0;
+            centerPanel.add(getLblPathToPresentation(), gbc_lblPathToPresentation);
             final GridBagConstraints gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints.weightx = 1;
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 2;
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 0;
             gridBagConstraints.ipadx = 282;
-            gridBagConstraints.insets = new Insets(0, 0, 0, 0);
+            gridBagConstraints.insets = new Insets(0, 0, 5, 0);
             centerPanel.add(getHeaderPanel(), gridBagConstraints);
-            final GridBagConstraints gridBagConstraints_1 = new GridBagConstraints();
-            gridBagConstraints_1.fill = GridBagConstraints.BOTH;
-            gridBagConstraints_1.weighty = 1;
-            gridBagConstraints_1.weightx = 1;
-            gridBagConstraints_1.gridx = 0;
-            gridBagConstraints_1.gridy = 5;
-            gridBagConstraints_1.insets = new Insets(0, 0, 0, 0);
-            final GridBagConstraints gridBagConstraints_2 = new GridBagConstraints();
-            gridBagConstraints_2.weightx = 1;
-            gridBagConstraints_2.fill = GridBagConstraints.HORIZONTAL;
-            gridBagConstraints_2.insets = new Insets(4, 4, 4, 4);
-            gridBagConstraints_2.gridy = 3;
-            gridBagConstraints_2.gridx = 0;
-            centerPanel.add(getLabel_1(), gridBagConstraints_2);
-            centerPanel.add(getColumnListPanel(), gridBagConstraints_1);
             centerPanel.setOpaque(false);
+            GridBagConstraints gbc_lblVisibleColumns = new GridBagConstraints();
+            gbc_lblVisibleColumns.anchor = GridBagConstraints.EAST;
+            gbc_lblVisibleColumns.insets = new Insets(0, 0, 5, 5);
+            gbc_lblVisibleColumns.gridx = 0;
+            gbc_lblVisibleColumns.gridy = 1;
+            centerPanel.add(getLblVisibleColumns(), gbc_lblVisibleColumns);
+            GridBagConstraints gbc_bnbtnConfigureColumn = new GridBagConstraints();
+            gbc_bnbtnConfigureColumn.insets = new Insets(0, 0, 5, 0);
+            gbc_bnbtnConfigureColumn.anchor = GridBagConstraints.WEST;
+            gbc_bnbtnConfigureColumn.gridx = 1;
+            gbc_bnbtnConfigureColumn.gridy = 1;
+            centerPanel.add(getBnbtnConfigureColumn(), gbc_bnbtnConfigureColumn);
         }
         return centerPanel;
     }
 
     private JPanel getHeaderPanel() {
         if (headerPanel == null) {
-            final GridBagConstraints gridBagConstraints_2 = new GridBagConstraints();
-            gridBagConstraints_2.fill = GridBagConstraints.HORIZONTAL;
-            gridBagConstraints_2.weightx = 1;
-            gridBagConstraints_2.gridx = 0;
-            gridBagConstraints_2.gridy = 1;
-            gridBagConstraints_2.insets = new Insets(4, 4, 4, 4);
-            centerPanel.add(getLabel(), gridBagConstraints_2);
             headerPanel = new JPanel();
             headerPanel.setLayout(new BorderLayout());
             headerPanel.add(getPathPanel());
@@ -152,23 +149,11 @@ public class BnTableCustomizer extends CustomizerBasePanel implements Customizer
     private PathPanel getPathPanel() {
         if (pathPanel == null) {
             pathPanel = new PathPanel();
-            pathPanel.setBorder(new EmptyBorder(4, 4, 4, 4));
             pathPanel.setPath(new org.beanfabrics.Path("this.path"));
             pathPanel.setModelProvider(getLocalProvider());
             pathPanel.setOpaque(false);
         }
         return pathPanel;
-    }
-
-    private ColumnListPanel getColumnListPanel() {
-        if (columnListPanel == null) {
-            columnListPanel = new ColumnListPanel();
-            columnListPanel.setBorder(new EmptyBorder(4, 4, 4, 4));
-            columnListPanel.setPath(new org.beanfabrics.Path("this.columns"));
-            columnListPanel.setModelProvider(getLocalProvider());
-            columnListPanel.setOpaque(false);
-        }
-        return columnListPanel;
     }
 
     protected TitlePanel getTitlePanel() {
@@ -188,19 +173,37 @@ public class BnTableCustomizer extends CustomizerBasePanel implements Customizer
         }
     }
 
-    private SeparatorLabel getLabel() {
-        if (label == null) {
-            label = new SeparatorLabel();
-            label.setText("Choose Path to Model");
+    private BnButton getBnbtnConfigureColumn() {
+        if (bnbtnConfigureColumn == null) {
+            bnbtnConfigureColumn = new BnButton();
+            bnbtnConfigureColumn.setPath(new Path("this.configureColumns"));
+            bnbtnConfigureColumn.setText("Configure...");
+            bnbtnConfigureColumn.setModelProvider(getLocalProvider());
         }
-        return label;
+        return bnbtnConfigureColumn;
     }
 
-    private JLabel getLabel_1() {
-        if (label_1 == null) {
-            label_1 = new SeparatorLabel();
-            label_1.setText("Choose Visible Columns");
+    /**
+     * @wbp.nonvisual location=16,411
+     */
+    private BnTableCustomizerPM getBnTableCustomizerPM() {
+        if (bnTableCustomizerPM == null) {
+            bnTableCustomizerPM = new BnTableCustomizerPM();
         }
-        return label_1;
+        return bnTableCustomizerPM;
+    }
+
+    private JLabel getLblPathToPresentation() {
+        if (lblPathToPresentation == null) {
+            lblPathToPresentation = new JLabel("Path to Presentation Model");
+        }
+        return lblPathToPresentation;
+    }
+
+    private JLabel getLblVisibleColumns() {
+        if (lblVisibleColumns == null) {
+            lblVisibleColumns = new JLabel("Visible Columns");
+        }
+        return lblVisibleColumns;
     }
 }
