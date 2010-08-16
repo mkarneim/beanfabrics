@@ -122,7 +122,7 @@ public class DefaultContext implements Context {
         }
     }
 
-    public <T> boolean addService(Class<T> type, T service) {
+    public <T> boolean addService(Class<? super T> type, T service) {
         ServiceEntry entry = new ServiceEntry(0, this, service, type);
         return addServiceEntry(entry);
     }
@@ -177,5 +177,14 @@ public class DefaultContext implements Context {
             }
         }
         return result;
+    }
+
+    public <T> T getService(Class<? extends T> type) {
+        ServiceEntry entry = findService(type);
+        if (entry == null) {
+            return null;
+        } else {
+            return (T)entry.getService();
+        }
     }
 }

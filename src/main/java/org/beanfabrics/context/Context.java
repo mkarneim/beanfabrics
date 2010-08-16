@@ -22,7 +22,7 @@ public interface Context {
 
     public void removeContextListener(ContextListener l);
 
-    public <T> boolean addService(Class<T> type, T service);
+    public <T> boolean addService(Class<? super T> type, T service);
 
     @SuppressWarnings("unchecked")
     public Object removeService(Class type);
@@ -31,4 +31,6 @@ public interface Context {
 
     @SuppressWarnings("unchecked")
     public ServiceEntry findService(Class type);
+
+    public <T> T getService(Class<? extends T> type);
 }
