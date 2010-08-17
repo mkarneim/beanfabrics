@@ -13,10 +13,9 @@ import java.beans.PropertyChangeSupport;
 import java.beans.PropertyEditor;
 import java.util.LinkedList;
 
-import javax.swing.SwingConstants;
-
 import org.beanfabrics.Path;
 import org.beanfabrics.swing.table.BnColumn;
+import org.beanfabrics.swing.table.BnColumnBuilder;
 import org.beanfabrics.util.ExceptionUtil;
 
 /**
@@ -135,72 +134,13 @@ public class BnColumnPropertyEditor implements PropertyEditor {
      * This method is intended for use when generating Java code to set the
      * value of the property.
      * 
-     * @return The generated Java code, like:
-     * 
-     *         <pre>
-     *     new BnColumn[] {
-     *       new BnColumn(
-     *         new Path(&quot;pathString&quot;),
-     *         &quot;columnName&quot;
-     *         100,
-     *         false
-     *         ),
-     *       ...
-     *     }
-     * </pre>
+     * @return The generated Java code, see {@link BnColumnBuilder}
      */
     public String getJavaInitializationString() {
         try {
-            StringBuilder sb = new StringBuilder();
-            sb.append("new " + BNCOLUMN_CLASSNAME + "[] {");
-            if (this.columns == null || this.columns.length == 0) {
-                return null;
-            }
-            for (int i = 0; i < this.columns.length; i++) {
-                sb.append("\n\t      ");
-                if (i > 0) {
-                    sb.append(" ,");
-                }
-                sb.append(" new " + BNCOLUMN_CLASSNAME + "(");
-                sb.append(" new " + PATH_CLASSNAME + "(\"").append(this.columns[i].getPath().getPathString() + "\")");
-                sb.append(", \"").append(this.columns[i].getColumnName() + "\"");
-                sb.append(", ").append(this.columns[i].getWidth());
-                sb.append(", ").append(this.columns[i].isWidthFixed());
-                if (this.columns[i].getOperationPath() != null) {
-                    sb.append(", new " + PATH_CLASSNAME + "(\"").append(this.columns[i].getOperationPath().getPathString() + "\")");
-                } else if (this.columns[i].getAlignment() != null) {
-                    sb.append(", ").append("null");
-                }
-
-                if (this.columns[i].getAlignment() != null) {
-                    String code;
-                    switch (this.columns[i].getAlignment().intValue()) {
-                        case SwingConstants.LEADING:
-                            code = "SwingConstants.LEADING";
-                            break;
-                        case SwingConstants.LEFT:
-                            code = "SwingConstants.LEFT";
-                            break;
-                        case SwingConstants.TRAILING:
-                            code = "SwingConstants.TRAILING";
-                            break;
-                        case SwingConstants.RIGHT:
-                            code = "SwingConstants.RIGHT";
-                            break;
-                        case SwingConstants.CENTER:
-                            code = "SwingConstants.CENTER";
-                            break;
-                        default:
-                            code = null;
-                    }
-                    if (code != null) {
-                        sb.append(", ").append(code);
-                    }
-                }
-                sb.append("    )");
-            }
-            sb.append("}");
-            return sb.toString();
+            BnColumnBuilderFormat format = new BnColumnBuilderFormat();
+            String result = format.format(this.columns);
+            return result;
         } catch (Exception ex) {
             ExceptionUtil.getInstance().handleException("Can't call getJavaInitializationString ", ex);
             return null;

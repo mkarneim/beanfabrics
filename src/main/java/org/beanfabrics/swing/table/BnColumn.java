@@ -16,6 +16,9 @@ import org.beanfabrics.Path;
  */
 public class BnColumn {
     public static final int DEFAULT_WIDTH = 100;
+    public static final Integer DEFAULT_ALIGNEMNT = null;
+    public static final boolean DEFAULT_WIDTH_FIXED = false;
+
     private final Path path;
     private final String columnName;
     private int width;
@@ -28,11 +31,11 @@ public class BnColumn {
     }
 
     public BnColumn(Path path, String columnName) {
-        this(path, columnName, DEFAULT_WIDTH, false);
+        this(path, columnName, DEFAULT_WIDTH, DEFAULT_WIDTH_FIXED);
     }
 
     public BnColumn(Path path, String columnName, int width) {
-        this(path, columnName, width, true, null);
+        this(path, columnName, width, DEFAULT_WIDTH_FIXED, null);
     }
 
     public BnColumn(Path path, String columnName, int width, boolean widthFixed) {
@@ -40,7 +43,7 @@ public class BnColumn {
     }
 
     public BnColumn(Path path, String columnName, int width, boolean widthFixed, Path operationPath) {
-        this(path, columnName, width, widthFixed, operationPath, null);
+        this(path, columnName, width, widthFixed, operationPath, DEFAULT_ALIGNEMNT);
     }
 
     public BnColumn(Path path, String columnName, int width, boolean widthFixed, Path operationPath, Integer alignment) {
