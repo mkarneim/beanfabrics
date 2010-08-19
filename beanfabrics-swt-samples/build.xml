@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<project name="beanfabrics-swt-samples" default="main" basedir=".">
+	<description>Build, test and deploy the Beanfabrics SWT samples module</description>
+	<import file="${basedir}/../abstract_module_build.xml" />
+
+	<!-- Folders and files -->
+
+	<!-- Filesets and paths -->
+	<path id="parent.project.classpath" description="Classpath referencing the dependent project(s)">
+		<pathelement location="${basedir}/../beanfabrics-core/target/classes/" />
+		<pathelement location="${basedir}/../beanfabrics-swt/target/classes/" />
+	</path>
+
+	<!--#################### Build targets ########################-->
+</project>

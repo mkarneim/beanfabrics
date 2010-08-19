@@ -1,0 +1,6 @@
+.project
+.classpath
+.settings/
+target/
+build.local.properties
+build.credentials
