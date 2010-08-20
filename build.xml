@@ -121,7 +121,7 @@
 		
 		<copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-core/target"><include name="*.jar"/></fileset></copy>
 		<copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-swing/target"><include name="*.jar"/></fileset></copy>
-		<copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-swt/target"><include name="*.jar"/></fileset></copy>		
+		<!-- <copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-swt/target"><include name="*.jar"/></fileset></copy> -->		
 		
 		<copy file="${javadoc.jarfile}" todir="${build.bin.content.dir}" />
 
