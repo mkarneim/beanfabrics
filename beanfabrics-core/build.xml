@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <project name="beanfabrics-core" default="main" basedir=".">
+	
 	<description>Build, test and deploy the Beanfabrics Core module</description>
 	<import file="${basedir}/../abstract_module_build.xml" />
+	
 </project>

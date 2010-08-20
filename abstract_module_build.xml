@@ -82,7 +82,7 @@
 	    <fail unless="version.build" message="Invalid contents for file 'build.version', missing 'version.build'."/>
 		<fail unless="release.label" message="Invalid contents for file 'release.label', missing 'version.build'."/>
 		<property name="project.version" value="${version.major}.${version.minor}.${version.build}" />
-		<echo message="building ${ant.project.name} v${project.version}"/>
+		<echo message="Building ${ant.project.name} v${project.version}"/>
 	</target>
 
 	<target name="init-dist" depends="init, init-version">
@@ -160,6 +160,7 @@
 	</target>
 
 	<target name="create-manifest" depends="init, prepare-manifest">
+		<echo>javabean dir = ${javabean-doclet.lib.dir}</echo>
 		<path id="create.manifest.classpath">
 			<fileset dir="${javabean-doclet.lib.dir}" includes="**/*.jar" />
 		</path>

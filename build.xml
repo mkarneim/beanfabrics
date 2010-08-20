@@ -10,18 +10,15 @@
 	<property name="lib.dir" location="${basedir}/lib" />
 					
 	<property name="target.dir" location="${basedir}/target" />
-						<property name="target.classes.dir" location="${target.dir}/classes" />
-						<property name="target.test.dir" location="${target.dir}/test" />
 					
 	<property name="target.bin.dir" location="${target.dir}/bin" />
 	<property name="target.project.dir" location="${target.dir}/project" />
 	<property name="target.javadoc.dir" location="${target.dir}/javadoc" />
 					
-	<property name="lib4ant.dir" location="${basedir}/lib" />
+	<property name="lib4ant.dir" location="${basedir}/lib4ant" />
 	<property name="ant-googlecode.lib.dir" location="${lib4ant.dir}/ant-googlecode" />
-						<property name="javabean-doclet.lib.dir" location="${lib4ant.dir}/javabean-doclet" />
 
-	<property name="build.version.file" location="${my.basedir}/build.version" />
+	<property name="build.version.file" location="${basedir}/build.version" />
 
 	<!-- Filesets and paths -->
 	<fileset id="src.javadoc.fileset" dir="${basedir}">
@@ -65,24 +62,24 @@
 					
 	<!--#################### Build targets ########################-->
 	<target name="create-classes-jars" depends="init" description="Create JARs of all sub projects containing all classes.">
-		<ant antfile="${basedir}/beanfabrics-core/build.xml"    target="create-classes-jar" />
-		<ant antfile="${basedir}/beanfabrics-swing/build.xml"   target="create-classes-jar" />
-		<ant antfile="${basedir}/beanfabrics-swt/build.xml"     target="create-classes-jar" />
-		<ant antfile="${basedir}/beanfabrics-samples/build.xml" target="create-classes-jar" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="create-classes-jar" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="create-classes-jar" />
+		<!--<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="create-classes-jar" />-->
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-samples/" antfile="build.xml" target="create-classes-jar" />
 	</target>
 					
 	<target name="create-src-jars" depends="init" description="Creates JARs of all sub projects containing all sources.">
-		<ant antfile="${basedir}/beanfabrics-core/build.xml"    target="create-src-jar" />
-		<ant antfile="${basedir}/beanfabrics-swing/build.xml"   target="create-src-jar" />
-		<ant antfile="${basedir}/beanfabrics-swt/build.xml"     target="create-src-jar" />
-		<ant antfile="${basedir}/beanfabrics-samples/build.xml" target="create-src-jar" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="create-src-jar" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="create-src-jar" />
+		<!--<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="create-src-jar" />-->
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-samples/" antfile="build.xml" target="create-src-jar" />
 	</target>
 	
 	<target name="test" depends="init" description="Executes all tests of all sub projects.">
-		<ant antfile="${basedir}/beanfabrics-core/build.xml"    target="test" />
-		<ant antfile="${basedir}/beanfabrics-swing/build.xml"   target="test" />
-		<ant antfile="${basedir}/beanfabrics-swt/build.xml"     target="test" />
-		<ant antfile="${basedir}/beanfabrics-samples/build.xml" target="test" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="test" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="test" />
+		<!--<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="test" />-->
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-samples/" antfile="build.xml" test="create-src-jar" />
 	</target>
 
 	<target name="clean" depends="init" description="Clean up all generated files.">
@@ -122,16 +119,11 @@
 		<delete dir="${build.bin.content.dir}" />
 		<mkdir dir="${build.bin.content.dir}" />
 		
-		<copy file="${basedir}/beanfabrics-core/${classes.jarfile}"  todir="${build.bin.content.dir}" />
-		<copy file="${basedir}/beanfabrics-core/${src.jarfile}"      todir="${build.bin.content.dir}" />
-
-		<copy file="${basedir}/beanfabrics-swing/${classes.jarfile}" todir="${build.bin.content.dir}" />
-		<copy file="${basedir}/beanfabrics-swing/${src.jarfile}"     todir="${build.bin.content.dir}" />
-
-		<copy file="${basedir}/beanfabrics-swt/${classes.jarfile}"   todir="${build.bin.content.dir}" />
-		<copy file="${basedir}/beanfabrics-swt/${src.jarfile}"       todir="${build.bin.content.dir}" />
-
-		<copy file="${javadoc.jarfile}"                              todir="${build.bin.content.dir}" />
+		<copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-core/target"><include name="*.jar"/></fileset></copy>
+		<copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-swing/target"><include name="*.jar"/></fileset></copy>
+		<copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-swt/target"><include name="*.jar"/></fileset></copy>		
+		
+		<copy file="${javadoc.jarfile}" todir="${build.bin.content.dir}" />
 
 		<copy todir="${build.bin.content.dir}">
 			<fileset dir="${basedir}" includes="build.version readme.txt license.txt 3rdparty-licenses.txt lgpl.txt" />
@@ -151,6 +143,7 @@
 				<exclude name="**/target/**" />
 				<exclude name="build.local.properties" />
 				<exclude name="build.credentials" />
+				<exclude name="bin" />
 			</fileset>
 		</copy>
 		
