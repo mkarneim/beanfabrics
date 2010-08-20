@@ -64,21 +64,21 @@
 	<target name="create-classes-jars" depends="init" description="Create JARs of all sub projects containing all classes.">
 		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="create-classes-jar" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="create-classes-jar" />
-		<!--<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="create-classes-jar" />-->
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="create-classes-jar" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-samples/" antfile="build.xml" target="create-classes-jar" />
 	</target>
 					
 	<target name="create-src-jars" depends="init" description="Creates JARs of all sub projects containing all sources.">
 		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="create-src-jar" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="create-src-jar" />
-		<!--<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="create-src-jar" />-->
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="create-src-jar" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-samples/" antfile="build.xml" target="create-src-jar" />
 	</target>
 	
 	<target name="test" depends="init" description="Executes all tests of all sub projects.">
 		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="test" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="test" />
-		<!--<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="test" />-->
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="test" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-samples/" antfile="build.xml" test="create-src-jar" />
 	</target>
 

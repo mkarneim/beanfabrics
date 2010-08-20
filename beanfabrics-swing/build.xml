@@ -9,19 +9,19 @@
 	<property name="target.classes.java6.dir" location="${target.dir}/classes6" />
 					
 	<!-- Filesets and paths -->
-	<path id="parent.project.classpath" description="Classpath referencing the dependent project(s)">
+	<path id="compile.main.classpath" description="Classpath for compiling java5 runtime-classes">
+		<path refid="global.compile.main.classpath" />
 		<pathelement location="${basedir}/../beanfabrics-core/target/classes/" />
 	</path>
-
-	<path id="compile.main.java6.classpath" description="Classpath for compiling beanfabrics main runtime-classes">
-		<fileset refid="lib.compile.fileset" />
+	
+	<path id="compile.main.java6.classpath" description="Classpath for compiling java6 runtime-classes">
+		<path refid="compile.main.classpath" />
 		<pathelement location="${target.classes.dir}" />
-		<pathelement location="${basedir}/../beanfabrics-core/target/classes/" />
 	</path>
 					
-	<path id="compile.main.design.classpath" description="Classpath for compiling beanfabrics design-time classes">
+	<path id="compile.main.design.classpath" description="Classpath for compiling design-time classes">
+		<path refid="compile.main.classpath" />
 		<pathelement location="${target.classes.dir}" />
-		<pathelement location="${basedir}/../beanfabrics-core/target/classes/" />
 	</path>
 					
 	<!--#################### Build targets ########################-->

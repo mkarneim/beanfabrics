@@ -4,11 +4,20 @@
 	<import file="${basedir}/../abstract_module_build.xml" />
 
 	<!-- Folders and files -->
-
+	<property name="lib.dir" location="${basedir}/lib" />
+	
 	<!-- Filesets and paths -->
-	<path id="parent.project.classpath" description="Classpath referencing the dependent project(s)">
+	
+	<fileset id="lib.compile.fileset" dir="${lib.dir}" description="Additional libraries needed to build this project.">
+		<include name="eclipse/*.jar" />
+	</fileset>
+		
+	<path id="compile.main.classpath" description="Classpath for compiling runtime-classes">
+		<path refid="global.compile.main.classpath" />
+		<fileset refid="lib.compile.fileset" />
 		<pathelement location="${basedir}/../beanfabrics-core/target/classes/" />
 	</path>
-
+	
+	
 	<!--#################### Build targets ########################-->
 </project>

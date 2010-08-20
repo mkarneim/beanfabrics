@@ -6,7 +6,8 @@
 	<!-- Folders and files -->
 
 	<!-- Filesets and paths -->
-	<path id="parent.project.classpath" description="Classpath referencing the dependent project(s)">
+	<path id="compile.main.classpath" description="Classpath for compiling main runtime-classes">
+		<path refid="global.compile.main.classpath" />
 		<pathelement location="${basedir}/../beanfabrics-core/target/classes/" />
 		<pathelement location="${basedir}/../beanfabrics-swing/target/classes/" />
 	</path>

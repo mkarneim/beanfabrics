@@ -10,7 +10,7 @@
 	<property file="${my.basedir}/build.properties" />
 
 	<!-- Folders and files -->
-	<property name="lib.dir" location="${my.basedir}/lib" />
+	<property name="global.lib.dir" location="${my.basedir}/lib" />
 
 	<property name="src.dir" location="${basedir}/src" />
 	<property name="src.main.java.dir" location="${src.dir}/main/java" />
@@ -32,39 +32,37 @@
 	<property name="build.version.file" location="${my.basedir}/build.version" />
 
 	<!-- Filesets and paths -->
-	<fileset id="lib.compile.fileset" dir="${lib.dir}" description="Libraries needed to build this project.">
+	<fileset id="global.lib.compile.fileset" dir="${global.lib.dir}" description="Libraries needed to build this project.">
 		<include name="slf4j/slf4j-*.jar" />
 		<include name="junit/junit-*.jar" />
 	</fileset>
-	<fileset id="lib.runtime.fileset" dir="${lib.dir}" description="Libraries needed to run this project.">
+	<fileset id="global.lib.runtime.fileset" dir="${global.lib.dir}" description="Libraries needed to run this project.">
 		<include name="logback/logback-classic-*.jar" />
 		<include name="logback/logback-core-*.jar" />
 	</fileset>
 
-	<path id="parent.project.classpath" description="Extend all compile classpaths by redefining a path with the same id" />
-	
-	<path id="compile.main.classpath" description="Classpath for compiling beanfabrics main runtime-classes">
-		<path refid="parent.project.classpath" />
-		<fileset refid="lib.compile.fileset" />
+	<path id="global.compile.main.classpath" description="Contains libraries required by all modules.">
+		<fileset refid="global.lib.compile.fileset" />
+	</path>
+	<path id="compile.main.classpath" description="You can redefine this classpath in any module build script">
+		<path refid="global.compile.main.classpath" />				
 	</path>
 
-	<path id="compile.test.classpath" description="Classpath for compiling beanfabrics test classes">
-		<path refid="parent.project.classpath" />
-		<pathelement location="${target.classes.dir}" />
-		<fileset refid="lib.compile.fileset" />
+	<path id="compile.test.classpath" description="Classpath for compiling test classes">
+		<fileset refid="compile.main.classpath" />
 	</path>
 
 	<path id="run.javadoc.classpath" description="Classpath for running javadoc">
-		<path refid="parent.project.classpath" />
-		<fileset refid="lib.compile.fileset" />
+		<path refid="compile.main.classpath" />
+		<fileset refid="global.lib.compile.fileset" />
 	</path>
 
-	<path id="run.test.classpath" description="Classpath for running beanfabrics test classes">
-		<path refid="parent.project.classpath" />
+	<path id="run.test.classpath" description="Classpath for running test classes">
+		<path refid="compile.main.classpath" />
 		<pathelement location="${target.classes.dir}" />
 		<pathelement location="${target.testclasses.dir}" />
-		<fileset refid="lib.compile.fileset" />
-		<fileset refid="lib.runtime.fileset" />
+		<fileset refid="global.lib.compile.fileset" />
+		<fileset refid="global.lib.runtime.fileset" />
 	</path>
 
 	<!--#################### Init dynamic properties ########################-->
