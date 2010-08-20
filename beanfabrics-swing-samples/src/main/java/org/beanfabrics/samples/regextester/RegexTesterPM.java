@@ -59,11 +59,11 @@ public class RegexTesterPM extends AbstractPM {
     /**
      * This validation rule checks whether the match operation can be executed.
      * 
-     * @return true, if all required input is available and correct
+     * @return true, if the regex is valid
      */
-    @Validation
+    @Validation(path="match")
     public boolean isMatchEnabled() {
-        return regex.isValid() && input.isEmpty() != false;
+        return regex.isValid();
     }
 
 }
