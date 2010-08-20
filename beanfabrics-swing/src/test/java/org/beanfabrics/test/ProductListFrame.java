@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.table.BnTable;
+import org.beanfabrics.swing.table.BnColumnBuilder;
 
 @SuppressWarnings("serial")
 public class ProductListFrame extends JFrame {
@@ -59,7 +60,10 @@ public class ProductListFrame extends JFrame {
         getContentPane().add(getPanel(), BorderLayout.NORTH);
         //
     }
-
+    /**
+     * @wbp.nonvisual location=38,265
+     * @return
+     */
     protected ModelProvider getLocalProvider() {
         if (provider == null) {
             provider = new ModelProvider(); // @wb:location=38,265
@@ -67,7 +71,10 @@ public class ProductListFrame extends JFrame {
         }
         return provider;
     }
-
+    /**
+     * @wbp.nonvisual location=146,273
+     * @return
+     */
     protected ProductListPM getProductListModel() {
         if (productListModel == null) {
             productListModel = new ProductListPM(); // @wb:location=146,273
@@ -87,9 +94,12 @@ public class ProductListFrame extends JFrame {
         if (bnTable == null) {
             bnTable = new BnTable();
             bnTable.setPath(new org.beanfabrics.Path("this.elements"));
-            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.name"), "Name", 100, false),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.type"), "Type", 80, true), new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.country"), "Country", 80, true),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.price"), "Price", 70, true) });
+            bnTable.setColumns(new BnColumnBuilder()
+            	      .addColumn().withPath("this.name").withName("Name")
+            	      .addColumn().withPath("this.type").withName("Type").withWidth(80).withWidthFixed(true)
+            	      .addColumn().withPath("this.country").withName("Country").withWidth(80).withWidthFixed(true)
+            	      .addColumn().withPath("this.price").withName("Price").withWidth(70).withWidthFixed(true)
+            	      .build());
             bnTable.setModelProvider(getLocalProvider());
         }
         return bnTable;

@@ -23,6 +23,7 @@ import org.beanfabrics.Path;
 import org.beanfabrics.View;
 import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.table.BnTable;
+import org.beanfabrics.swing.table.BnColumnBuilder;
 
 /**
  * The <code>ColumnListPanel</code> is a view on a {@link ColumnListPM}.
@@ -56,6 +57,7 @@ public class ColumnListPanel extends JPanel implements View<ColumnListPM>, Model
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
+     * @wbp.nonvisual location=10,430
      */
     protected ModelProvider getLocalProvider() {
         if (localProvider == null) {
@@ -118,10 +120,14 @@ public class ColumnListPanel extends JPanel implements View<ColumnListPM>, Model
     private BnTable getBnTable() {
         if (bnTable == null) {
             bnTable = new BnTable();
-            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.path"), "path", 120, false, new org.beanfabrics.Path("this.path.choosePath")),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.columnName"), "columnName", 100, true), new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.width"), "width", 55, true),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.fixedWidth"), "fixedWidth", 45, true), new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.alignment"), "alignment", 45, true),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.operationPath"), "operationPath", 80, true, new org.beanfabrics.Path("this.operationPath.choosePath")) });
+            bnTable.setColumns(new BnColumnBuilder()
+            	      .addColumn().withPath("this.path").withName("path").withWidth(120).withOperationPath("this.path.choosePath")
+            	      .addColumn().withPath("this.columnName").withName("columnName").withWidthFixed(true)
+            	      .addColumn().withPath("this.width").withName("width").withWidth(55).withWidthFixed(true)
+            	      .addColumn().withPath("this.fixedWidth").withName("fixedWidth").withWidth(45).withWidthFixed(true)
+            	      .addColumn().withPath("this.alignment").withName("alignment").withWidth(45).withWidthFixed(true)
+            	      .addColumn().withPath("this.operationPath").withName("operationPath").withWidth(80).withWidthFixed(true).withOperationPath("this.operationPath.choosePath")
+            	      .build());
             bnTable.setPath(new org.beanfabrics.Path("this"));
             bnTable.setModelProvider(getLocalProvider());
             // Customize rendering

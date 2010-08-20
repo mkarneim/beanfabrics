@@ -21,6 +21,7 @@ import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.BnLabel;
 import org.beanfabrics.swing.BnTextField;
 import org.beanfabrics.swing.table.BnTable;
+import org.beanfabrics.swing.table.BnColumnBuilder;
 
 @SuppressWarnings("serial")
 public class ContactListFrame extends JFrame {
@@ -253,14 +254,19 @@ public class ContactListFrame extends JFrame {
     private BnTable getBnTable() {
         if (bnTable == null) {
             bnTable = new BnTable();
+            bnTable.setCellEditingAllowed(false);
             //bnTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             bnTable.setPath(new Path("elements"));
             //bnTable.setPath(new Path("elementsList"));
             bnTable.setModelProvider(getLocalProvider());
-            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.icon"), "", 25, true),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("lastname"), "Name", 100, false), new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("birthday"), "Birthday", 80, true),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("address.street"), "Street", 100, false), new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.children"), "Children", 100, false),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.notes.content"), "Notes", 100, false) });
+            bnTable.setColumns(new BnColumnBuilder()
+            	      .addColumn().withPath("this.icon").withWidth(25).withWidthFixed(true)
+            	      .addColumn().withPath("lastname").withName("Name")
+            	      .addColumn().withPath("birthday").withName("Birthday").withWidth(80).withWidthFixed(true)
+            	      .addColumn().withPath("address.street").withName("Street")
+            	      .addColumn().withPath("this.children").withName("Children")
+            	      .addColumn().withPath("this.notes.content").withName("Notes")
+            	      .build());
         }
         return bnTable;
     }
@@ -283,6 +289,7 @@ public class ContactListFrame extends JFrame {
      * This method initializes provider
      * 
      * @return the <code>ModelProvider</code>
+     * @wbp.nonvisual location=63,314
      */
     private ModelProvider getLocalProvider() {
         if (provider == null) {

@@ -128,6 +128,7 @@ public class BnTableTestGUI extends JFrame {
 
     /**
      * This method initializes the {@link ModelProvider}.
+     * @wbp.nonvisual location=570,76
      */
     private ModelProvider getLocalProvider() {
         if (provider == null) {
@@ -154,8 +155,11 @@ public class BnTableTestGUI extends JFrame {
     private BnTable getBnTable() {
         if (bnTable == null) {
             bnTable = new BnTable();
-            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new Path("name"), "Name"), new org.beanfabrics.swing.table.BnColumn(new Path("birthday"), "Birthday"),
-                    new org.beanfabrics.swing.table.BnColumn(new Path("active"), "Active"), });
+            bnTable.setColumns(new BnColumnBuilder()
+            	      .addColumn().withPath("name").withName("Name")
+            	      .addColumn().withPath("birthday").withName("Birthday")
+            	      .addColumn().withPath("active").withName("Active")
+            	      .build());
             bnTable.setModelProvider(getLocalProvider());
             bnTable.setPath(new Path("this.persons"));
         }

@@ -15,6 +15,7 @@ import org.beanfabrics.Path;
 import org.beanfabrics.View;
 import org.beanfabrics.swing.BnLabel;
 import org.beanfabrics.swing.table.BnTable;
+import org.beanfabrics.swing.table.BnColumnBuilder;
 
 /*
  * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
@@ -43,6 +44,7 @@ public class PropertiesPanel extends JPanel implements View<PropertiesPM>, Model
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
+     * @wbp.nonvisual location=10,430
      */
     protected ModelProvider getLocalModelProvider() {
         if (localModelProvider == null) {
@@ -114,8 +116,10 @@ public class PropertiesPanel extends JPanel implements View<PropertiesPM>, Model
         if (bnTable == null) {
             bnTable = new BnTable();
             bnTable.setPath(new org.beanfabrics.Path("this"));
-            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.key"), "Key", 200, true),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.value"), "Value", 100, false) });
+            bnTable.setColumns(new BnColumnBuilder()
+            	      .addColumn().withPath("this.key").withName("Key").withWidth(200).withWidthFixed(true)
+            	      .addColumn().withPath("this.value").withName("Value")
+            	      .build());
             bnTable.setModelProvider(getLocalModelProvider());
             bnTable.setBackground(Color.WHITE);
             bnTable.setShowVerticalLines(true);

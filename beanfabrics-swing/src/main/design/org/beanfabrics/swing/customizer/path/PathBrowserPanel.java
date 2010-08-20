@@ -40,6 +40,7 @@ import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 import org.beanfabrics.swing.customizer.util.SeparatorLabel;
 import org.beanfabrics.swing.customizer.util.ToolbarButton;
 import org.beanfabrics.swing.table.BnTable;
+import org.beanfabrics.swing.table.BnColumnBuilder;
 
 /**
  * The <code>PathBrowserPanel</code> is the view on a {@link PathBrowserPM}.
@@ -87,6 +88,7 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
+     * @wbp.nonvisual location=16,477
      */
     protected ModelProvider getLocalProvider() {
         if (localProvider == null) {
@@ -181,8 +183,10 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
                 }
             });
             bnTable.setPath(new org.beanfabrics.Path("this.children"));
-            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.name"), "Name", 140, true),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.type"), "Type", 200, false) });
+            bnTable.setColumns(new BnColumnBuilder()
+            	      .addColumn().withPath("this.name").withName("Name").withWidth(140).withWidthFixed(true)
+            	      .addColumn().withPath("this.type").withName("Type").withWidth(200)
+            	      .build());
             bnTable.setModelProvider(getLocalProvider());
             bnTable.setGridColor(bnTable.getBackground());
             bnTable.setIntercellSpacing(new Dimension(0, 0));

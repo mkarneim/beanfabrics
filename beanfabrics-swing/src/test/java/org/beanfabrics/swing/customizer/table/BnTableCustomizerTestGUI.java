@@ -22,6 +22,7 @@ import org.beanfabrics.model.ListPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.TextPM;
 import org.beanfabrics.swing.table.BnColumn;
+import org.beanfabrics.swing.table.BnColumnBuilder;
 import org.beanfabrics.swing.table.BnTable;
 
 /**
@@ -113,8 +114,7 @@ public class BnTableCustomizerTestGUI extends JFrame {
 
                 bean.setModelProvider(provider);
                 bean.setPath(new Path("this.files"));
-
-                bean.setColumns(new BnColumn[] { new BnColumn(new Path("name"), "Name") });
+                bean.setColumns( new BnColumnBuilder().addColumn().withPath("name").withName("Name").build());
                 // then create the customizer frame
                 BnTableCustomizerTestGUI f = new BnTableCustomizerTestGUI();
                 f.bnTableCustomizer.setObject(bean);

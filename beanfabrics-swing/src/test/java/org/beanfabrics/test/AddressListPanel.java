@@ -20,6 +20,7 @@ import org.beanfabrics.View;
 import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.table.BnColumn;
 import org.beanfabrics.swing.table.BnTable;
+import org.beanfabrics.swing.table.BnColumnBuilder;
 
 public class AddressListPanel extends JPanel implements View<AddressListPM>, ModelSubscriber {
     private final Link link = new Link(this);
@@ -27,7 +28,7 @@ public class AddressListPanel extends JPanel implements View<AddressListPM>, Mod
     private BnButton bnButton = null;
     private JScrollPane jScrollPane = null;
     private BnTable bnTable = null;
-    private ModelProvider myDataSource = null; //@jve:decl-index=0:visual-constraint
+    private ModelProvider localModelProvider = null; //@jve:decl-index=0:visual-constraint
     // ="441,27"
     private JSplitPane jSplitPane = null;
     private AddressPanel addressPanel = null;
@@ -38,17 +39,17 @@ public class AddressListPanel extends JPanel implements View<AddressListPM>, Mod
     public AddressListPanel() {
         super();
         init();
-        getMyDataSource().setPresentationModel(new AddressListPM());
+        getLocalModelProvider().setPresentationModel(new AddressListPM());
     }
 
     /** {@inheritDoc} */
     public AddressListPM getPresentationModel() {
-        return getMyDataSource().getPresentationModel();
+        return getLocalModelProvider().getPresentationModel();
     }
 
     /** {@inheritDoc} */
     public void setPresentationModel(AddressListPM model) {
-        getMyDataSource().setPresentationModel(model);
+        getLocalModelProvider().setPresentationModel(model);
     }
 
     /** {@inheritDoc} */
@@ -104,7 +105,7 @@ public class AddressListPanel extends JPanel implements View<AddressListPM>, Mod
         if (bnButton == null) {
             bnButton = new BnButton();
             bnButton.setPath(new Path("addSome"));
-            bnButton.setModelProvider(getMyDataSource());
+            bnButton.setModelProvider(getLocalModelProvider());
         }
         return bnButton;
     }
@@ -131,9 +132,14 @@ public class AddressListPanel extends JPanel implements View<AddressListPM>, Mod
         if (bnTable == null) {
             bnTable = new BnTable();
             bnTable.setPath(new Path("elements"));
-            bnTable.setModelProvider(getMyDataSource());
-            bnTable.setColumns(new BnColumn[] { new BnColumn(new Path("appartment"), "Appartment"), new BnColumn(new Path("street"), "Street"), new BnColumn(new Path("city"), "City"), new BnColumn(new Path("zip"), "ZIP"),
-                    new BnColumn(new Path("country"), "Country") });
+            bnTable.setModelProvider(getLocalModelProvider());
+            bnTable.setColumns(new BnColumnBuilder()
+            	      .addColumn().withPath("appartment").withName("Appartment")
+            	      .addColumn().withPath("street").withName("Street")
+            	      .addColumn().withPath("city").withName("City")
+            	      .addColumn().withPath("zip").withName("ZIP")
+            	      .addColumn().withPath("country").withName("Country")
+            	      .build());
         }
         return bnTable;
     }
@@ -142,13 +148,14 @@ public class AddressListPanel extends JPanel implements View<AddressListPM>, Mod
      * This method initializes <code>myDataSource</code>.
      * 
      * @return the <code>ModelProvider</code>
+     * @wbp.nonvisual location=10,430
      */
-    private ModelProvider getMyDataSource() {
-        if (myDataSource == null) {
-            myDataSource = new ModelProvider();
-            myDataSource.setPresentationModelType(org.beanfabrics.test.AddressListPM.class);
+    private ModelProvider getLocalModelProvider() {
+        if (localModelProvider == null) {
+            localModelProvider = new ModelProvider();
+            localModelProvider.setPresentationModelType(org.beanfabrics.test.AddressListPM.class);
         }
-        return myDataSource;
+        return localModelProvider;
     }
 
     /**
@@ -175,7 +182,7 @@ public class AddressListPanel extends JPanel implements View<AddressListPM>, Mod
         if (addressPanel == null) {
             addressPanel = new AddressPanel();
             addressPanel.setPath(new Path("selected"));
-            addressPanel.setModelProvider(getMyDataSource());
+            addressPanel.setModelProvider(getLocalModelProvider());
         }
         return addressPanel;
     }

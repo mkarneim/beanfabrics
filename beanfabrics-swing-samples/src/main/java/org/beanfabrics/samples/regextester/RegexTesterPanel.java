@@ -19,6 +19,7 @@ import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.BnTextArea;
 import org.beanfabrics.swing.BnTextField;
 import org.beanfabrics.swing.table.BnTable;
+import org.beanfabrics.swing.table.BnColumnBuilder;
 
 /*
  * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
@@ -119,6 +120,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
+     * @wbp.nonvisual location=12,498
      */
     protected ModelProvider getLocalModelProvider() {
         if (localModelProvider == null) {
@@ -248,8 +250,11 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         if (bnTable == null) {
             bnTable = new BnTable();
             bnTable.setPath(new org.beanfabrics.Path("this.groups"));
-            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.findIndex"), "FindIndex", 80, true),
-                    new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.groupIndex"), "GroupIndex", 80, true), new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this.text"), "Text", 100, false) });
+            bnTable.setColumns(new BnColumnBuilder()
+            	      .addColumn().withPath("this.findIndex").withName("FindIndex").withWidth(80).withWidthFixed(true)
+            	      .addColumn().withPath("this.groupIndex").withName("GroupIndex").withWidth(80).withWidthFixed(true)
+            	      .addColumn().withPath("this.text").withName("Text")
+            	      .build());
             bnTable.setModelProvider(getLocalModelProvider());
         }
         return bnTable;

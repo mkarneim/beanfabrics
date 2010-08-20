@@ -66,7 +66,10 @@ public class TextPMsInATableTestGUI extends JFrame {
         getContentPane().add(getPanel(), BorderLayout.CENTER);
         //
     }
-
+    /**
+     * @wbp.nonvisual location=28,415
+     * @return
+     */
     private ModelProvider getLocalProvider() {
         if (provider == null) {
             provider = new ModelProvider(); // @wb:location=28,415
@@ -96,7 +99,9 @@ public class TextPMsInATableTestGUI extends JFrame {
     private BnTable getBnTable() {
         if (bnTable == null) {
             bnTable = new BnTable();
-            bnTable.setColumns(new org.beanfabrics.swing.table.BnColumn[] { new org.beanfabrics.swing.table.BnColumn(new org.beanfabrics.Path("this"), "Text", 100, false) });
+            bnTable.setColumns(new BnColumnBuilder()
+            	      .addColumn().withPath("this").withName("Text")
+            	      .build());
             bnTable.setPath(new org.beanfabrics.Path("this.elements"));
             bnTable.setModelProvider(getLocalProvider());
         }

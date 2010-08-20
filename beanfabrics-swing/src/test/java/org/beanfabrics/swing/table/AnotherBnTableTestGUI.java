@@ -69,7 +69,10 @@ public class AnotherBnTableTestGUI extends JFrame implements View<AnotherBnTable
         getContentPane().add(getPanel(), BorderLayout.CENTER);
         //
     }
-
+    /**
+     * @wbp.nonvisual location=11,442
+     * @return
+     */
     protected ModelProvider getLocalProvider() {
         if (localProvider == null) {
             localProvider = new ModelProvider(); // @wb:location=11,442
