@@ -170,12 +170,12 @@
 	<distributionManagement>
 		<repository>
 			<id>beanfabrics</id>
-			<name>beanfabrics</name>
+			<name>Maven Repository for Beanfabrics (releases)</name>
 			<url>svn:https://beanfabrics.googlecode.com/svn/maven/repository</url>
 		</repository>
 		<snapshotRepository>
 			<id>beanfabrics</id>
-			<name>beanfabrics</name>
+			<name>Maven Repository for Beanfabrics (snapshots)</name>
 			<url>svn:https://beanfabrics.googlecode.com/svn/maven/repository-snapshot</url>
 		</snapshotRepository>
 		<site>
