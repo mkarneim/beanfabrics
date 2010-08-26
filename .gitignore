@@ -4,3 +4,4 @@
 target/
 build.local.properties
 build.credentials
+bin/
