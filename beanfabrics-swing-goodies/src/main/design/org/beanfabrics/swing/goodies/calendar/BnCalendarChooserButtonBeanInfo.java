@@ -12,6 +12,7 @@ import org.beanfabrics.swing.ModelSubscriberBeanInfo;
  * @author Max Gensthaler
  */
 public class BnCalendarChooserButtonBeanInfo extends ModelSubscriberBeanInfo {
+    @SuppressWarnings("unchecked")
     @Override
     protected Class getBeanClass() {
         return BnCalendarChooserButton.class;
