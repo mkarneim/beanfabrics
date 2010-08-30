@@ -1,0 +1,33 @@
+/*
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
+ */
+package org.beanfabrics.swt.model;
+
+import org.beanfabrics.model.TextPM;
+import org.eclipse.swt.graphics.Image;
+
+/**
+ * @author Michael Karneim
+ */
+public class ImageTextPM extends TextPM implements IImagePM {
+	private Image image;
+
+	public void setImage(Image newImage) {
+		if (equals(newImage, image)) {
+			return;
+		}
+		Image old = this.image;
+		this.image = newImage;
+		this.getPropertyChangeSupport().firePropertyChange("image", old, newImage);
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return image == null && super.isEmpty();
+	}
+}

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="beanfabrics-core/src/main/java"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/main/resources"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/main/java"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/test/java"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/test/resources"/>
 	<classpathentry kind="src" path="beanfabrics-swt-samples/src/test/resources"/>
 	<classpathentry kind="src" path="beanfabrics-swt-samples/src/main/java"/>
 	<classpathentry kind="src" path="beanfabrics-core/src/main/resources"/>
