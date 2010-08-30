@@ -78,8 +78,7 @@
 	<target name="test" depends="init" description="Executes all tests of all sub projects.">
 		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="test" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="test" />
-		<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="test" />
-		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-samples/" antfile="build.xml" test="create-src-jar" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="test" />		
 	</target>
 
 	<target name="clean" depends="init" description="Clean up all generated files.">
