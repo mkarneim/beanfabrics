@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="beanfabrics-core/src/main/java"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/test/java"/>
+	<classpathentry kind="src" path="beanfabrics-swt-samples/src/test/resources"/>
+	<classpathentry kind="src" path="beanfabrics-swt-samples/src/main/java"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/main/resources"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/main/java"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/test/resources"/>
 	<classpathentry kind="src" path="beanfabrics-core/src/main/resources"/>
 	<classpathentry kind="src" path="beanfabrics-core/src/test/java"/>
 	<classpathentry kind="src" path="beanfabrics-core/src/test/resources"/>
@@ -18,5 +24,7 @@
 	<classpathentry kind="lib" path="lib/logback/logback-core-0.9.21.jar"/>
 	<classpathentry kind="lib" path="lib/logback/logback-classic-0.9.21.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="beanfabrics-swt/lib/eclipse/org.eclipse.swt_3.5.2.v3557f.jar"/>
+	<classpathentry kind="lib" path="beanfabrics-swt/lib/eclipse/org.eclipse.swt.win32.win32.x86_3.5.2.v3557f.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

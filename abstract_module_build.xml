@@ -45,11 +45,12 @@
 		<fileset refid="global.lib.compile.fileset" />
 	</path>
 	<path id="compile.main.classpath" description="You can redefine this classpath in any module build script">
-		<path refid="global.compile.main.classpath" />				
+		<path refid="global.compile.main.classpath" />
 	</path>
 
 	<path id="compile.test.classpath" description="Classpath for compiling test classes">
-		<fileset refid="compile.main.classpath" />
+		<path refid="compile.main.classpath" />
+		<pathelement location="${target.classes.dir}" />
 	</path>
 
 	<path id="run.javadoc.classpath" description="Classpath for running javadoc">
@@ -125,7 +126,8 @@
 	</target>
 
 	<target name="compile-test" depends="init, prepare-test-dir, compile" description="Compile test classes.">
-		<echo message="current classpath: ${toString:compile.test.classpath}" />
+		<echo message="current main classpath: ${toString:compile.main.classpath}" />
+		<echo message="current test classpath: ${toString:compile.test.classpath}" />
 		<javac classpathref="compile.test.classpath" destdir="${target.testclasses.dir}"
 			   source="${compile.source}" target="${compile.target}"
 			   debug="${compile.debug}" deprecation="${compile.deprecation}"
