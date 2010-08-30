@@ -7,7 +7,8 @@ Beanfabrics makes use of the following 3rd party components and images:
 These images are released under LGPL.
 
 2) Simple Logging Facade for Java
-Beanfabrics has a compile-time dependency to SLF4J. During runtime, the use of SLF4J is optional.
+Beanfabrics has a compile-time dependency to SLF4J. 
+However, during runtime, the use of SLF4J is optional.
 SLF4J source code and binaries are distributed under the following MIT license:
 
 Copyright (c) 2004-2008 QOS.ch All rights reserved. 
@@ -27,3 +28,12 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
 AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  
+3) Eclipse SWT Libraries
+The beanfabrics-swt library has a compile-time and run-time dependency to 
+the eclipse SWT libraries. Due to this the beanfabrics source release contains two
+library JAR files from Eclipse in beanfabrics-swt/lib/eclipse/ for convenience. 
+However, beanfabrics binary release does not include the SWT library since it
+is not a derived work in that sense.
+
+The Eclipse SWT libraries are distributes under the Eclipse Public License.
+For more information see epl.txt or http://www.eclipse.org/legal/epl-v10.html.
