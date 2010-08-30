@@ -179,7 +179,7 @@
 	              password="${gc.password}"
 	           projectname="${ant.project.name}"
 	      targetfilename="${project.zipfile.name}"
-	             summary="${project.title} ${project.version} source distribution: source code, build files, unit tests, sample code"
+	             summary="${project.title} ${project.version} source distribution (source code, build files, unit tests, sample code)"
 	              labels="Type-Project, ${release.label}" />
 
 		<basename file="${bin.zipfile}" property="bin.zipfile.name"/>
@@ -192,7 +192,7 @@
 	              password="${gc.password}"
 	           projectname="${ant.project.name}"
 	      targetfilename="${bin.zipfile.name}"
-	             summary="${project.title} ${project.version} binary distribution: ${classes.jarfile.name}, ${javadoc.jarfile.name} and ${src.jarfile.name}"
+	             summary="${project.title} ${project.version} binary distribution (compiled classes, sources and javadoc)"
 	              labels="Type-Binary, Featured, ${release.label}" />
 	</target>
 					
