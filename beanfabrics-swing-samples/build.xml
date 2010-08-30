@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="beanfabrics-swing-samples" default="main" basedir=".">
-	<description>Build, test and deploy the Beanfabrics Swing samples module</description>
+	<description>Build, test and release the Beanfabrics Swing samples module</description>
 	<import file="${basedir}/../abstract_module_build.xml" />
 
 	<!-- Folders and files -->
@@ -11,6 +11,5 @@
 		<pathelement location="${basedir}/../beanfabrics-core/target/classes/" />
 		<pathelement location="${basedir}/../beanfabrics-swing/target/classes/" />
 	</path>
-
-	<!--#################### Build targets ########################-->
+	
 </project>
