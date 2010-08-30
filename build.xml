@@ -87,6 +87,11 @@
 
 	<target name="clean" depends="init" description="Clean up all generated files.">
 		<delete dir="${target.dir}" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="clean" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="clean" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-goodies/" antfile="build.xml" target="clean" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="clean" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-samples/" antfile="build.xml" target="clean" />
 	</target>
 					
 	<target name="prepare-target" depends="init, init-dist">
