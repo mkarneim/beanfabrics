@@ -19,6 +19,9 @@
 	<classpathentry kind="src" path="beanfabrics-swing-samples/src/main/java"/>
 	<classpathentry kind="src" path="beanfabrics-swing-samples/src/main/resources"/>
 	<classpathentry kind="src" path="beanfabrics-swing-samples/src/test/resources"/>
+	<classpathentry kind="src" path="beanfabrics-swing-goodies/src/main/java"/>
+	<classpathentry kind="src" path="beanfabrics-swing-goodies/src/main/resources"/>
+	<classpathentry kind="src" path="beanfabrics-swing-goodies/src/test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/slf4j/slf4j-api-1.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/logback/logback-core-0.9.21.jar"/>

@@ -1,0 +1,80 @@
+/*
+ * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
+ * Use is subject to license terms. See license.txt.
+ */
+package org.beanfabrics.swing.goodies.calendar;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import org.beanfabrics.IModelProvider;
+import org.beanfabrics.Link;
+import org.beanfabrics.ModelSubscriber;
+import org.beanfabrics.Path;
+import org.beanfabrics.View;
+import org.beanfabrics.event.WeakPropertyChangeListener;
+import org.beanfabrics.model.IDatePM;
+
+/**
+ * @author Michael Karneim
+ */
+// TODO UNIT TEST
+// TODO this class is NOT working correctly right now
+// TODO add a listener to superclass and sync selected date into {@link DatePM}
+@SuppressWarnings("serial")
+public class BnCalendarChooser extends CalendarChooser implements View<IDatePM>, ModelSubscriber {
+    private transient PropertyChangeListener pcl = new WeakPropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent evt) {
+            refresh();
+        }
+    };
+    private final Link link = new Link(this);
+    private IDatePM pModel;
+
+    public BnCalendarChooser() {
+    }
+
+    /** {@inheritDoc} */
+    public IDatePM getPresentationModel() {
+        return this.pModel;
+    }
+
+    /** {@inheritDoc} */
+    public void setPresentationModel(IDatePM pModel) {
+        if (this.pModel != null) {
+            this.pModel.removePropertyChangeListener(pcl);
+        }
+        this.pModel = pModel;
+        if (this.pModel != null) {
+            this.pModel.addPropertyChangeListener(pcl);
+        }
+    }
+
+    /** {@inheritDoc} */
+    public IModelProvider getModelProvider() {
+        return link.getModelProvider();
+    }
+
+    /** {@inheritDoc} */
+    public void setModelProvider(IModelProvider provider) {
+        this.link.setModelProvider(provider);
+    }
+
+    /** {@inheritDoc} */
+    public Path getPath() {
+        return link.getPath();
+    }
+
+    /** {@inheritDoc} */
+    public void setPath(Path path) {
+        this.link.setPath(path);
+    }
+
+    protected void refresh() {
+        if (this.pModel == null) {
+            this.setSelectedDate(null);
+        } else {
+            this.setSelectedDate(this.pModel.getDate());
+        }
+    }
+}

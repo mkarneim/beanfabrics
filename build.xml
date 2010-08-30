@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="beanfabrics" default="test" basedir=".">
-	<description>Build, test and deploy the Beanfabrics library</description>
+	<description>Build, test and release the Beanfabrics library</description>
 
 	<!--#################### Init constant properties ########################-->
 	<property file="${basedir}/build.local.properties" />
@@ -24,6 +24,7 @@
 	<fileset id="src.javadoc.fileset" dir="${basedir}">
 		<include name="beanfabrics-core/src/main/java/**/*.java"/>
 		<include name="beanfabrics-swing/src/main/java/**/*.java"/>
+		<include name="beanfabrics-swing-goodies/src/main/java/**/*.java"/>
 		<include name="beanfabrics-swt/src/main/java/**/*.java"/>
 	</fileset>
 
@@ -64,6 +65,7 @@
 	<target name="create-classes-jars" depends="init" description="Create JARs of all sub projects containing all classes.">
 		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="create-classes-jar" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="create-classes-jar" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-goodies/" antfile="build.xml" target="create-classes-jar" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="create-classes-jar" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-samples/" antfile="build.xml" target="create-classes-jar" />
 	</target>
@@ -71,6 +73,7 @@
 	<target name="create-src-jars" depends="init" description="Creates JARs of all sub projects containing all sources.">
 		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="create-src-jar" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="create-src-jar" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-goodies/" antfile="build.xml" target="create-src-jar" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="create-src-jar" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-samples/" antfile="build.xml" target="create-src-jar" />
 	</target>
@@ -78,6 +81,7 @@
 	<target name="test" depends="init" description="Executes all tests of all sub projects.">
 		<ant inheritall="false" dir="${basedir}/beanfabrics-core/" antfile="build.xml" target="test" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swing/" antfile="build.xml" target="test" />
+		<ant inheritall="false" dir="${basedir}/beanfabrics-swing-goodies/" antfile="build.xml" target="test" />
 		<ant inheritall="false" dir="${basedir}/beanfabrics-swt/" antfile="build.xml" target="test" />		
 	</target>
 
@@ -120,7 +124,8 @@
 		
 		<copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-core/target"><include name="*.jar"/></fileset></copy>
 		<copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-swing/target"><include name="*.jar"/></fileset></copy>
-		<!-- <copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-swt/target"><include name="*.jar"/></fileset></copy> -->		
+		<copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-swing-goodies/target"><include name="*.jar"/></fileset></copy>
+		<copy todir="${build.bin.content.dir}"><fileset dir="${basedir}/beanfabrics-swt/target"><include name="*.jar"/></fileset></copy>		
 		
 		<copy file="${javadoc.jarfile}" todir="${build.bin.content.dir}" />
 
