@@ -5,7 +5,6 @@
 package org.beanfabrics.swing.customizer.table;
 
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 
 import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Path;
@@ -24,6 +23,7 @@ import org.beanfabrics.swing.customizer.util.AbstractCustomizerPM;
 import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 import org.beanfabrics.swing.table.BnColumn;
 import org.beanfabrics.swing.table.BnTable;
+import org.beanfabrics.util.GenericType;
 
 /**
  * The <code>BnTableCustomizerPM</code> is the presentation model for the
@@ -117,12 +117,11 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
         if (listPathInfo == null) {
             return null;
         } else {
-            Type tArg = listPathInfo.getTypeArguments(IListPM.class)[0];
+            GenericType gt = listPathInfo.getGenericType();
+            GenericType typeParam = gt.getTypeParameter(IListPM.class.getTypeParameters()[0]);
+            Type tArg = typeParam.narrow(typeParam.getType(), PresentationModel.class);
             if (tArg instanceof Class) {
                 return (Class)tArg;
-            } else if (tArg instanceof TypeVariable) {
-                // if no actual argument can be found, we just return the first bound.
-                return (Class)((TypeVariable)tArg).getBounds()[0];
             } else {
                 throw new IllegalStateException("Unexpected type: " + tArg.getClass().getName());
             }

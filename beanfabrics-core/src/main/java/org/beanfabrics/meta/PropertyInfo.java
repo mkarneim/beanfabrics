@@ -6,28 +6,31 @@
 // methods and fields are documented
 package org.beanfabrics.meta;
 
-import java.lang.reflect.Type;
-import java.util.List;
-
-import org.beanfabrics.util.GenericsUtil;
+import java.lang.reflect.Member;
 
 /**
  * @author Michael Karneim
  */
 public class PropertyInfo {
-    private PresentationModelInfo owner;
-    private String name;
-    private PresentationModelInfo type;
+    private final PresentationModelInfo owner;
+    private final String name;
+    private final PresentationModelInfo type;
+    private final Member member;
 
-    public PropertyInfo(PresentationModelInfo owner, String name, PresentationModelInfo type) {
+    public PropertyInfo(PresentationModelInfo owner, String name, Member member, PresentationModelInfo type) {
         super();
         this.owner = owner;
         this.name = name;
+        this.member = member;
         this.type = type;
     }
 
     public PresentationModelInfo getOwner() {
         return owner;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public String getName() {
@@ -36,16 +39,6 @@ public class PropertyInfo {
 
     public PresentationModelInfo getType() {
         return type;
-    }
-
-    public Type[] getTypeArguments(Class genericClass) {
-        List<Type> typeArgs = GenericsUtil.getFieldTypeArguments(getOwner().getJavaType(), this.name, genericClass);
-        if (typeArgs.size() == 0) {
-            // no field
-            //-> any matching method?
-            typeArgs = GenericsUtil.getMethodReturnTypeArguments(getOwner().getJavaType(), getGetterName(), new Class[] {}, genericClass);
-        }
-        return (Type[])typeArgs.toArray(new Type[0]);
     }
 
     private String getGetterName() {

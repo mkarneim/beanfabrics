@@ -4,12 +4,14 @@
  */
 package org.beanfabrics.meta;
 
-import java.lang.reflect.Type;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.beanfabrics.Path;
+import org.beanfabrics.util.GenericType;
 
 /**
  * @author Michael Karneim
@@ -19,18 +21,19 @@ public class PathInfo {
     private final PresentationModelInfo modelInfo;
     private final String name;
     private final Path path;
+    private final GenericType genericType;
 
-    PathInfo(String name, PresentationModelInfo type, PathInfo parent) {
+    PathInfo(String name, PresentationModelInfo type, PathInfo parent, GenericType aGenericType) {
         super();
         this.name = name;
         this.parent = parent;
         this.modelInfo = type;
         this.path = parent == null ? new Path() : Path.concat(this.parent.getPath(), new Path(name));
-
+        this.genericType = aGenericType;
     }
 
     PathInfo(PresentationModelInfo type) {
-        this(Path.THIS_PATH_ELEMENT, type, null);
+        this(Path.THIS_PATH_ELEMENT, type, null, new GenericType(type.getJavaType()));
     }
 
     public PathInfo getParent() {
@@ -49,11 +52,26 @@ public class PathInfo {
         return this.modelInfo.hasProperties();
     }
 
+    private GenericType getGenericTypeOfChild(PropertyInfo prop) {
+        if (prop.getMember() instanceof Field) {
+            Field f = (Field)prop.getMember();
+            GenericType result = genericType.getFieldType(f.getName());
+            return result;
+        } else if (prop.getMember() instanceof Method) {
+            Method m = (Method)prop.getMember();
+            GenericType result = genericType.getMethodReturnType(m.getName());
+            return result;
+        } else {
+            throw new Error("Unexpected member type: " + prop.getMember().getClass().getName());
+        }
+    }
+
     public Collection<PathInfo> getChildren() {
         Collection<PropertyInfo> props = this.modelInfo.getProperties();
         List<PathInfo> result = new ArrayList<PathInfo>();
         for (PropertyInfo prop : props) {
-            PathInfo child = new PathInfo(prop.getName(), prop.getType(), this);
+            GenericType childGT = getGenericTypeOfChild(prop);
+            PathInfo child = new PathInfo(prop.getName(), prop.getType(), this, childGT);
             result.add(child);
         }
         return result;
@@ -64,7 +82,8 @@ public class PathInfo {
         if (prop == null) {
             return null;
         } else {
-            PathInfo child = new PathInfo(prop.getName(), prop.getType(), this);
+            GenericType childGT = getGenericTypeOfChild(prop);
+            PathInfo child = new PathInfo(prop.getName(), prop.getType(), this, childGT);
             return child;
         }
     }
@@ -91,6 +110,10 @@ public class PathInfo {
         return this.path;
     }
 
+    public GenericType getGenericType() {
+        return genericType;
+    }
+
     public PathInfo getRoot() {
         if (this.parent == null) {
             return this;
@@ -99,41 +122,41 @@ public class PathInfo {
         }
     }
 
-    /**
-     * Returns the type arguments that are used to parameterize the given
-     * generic class which must be a supertype of this children modelInfo. To
-     * find the type arguments this methods tries first the node's indirect
-     * reference (via parent and name) to it's property info and returns the
-     * type arguments found there. If this can't be resolved it returns the type
-     * arguments of this objects model info.
-     * 
-     * @param genericClass the Class of the generic type
-     * @return the type arguments that are used to parameterize the given
-     *         generic class
-     */
-    public Type[] getTypeArguments(Class genericClass) {
-        // The best way is to find the type argument for the given generic class
-        // is by navigating via the parent
-        // to the respective property info since it holds the most accurate static type info.
-        PathInfo parentPathInfo = this.getParent();
-        if (parentPathInfo == null) {
-            // nope - this is the topmost node
-            // but we still can access the type arguments of the model info
-            PresentationModelInfo modelInfo = this.getModelInfo();
-            Type[] result = modelInfo.getTypeArguments(genericClass);
-            return result;
-        } else {
-            // fine. We now can navigate to the property info
-            String propName = this.getName();
-            PropertyInfo propInfo = parentPathInfo.getModelInfo().getProperty(propName);
-            if (propInfo == null) {
-                throw new Error("Unexpected error: can't find property info for '" + propName + "' in " + parentPathInfo.getName());
-            } else {
-                Type[] result = propInfo.getTypeArguments(genericClass);
-                return result;
-            }
-        }
-    }
+    //    /**
+    //     * Returns the type arguments that are used to parameterize the given
+    //     * generic class which must be a supertype of this children modelInfo. To
+    //     * find the type arguments this methods tries first the node's indirect
+    //     * reference (via parent and name) to it's property info and returns the
+    //     * type arguments found there. If this can't be resolved it returns the type
+    //     * arguments of this objects model info.
+    //     * 
+    //     * @param genericClass the Class of the generic type
+    //     * @return the type arguments that are used to parameterize the given
+    //     *         generic class
+    //     */
+    //    public Type[] getTypeArguments(Class genericClass) {
+    //        // The best way is to find the type argument for the given generic class
+    //        // is by navigating via the parent
+    //        // to the respective property info since it holds the most accurate static type info.
+    //        PathInfo parentPathInfo = this.getParent();
+    //        if (parentPathInfo == null) {
+    //            // nope - this is the topmost node
+    //            // but we still can access the type arguments of the model info
+    //            PresentationModelInfo modelInfo = this.getModelInfo();
+    //            Type[] result = modelInfo.getTypeArguments(genericClass);
+    //            return result;
+    //        } else {
+    //            // fine. We now can navigate to the property info
+    //            String propName = this.getName();
+    //            PropertyInfo propInfo = parentPathInfo.getModelInfo().getProperty(propName);
+    //            if (propInfo == null) {
+    //                throw new Error("Unexpected error: can't find property info for '" + propName + "' in " + parentPathInfo.getName());
+    //            } else {
+    //                Type[] result = propInfo.getTypeArguments(genericClass);
+    //                return result;
+    //            }
+    //        }
+    //    }
 
     @Override
     public int hashCode() {

@@ -69,7 +69,7 @@ public class MetadataRegistry {
         for (PropertySupport.PropertyDeclaration decl : propDecls) {
             String name = decl.getName();
             PresentationModelInfo typeDesc = getPresentationModelInfo(decl.getType());
-            result.add(new PropertyInfo(modelInfo, name, typeDesc));
+            result.add(new PropertyInfo(modelInfo, name, decl.getMember(), typeDesc));
         }
         return result;
     }

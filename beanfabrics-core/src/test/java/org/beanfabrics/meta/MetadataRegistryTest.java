@@ -8,12 +8,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
-import java.lang.reflect.Type;
 
 import junit.framework.JUnit4TestAdapter;
 
 import org.beanfabrics.model.AbstractPM;
-import org.beanfabrics.model.IListPM;
 import org.beanfabrics.model.IntegerPM;
 import org.beanfabrics.model.ListPM;
 import org.beanfabrics.model.MapPM;
@@ -98,14 +96,6 @@ public class MetadataRegistryTest {
         PresentationModelInfo info = this.metadata.getPresentationModelInfo(cls);
         assertEquals("info.getProperties().size()", 0, info.getProperties().size());
         assertEquals("info.getJavaType()", cls, info.getJavaType());
-        Type typeArg = info.getTypeArguments(IListPM.class)[0];
-        assertEquals("typeArg", FilePM.class, typeArg);
-        Type typeArg2 = info.getTypeArguments(ListPM.class)[0];
-        assertEquals("typeArg2", FilePM.class, typeArg2);
-
-        Type[] typeArgs = info.getTypeArguments(IListPM.class);
-        assertEquals("typeArgs.length", 1, typeArgs.length);
-        assertEquals("typeArgs[0]", FilePM.class, typeArgs[0]);
     }
 
     @Test
@@ -130,10 +120,6 @@ public class MetadataRegistryTest {
 
         assertEquals("info.getProperties().size()", 3, info.getProperties().size());
 
-        // see if this property is parameterized itself
-        Type[] typeArgs = info.getProperty("files").getTypeArguments(IListPM.class);
-
-        assertEquals("typeArgs[0]", FilePM.class, typeArgs[0]);
         PropertyInfo pInfo = info.getProperty("parent");
         assertNotNull("pInfo", pInfo);
         // otherwise see test 'describeAnotherDirectoryCell'
@@ -149,10 +135,6 @@ public class MetadataRegistryTest {
 
         assertEquals("info.getProperties().size()", 2, info.getProperties().size());
 
-        // if this property is not parameterized,
-        Type[] typeArgs = info.getProperty("listOfFiles").getTypeArguments(IListPM.class);
-        assertEquals("typeArgs[0]", FilePM.class, typeArgs[0]);
-        // otherwise see test 'describeDirectoryCell'
     }
 
     @Test
@@ -162,8 +144,7 @@ public class MetadataRegistryTest {
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
         PropertyInfo pInfo = info.getProperty("listOfFiles");
-        Type typeArg = pInfo.getTypeArguments(IListPM.class)[0];
-        assertEquals("typeArg", FilePM.class, typeArg);
+
     }
 
     @Test
@@ -173,8 +154,7 @@ public class MetadataRegistryTest {
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
         PropertyInfo pInfo = info.getProperty("files");
-        Type typeArg = pInfo.getTypeArguments(IListPM.class)[0];
-        assertEquals("typeArg", FilePM.class, typeArg);
+
     }
 
     @Test
@@ -184,7 +164,6 @@ public class MetadataRegistryTest {
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
         PropertyInfo pInfo = info.getProperty("files");
-        Type typeArg = pInfo.getTypeArguments(IListPM.class)[0];
-        assertEquals("typeArg", FilePM.class, typeArg);
+
     }
 }

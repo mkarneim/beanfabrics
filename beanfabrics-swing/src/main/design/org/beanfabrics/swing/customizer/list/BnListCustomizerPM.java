@@ -5,7 +5,6 @@
 package org.beanfabrics.swing.customizer.list;
 
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 
 import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Path;
@@ -20,6 +19,7 @@ import org.beanfabrics.swing.customizer.path.PathPM;
 import org.beanfabrics.swing.customizer.util.AbstractCustomizerPM;
 import org.beanfabrics.swing.list.BnList;
 import org.beanfabrics.swing.list.CellConfig;
+import org.beanfabrics.util.GenericType;
 
 /**
  * The <code>BnListCustomizerPM</code> is the presentation model for the
@@ -105,12 +105,11 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
         if (pathInfo == null) {
             return null;
         } else {
-            Type tArg = pathInfo.getTypeArguments(IListPM.class)[0];
+            GenericType gt = pathInfo.getGenericType();
+            GenericType typeParam = gt.getTypeParameter(IListPM.class.getTypeParameters()[0]);
+            Type tArg = typeParam.narrow(typeParam.getType(), PresentationModel.class);
             if (tArg instanceof Class) {
                 return (Class)tArg;
-            } else if (tArg instanceof TypeVariable) {
-                // if no actual argument can be found, we just return the first bound.
-                return (Class)((TypeVariable)tArg).getBounds()[0];
             } else {
                 throw new IllegalStateException("Unexpected type: " + tArg.getClass().getName());
             }

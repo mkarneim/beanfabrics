@@ -6,13 +6,11 @@
 // methods and fields are documented
 package org.beanfabrics.meta;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
 import org.beanfabrics.model.PresentationModel;
-import org.beanfabrics.util.GenericsUtil;
 
 /**
  * @author Michael Karneim
@@ -62,11 +60,6 @@ public class PresentationModelInfo {
 
     public boolean isAssignableFrom(PresentationModelInfo otherModelInfo) {
         return this.getJavaType().isAssignableFrom(otherModelInfo.getJavaType());
-    }
-
-    // TODO (mk/generic) change method return type to Collection<Type>
-    public Type[] getTypeArguments(Class genericClass) {
-        return (Type[])GenericsUtil.getTypeArguments(genericClass, this.cls).toArray(new Type[0]);
     }
 
     @Override

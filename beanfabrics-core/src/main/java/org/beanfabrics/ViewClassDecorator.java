@@ -4,12 +4,10 @@
  */
 package org.beanfabrics;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.List;
 
-import org.beanfabrics.util.GenericsUtil;
+import org.beanfabrics.model.PresentationModel;
+import org.beanfabrics.util.GenericType;
 
 /**
  * Temporary class that will be deleted soon. Decorates a view class and
@@ -28,21 +26,16 @@ public class ViewClassDecorator {
 
     public Class getExpectedModelType() {
         if (this.expectedModelType == null) {
-            List<Type> args = GenericsUtil.getTypeArguments(View.class, this.viewClass);
-            Type arg = args.get(0); // View declares exactly one single type parameter.
-            if (arg instanceof TypeVariable) {
-                // we just take the first bound.
-                // TODO (mk) perhaps we should support  *all* bounds?
-                this.expectedModelType = ((TypeVariable)arg).getBounds()[0];
-            } else if (arg instanceof Class) {
-                this.expectedModelType = (Class)arg;
-            } else if (arg instanceof ParameterizedType) {
-                ParameterizedType pt = ((ParameterizedType)arg);
-                // TODO (mk) this is possibly wrong !?!
-                this.expectedModelType = pt.getRawType();
+
+            GenericType gt = new GenericType(viewClass);
+            GenericType typeParam = gt.getTypeParameter(View.class.getTypeParameters()[0]);
+            Type narrowedType = typeParam.narrow(typeParam.getType(), PresentationModel.class);
+
+            if (narrowedType instanceof Class) {
+                this.expectedModelType = (Class)narrowedType;
             } else {
-                // this is totally unexpected
-                throw new Error("Unexpected type argument: " + arg.getClass().getName());
+                // Can't resolve model type
+                this.expectedModelType = PresentationModel.class;
             }
         }
         if (this.expectedModelType instanceof Class) {

@@ -12,6 +12,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
@@ -310,30 +311,45 @@ public class PropertySupport implements Support {
     }
 
     public static abstract class PropertyDeclaration {
+        private final Member member;
         private final String name;
-        private final Class type;
 
-        public PropertyDeclaration(String name, Class type) {
+        public PropertyDeclaration(String name, Member member) {
             super();
+            if (name == null) {
+                throw new IllegalArgumentException("name==null");
+            }
             this.name = name;
-            this.type = type;
+            if (member == null) {
+                throw new IllegalArgumentException("member==null");
+            }
+            this.member = member;
         }
 
         public String getName() {
             return name;
         }
 
-        public Class getType() {
-            return type;
+        public Class<? extends PresentationModel> getType() {
+            if (member instanceof Field) {
+                return (Class<? extends PresentationModel>)((Field)member).getType();
+            } else if (member instanceof Method) {
+                return (Class<? extends PresentationModel>)((Method)member).getReturnType();
+            } else {
+                throw new Error("Unknown member type: " + member.getClass().getName());
+            }
         }
 
+        public Member getMember() {
+            return member;
+        }
     }
 
     public static class FieldDecl extends PropertyDeclaration {
         private final Field field;
 
         public FieldDecl(String name, Field field) {
-            super(name, field.getType());
+            super(name, field);
             this.field = field;
         }
 
@@ -351,7 +367,7 @@ public class PropertySupport implements Support {
         private final Method method;
 
         public MethodDecl(String name, Method method) {
-            super(name, method.getReturnType());
+            super(name, method);
             this.method = method;
         }
 
