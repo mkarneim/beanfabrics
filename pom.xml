@@ -16,6 +16,7 @@
 	<modules>
 		<module>beanfabrics-core</module>
 		<module>beanfabrics-swing</module>
+		<module>beanfabrics-swing-goodies</module>
 		<module>beanfabrics-swing-samples</module>
 		<module>beanfabrics-swt</module>
 		<module>beanfabrics-swt-samples</module>
