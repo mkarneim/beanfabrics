@@ -183,7 +183,6 @@ public class TextPMTextField extends JTextField implements KeyBindingProcessor, 
         this.errorIconPainter = aErrorIconPainter;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void paintChildren(Graphics g) {
         super.paintChildren(g);
