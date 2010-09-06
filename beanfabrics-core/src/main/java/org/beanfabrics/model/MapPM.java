@@ -443,6 +443,10 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     public Collection<V> toCollection() {
         return entries.toCollection();
     }
+    
+    public Map<K, V> toMap() {
+        return new OrderPreservingMap<K, V>(entries);
+    }
 
     public Object[] toArray() {
         return entries.toArray();

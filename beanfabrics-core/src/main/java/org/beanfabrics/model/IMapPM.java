@@ -6,8 +6,19 @@
 // methods and fields are documented
 package org.beanfabrics.model;
 
+import java.util.Map;
+
 /**
- * @author Michael Karneim TODO add some methods from MapPM here
+ * The {@link IMapPM} is the minimal interface for a presentation model that maps
+ * key objects to presentation model objects.
+ * 
+ * @author Michael Karneim
  */
 public interface IMapPM<K, V extends PresentationModel> extends IListPM<V> {
+    /**
+     * Returns a new {@link Map} with all elements of this map.
+     * 
+     * @return a new {@link Map} with all elements of this map.
+     */
+    public Map<K, V> toMap();
 }
