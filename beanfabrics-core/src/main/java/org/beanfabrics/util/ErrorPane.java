@@ -41,11 +41,13 @@ import javax.swing.UIManager;
  * icon and - when checking the checkbox - the stack trace of a
  * {@link Throwable}.
  * 
+ * TODO This class makes no sense in SWT environment. Any solution?
+ * 
  * @author Max Gensthaler
  */
 @SuppressWarnings("serial")
 public class ErrorPane extends JPanel {
-    private static JDialog dialog;
+    private static JDialog dialog; // TODO why is this a static member instance? do we need to store the reference as a member?
     private JLabel messageLabel;
     private JCheckBox stackTraceCheckBox;
     private JScrollPane stackTraceScrollPane;
@@ -244,7 +246,9 @@ public class ErrorPane extends JPanel {
         } else if (window instanceof Dialog) {
             dialog = new ErrorPaneDialog((Dialog)window, title, message, cause);
         } else {
-            // window is null. Use a dummy frame as parent.
+            // TODO perhaps we should try to find the topmost frame before using the fallback below
+            
+            // fallback: window is null. Use a dummy frame as parent. 
             dialog = new ErrorPaneDialog(new Frame(), title, message, cause);
         }
         dialog.setModal(modal);
