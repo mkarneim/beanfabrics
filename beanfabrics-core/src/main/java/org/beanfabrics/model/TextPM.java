@@ -183,11 +183,6 @@ public class TextPM extends AbstractValuePM implements ITextPM {
         return new TextComparable();
     }
 
-    @Override
-    public String toString() {
-        return text;
-    }
-
     protected class TextComparable implements Comparable {
         String text;
 
