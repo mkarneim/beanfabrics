@@ -203,7 +203,9 @@
 		</copy>
 		<copy todir="${target.src.dir}">
 			<fileset dir="${src.main.java.dir}" />
-			<fileset dir="${src.main.resources.dir}" />
+			<fileset dir="${src.main.resources.dir}" >
+				<exclude name="**/log4j.properties"/>
+			</fileset>
 		</copy>
 
 		<jar destfile="${src.jarfile}">
