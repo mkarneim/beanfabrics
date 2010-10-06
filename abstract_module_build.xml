@@ -104,7 +104,9 @@
 			<fileset dir="${basedir}"    includes="readme-*.txt" />
 		</copy>
 		<copy todir="${target.classes.dir}">
-			<fileset dir="${src.main.resources.dir}" />
+			<fileset dir="${src.main.resources.dir}" >
+				<exclude name="**/log4j.properties"/>
+			</fileset>
 		</copy>
 	</target>
 
