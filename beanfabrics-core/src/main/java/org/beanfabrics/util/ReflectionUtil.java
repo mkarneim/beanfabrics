@@ -261,13 +261,10 @@ public class ReflectionUtil {
             Annotation anno = m.getAnnotation(annotationType);
             if (anno != null) {
                 try {
-                    boolean oldValue = m.isAccessible();
-                    m.setAccessible(true);
-                    try {
-                        m.invoke(target, (Object[])null);
-                    } finally {
-                        m.setAccessible(oldValue);
+                    if (!m.isAccessible()) {
+                        m.setAccessible(true);
                     }
+                    m.invoke(target, (Object[])null);
                 } catch (IllegalAccessException ex) {
                     throw new RuntimeException(ex);
                 } catch (InvocationTargetException ex) {
@@ -298,59 +295,38 @@ public class ReflectionUtil {
 
     public static synchronized void setFieldValue(Object owner, Field field, Object value)
         throws IllegalArgumentException, IllegalAccessException {
-        boolean accessible = field.isAccessible();
-        if (accessible == false) {
+        if (!field.isAccessible()) {
             field.setAccessible(true);
         }
-        try {
-            field.set(owner, value);
-        } finally {
-            if (accessible == false) {
-                field.setAccessible(false);
-            }
-        }
+        field.set(owner, value);
     }
 
     public static synchronized Object getFieldValue(Object owner, Field f)
         throws IllegalArgumentException, IllegalAccessException {
-        boolean accessible = f.isAccessible();
-        if (accessible == false) {
+        if (!f.isAccessible()) {
             f.setAccessible(true);
         }
-        try {
-            Object result = f.get(owner);
-            return result;
-        } finally {
-            if (accessible == false) {
-                f.setAccessible(false);
-            }
-        }
+        Object result = f.get(owner);
+        return result;
     }
 
     public static synchronized Object invokeMethod(Object owner, Method m, Object... args)
         throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         callCount++;
-        boolean accessible = m.isAccessible();
-        if (accessible == false) {
+        if (!m.isAccessible()) {
             m.setAccessible(true);
         }
-        try {
-            if (LOG.isDebugEnabled()) {
-                if (m.getParameterTypes().length == 0) {
-                    LOG.debug("Calling " + format(m) + " on " + owner);
-                } else if (args == null) {
-                    LOG.debug("Calling " + format(m) + " on " + owner + " with no arguments");
-                } else {
-                    LOG.debug("Calling " + format(m) + " on " + owner + " with arguments: " + format(args));
-                }
-            }
-            Object result = m.invoke(owner, args);
-            return result;
-        } finally {
-            if (accessible == false) {
-                m.setAccessible(false);
+        if (LOG.isDebugEnabled()) {
+            if (m.getParameterTypes().length == 0) {
+                LOG.debug("Calling " + format(m) + " on " + owner);
+            } else if (args == null) {
+                LOG.debug("Calling " + format(m) + " on " + owner + " with no arguments");
+            } else {
+                LOG.debug("Calling " + format(m) + " on " + owner + " with arguments: " + format(args));
             }
         }
+        Object result = m.invoke(owner, args);
+        return result;
     }
 
     private static String format(Object[] args) {
@@ -386,18 +362,11 @@ public class ReflectionUtil {
     public static synchronized <T> T newInstance(Class<T> cls)
         throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, InstantiationException {
         Constructor<T> constr = cls.getConstructor((Class[])null);
-        boolean accessible = constr.isAccessible();
-        if (accessible == false) {
+        if (!constr.isAccessible()) {
             constr.setAccessible(true);
         }
-        try {
-            T result = constr.newInstance((Object[])null);
-            return result;
-        } finally {
-            if (accessible == false) {
-                constr.setAccessible(false);
-            }
-        }
+        T result = constr.newInstance((Object[])null);
+        return result;
     }
 
 }
