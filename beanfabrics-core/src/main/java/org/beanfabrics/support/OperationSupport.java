@@ -16,8 +16,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.beanfabrics.Observation;
 import org.beanfabrics.Path;
+import org.beanfabrics.PathObservation;
 import org.beanfabrics.model.IOperationPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PresentationModel;
@@ -61,7 +61,7 @@ public class OperationSupport implements Support {
     private static class ExecutionMethodSupport {
         private final PresentationModel owner;
 
-        private final List<Observation> obervations = new LinkedList<Observation>();
+        private final List<PathObservation> obervations = new LinkedList<PathObservation>();
         private final Method annotatedMethod;
         private final org.beanfabrics.model.ExecutionMethod executionMethod = new org.beanfabrics.model.ExecutionMethod() {
 
@@ -100,7 +100,7 @@ public class OperationSupport implements Support {
 
         }
 
-        private class OperationTargetObservation extends Observation {
+        private class OperationTargetObservation extends PathObservation {
             private PresentationModel currentTarget = null;
 
             public OperationTargetObservation(PresentationModel root, Path path) {

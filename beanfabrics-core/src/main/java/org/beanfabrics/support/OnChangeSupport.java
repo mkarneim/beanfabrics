@@ -16,8 +16,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.beanfabrics.Observation;
 import org.beanfabrics.Path;
+import org.beanfabrics.PathObservation;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.util.ReflectionUtil;
 
@@ -64,7 +64,7 @@ public class OnChangeSupport implements Support {
     private static class OnChangeMethodSupport {
         private final PresentationModel owner;
         private final Path[] paths;
-        private final List<Observation> obervations = new LinkedList<Observation>();
+        private final List<PathObservation> obervations = new LinkedList<PathObservation>();
         private final Method annotatedMethod;
         private final PropertyChangeListener pcListener = new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -105,7 +105,7 @@ public class OnChangeSupport implements Support {
             }
         }
 
-        private class TargetObservation extends Observation {
+        private class TargetObservation extends PathObservation {
             private PresentationModel currentTarget = null;
             private String propertyName;
 

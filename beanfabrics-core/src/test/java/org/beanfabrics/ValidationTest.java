@@ -116,7 +116,7 @@ public class ValidationTest {
 
         list.getAt(0).setText("abc");
         assertEquals("list.getAt(0).isValid()", false, list.getAt(0).isValid());
-        assertEquals("counter.count", 4, counter.count);
+        assertEquals("counter.count", 3, counter.count);
     }
 
     @Test

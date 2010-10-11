@@ -121,15 +121,11 @@ public class PropertySupportTest {
     @Test
     public void interfaceMethodAnnotated() {
         AnnotatedImplModel mdl = new AnnotatedImplModel();
-        assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("firstname"));
-        assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("middlename"));
-        assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("lastname"));
+        assertNotNull("getProperty(\"firstname\")", PropertySupport.get(mdl).getProperty("firstname"));
+        assertNotNull("getProperty(\"lastname\")", PropertySupport.get(mdl).getProperty("lastname"));
     }
 
     public static interface AnnotatedInterface {
-        @Property
-        final TextPM middlename = new TextPM();
-
         @Property
         TextPM getFirstname();
     }
@@ -143,6 +139,7 @@ public class PropertySupportTest {
             PMManager.setup(this);
         }
 
+        @Property
         public TextPM getFirstname() {
             return ref.getTextPM();
         }
@@ -159,11 +156,10 @@ public class PropertySupportTest {
     @Test
     public void hierarchyOfUnAndAnnotatedClasses() {
         AnnotatedChildModel mdl = new AnnotatedChildModel();
-        assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("firstname"));
-        assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("middlename"));
-        assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("lastname"));
-        assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("fathersname"));
-        assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("mothersname"));
+        assertNotNull("getProperty(\"firstname\")", PropertySupport.get(mdl).getProperty("firstname"));
+        assertNotNull("getProperty(\"lastname\")", PropertySupport.get(mdl).getProperty("lastname"));
+        assertNotNull("getProperty(\"fathersname\")", PropertySupport.get(mdl).getProperty("fathersname"));
+        assertNotNull("getProperty(\"mothersname\")", PropertySupport.get(mdl).getProperty("mothersname"));
     }
 
     public static class UnAnnotatedParentModel extends AbstractPM {
@@ -188,6 +184,7 @@ public class PropertySupportTest {
             PMManager.setup(this);
         }
 
+        @Property
         public TextPM getFirstname() {
             return ref.getTextPM();
         }

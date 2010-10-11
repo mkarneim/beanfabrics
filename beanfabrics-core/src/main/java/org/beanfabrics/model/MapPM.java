@@ -35,7 +35,6 @@ import org.beanfabrics.event.ElementsReplacedEvent;
 import org.beanfabrics.event.ElementsSelectedEvent;
 import org.beanfabrics.event.ListListener;
 import org.beanfabrics.event.ListSupport;
-import org.beanfabrics.support.PropertySupport;
 import org.beanfabrics.util.Interval;
 import org.beanfabrics.util.OrderPreservingMap;
 import org.beanfabrics.validation.ValidationRule;
@@ -136,15 +135,11 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
 
     protected void revalidateAllExcept(V element) {
         for (V e : entries.valuesReference()) {
-            if (element == e)
+            if (element == e) {
                 continue;
-            //e.revalidateAllProperties();
-
-            // TODO (mk) I think here "revalidate" should be enough
-            PropertySupport.get(e).revalidateProperties();
-
-            //((Validatable)e).revalidate();
-
+            }
+            //PropertySupport.get(e).revalidateProperties();
+            e.revalidate();
         }
     }
 
@@ -443,7 +438,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     public Collection<V> toCollection() {
         return entries.toCollection();
     }
-    
+
     public Map<K, V> toMap() {
         return new OrderPreservingMap<K, V>(entries);
     }

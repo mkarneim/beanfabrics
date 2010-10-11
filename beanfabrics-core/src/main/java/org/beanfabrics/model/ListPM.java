@@ -33,7 +33,6 @@ import org.beanfabrics.event.ElementsReplacedEvent;
 import org.beanfabrics.event.ElementsSelectedEvent;
 import org.beanfabrics.event.ListListener;
 import org.beanfabrics.event.ListSupport;
-import org.beanfabrics.support.PropertySupport;
 import org.beanfabrics.util.Interval;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
@@ -173,14 +172,11 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     protected void revalidateAllExcept(T element) {
         for (Entry entry : entries) {
-            if (element == entry.element)
+            if (element == entry.element) {
                 continue;
-            //entry.element.revalidateAllProperties();
-
-            // TODO (mk) I think here "revalidate" should be enough
-            PropertySupport.get(entry.element).revalidateProperties();
-
-            //((Validatable)entry.element).revalidate();
+            }
+            //PropertySupport.get(entry.element).revalidateProperties();
+            entry.element.revalidate();
         }
     }
 

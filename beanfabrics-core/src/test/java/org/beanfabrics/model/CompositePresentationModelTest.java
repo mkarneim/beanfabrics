@@ -122,21 +122,26 @@ public class CompositePresentationModelTest {
     }
 
     public static class CompanyPM extends AbstractPM implements AddressablePM {
+
         private TextPM name = new TextPM();
+        @Property
         PersonPM owner = new PersonPM();
+
         AddressPM address = new AddressPM();
 
         public CompanyPM() {
             PMManager.setup(this);
         }
 
+        @Property
         public AddressPM getAddress() {
             return address;
         }
 
-		public TextPM getName() {
-			return name;
-		}
+        @Property
+        public TextPM getName() {
+            return name;
+        }
     }
 
     public static class PersonPM extends AbstractPM implements AddressablePM {
@@ -191,8 +196,7 @@ public class CompositePresentationModelTest {
 
     public static class AddressPM extends AbstractPM {
         @Property
-		private
-        TextPM street = new TextPM();
+        private TextPM street = new TextPM();
         @Property
         CityPM city = new CityPM();
 
@@ -200,9 +204,9 @@ public class CompositePresentationModelTest {
             PMManager.setup(this);
         }
 
-		public TextPM getStreet() {
-			return street;
-		}
+        public TextPM getStreet() {
+            return street;
+        }
     }
 
     public static class CityPM extends AbstractPM {

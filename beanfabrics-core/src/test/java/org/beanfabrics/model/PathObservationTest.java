@@ -7,20 +7,20 @@ package org.beanfabrics.model;
 import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
 
-import org.beanfabrics.Observation;
 import org.beanfabrics.Path;
+import org.beanfabrics.PathObservation;
 import org.beanfabrics.support.OnChange;
 import org.beanfabrics.support.Property;
 import org.beanfabrics.support.PropertySupport;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ObservationTest {
+public class PathObservationTest {
     public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ObservationTest.class);
+        return new JUnit4TestAdapter(PathObservationTest.class);
     }
 
-    public ObservationTest() {
+    public PathObservationTest() {
     }
 
     static class GroupPM extends AbstractPM {
@@ -90,13 +90,13 @@ public class ObservationTest {
     @Test
     public void create() {
         Path path = new Path("this");
-        new Observation(root, path);
+        new PathObservation(root, path);
     }
 
     @Test
     public void getTarget() {
         Path path = new Path("this");
-        Observation o = new Observation(root, path);
+        PathObservation o = new PathObservation(root, path);
         assertEquals("o.hasTarget()", true, o.hasTarget());
         assertEquals("o.getTarget()", root, o.getTarget());
     }
@@ -104,7 +104,7 @@ public class ObservationTest {
     @Test
     public void getTarget2() {
         Path path = new Path("this.selectedContact");
-        Observation o = new Observation(root, path);
+        PathObservation o = new PathObservation(root, path);
         assertEquals("o.hasTarget()", true, o.hasTarget());
         assertEquals("o.getTarget()", root.selectedContact, o.getTarget());
     }
@@ -112,7 +112,7 @@ public class ObservationTest {
     @Test
     public void getTarget3() {
         Path path = new Path("this.selectedContact.firstname");
-        Observation o = new Observation(root, path);
+        PathObservation o = new PathObservation(root, path);
         assertEquals("o.hasTarget()", true, o.hasTarget());
         assertEquals("o.getTarget()", root.selectedContact.firstname, o.getTarget());
     }
@@ -120,7 +120,7 @@ public class ObservationTest {
     @Test
     public void getTarget4() {
         Path path = new Path("this.selectedContact.address");
-        Observation o = new Observation(root, path);
+        PathObservation o = new PathObservation(root, path);
         assertEquals("o.hasTarget()", true, o.hasTarget());
         assertEquals("o.getTarget()", root.selectedContact.address, o.getTarget());
     }
@@ -128,7 +128,7 @@ public class ObservationTest {
     @Test
     public void getTarget5() {
         Path path = new Path("this.selectedContact.address.street");
-        Observation o = new Observation(root, path);
+        PathObservation o = new PathObservation(root, path);
         assertEquals("o.hasTarget()", true, o.hasTarget());
         assertEquals("o.getTarget()", root.selectedContact.address.street, o.getTarget());
     }
@@ -136,7 +136,7 @@ public class ObservationTest {
     @Test
     public void getTarget6() {
         Path path = new Path("this.selectedContact.address.illegal");
-        Observation o = new Observation(root, path);
+        PathObservation o = new PathObservation(root, path);
         assertEquals("o.hasTarget()", false, o.hasTarget());
         assertEquals("o.getTarget()", null, o.getTarget());
     }
@@ -144,7 +144,7 @@ public class ObservationTest {
     @Test
     public void getTarget7() {
         Path path = new Path("this.selectedContact.address.country");
-        Observation o = new Observation(root, path);
+        PathObservation o = new PathObservation(root, path);
         assertEquals("o.hasTarget()", false, o.hasTarget());
         assertEquals("o.getTarget()", null, o.getTarget());
     }
@@ -153,7 +153,7 @@ public class ObservationTest {
     public void getTarget8() {
         Path path = new Path("this");
         PresentationModel newRoot = new TextPM();
-        Observation o = new Observation(newRoot, path);
+        PathObservation o = new PathObservation(newRoot, path);
         assertEquals("o.hasTarget()", true, o.hasTarget());
         assertEquals("o.getTarget()", newRoot, o.getTarget());
     }
@@ -161,7 +161,7 @@ public class ObservationTest {
     @Test
     public void getTarget9() {
         Path path = new Path("this.selectedContact.address.country");
-        Observation o = new Observation(root, path);
+        PathObservation o = new PathObservation(root, path);
         assertEquals("o.hasTarget()", false, o.hasTarget());
         assertEquals("o.getTarget()", null, o.getTarget());
         TextPM country = new TextPM();
@@ -174,7 +174,7 @@ public class ObservationTest {
     @Test
     public void getTarget10() {
         Path path = new Path("this.selectedContact");
-        Observation o = new Observation(root, path);
+        PathObservation o = new PathObservation(root, path);
         assertEquals("o.hasTarget()", true, o.hasTarget());
         assertEquals("o.getTarget()", root.selectedContact, o.getTarget());
         root.contacts.getSelection().clear();
@@ -188,7 +188,7 @@ public class ObservationTest {
     @Test
     public void getTarget11() {
         Path path = new Path("this.selectedContact.lastname");
-        Observation o = new Observation(root, path);
+        PathObservation o = new PathObservation(root, path);
         assertEquals("o.hasTarget()", true, o.hasTarget());
         assertEquals("o.getTarget()", root.selectedContact.lastname, o.getTarget());
         root.contacts.getSelection().clear();

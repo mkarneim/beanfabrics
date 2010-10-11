@@ -14,11 +14,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +26,8 @@ import java.util.Map;
 import org.beanfabrics.Path;
 import org.beanfabrics.PathEvaluation;
 import org.beanfabrics.context.ContextOwner;
+import org.beanfabrics.log.Logger;
+import org.beanfabrics.log.LoggerFactory;
 import org.beanfabrics.model.IOperationPM;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.model.PresentationModelFilter;
@@ -38,6 +40,7 @@ import org.beanfabrics.util.ReflectionUtil;
  * @author Max Gensthaler
  */
 public class PropertySupport implements Support {
+    private final static Logger LOG = LoggerFactory.getLogger(PropertySupport.class);
 
     private static final String DEFAULT_NAME = "#default";
     private static final Map<Class, List<PropertyDeclaration>> DECLARATION_CACHE = new HashMap<Class, List<PropertyDeclaration>>();
@@ -53,15 +56,16 @@ public class PropertySupport implements Support {
         return support;
     }
 
+    private PropertyChangeListener modelListener;
     private Map<String, PropertyChangeListener> pclMap = new HashMap<String, PropertyChangeListener>();
 
     private final PresentationModel presentationModel;
-    private final Properties properties = new Properties() {
+    private final Properties properties = new Properties(new PropertiesListener() {
+
         /**
          * This method is called whenever a property is added or removed.
          */
-        @Override
-        protected void onChange(String propertyName, PresentationModel oldValue, PresentationModel newValue) {
+        public void changed(String propertyName, PresentationModel oldValue, PresentationModel newValue) {
             if (oldValue != newValue) {
                 onRemove(oldValue, propertyName);
                 onAdd(newValue, propertyName);
@@ -96,7 +100,7 @@ public class PropertySupport implements Support {
                 }
             }
         }
-    };
+    });
 
     private void onPropertyChange(String propertyName) {
         // revalidate other properties
@@ -159,6 +163,26 @@ public class PropertySupport implements Support {
             throw new IllegalArgumentException("cls==null");
         }
         putProperties(cls);
+        addPropertyChangeListenerToPM();
+    }
+
+    /**
+     * This method adds the {@link #modelListener} to the supported
+     * {@link PresentationModel}.
+     */
+    private void addPropertyChangeListenerToPM() {
+        if (modelListener == null) {
+            modelListener = new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    // This method has been called when any of the models properties has changed,
+                    // including 'conventional' bean properties.
+                    // Since some properties validation rules could be dependent on these properties, we
+                    // have to revalidate them.
+                    revalidateProperties();
+                }
+            };
+            this.presentationModel.addPropertyChangeListener(modelListener);
+        }
     }
 
     void putProperties(Class cls) {
@@ -206,7 +230,6 @@ public class PropertySupport implements Support {
         for (PresentationModel pModel : this.properties.models(true)) {
             pModel.revalidate();
         }
-        presentationModel.revalidate();
     }
 
     public Collection<PresentationModel> getProperties() {
@@ -244,72 +267,6 @@ public class PropertySupport implements Support {
         }
     }
 
-    class Properties {
-        final LinkedHashSet<String> names = new LinkedHashSet<String>();
-        final Map<String, PresentationModel> valueMap = new HashMap<String, PresentationModel>();
-        final Map<String, Class<? extends PresentationModel>> typeMap = new HashMap<String, Class<? extends PresentationModel>>();
-
-        public PresentationModel put(String name, PresentationModel value, Class<? extends PresentationModel> type) {
-            names.add(name);
-            typeMap.put(name, type);
-            PresentationModel oldValue = valueMap.put(name, value);
-            if (oldValue != value) {
-                onChange(name, oldValue, value);
-            }
-            return oldValue;
-        }
-
-        public LinkedHashSet<String> names() {
-            return names;
-        }
-
-        public PresentationModel get(String name) {
-            return valueMap.get(name);
-        }
-
-        public String getName(PresentationModel value) {
-            for (Map.Entry<String, PresentationModel> entry : valueMap.entrySet()) {
-                if (value == entry.getValue()) {
-                    return entry.getKey();
-                }
-            }
-            return null; // TODO (mk) better to throw IllegalArgumentException
-            // ??
-        }
-
-        public Class<? extends PresentationModel> getType(String name) {
-            return typeMap.get(name);
-        }
-
-        public Collection<PresentationModel> models() {
-            return models(false);
-        }
-
-        public Collection<PresentationModel> models(boolean skipNullValues) {
-            Collection<PresentationModel> result = new LinkedList<PresentationModel>();
-            for (String name : names) {
-                PresentationModel value = valueMap.get(name);
-                if (skipNullValues && value == null) {
-                    continue;
-                }
-                result.add(value);
-            }
-            return result;
-        }
-
-        public PresentationModel remove(String name) {
-            PresentationModel result = valueMap.remove(name);
-            typeMap.remove(name);
-            names.remove(name);
-            onChange(name, result, null);
-            return result;
-        }
-
-        protected void onChange(String name, PresentationModel oldValue, PresentationModel newValue) {
-
-        }
-    }
-
     public static abstract class PropertyDeclaration {
         private final Member member;
         private final String name;
@@ -342,6 +299,15 @@ public class PropertySupport implements Support {
 
         public Member getMember() {
             return member;
+        }
+
+        public boolean isAbstract() {
+            if (member instanceof Method) {
+                Method m = (Method)member;
+                return Modifier.isAbstract(m.getModifiers());
+            } else {
+                return false;
+            }
         }
     }
 
@@ -386,12 +352,56 @@ public class PropertySupport implements Support {
         if (result == null) {
             result = new LinkedList<PropertyDeclaration>();
             findAllPropertyDeclarations(cls, result);
+            check(cls, result);
+            log(cls, result);
             DECLARATION_CACHE.put(cls, result);
         }
         return result;
     }
 
+    private static void check(Class cls, List<PropertyDeclaration> decls) {
+        Map<String, PropertyDeclaration> map = new HashMap<String, PropertyDeclaration>();
+        for (PropertyDeclaration currentDecl : decls) {
+            String key = currentDecl.getName();
+            if (map.containsKey(key)) {
+                PropertyDeclaration firstDecl = map.get(key);
+                if (currentDecl.isAbstract()) {
+                    // abstract declarations are always allowed since they do not shadow a property
+                } else if (firstDecl.isAbstract()) {
+                    // an abstract declaration can be refined by a concrete declaration
+                    map.put(key, currentDecl);
+                } else {
+                    throw new IllegalStateException("Illegal property declaration found in class '" + cls.getName() + "':\nmember " + currentDecl.getMember() + " shadows " + firstDecl.getMember() + "!");
+                }
+            } else {
+                map.put(key, currentDecl);
+            }
+        }
+    }
+
+    private static void log(Class cls, List<PropertyDeclaration> decls) {
+        if (LOG.isDebugEnabled()) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Properties of class ").append(cls.getName()).append(":\n");
+            for (PropertyDeclaration decl : decls) {
+                builder.append(decl.getName()).append(":").append(decl.getMember()).append("\n");
+            }
+            LOG.debug(builder.toString());
+        }
+    }
+
     private static void findAllPropertyDeclarations(Class cls, List<PropertyDeclaration> result) {
+        // First process members declared in superclass and interfaces
+        Class superCls = cls.getSuperclass();
+        if (superCls != null) {
+            findAllPropertyDeclarations(superCls, result);
+        }
+        Class[] interfaces = cls.getInterfaces();
+        for (Class i : interfaces) {
+            findAllPropertyDeclarations(i, result);
+        }
+
+        // now process members declared in current class
         Method[] allDeclMethods = cls.getDeclaredMethods();
         Field[] allDeclFields = cls.getDeclaredFields();
         Method[] annoDeclMethods = (Method[])getAnnotated(allDeclMethods, Property.class).toArray(new Method[0]);
@@ -409,14 +419,7 @@ public class PropertySupport implements Support {
         result.addAll(methodDecls);
         List<FieldDecl> fieldDecls = findFieldDecls(potentialPropFields);
         result.addAll(fieldDecls);
-        Class superCls = cls.getSuperclass();
-        if (superCls != null) {
-            findAllPropertyDeclarations(superCls, result);
-        }
-        Class[] interfaces = cls.getInterfaces();
-        for (Class i : interfaces) {
-            findAllPropertyDeclarations(i, result);
-        }
+
     }
 
     private static <T extends AccessibleObject> List<T> getAnnotated(T[] allDecl, Class<Property> annoType) {
@@ -502,22 +505,31 @@ public class PropertySupport implements Support {
             List<PropertyDeclaration> decls = findAllPropertyDeclarations(cls);
             Properties result = new Properties();
             for (PropertyDeclaration decl : decls) {
-                Object value;
-                if (decl instanceof MethodDecl) {
-                    // if( false == "access$0".equals(decl.getName())) {
-                    value = ReflectionUtil.invokeMethod(presentationModel, ((MethodDecl)decl).getMethod());
-                    // }
-                } else if (decl instanceof FieldDecl) {
-                    value = ReflectionUtil.getFieldValue(presentationModel, ((FieldDecl)decl).getField());
+                Object value = null;
+                if (!decl.isAbstract()) {
+                    if (decl instanceof MethodDecl) {
+                        value = ReflectionUtil.invokeMethod(presentationModel, ((MethodDecl)decl).getMethod());
+                    } else if (decl instanceof FieldDecl) {
+                        value = ReflectionUtil.getFieldValue(presentationModel, ((FieldDecl)decl).getField());
+                    } else {
+                        throw new RuntimeException("Should never be thrown. What should decl else be?");
+                    }
+
+                    if (value == null || value instanceof PresentationModel) {
+                        String name = decl.getName();
+                        Class<? extends PresentationModel> type = decl.getType();
+                        LOG.debug("Defining property " + decl.getName() + " with: " + value);
+                        result.put(name, (PresentationModel)value, type);
+                    } else {
+                        throw new IllegalStateException("Return type of member '" + decl.getMember() + "' must implement " + PresentationModel.class.getName());
+                    }
                 } else {
-                    throw new RuntimeException("Should never be thrown. What should decl else be?");
-                }
-                String name = decl.getName();
-                Class<? extends PresentationModel> type = decl.getType();
-                if (value == null || value instanceof PresentationModel) {
-                    result.put(name, (PresentationModel)value, type);
-                } else {
-                    throw new IllegalStateException("Return type must implement PresentationModel");
+                    String name = decl.getName();
+                    if (result.getType(name) == null) {
+                        LOG.debug("Declaring property " + decl.getName() + " with type: " + decl.getType());
+                        Class<? extends PresentationModel> type = decl.getType();
+                        result.put(name, type);
+                    }
                 }
             }
             return result;

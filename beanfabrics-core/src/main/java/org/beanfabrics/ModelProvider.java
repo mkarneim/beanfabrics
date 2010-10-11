@@ -160,7 +160,7 @@ public class ModelProvider extends AbstractBean implements IModelProvider {
     private class Subscription implements PropertyChangeListener {
         final Path path;
         final ModelProviderListener listener;
-        private Observation observation;
+        private PathObservation observation;
 
         /**
          * Creates a new subscription.
@@ -178,7 +178,7 @@ public class ModelProvider extends AbstractBean implements IModelProvider {
          * Starts the observation of the presentation model (along the path)
          */
         public void startObservation() {
-            this.observation = new Observation(presentationModel, this.path);
+            this.observation = new PathObservation(presentationModel, this.path);
             this.observation.addPropertyChangeListener("target", this);
             if (this.observation.getTarget() != null) {
                 listener.modelGained(new ModelProviderEvent(ModelProvider.this, ModelProvider.this.presentationModel, path));

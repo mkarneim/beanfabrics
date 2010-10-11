@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.beanfabrics.Observation;
 import org.beanfabrics.Path;
+import org.beanfabrics.PathObservation;
+import org.beanfabrics.log.Logger;
+import org.beanfabrics.log.LoggerFactory;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.util.ReflectionUtil;
 import org.beanfabrics.util.ResourceBundleFactory;
@@ -36,6 +38,7 @@ import org.beanfabrics.validation.ValidationState;
  * @author Michael Karneim
  */
 public class ValidationSupport implements Support {
+    private static Logger LOG = LoggerFactory.getLogger(ValidationSupport.class);
     private static final String KEY_MESSAGE_VALIDATION_FAILED = "message.validationFailed";
 
     public static ValidationSupport get(PresentationModel model) {
@@ -73,7 +76,7 @@ public class ValidationSupport implements Support {
     private static class ValidationMethodSupport {
         private final ResourceBundle resourceBundle;
         private final PresentationModel owner;
-        private final List<Observation> obervations = new LinkedList<Observation>();
+        private final List<PathObservation> obervations = new LinkedList<PathObservation>();
         private final Method annotatedMethod;
         private final ValidationRule rule;
 
@@ -106,6 +109,7 @@ public class ValidationSupport implements Support {
 
             for (int i = 0; i < anno.path().length; ++i) {
                 Path path = Path.parse(anno.path()[i]);
+                LOG.debug("Observing " + owner + " at " + path + ".");
                 this.obervations.add(new ValidationTargetObservation(owner, path));
             }
 
@@ -116,7 +120,7 @@ public class ValidationSupport implements Support {
             return message;
         }
 
-        private class ValidationTargetObservation extends Observation {
+        private class ValidationTargetObservation extends PathObservation {
             private PresentationModel currentTarget = null;
 
             public ValidationTargetObservation(PresentationModel root, Path path) {
@@ -139,6 +143,7 @@ public class ValidationSupport implements Support {
                 }
                 this.currentTarget = newTarget;
                 if (this.currentTarget != null) {
+                    LOG.debug("Adding validation rule to " + newTarget + " in " + getRootNode() + " at " + getPath() + ".");
                     this.currentTarget.getValidator().add(ValidationMethodSupport.this.rule);
                 }
             }
