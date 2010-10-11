@@ -6,6 +6,7 @@ package org.beanfabrics.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -62,6 +63,25 @@ public class DatePMTest {
         assertEquals("pM.isValid()", true, model.isValid());
         model.setText("31.02");
         assertEquals("pM.isValid()", false, model.isValid());
+
+        model.setText("aaa");
+        assertEquals("pM.isValid()", false, model.isValid());
+        try {
+            model.getDate();
+            fail("ecpected ConversionException");
+        } catch (ConversionException ex) {
+            // expected
+        }
+
+        model.setText("14.01.1971a");
+        assertEquals("pM.isValid()", false, model.isValid());
+        try {
+            model.getDate();
+            fail("ecpected ConversionException");
+        } catch (ConversionException ex) {
+            // expected
+        }
+
     }
 
     @Test

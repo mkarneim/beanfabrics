@@ -8,7 +8,7 @@ package org.beanfabrics.model;
 
 import java.text.DateFormat;
 import java.text.Format;
-import java.text.ParseException;
+import java.text.ParsePosition;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -66,16 +66,19 @@ public class DatePM extends TextPM implements IDatePM {
     /** {@inheritDoc} */
     public Date getDate()
         throws ConversionException {
-        try {
-            if (this.isEmpty()) {
-                return null;
-            }
-            String str = getText();
-            Date result = (Date)format.parseObject(str);
-            return result;
-        } catch (ParseException e) {
-            throw new ConversionException(e);
+
+        if (this.isEmpty()) {
+            return null;
         }
+        String str = getText();
+        ParsePosition posInOut = new ParsePosition(0);
+        Date result = (Date)format.parseObject(str, posInOut);
+        if (posInOut.getIndex() == str.length()) {
+            return result;
+        } else {
+            throw new ConversionException();
+        }
+
     }
 
     /** {@inheritDoc} */
