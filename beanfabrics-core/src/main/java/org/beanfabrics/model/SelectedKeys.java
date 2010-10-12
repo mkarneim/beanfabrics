@@ -27,4 +27,22 @@ public interface SelectedKeys<E> extends Set<E> {
      * @return the first (topmost) selected key
      */
     public E getFirst();
+
+    /**
+     * Sets this selection to contain exactly the specified keys.
+     * 
+     * @param c
+     * @return <tt>true</tt> if this set did not already contain exactly the
+     *         specified keys
+     */
+    public boolean setAll(Collection<?> c);
+
+    /**
+     * Sets this selection to contain exactly the specified keys.
+     * 
+     * @param keys
+     * @return <tt>true</tt> if this set did not already contain exactly the
+     *         specified keys
+     */
+    public boolean setAll(E... keys);
 }

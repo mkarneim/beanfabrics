@@ -832,6 +832,9 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             return result;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public K getFirst() {
             return min();
         }
@@ -870,6 +873,9 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             return null;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public boolean add(K key) {
             // check if key is valid
             int index = indexOfKey(key);
@@ -884,6 +890,9 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             return result;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public boolean addAll(Collection<? extends K> c) {
             Collection<K> diff = new LinkedHashSet<K>(c);
             diff.removeAll(elements);
@@ -907,24 +916,39 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public void clear() {
             int[] indices = indicesOfKeys(this);
             elements.clear();
             support.fireElementsDeselected(indices);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public boolean contains(Object o) {
             return elements.contains(o);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public boolean containsAll(Collection<?> c) {
             return elements.containsAll(c);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public boolean isEmpty() {
             return elements.isEmpty();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public Iterator<K> iterator() {
             return new Iterator<K>() {
                 private Iterator<K> impl = elements.iterator();
@@ -947,6 +971,9 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             };
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public boolean remove(Object o) {
             boolean result = elements.remove(o);
             // we won't throw any exception for invalid elements
@@ -958,6 +985,9 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             return result;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public boolean removeAll(Collection<?> c) {
             Collection diff = new LinkedHashSet(c);
             // we won't throw any exception for invalid elements
@@ -977,6 +1007,9 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public boolean retainAll(Collection<?> c) {
             Collection diff = new LinkedHashSet(elements);
             diff.removeAll(c);
@@ -988,6 +1021,16 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
+        public boolean setAll(K... keys) {
+            return setAll(Arrays.asList(keys));
+        }
+
+        /**
+         * {@inheritDoc}
+         */
         public boolean setAll(Collection<?> c) {
             Collection toRemove = new LinkedHashSet(elements);
             toRemove.removeAll(c);
@@ -1021,23 +1064,29 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             return changed;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public int size() {
             return elements.size();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public Object[] toArray() {
             return elements.toArray();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public <T> T[] toArray(T[] a) {
             return elements.toArray(a);
         }
 
         /**
-         * Returns a new Collection with all selected keys. Modification on this
-         * collection will not influence the original selection.
-         * 
-         * @return a new Collection with all selected keys.
+         * {@inheritDoc}
          */
         public Collection<K> toCollection() {
             return new ArrayList<K>(elements);

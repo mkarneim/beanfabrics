@@ -91,7 +91,7 @@ public class MapPMTest {
 
     @Test
     public void putMany() {
-		MapPM<Integer, TextPM> map = new MapPM<Integer, TextPM>();
+        MapPM<Integer, TextPM> map = new MapPM<Integer, TextPM>();
         TextPM[] elems = new TextPM[10];
         for (int i = 0; i < elems.length; ++i) {
             elems[i] = new TextPM();
@@ -198,6 +198,86 @@ public class MapPMTest {
         assertEquals("counter.elementsSelected", 1, counter.elementsSelected);
         assertEquals("map.getSelection().getMaxIndex()", NUM - 1, map.getSelection().getMaxIndex());
         assertEquals("map.getSelection().getMinIndex()", 0, map.getSelection().getMinIndex());
+    }
+
+    @Test
+    public void selectedKeysSetAll_1() {
+        MapPM<Integer, DummyPM> map = new MapPM<Integer, DummyPM>();
+        final int NUM = 10;
+        populate(map, NUM);
+
+        EventCounter counter = new EventCounter();
+        map.addListListener(counter);
+
+        map.getSelectedKeys().setAll(1, 2, 3);
+
+        assertEquals("map.getSelection().size()", 3, map.getSelectedKeys().size());
+        // we expect only single event since all indices build a single interval
+        assertEquals("counter.elementsSelected", 1, counter.elementsSelected);
+        assertEquals("map.getSelection().getMaxIndex()", 3, map.getSelection().getMaxIndex());
+        assertEquals("map.getSelection().getMinIndex()", 1, map.getSelection().getMinIndex());
+    }
+
+    @Test
+    public void selectedKeysSetAll_2() {
+        MapPM<Integer, DummyPM> map = new MapPM<Integer, DummyPM>();
+        final int NUM = 10;
+        populate(map, NUM);
+
+        EventCounter counter = new EventCounter();
+        map.addListListener(counter);
+
+        map.getSelectedKeys().setAll(1, 2, 3, 7, 8, 9);
+
+        assertEquals("map.getSelection().size()", 6, map.getSelectedKeys().size());
+        // we expect 2 events since the indices build two distinct interval
+        assertEquals("counter.elementsSelected", 2, counter.elementsSelected);
+        assertEquals("map.getSelection().getMaxIndex()", 9, map.getSelection().getMaxIndex());
+        assertEquals("map.getSelection().getMinIndex()", 1, map.getSelection().getMinIndex());
+    }
+
+    @Test
+    public void selectedKeysSetAll_3() {
+        MapPM<Integer, DummyPM> map = new MapPM<Integer, DummyPM>();
+        final int NUM = 10;
+        populate(map, NUM);
+
+        map.getSelectedKeys().setAll(1, 2, 3);
+
+        EventCounter counter = new EventCounter();
+        map.addListListener(counter);
+
+        map.getSelectedKeys().setAll(3, 4, 5);
+
+        assertEquals("map.getSelection().size()", 3, map.getSelectedKeys().size());
+        // we expect only single event since the indices build a single interval
+        assertEquals("counter.elementsSelected", 1, counter.elementsSelected);
+        // we expect only one single deselected event since the indices 1,2 build a single interval
+        assertEquals("counter.elementsDeselected", 1, counter.elementsDeselected);
+        assertEquals("map.getSelection().getMaxIndex()", 5, map.getSelection().getMaxIndex());
+        assertEquals("map.getSelection().getMinIndex()", 3, map.getSelection().getMinIndex());
+    }
+
+    @Test
+    public void selectedKeysSetAll_4() {
+        MapPM<Integer, DummyPM> map = new MapPM<Integer, DummyPM>();
+        final int NUM = 10;
+        populate(map, NUM);
+
+        map.getSelectedKeys().setAll(1, 2, 3);
+
+        EventCounter counter = new EventCounter();
+        map.addListListener(counter);
+
+        map.getSelectedKeys().setAll(3, 7, 8);
+
+        assertEquals("map.getSelection().size()", 3, map.getSelectedKeys().size());
+        // we expect only one single selected event since the indices 7,8 build a single interval
+        assertEquals("counter.elementsSelected", 1, counter.elementsSelected);
+        // we expect only one single deselected event since the indices 1,2 build a single interval
+        assertEquals("counter.elementsDeselected", 1, counter.elementsDeselected);
+        assertEquals("map.getSelection().getMaxIndex()", 8, map.getSelection().getMaxIndex());
+        assertEquals("map.getSelection().getMinIndex()", 3, map.getSelection().getMinIndex());
     }
 
     @Test
