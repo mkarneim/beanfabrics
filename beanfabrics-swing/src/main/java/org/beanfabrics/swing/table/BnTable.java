@@ -81,28 +81,69 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     private IListPM<? extends PresentationModel> presentationModel;
     private List<BnColumn> columns = Collections.emptyList();
     private boolean cellEditingAllowed;
+    private boolean sortable;
 
     // Extensions
     private final AutoResizeExtension autoResizeExtension = createAutoResizeExtension();
 
     public BnTable() {
-        this.setSurrendersFocusOnKeystroke(true);
-        this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        this.setCellEditingAllowed(true);
+        setSurrendersFocusOnKeystroke(true);
+        setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        setCellEditingAllowed(true);
+        setSortable(true);
     }
 
+    /**
+     * Returns whether or not this table allows cell editing.
+     * 
+     * @return <code>true</code> if cell editing is allowed
+     */
     public boolean isCellEditingAllowed() {
         return cellEditingAllowed;
     }
 
-    public void setCellEditingAllowed(boolean editingAllowed) {
-        this.cellEditingAllowed = editingAllowed;
+    /**
+     * Sets whether or not this table allows cell editing.
+     * 
+     * @param newValue
+     */
+    public void setCellEditingAllowed(boolean newValue) {
+        boolean oldValue = this.cellEditingAllowed;
+        this.cellEditingAllowed = newValue;
         if (isConnected()) {
             TableModel tblModel = getModel();
             if (tblModel instanceof BnTableModel) {
                 ((BnTableModel)tblModel).setCellEditingAllowed(this.cellEditingAllowed);
             }
         }
+        this.firePropertyChange("cellEditingAllowed", oldValue, newValue);
+    }
+
+    /**
+     * Returns wheter or not this table is sortable.
+     * 
+     * @return <code>true</code> if this table is sortable
+     */
+    public boolean isSortable() {
+        return sortable;
+    }
+
+    /**
+     * Sets whether or not this table is sortable.
+     * 
+     * @param newValue
+     */
+    public void setSortable(boolean newValue) {
+        boolean oldValue = this.sortable;
+        if (oldValue == newValue) {
+            return;
+        }
+        this.sortable = newValue;
+        if (isConnected()) {
+            disconnect();
+            connect();
+        }
+        this.firePropertyChange("sortable", oldValue, newValue);
     }
 
     /** {@inheritDoc} */
@@ -143,11 +184,10 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     }
 
     /**
-     * Returns whether this component is connected to the target
+     * Returns whether or not this component is connected to the target
      * {@link AbstractPM} to synchronize with.
      * 
-     * @return <code>true</code> when this component is connected, else
-     *         <code>false</code>
+     * @return <code>true</code> if this component is connected
      */
     private boolean isConnected() {
         return this.columns != null && this.presentationModel != null;
@@ -172,16 +212,10 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
 
         this.setModel(new BnTableModel(currListMdl, this.columns, this.cellEditingAllowed));
 
-        // install the row sorter
-        {
-            // When intalling a row sorter in jre1.6 the selection model is cleared
-            // To prevent this to change the presentation model we temporary install a dummy selection model
-            int oldSelectionMode = getSelectionModel().getSelectionMode();
-            setSelectionModel(createDefaultSelectionModel());
-            setSelectionMode(oldSelectionMode);
+        if (isSortable()) {
+            installSortingFeature();
         }
-        installRowSorter();
-        // now install the real selection model
+        // now install the selection model
         int currentSelectionMode = getSelectionModel().getSelectionMode();
         BnTableSelectionModel newModel = new BnTableSelectionModel(currListMdl);
         newModel.setSelectionMode(currentSelectionMode);
@@ -191,12 +225,37 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         this.autoResizeExtension.resizeColumns();
     }
 
+    private void installSortingFeature() {
+        installRowSorter();
+        JTableHeader header = getTableHeader();
+        if (header instanceof Java5SortingTableHeader) {
+            Java5SortingTableHeader headerJ5 = (Java5SortingTableHeader)header;
+            headerJ5.setSortable(true);
+        }
+    }
+
+    private void uninstallSortingFeature() {
+        uninstallRowSorter();
+        JTableHeader header = getTableHeader();
+        if (header instanceof Java5SortingTableHeader) {
+            Java5SortingTableHeader headerJ5 = (Java5SortingTableHeader)header;
+            headerJ5.setSortable(false);
+        }
+    }
+
     private void installRowSorter() {
-        // TODO (mk) do not install the row sorter automatically.
         // TODO (mk) make this configurable (e.g. with a client property)
         if (isJava5()) {
             return;
         }
+        // When intalling a row sorter in jre1.6 the selection model is cleared
+        // To prevent this to change the presentation model we temporary install a dummy selection model
+        ListSelectionModel oldSelModel = getSelectionModel();
+
+        int oldSelectionMode = oldSelModel.getSelectionMode();
+        setSelectionModel(createDefaultSelectionModel());
+        setSelectionMode(oldSelectionMode);
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("trying to install BnTableRowSorter");
         }
@@ -212,6 +271,9 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         } catch (Exception ex) {
             throw new UndeclaredThrowableException(ex);
         }
+
+        // reset the temporary selection model
+        setSelectionModel(oldSelModel);
     }
 
     private void uninstallRowSorter() {
@@ -248,6 +310,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         if (useJava5SortingTableHeader()) {
             Java5SortingTableHeader header = new Java5SortingTableHeader();
             header.setColumnModel(this.getColumnModel());
+            header.setSortable(isSortable());
             return header;
         } else {
             return super.createDefaultTableHeader();
@@ -294,7 +357,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         }
         setModel(createDefaultDataModel());
 
-        uninstallRowSorter();
+        uninstallSortingFeature();
     }
 
     public BnColumn[] getColumns() {

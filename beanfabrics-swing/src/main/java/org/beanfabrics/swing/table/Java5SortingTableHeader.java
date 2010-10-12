@@ -42,6 +42,7 @@ public class Java5SortingTableHeader extends JTableHeader {
             onClick(e);
         }
     };
+    private boolean sortable;
 
     public Java5SortingTableHeader() {
         super();
@@ -51,6 +52,10 @@ public class Java5SortingTableHeader extends JTableHeader {
     public Java5SortingTableHeader(TableColumnModel cm) {
         super(cm);
         installListeners();
+    }
+
+    public void setSortable(boolean newValue) {
+        this.sortable = newValue;
     }
 
     private void installListeners() {
@@ -63,10 +68,12 @@ public class Java5SortingTableHeader extends JTableHeader {
      * @param e
      */
     protected void onClick(MouseEvent e) {
-        int visColIndex = getTable().columnAtPoint(e.getPoint());
-        if (visColIndex >= 0) {
-            int modelColIndex = getColumnModel().getColumn(visColIndex).getModelIndex();
-            toggleSortOrder(modelColIndex);
+        if (sortable) {
+            int visColIndex = getTable().columnAtPoint(e.getPoint());
+            if (visColIndex >= 0) {
+                int modelColIndex = getColumnModel().getColumn(visColIndex).getModelIndex();
+                toggleSortOrder(modelColIndex);
+            }
         }
     }
 
@@ -99,4 +106,5 @@ public class Java5SortingTableHeader extends JTableHeader {
         // else sort ascending
         return new SortKey( /*ascending=*/true, path);
     }
+
 }
