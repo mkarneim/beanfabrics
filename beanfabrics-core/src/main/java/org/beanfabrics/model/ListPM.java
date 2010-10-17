@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -33,6 +34,7 @@ import org.beanfabrics.event.ElementsReplacedEvent;
 import org.beanfabrics.event.ElementsSelectedEvent;
 import org.beanfabrics.event.ListListener;
 import org.beanfabrics.event.ListSupport;
+import org.beanfabrics.support.PropertySupport;
 import org.beanfabrics.util.Interval;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
@@ -1177,39 +1179,12 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
         /** {@inheritDoc} */
         public boolean retainAll(Collection<?> c) {
-            Set argSet;
-            if (c instanceof Set) {
-                argSet = (Set)c;
+        	Collection diff = new LinkedHashSet(this);
+            diff.removeAll(c);
+            if (!diff.isEmpty()) {
+                return this.removeAll(diff);
             } else {
-                argSet = new HashSet(c);
-            }
-            List<Integer> indices = new LinkedList<Integer>();
-            int index = 0;
-            for (Entry e : entries) {
-                if (argSet.remove(e.element) == false) {
-                    if (e.isSelected == true) {
-                        e.isSelected = false;
-                        selectionSize--;
-                        indices.add(index);
-                        // update min and max
-                        //						if (selectionSize>0) {
-                        //							if (minSelIndex != UNKNOWN && minSelIndex == index) {
-                        //								minSelIndex = UNKNOWN;
-                        //							}
-                        //							if (maxSelIndex != UNKNOWN && maxSelIndex == index) {
-                        //								maxSelIndex = UNKNOWN;
-                        //							}
-                        //						} else {
-                        //							minSelIndex = NONE;
-                        //							maxSelIndex = NONE;
-                        //						}
-                    }
-                }
-            }
-            if (!indices.isEmpty()) {
-                support.fireElementsDeselected(indices);
-                return true;
-            } else {
+                // nothing to do
                 return false;
             }
         }

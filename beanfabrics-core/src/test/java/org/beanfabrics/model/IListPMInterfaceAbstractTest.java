@@ -17,6 +17,14 @@ import java.util.List;
 import java.util.Random;
 
 import org.beanfabrics.Path;
+import org.beanfabrics.event.ElementChangedEvent;
+import org.beanfabrics.event.ElementsAddedEvent;
+import org.beanfabrics.event.ElementsDeselectedEvent;
+import org.beanfabrics.event.ElementsRemovedEvent;
+import org.beanfabrics.event.ElementsReplacedEvent;
+import org.beanfabrics.event.ElementsSelectedEvent;
+import org.beanfabrics.event.ListEvent;
+import org.beanfabrics.event.ListListener;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -46,6 +54,57 @@ public abstract class IListPMInterfaceAbstractTest {
             PMManager.setup(this);
         }
     }
+    
+    class MyListListener implements ListListener {
+    	final List<ListEvent> events = new ArrayList<ListEvent>();
+    	
+		@Override
+		public void elementChanged(ElementChangedEvent evt) {
+			events.add(evt);
+		}
+
+		@Override
+		public void elementsAdded(ElementsAddedEvent evt) {
+			events.add(evt);
+		}
+
+		@Override
+		public void elementsDeselected(ElementsDeselectedEvent evt) {
+			events.add(evt);
+		}
+
+		@Override
+		public void elementsRemoved(ElementsRemovedEvent evt) {
+			events.add(evt);
+		}
+
+		@Override
+		public void elementsReplaced(ElementsReplacedEvent evt) {
+			events.add(evt);
+		}
+
+		@Override
+		public void elementsSelected(ElementsSelectedEvent evt) {
+			events.add(evt);
+		}
+		
+		@SuppressWarnings("unchecked")
+		public <T extends ListEvent> List<T> getEventsOfType( Class<T> type ) {
+			List<T> result = new ArrayList<T>();
+			for( ListEvent evt: events) {
+				if ( type.isInstance(evt)) {
+					result.add((T)evt);
+				}
+			}
+			return result;
+		}
+
+		public void clear() {
+			events.clear();
+		}
+    	
+    }
+    MyListListener listListener;
 
     IListPM<RowPM> list;
     List<RowPM> elements;
@@ -63,6 +122,8 @@ public abstract class IListPMInterfaceAbstractTest {
             elements.add(row);
         }
         this.list = create(elements, INITIAL_SELECTED_ELEMENT_INDEXES);
+        this.listListener = new MyListListener();
+        this.list.addListListener(this.listListener);
     }
 
     private String createRandomText(Random rnd) {
@@ -173,4 +234,24 @@ public abstract class IListPMInterfaceAbstractTest {
             last = curr;
         }
     }
+    
+    @Test
+    public void test1() {
+    	list.getSelection().addAll();
+    	assertEquals("list.getSelection().size()", elements.size(), list.getSelection().size());
+    	assertEquals( "listListener.events.size()", 1, listListener.events.size());
+    	assertEquals( "listListener.getEventsOfType(ElementsSelectedEvent.class).size()", 1, listListener.getEventsOfType(ElementsSelectedEvent.class).size());
+    	
+    	listListener.clear();
+    	
+    	List old = new ArrayList(elements);
+    	old.remove(0);
+    	list.getSelection().retainAll(old);
+    
+    	assertEquals("list.getSelection().size()", old.size(), list.getSelection().size());
+    	assertEquals( "listListener.getEventsOfType(ElementsSelectedEvent.class).size()", 1, listListener.getEventsOfType(ElementsDeselectedEvent.class).size());
+    	
+    }
+    
+    
 }
