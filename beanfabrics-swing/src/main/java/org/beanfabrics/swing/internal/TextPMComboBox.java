@@ -25,6 +25,7 @@ import org.beanfabrics.View;
 import org.beanfabrics.event.WeakPropertyChangeListener;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.ITextPM;
+import org.beanfabrics.model.Options;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.BnComboBoxEditor;
 import org.beanfabrics.swing.ErrorIconPainter;
@@ -115,6 +116,14 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor, Vi
     public boolean isConnected() {
         return this.pModel != null;
     }
+    
+    /**
+     * Returns whether this component is connected to a PM that provides {@link Options}.
+     * @return <code>true</code> when this component has access to some {@link Options} 
+     */
+    protected boolean hasOptions() {
+    	return isConnected() && pModel.getOptions()!=null;
+    }
 
     /**
      * Configures this component depending on the target {@link AbstractPM}s
@@ -183,27 +192,15 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor, Vi
     }
 
     protected class TextEditorComboBoxModel extends AbstractListModel implements ComboBoxModel {
-        private int indexOf(Object elem) {
-            if (isConnected() == false)
-                return -1;
-            Set optVals = pModel.getOptions().values();
-            // TODO (rk) Options should have an index
-            Object[] values = optVals.toArray(new Object[pModel.getOptions().size()]);
-            for (int i = 0; i < values.length; i++) {
-                if (values[i].equals(elem)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
 
         public Object getElementAt(int index) {
-            if (isConnected() == false)
+            if (isConnected() == false) {
                 return null;
-            Set optVals = pModel.getOptions().values();
-            // TODO (rk) Options should have an index
-            Object[] values = optVals.toArray(new Object[pModel.getOptions().size()]);
-            return values[index];
+            }
+            if ( index <0 || index >= pModel.getOptions().size()) {
+            	return null;
+            }
+            return pModel.getOptions().getValue(index);
         }
 
         public int getSize() {
