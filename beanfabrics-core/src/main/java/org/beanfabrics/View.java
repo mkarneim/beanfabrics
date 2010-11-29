@@ -9,24 +9,26 @@ package org.beanfabrics;
 import org.beanfabrics.model.PresentationModel;
 
 /**
- * Basic interface for classes that represent a view on a presentation model.
+ * The {@link View} is the interface for classes that can be bound to a
+ * (specific, see M) {@link PresentationModel}.
+ * <p>
+ * That doesn't imply that an implementor must be visual at any kind.
  * 
  * @author Michael Karneim
- * @param <M>
+ * @param <M> the concrete {@link PresentationModel} type
  */
 public interface View<M extends PresentationModel> {
     /**
-     * Returns the {@link PresentationModel} with that this component is
-     * synchronized.
+     * Returns the {@link PresentationModel} of this view.
      * 
      * @return the {@link PresentationModel}
      */
     public M getPresentationModel();
 
     /**
-     * Sets the {@link PresentationModel} to synchronize this component with.
+     * Sets the {@link PresentationModel} of this view.
      * 
-     * @param pModel the <code>PresentationModel</code> to set
+     * @param pModel the <code>PresentationModel</code>
      */
     public void setPresentationModel(M pModel);
 }

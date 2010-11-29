@@ -14,8 +14,11 @@ import org.beanfabrics.View;
 import org.beanfabrics.model.PresentationModel;
 
 /**
- * ModelSubscriber Context that will become a parent context of the bound
- * object's context.
+ * The {@link BnParentContext} is a context that dynamically adds itself as a
+ * parent context to the target's context.
+ * <p>
+ * Use this class if you want to dynamically provide access to a specific
+ * service only to PM objects that are members of this context.
  * 
  * @author Michael Karneim
  */

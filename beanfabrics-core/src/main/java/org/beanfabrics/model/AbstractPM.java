@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.beanfabrics.ValidatableBean;
 import org.beanfabrics.context.Context;
-import org.beanfabrics.context.ModelContext;
 import org.beanfabrics.support.PropertySupport;
 import org.beanfabrics.support.SupportMap;
 import org.beanfabrics.validation.CompositeValidationState;

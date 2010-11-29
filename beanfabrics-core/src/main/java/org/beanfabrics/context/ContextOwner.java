@@ -7,16 +7,20 @@
 package org.beanfabrics.context;
 
 /**
- * A class that implements this interface has a context property.
+ * The {@link ContextOwner} is an interface for classes that can "own" a
+ * {@link Context} and provide public access to it.
+ * <p>
+ * Please note that the owned context is assumed being constant. Implementors
+ * must not change their context reference during lifetime.
  * 
  * @see Context
  * @author Michael Karneim
  */
 public interface ContextOwner {
     /**
-     * Returns the {@link Context} of this model.
+     * Returns the owned {@link Context}.
      * 
-     * @return the IContext of this model
+     * @return the owned context.
      */
     public Context getContext();
 }

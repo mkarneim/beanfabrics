@@ -16,6 +16,9 @@ import org.beanfabrics.log.Logger;
 import org.beanfabrics.log.LoggerFactory;
 
 /**
+ * The {@link DefaultContext} is the default implementation of the
+ * {@link Context} interface.
+ * 
  * @author Michael Karneim
  */
 public class DefaultContext implements Context {
@@ -28,6 +31,9 @@ public class DefaultContext implements Context {
     private final List<Context> parents;
     private final List<Context> unmodifiableParents;
 
+    /**
+     * Constructs a {@link DefaultContext}.
+     */
     public DefaultContext() {
         parents = new LinkedList<Context>();
         parentListener = new ContextListener() {
@@ -41,21 +47,23 @@ public class DefaultContext implements Context {
             }
 
             public void parentRemoved(ParentRemovedEvent evt) {
-
+                // nothing to do
             }
 
             public void parentAdded(ParentAddedEvent evt) {
-
+                // nothing to do
             }
         };
         unmodifiableParents = Collections.unmodifiableList(parents);
         unmodifiableServiceEntries = Collections.unmodifiableList(serviceEntries);
     }
 
+    /** {@inheritDoc} */
     public List<Context> getParents() {
         return unmodifiableParents;
     }
 
+    /** {@inheritDoc} */
     public synchronized void addParent(Context parent) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("adding parent " + parent + " to " + this);
@@ -68,6 +76,7 @@ public class DefaultContext implements Context {
         this.fireParentAdded(parent);
     }
 
+    /** {@inheritDoc} */
     public synchronized void removeParent(Context parent) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("removing parent " + parent + " from " + this);
@@ -80,6 +89,7 @@ public class DefaultContext implements Context {
         this.fireParentRemoved(parent);
     }
 
+    /** {@inheritDoc} */
     public void addContextListener(ContextListener l) {
         if (l == null) {
             throw new IllegalArgumentException("l must not be null.");
@@ -87,6 +97,7 @@ public class DefaultContext implements Context {
         contextListeners.add(l);
     }
 
+    /** {@inheritDoc} */
     public void removeContextListener(ContextListener l) {
         if (l == null) {
             throw new IllegalArgumentException("l must not be null.");
@@ -94,6 +105,11 @@ public class DefaultContext implements Context {
         contextListeners.remove(l);
     }
 
+    /**
+     * Fires a parentAdded-event.
+     * 
+     * @param parent the parent this context has been added to
+     */
     protected void fireParentAdded(Context parent) {
         ParentAddedEvent evt = new ParentAddedEvent(this, parent);
         for (ContextListener l : contextListeners) {
@@ -101,6 +117,11 @@ public class DefaultContext implements Context {
         }
     }
 
+    /**
+     * Fires a parentRemoved-event.
+     * 
+     * @param parent the parent this context has been removed from.
+     */
     protected void fireParentRemoved(Context parent) {
         ParentRemovedEvent evt = new ParentRemovedEvent(this, parent);
         for (ContextListener l : contextListeners) {
@@ -108,6 +129,11 @@ public class DefaultContext implements Context {
         }
     }
 
+    /**
+     * Fires a service-added-event.
+     * 
+     * @param entry the service entry that has been added to this context
+     */
     protected void fireServiceAdded(ServiceEntry entry) {
         ServiceAddedEvent evt = new ServiceAddedEvent(this, entry);
         for (ContextListener l : contextListeners) {
@@ -115,6 +141,11 @@ public class DefaultContext implements Context {
         }
     }
 
+    /**
+     * Fires a service-removed-event.
+     * 
+     * @param entry the service entry that has been removed from this context
+     */
     protected void fireServiceRemoved(ServiceEntry entry) {
         ServiceRemovedEvent evt = new ServiceRemovedEvent(this, entry);
         for (ContextListener l : contextListeners) {
@@ -122,11 +153,18 @@ public class DefaultContext implements Context {
         }
     }
 
+    /** {@inheritDoc} */
     public <T> boolean addService(Class<? super T> type, T service) {
         ServiceEntry entry = new ServiceEntry(0, this, service, type);
         return addServiceEntry(entry);
     }
 
+    /**
+     * Adds the given entry to the list of services available in this context.
+     * 
+     * @param entry
+     * @return <code>true</code>, if the entry was added sucessfully
+     */
     private boolean addServiceEntry(ServiceEntry entry) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("adding service '" + entry.getType().getName() + "' to " + this);
@@ -136,7 +174,15 @@ public class DefaultContext implements Context {
         return result;
     }
 
-    protected Object removeServiceEntry(Context origin, Class type) {
+    /**
+     * Removes the first service entry from this context that matches the given
+     * type and origially was placed into the given "origin" context.
+     * 
+     * @param origin
+     * @param type
+     * @return the removed entry
+     */
+    protected ServiceEntry removeServiceEntry(Context origin, Class<?> type) {
         Iterator<ServiceEntry> it = serviceEntries.iterator();
         while (it.hasNext()) {
             ServiceEntry entry = it.next();
@@ -156,18 +202,27 @@ public class DefaultContext implements Context {
         // throw new IllegalArgumentException("Service with type='" +type.getName() + "' not found");
     }
 
-    public Object removeService(Class type) {
+    /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
+    public <T> T removeService(Class<? extends T> type) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("removeService(" + type.getName() + ")");
         }
-        return removeServiceEntry(this, type);
+        ServiceEntry result = removeServiceEntry(this, type);
+        if (result == null) {
+            return null;
+        } else {
+            return (T)result.getService();
+        }
     }
 
+    /** {@inheritDoc} */
     public List<ServiceEntry> getServiceEntries() {
         return this.unmodifiableServiceEntries;
     }
 
-    public ServiceEntry findService(Class type) {
+    /** {@inheritDoc} */
+    public ServiceEntry findService(Class<?> type) {
         ServiceEntry result = null;
         for (ServiceEntry entry : serviceEntries) {
             if (type.equals(entry.getType())) {
@@ -179,6 +234,8 @@ public class DefaultContext implements Context {
         return result;
     }
 
+    /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public <T> T getService(Class<? extends T> type) {
         ServiceEntry entry = findService(type);
         if (entry == null) {

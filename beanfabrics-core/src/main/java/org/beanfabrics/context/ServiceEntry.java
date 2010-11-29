@@ -13,9 +13,9 @@ public class ServiceEntry {
     private final Context origin;
     private final int distance;
     private final Object service;
-    private final Class type;
+    private final Class<?> type;
 
-    public ServiceEntry(int distance, Context origin, Object service, Class type) {
+    public ServiceEntry(int distance, Context origin, Object service, Class<?> type) {
         super();
         if (type == null) {
             throw new IllegalArgumentException("type==null");
@@ -41,7 +41,7 @@ public class ServiceEntry {
         return service;
     }
 
-    public Class getType() {
+    public Class<?> getType() {
         return type;
     }
 }

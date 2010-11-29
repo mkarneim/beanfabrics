@@ -9,10 +9,18 @@ package org.beanfabrics.context;
 import java.util.EventObject;
 
 /**
+ * An event which indicates that some change has occurred in a context.
+ * <p>
+ * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
 public class ContextEvent extends EventObject {
+    /**
+     * Constructs a {@link ContextEvent} object.
+     * 
+     * @param source the {@link Context} that originated the event
+     */
     public ContextEvent(Context source) {
         super(source);
     }
