@@ -9,8 +9,8 @@ package org.beanfabrics.model;
 import java.util.Map;
 
 /**
- * The {@link IMapPM} is the minimal interface for a presentation model that maps
- * key objects to presentation model objects.
+ * The {@link IMapPM} is the minimal interface for a presentation model that
+ * maps key objects to presentation model objects.
  * 
  * @author Michael Karneim
  */

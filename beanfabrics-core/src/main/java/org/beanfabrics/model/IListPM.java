@@ -20,18 +20,18 @@ import org.beanfabrics.event.ListListener;
  */
 public interface IListPM<T extends PresentationModel> extends PresentationModel, Iterable<T> {
     /**
-     * Adds a ListListener to this model.
+     * Adds the given listener.
      * 
-     * @param l
+     * @param listener
      */
-    public void addListListener(ListListener l);
+    public void addListListener(ListListener listener);
 
     /**
-     * Removes a ListListener from this model.
+     * Removes the given listener.
      * 
-     * @param l
+     * @param listener
      */
-    public void removeListListener(ListListener l);
+    public void removeListListener(ListListener listener);
 
     /**
      * Returns the number of elements in this collection.

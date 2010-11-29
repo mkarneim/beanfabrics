@@ -11,7 +11,11 @@ import java.util.EventListener;
 import org.beanfabrics.model.IListPM;
 
 /**
- * Listener for changes to {@link IListPM} objects.
+ * The listener interface for receiving {@link ListEvent}s.
+ * <p>
+ * A listener object created from this class can be registered with a
+ * {@link IListPM} using the {@link IListPM#addListListener(ListListener)}
+ * method.
  * 
  * @author Michael Karneim
  */

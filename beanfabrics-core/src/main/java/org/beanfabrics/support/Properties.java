@@ -94,7 +94,7 @@ class Properties {
     }
 
     private void onChange(String name, PresentationModel oldValue, PresentationModel newValue) {
-        if (listener!=null) {
+        if (listener != null) {
             listener.changed(name, oldValue, newValue);
         }
     }

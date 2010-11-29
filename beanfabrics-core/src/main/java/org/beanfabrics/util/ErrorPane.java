@@ -39,9 +39,8 @@ import javax.swing.UIManager;
 /**
  * The <code>ErrorPane</code> is a panel that shows a message beside an error
  * icon and - when checking the checkbox - the stack trace of a
- * {@link Throwable}.
- * 
- * TODO This class makes no sense in SWT environment. Any solution?
+ * {@link Throwable}. TODO This class makes no sense in SWT environment. Any
+ * solution?
  * 
  * @author Max Gensthaler
  */
@@ -247,7 +246,7 @@ public class ErrorPane extends JPanel {
             dialog = new ErrorPaneDialog((Dialog)window, title, message, cause);
         } else {
             // TODO perhaps we should try to find the topmost frame before using the fallback below
-            
+
             // fallback: window is null. Use a dummy frame as parent. 
             dialog = new ErrorPaneDialog(new Frame(), title, message, cause);
         }

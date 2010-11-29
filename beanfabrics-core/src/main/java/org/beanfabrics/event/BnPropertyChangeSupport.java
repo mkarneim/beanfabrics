@@ -14,19 +14,18 @@ package org.beanfabrics.event;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * This is a utility class that can be used by beans that support bound
- * properties.
+ * The {@link BnPropertyChangeSupport} is a utility class for handling listeners
+ * of bound properties.
  * 
  * @author Michael Karneim
  */
@@ -35,20 +34,18 @@ public class BnPropertyChangeSupport {
     private List<PropertyChangeListener> listeners;
 
     /**
-     * {@link HashMap} for managing listeners for specific properties. Maps
-     * property names to {@link PropertyChangeSupport} objects.
+     * {@link Map} for managing listeners on named properties. Maps each
+     * property name to a {@link BnPropertyChangeSupport} object.
      */
     private Map<String, BnPropertyChangeSupport> children;
 
     /**
      * The object to be provided as the "source" for any generated events.
-     * 
-     * @serial
      */
     private Object source;
 
     /**
-     * Constructs a <code>PropertyChangeSupport</code>.
+     * Constructs a {@link BnPropertyChangeSupport}.
      * 
      * @param sourceBean The bean to be given as the source for any events
      */
@@ -60,10 +57,10 @@ public class BnPropertyChangeSupport {
     }
 
     /**
-     * Add a {@link PropertyChangeListener} to the listener listCell. The
-     * listener is registered for all properties.
+     * Adds the given {@link PropertyChangeListener} for any property of the
+     * source bean.
      * 
-     * @param listener the <code>PropertyChangeListener</code> to be added
+     * @param listener the listener add
      */
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         if (listener instanceof WeakListener) {
@@ -78,11 +75,9 @@ public class BnPropertyChangeSupport {
     }
 
     /**
-     * Remove a {@link PropertyChangeListener} from the listener listCell. This
-     * removes a {@link PropertyChangeListener} that was registered for all
-     * properties.
+     * Removes the given {@link PropertyChangeListener}.
      * 
-     * @param listener the <code>PropertyChangeListener</code> to be removed
+     * @param listener the listener to remove
      */
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         if (listeners == null) {
@@ -97,12 +92,12 @@ public class BnPropertyChangeSupport {
     }
 
     /**
-     * Add a {@link PropertyChangeListener} for a specific property. The
-     * listener will be invoked only when a call on
-     * <code>firePropertyChange</code> names that specific property.
+     * Adds the given {@link PropertyChangeListener} for the specified property
+     * of the source bean. The listener will only receive events that are
+     * triggered by that property.
      * 
-     * @param propertyName the name of the property to listen on
-     * @param listener the PropertyChangeListener to be added
+     * @param propertyName the name of the property
+     * @param listener the listener to add
      */
 
     public synchronized void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
@@ -121,12 +116,11 @@ public class BnPropertyChangeSupport {
     }
 
     /**
-     * Remove a {@link PropertyChangeListener} for a specific property.
+     * Removes the given {@link PropertyChangeListener} for a specific property.
      * 
-     * @param propertyName the name of the property that was listened on
-     * @param listener the PropertyChangeListener to be removed
+     * @param propertyName the name of the property
+     * @param listener the listener to remove
      */
-
     public synchronized void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         if (children == null) {
             return;
@@ -143,19 +137,26 @@ public class BnPropertyChangeSupport {
         child.removePropertyChangeListener(listener);
     }
 
+    /**
+     * Report a bound property update to each registered listener. No event is
+     * fired if old and new are equal and non-null.
+     * 
+     * @param propertyName the property name of the property that was changed
+     * @param oldValue the old value of the property
+     * @param newValue the new value of the property
+     */
     public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         this.firePropertyChange(propertyName, oldValue, newValue, null);
     }
 
     /**
-     * Report a bound property update to any registered listeners. No event is
+     * Report a bound property update to each registered listener. No event is
      * fired if old and new are equal and non-null.
      * 
-     * @param propertyName the programmatic name of the property that was
-     *            changed
+     * @param propertyName the property name of the property that was changed
      * @param oldValue the old value of the property
      * @param newValue the new value of the property
-     * @param cause the event that caused the event
+     * @param cause the event that triggered the new event
      */
     public void firePropertyChange(String propertyName, Object oldValue, Object newValue, EventObject cause) {
         if (oldValue != null && newValue != null && oldValue.equals(newValue)) {
@@ -188,7 +189,7 @@ public class BnPropertyChangeSupport {
     }
 
     /**
-     * Fire an existing {@link PropertyChangeEvent} to any registered listeners.
+     * Fire thw given {@link PropertyChangeEvent} to each registered listener.
      * No event is fired if the given event's old and new values are equal and
      * non-<code>null</code>.
      * 
@@ -225,11 +226,11 @@ public class BnPropertyChangeSupport {
     }
 
     /**
-     * Check if there are any listeners for a specific property.
+     * Returns <code>true</code> if there are any listeners for the property
+     * with the specified name.
      * 
      * @param propertyName the property name
-     * @return <code>true</code> if there are ore or more listeners for the
-     *         given property
+     * @return <code>true</code> if there are any listeners
      */
     public synchronized boolean hasListeners(String propertyName) {
         if (listeners != null && !listeners.isEmpty()) {
@@ -245,68 +246,113 @@ public class BnPropertyChangeSupport {
         return false;
     }
 
+    /**
+     * Returns <code>true</code> if there are any listeners registered at all.
+     * 
+     * @return <code>true</code> if there are any listeners for any property
+     */
     public boolean hasListeners() {
         return !((this.listeners == null || this.listeners.isEmpty()) && (this.children == null || this.children.isEmpty()));
     }
 
-    private WeakWrapper getWeakWrapper(PropertyChangeListener l) {
-        WeakWrapper result = this.weakWrapper.get(l);
+    /**
+     * Returns the {@link WeakWrapper} for the given listener.
+     * 
+     * @param l
+     * @return the WeakWrapper for the given listener
+     */
+    private WeakWrapper getWeakWrapper(PropertyChangeListener listener) {
+        WeakWrapper result = this.weakWrapper.get(listener);
         if (result == null) {
-            result = new WeakWrapper(l);
-            this.weakWrapper.put(l, result);
+            result = new WeakWrapper(listener);
+            this.weakWrapper.put(listener, result);
         }
         return result;
     }
 
+    /**
+     * Removes the given {@link WeakWrapper} from the weakWrapper cache.
+     * 
+     * @param wrapper
+     */
     private void removeWeakWrapper(WeakWrapper wrapper) {
         this.weakWrapper.remove(wrapper);
     }
 
-    private void removeUnusedWeakWrappers(List listeners) {
-        LinkedList toRemove = new LinkedList();
-        final int len = listeners.size();
-        for (int i = 0; i < len; ++i) {
-            Object l = listeners.get(i);
-            if (l instanceof WeakWrapper && !((WeakWrapper)l).hasTarget()) {
+    /**
+     * Removes all unused WeakWrapper instances from the given list of
+     * listeners.
+     * 
+     * @param listeners
+     */
+    private void removeUnusedWeakWrappers(Collection<PropertyChangeListener> listeners) {
+        List<PropertyChangeListener> toRemove = new ArrayList<PropertyChangeListener>();
+        for (PropertyChangeListener l : listeners) {
+            if (l instanceof WeakWrapper && ((WeakWrapper)l).isCleared()) {
                 toRemove.add(l);
             }
         }
         listeners.removeAll(toRemove);
     }
 
-    // //
-
+    /**
+     * The {@link WeakWrapper} is a delegator that forwards
+     * {@link PropertyChangeEvent}s to a weakly referenced delegate object as
+     * long as that reference has not been cleared.
+     */
     private static class WeakWrapper implements PropertyChangeListener {
         private WeakReference<PropertyChangeListener> ref;
 
-        public WeakWrapper(PropertyChangeListener l) {
-            this.setTarget(l);
+        /**
+         * Constructs a {@link WeakWrapper} for the given delegate.
+         * 
+         * @param aDelegate
+         */
+        WeakWrapper(PropertyChangeListener aDelegate) {
+            this.setDelegate(aDelegate);
         }
 
-        public boolean hasTarget() {
-            return this.ref.get() != null;
+        /**
+         * Returns <code>true</code>, if the delegate reference has been
+         * cleared.
+         * 
+         * @return <code>true</code>, if the delegate reference has been cleared
+         */
+        boolean isCleared() {
+            return this.ref.get() == null;
         }
 
+        /** {@inheritDoc} */
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
-            PropertyChangeListener listener = this.getTarget();
+            PropertyChangeListener listener = this.getDelegate();
             if (listener == null) {
                 return;
             }
             listener.propertyChange(evt);
         }
 
-        protected PropertyChangeListener getTarget() {
+        /**
+         * Returns the delegate.
+         * 
+         * @return the delegate
+         */
+        PropertyChangeListener getDelegate() {
             if (this.ref == null) {
                 return null;
             }
             return this.ref.get();
         }
 
-        protected void setTarget(PropertyChangeListener l) {
-            if (l == null) {
+        /**
+         * Sets the delegate.
+         * 
+         * @param aDelegate
+         */
+        void setDelegate(PropertyChangeListener aDelegate) {
+            if (aDelegate == null) {
                 this.ref = null;
             } else {
-                this.ref = new WeakReference<PropertyChangeListener>(l);
+                this.ref = new WeakReference<PropertyChangeListener>(aDelegate);
             }
         }
     }

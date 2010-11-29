@@ -6,10 +6,21 @@
 // methods and fields are documented
 package org.beanfabrics.event;
 
+import java.beans.PropertyChangeEvent;
 import java.util.EventObject;
 import java.util.Iterator;
 
+import org.beanfabrics.model.PresentationModel;
+
 /**
+ * An event which indicates that some change has occurred in some
+ * {@link PresentationModel}.
+ * <p>
+ * This event is a subclass of {@link PropertyChangeEvent} that implements the
+ * {@link FollowUpEvent}. A {@link FollowUpEvent} is created when an event is
+ * passed from a child node to a parent node. By calling {@link #getCause()} you
+ * can track the chain of events from the received event to the orignal trigger.
+ * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
@@ -19,10 +30,27 @@ public class BnPropertyChangeEvent extends java.beans.PropertyChangeEvent implem
      */
     private EventObject cause;
 
+    /**
+     * Constructs a {@link BnPropertyChangeEvent} without a trigger.
+     * 
+     * @param source
+     * @param propertyName
+     * @param oldValue
+     * @param newValue
+     */
     public BnPropertyChangeEvent(Object source, String propertyName, Object oldValue, Object newValue) {
         this(source, propertyName, oldValue, newValue, null);
     }
 
+    /**
+     * Constructs a {@link BnPropertyChangeEvent}.
+     * 
+     * @param source
+     * @param propertyName
+     * @param oldValue
+     * @param newValue
+     * @param cause
+     */
     public BnPropertyChangeEvent(Object source, String propertyName, Object oldValue, Object newValue, EventObject cause) {
         super(source, propertyName, oldValue, newValue);
         this.cause = cause;

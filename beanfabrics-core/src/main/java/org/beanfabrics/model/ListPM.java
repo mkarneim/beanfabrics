@@ -34,7 +34,6 @@ import org.beanfabrics.event.ElementsReplacedEvent;
 import org.beanfabrics.event.ElementsSelectedEvent;
 import org.beanfabrics.event.ListListener;
 import org.beanfabrics.event.ListSupport;
-import org.beanfabrics.support.PropertySupport;
 import org.beanfabrics.util.Interval;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
@@ -1179,7 +1178,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
         /** {@inheritDoc} */
         public boolean retainAll(Collection<?> c) {
-        	Collection diff = new LinkedHashSet(this);
+            Collection diff = new LinkedHashSet(this);
             diff.removeAll(c);
             if (!diff.isEmpty()) {
                 return this.removeAll(diff);

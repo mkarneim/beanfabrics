@@ -29,9 +29,8 @@ import org.beanfabrics.event.OptionsListener;
  * </ul>
  * 
  * @param <K> the key type used in this options.
- * @author Michael Karneim
+ * @author Michael Karneim TODO introduce an interface for this implementation.
  */
-//TODO (rk) Options should have an index
 public class Options<K> {
     private final Map<K, String> map = new LinkedHashMap<K, String>();
     private final List<String> values = new ArrayList<String>();

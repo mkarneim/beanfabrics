@@ -7,6 +7,7 @@
 package org.beanfabrics.support;
 
 import org.beanfabrics.model.PresentationModel;
+
 /**
  * @author Michael Karneim
  */

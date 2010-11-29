@@ -58,15 +58,16 @@ public class CompositeValidationState extends ValidationState {
         hashCode = 31 * hashCode + (children == null ? 0 : children.hashCode());
         return hashCode;
     }
-    
+
     /**
-     * Creates a new {@link CompositeValidationState} only if the specified list of states contains at least one
-     * {@link ValidationState} object.
+     * Creates a new {@link CompositeValidationState} only if the specified list
+     * of states contains at least one {@link ValidationState} object.
+     * 
      * @param messagePrefix
      * @param states
      * @return the new {@link CompositeValidationState}
      */
-    public static CompositeValidationState create(String messagePrefix, ValidationState...states ) {
+    public static CompositeValidationState create(String messagePrefix, ValidationState... states) {
         if (states == null) {
             return null;
         } else {
@@ -75,12 +76,12 @@ public class CompositeValidationState extends ValidationState {
                 if (state != null) {
                     detailState = state;
                     break;
-                }                
+                }
             }
-            if ( detailState == null) {
+            if (detailState == null) {
                 return null;
             } else {
-                return new CompositeValidationState(messagePrefix+detailState.getMessage(), states);
+                return new CompositeValidationState(messagePrefix + detailState.getMessage(), states);
             }
         }
     }

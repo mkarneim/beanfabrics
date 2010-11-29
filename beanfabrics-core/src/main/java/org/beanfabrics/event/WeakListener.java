@@ -6,11 +6,14 @@
 // methods and fields are documented
 package org.beanfabrics.event;
 
+import java.lang.ref.WeakReference;
+
 /**
- * Marker interface that indicates, that marked instances (listeners) should be
- * treated as weak references, that means, that when an instance is found to be
- * only weak reachable and reachable by the listener listCell, it can be removed
- * safely from the listener listCell.
+ * The {@link WeakListener} is a marker interface for listener classes.
+ * <p>
+ * When registered with an event source the listener should be stored using a
+ * {@link WeakReference}. When an listener is found to be only weak reachable it
+ * can be unregistered safely from the event source.
  * 
  * @author Michael Karneim
  */

@@ -8,27 +8,48 @@ package org.beanfabrics.event;
 
 import java.util.EventObject;
 
+import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Path;
 import org.beanfabrics.model.PresentationModel;
 
 /**
+ * An event which indicates that some change has occurred in some
+ * {@link IModelProvider}.
+ * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
 public class ModelProviderEvent extends EventObject {
-    private final PresentationModel contentRoot;
+    private final PresentationModel model;
     private final Path path;
 
-    public ModelProviderEvent(Object source, PresentationModel contentRoot, Path path) {
+    /**
+     * Constructs a {@link ModelProviderEvent}.
+     * 
+     * @param source
+     * @param aModel
+     * @param path
+     */
+    public ModelProviderEvent(IModelProvider source, PresentationModel aModel, Path path) {
         super(source);
-        this.contentRoot = contentRoot;
+        this.model = aModel;
         this.path = path;
     }
 
-    public PresentationModel getContentRoot() {
-        return this.contentRoot;
+    /**
+     * The model involed in this event.
+     * 
+     * @return model involed in this event.
+     */
+    public PresentationModel getModel() {
+        return this.model;
     }
 
+    /**
+     * The path involved in this event.
+     * 
+     * @return path involved in this event
+     */
     public Path getPath() {
         return path;
     }

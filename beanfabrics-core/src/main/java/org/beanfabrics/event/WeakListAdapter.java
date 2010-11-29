@@ -7,6 +7,10 @@
 package org.beanfabrics.event;
 
 /**
+ * The {@link WeakListAdapter} is a {@link ListAdapter} marked with the
+ * {@link WeakListener} interface.
+ * 
+ * @see WeakListener What is a weak listener?
  * @author Michael Karneim
  */
 public class WeakListAdapter extends ListAdapter implements WeakListener {

@@ -11,11 +11,19 @@ import java.util.EventObject;
 import org.beanfabrics.model.Options;
 
 /**
+ * An event which indicates that some change has occurred in some
+ * {@link Options}.
+ * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
 public class OptionsEvent extends EventObject {
-    public OptionsEvent(Options source) {
+    /**
+     * Consructs a new {@link OptionsEvent}.
+     * 
+     * @param source
+     */
+    public OptionsEvent(Options<?> source) {
         super(source);
     }
 }

@@ -106,7 +106,7 @@ public class DefaultContext implements Context {
     }
 
     /**
-     * Fires a parentAdded-event.
+     * Fires a parentAdded-event to each registered listener.
      * 
      * @param parent the parent this context has been added to
      */
@@ -118,7 +118,7 @@ public class DefaultContext implements Context {
     }
 
     /**
-     * Fires a parentRemoved-event.
+     * Fires a parentRemoved-event to each registered listener.
      * 
      * @param parent the parent this context has been removed from.
      */
@@ -130,7 +130,7 @@ public class DefaultContext implements Context {
     }
 
     /**
-     * Fires a service-added-event.
+     * Fires a service-added-event to each registered listener.
      * 
      * @param entry the service entry that has been added to this context
      */
@@ -142,7 +142,7 @@ public class DefaultContext implements Context {
     }
 
     /**
-     * Fires a service-removed-event.
+     * Fires a service-removed-event to each registered listener.
      * 
      * @param entry the service entry that has been removed from this context
      */
