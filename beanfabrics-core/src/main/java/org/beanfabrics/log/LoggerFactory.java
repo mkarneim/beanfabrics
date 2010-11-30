@@ -10,24 +10,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Beanfabrics classes use this <code>LoggerFactory</code> for producing a
- * {@link Logger} instance.
+ * The {@link LoggerFactory} is used for creating (or accessing cached)
+ * {@link Logger} objects. Which logger implementation is used depends on
+ * configuration. At first request the <code>LoggerFactory</code> <b>chooses</b>
+ * the <b>concrete constructor</b> by <b>evaluating the following rules</b> and
+ * reuses it for every subsequent request.
+ * <ol>
+ * <li>The <code>LoggerFactory</code> checks if the system property
+ * "org.beanfabrics.log.LoggerFactory.loggerclass" for the name of a valid class
+ * with a valid constructor. The constructor is valid if it is public, returns
+ * an instance of {@link Logger}, and requires a single parameter of type
+ * {@link Class}. This parameter is used as the logging category.</li>
+ * <li>The <code>LoggerFactory</code> checks if <a
+ * href="http://www.slf4j.org">slf4j</a> is in the classpath. If that is the
+ * case, the factory uses the constructor of {@link Slf4jLogger}.</li>
+ * <li>If none of the above is true, the <code>LoggerFactory</code> falls back
+ * to the default {@link Jdk14Logger}, that delegates to
+ * {@link java.util.logging.Logger}.</li>
+ * </ol>
  * <p>
- * {@link Slf4jLogger} is produced as default if the SLF4J api is included in
- * the classpath. Otherwise a {@link Jdk14Logger} is produced.
- * <p>
- * You can configure this factory to produceFa custom <code>Logger</code> by
- * <ul>
- * <li>calling the method {@link #setLoggerClass(Class)}
- * <li>or by setting the system property
- * "org.beanfabrics.log.LoggerFactory.loggerclass" to the <code>Logger</code>'s
- * classname.
- * </ul>
- * Beanfabrics uses this 'own' <code>LoggerFactory</code> and
- * <code>Logger</code> to be runtime independent of any foreign library.
+ * Usually Beanfabrics classes store their logger reference in a static field,
+ * hence these logger instances are created when the calling class is loaded by
+ * the classloader.
  * 
- * @see <a href="http://www.beanfabrics.org/index.php/Logging_Example">Logging
- *      Example</a>
+ * @see <a
+ *      href="http://www.beanfabrics.org/index.php/Logging_Example">Logging&nbsp;Example</a>
  * @author Michael Karneim
  * @author Max Gensthaler
  */

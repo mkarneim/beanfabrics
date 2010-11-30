@@ -5,12 +5,13 @@
 package org.beanfabrics.log;
 
 /**
- * A {@link Logger} that delegates all logging to <a
+ * The {@link Slf4jLogger} us a logging delegator that delegates to <a
  * href="http://www.slf4j.org">Simple Logging Facade for Java</a>.
  * <p>
- * To use the SLF4J remember to import the required libraries to <a
- * href="http://www.slf4j.org/manual.html#binding">bind with the intended
- * logging framework at deployment time</a>.
+ * To use SLF4J please remember to import the required libraries. For more
+ * information please see the <a
+ * href="http://www.beanfabrics.org/index.php/Logging_Example"
+ * >Logging&nbsp;Example</a>.
  * 
  * @author Max Gensthaler
  */

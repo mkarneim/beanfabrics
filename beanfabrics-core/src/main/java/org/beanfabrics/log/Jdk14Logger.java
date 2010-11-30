@@ -7,8 +7,8 @@ package org.beanfabrics.log;
 import java.util.logging.Level;
 
 /**
- * A {@link Logger} that delegates all logging to the Java
- * {@link java.util.logging.Logger}.
+ * The {@link Jdk14Logger} is a {@link Logger} delegator that delegates logging
+ * requests to the Java {@link java.util.logging.Logger}.
  * 
  * @author Max Gensthaler
  */

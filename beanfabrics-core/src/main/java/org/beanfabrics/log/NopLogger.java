@@ -5,7 +5,8 @@
 package org.beanfabrics.log;
 
 /**
- * A {@link Logger} that doesn't write any log entries.
+ * The {@link NopLogger} is a logging delegator the doesn't delegate any log
+ * messages.
  * 
  * @author Michael Karneim
  */

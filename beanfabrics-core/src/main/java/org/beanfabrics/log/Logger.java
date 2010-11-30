@@ -7,14 +7,11 @@
 package org.beanfabrics.log;
 
 /**
- * Beanfabrics classes use instances of this logger to log errors, warnings,
- * infos ...
- * <p>
- * Beanfabrics uses this 'own' <code>LoggerFactory</code> and
- * <code>Logger</code> to be runtime independent of any foreign library.
+ * The {@link Logger} is the interface for several logging delegators available
+ * for Beanfabrics.
  * 
- * @see <a href="http://www.beanfabrics.org/index.php/Logging_Example">Logging
- *      Example</a>
+ * @see <a
+ *      href="http://www.beanfabrics.org/index.php/Logging_Example">Logging&nbsp;Example</a>
  * @author Max Gensthaler
  * @author Michael Karneim
  */
