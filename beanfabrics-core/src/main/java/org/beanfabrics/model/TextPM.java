@@ -182,7 +182,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
         this.getPropertyChangeSupport().firePropertyChange("options", old, this.options);
     }
 
-    public Comparable getComparable() {
+    public Comparable<?> getComparable() {
         return new TextComparable();
     }
 

@@ -26,10 +26,6 @@ public class AbstractValuePMTest {
                 return isEmpty;
             }
 
-            public Comparable getComparable() {
-                // TODO Auto-generated method stub
-                return null;
-            }
         };
         return result;
     }

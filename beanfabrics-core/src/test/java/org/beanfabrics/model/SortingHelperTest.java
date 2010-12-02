@@ -155,7 +155,7 @@ public class SortingHelperTest {
         }
 
         @Override
-        public Comparable getComparable() {
+        public Comparable<?> getComparable() {
             return name.getComparable();
         }
 

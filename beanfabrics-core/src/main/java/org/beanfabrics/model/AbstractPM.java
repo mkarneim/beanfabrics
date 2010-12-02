@@ -49,7 +49,7 @@ public abstract class AbstractPM extends ValidatableBean implements Presentation
     }
 
     /** {@inheritDoc} */
-    public Comparable getComparable() {
+    public Comparable<?> getComparable() {
         return null;
     }
 

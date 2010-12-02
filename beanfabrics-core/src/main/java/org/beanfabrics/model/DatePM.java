@@ -100,7 +100,7 @@ public class DatePM extends TextPM implements IDatePM {
         }
     }
 
-    public Comparable getComparable() {
+    public Comparable<?> getComparable() {
         return new DateComparable();
     }
 

@@ -249,7 +249,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
     }
 
     @Override
-    public Comparable getComparable() {
+    public Comparable<?> getComparable() {
         return new BigDecimalComparable();
     }
 

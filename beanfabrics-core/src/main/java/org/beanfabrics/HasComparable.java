@@ -4,6 +4,18 @@
  */
 package org.beanfabrics;
 
+/**
+ * The {@link HasComparable} is the interface of classes that do not implement
+ * the {@link Comparable} interface itself but provide access to a comparable
+ * substitute.
+ * 
+ * @author Michael Karneim
+ */
 public interface HasComparable {
-    public Comparable getComparable();
+    /**
+     * Returns the comparable substitute.
+     * 
+     * @return the comparable substitute
+     */
+    public Comparable<?> getComparable();
 }

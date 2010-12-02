@@ -50,7 +50,7 @@ public class IconPM extends AbstractValuePM implements IIconPM {
         return icon == null;
     }
 
-    public Comparable getComparable() {
+    public Comparable<?> getComparable() {
         return comparable;
     }
 
