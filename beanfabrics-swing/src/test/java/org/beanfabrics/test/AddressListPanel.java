@@ -18,9 +18,8 @@ import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
 import org.beanfabrics.View;
 import org.beanfabrics.swing.BnButton;
-import org.beanfabrics.swing.table.BnColumn;
-import org.beanfabrics.swing.table.BnTable;
 import org.beanfabrics.swing.table.BnColumnBuilder;
+import org.beanfabrics.swing.table.BnTable;
 
 public class AddressListPanel extends JPanel implements View<AddressListPM>, ModelSubscriber {
     private final Link link = new Link(this);
@@ -133,13 +132,8 @@ public class AddressListPanel extends JPanel implements View<AddressListPM>, Mod
             bnTable = new BnTable();
             bnTable.setPath(new Path("elements"));
             bnTable.setModelProvider(getLocalModelProvider());
-            bnTable.setColumns(new BnColumnBuilder()
-            	      .addColumn().withPath("appartment").withName("Appartment")
-            	      .addColumn().withPath("street").withName("Street")
-            	      .addColumn().withPath("city").withName("City")
-            	      .addColumn().withPath("zip").withName("ZIP")
-            	      .addColumn().withPath("country").withName("Country")
-            	      .build());
+            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("appartment").withName("Appartment").addColumn().withPath("street").withName("Street").addColumn().withPath("city").withName("City").addColumn().withPath("zip")
+                    .withName("ZIP").addColumn().withPath("country").withName("Country").build());
         }
         return bnTable;
     }

@@ -61,7 +61,7 @@ public class RegexTesterPM extends AbstractPM {
      * 
      * @return true, if the regex is valid
      */
-    @Validation(path="match")
+    @Validation(path = "match")
     public boolean isMatchEnabled() {
         return regex.isValid();
     }

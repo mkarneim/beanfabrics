@@ -18,8 +18,8 @@ import org.beanfabrics.View;
 import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.BnTextArea;
 import org.beanfabrics.swing.BnTextField;
-import org.beanfabrics.swing.table.BnTable;
 import org.beanfabrics.swing.table.BnColumnBuilder;
+import org.beanfabrics.swing.table.BnTable;
 
 /*
  * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
@@ -250,11 +250,8 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
         if (bnTable == null) {
             bnTable = new BnTable();
             bnTable.setPath(new org.beanfabrics.Path("this.groups"));
-            bnTable.setColumns(new BnColumnBuilder()
-            	      .addColumn().withPath("this.findIndex").withName("FindIndex").withWidth(80).withWidthFixed(true)
-            	      .addColumn().withPath("this.groupIndex").withName("GroupIndex").withWidth(80).withWidthFixed(true)
-            	      .addColumn().withPath("this.text").withName("Text")
-            	      .build());
+            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("this.findIndex").withName("FindIndex").withWidth(80).withWidthFixed(true).addColumn().withPath("this.groupIndex").withName("GroupIndex").withWidth(80).withWidthFixed(true)
+                    .addColumn().withPath("this.text").withName("Text").build());
             bnTable.setModelProvider(getLocalModelProvider());
         }
         return bnTable;

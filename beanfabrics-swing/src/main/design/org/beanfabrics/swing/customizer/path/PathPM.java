@@ -5,8 +5,8 @@
 package org.beanfabrics.swing.customizer.path;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathInfo;
-import org.beanfabrics.meta.PresentationModelInfo;
+import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.TextPM;
@@ -24,16 +24,16 @@ import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 public class PathPM extends TextPM {
     OperationPM choosePath = new OperationPM();
 
-    private PathInfo root;
-    private PresentationModelInfo requiredModelInfo;
+    private PathElementInfo rootElementInfo;
+    private TypeInfo requiredModelTypeInfo;
 
     public PathPM() {
         PMManager.setup(this);
     }
 
     public void setPathContext(PathContext pathContext) {
-        this.root = pathContext.root;
-        this.requiredModelInfo = pathContext.requiredModelInfo;
+        this.rootElementInfo = pathContext.root;
+        this.requiredModelTypeInfo = pathContext.requiredModelTypeInfo;
         this.setText(Path.getPathString(pathContext.initialPath));
         this.revalidateProperties();
     }
@@ -61,11 +61,11 @@ public class PathPM extends TextPM {
 
     @Validation(path = "choosePath")
     boolean canChoosePath() {
-        return this.root != null;
+        return this.rootElementInfo != null;
     }
 
     private PathContext getPathContext() {
-        PathContext result = new PathContext(root, requiredModelInfo, getPath());
+        PathContext result = new PathContext(rootElementInfo, requiredModelTypeInfo, getPath());
         return result;
     }
 
@@ -84,14 +84,14 @@ public class PathPM extends TextPM {
     @SortOrder(2)
     boolean isComplete() {
         Path path = new Path(this.getText());
-        return (this.root == null || this.root.getPathInfo(path) != null);
+        return (this.rootElementInfo == null || this.rootElementInfo.getPathInfo(path) != null);
     }
 
     @Validation(message = "The object at the end of this path does not match the required type")
     @SortOrder(3)
     boolean isCorrect() {
         Path path = new Path(this.getText());
-        return root == null || requiredModelInfo == null || requiredModelInfo.isAssignableFrom(this.root.getPathInfo(path).getModelInfo());
+        return rootElementInfo == null || requiredModelTypeInfo == null || requiredModelTypeInfo.isAssignableFrom(this.rootElementInfo.getPathInfo(path).getTypeInfo());
     }
 
 }

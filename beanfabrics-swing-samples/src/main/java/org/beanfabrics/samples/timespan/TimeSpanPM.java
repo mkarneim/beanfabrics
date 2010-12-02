@@ -16,77 +16,78 @@ import org.beanfabrics.support.Validation;
  * start date must be before or equal the end date.
  */
 public class TimeSpanPM extends AbstractPM {
-	private static final long MS_PER_DAY = 1000 * 60 * 60 * 24;
-	public final DatePM start = new DatePM();
-	public final DatePM end = new DatePM();
-	public final IntegerPM days = new IntegerPM();
+    private static final long MS_PER_DAY = 1000 * 60 * 60 * 24;
+    public final DatePM start = new DatePM();
+    public final DatePM end = new DatePM();
+    public final IntegerPM days = new IntegerPM();
 
-	public TimeSpanPM() {
-		PMManager.setup(this);
-		start.setMandatory(true);
-		end.setMandatory(true);
-		days.setEditable(false);
-	}
+    public TimeSpanPM() {
+        PMManager.setup(this);
+        start.setMandatory(true);
+        end.setMandatory(true);
+        days.setEditable(false);
+    }
 
-	public TimeSpanPM(Date startDate, Date endDate) {
-		this();
-		start.setDate(startDate);
-		end.setDate(endDate);
-	}
+    public TimeSpanPM(Date startDate, Date endDate) {
+        this();
+        start.setDate(startDate);
+        end.setDate(endDate);
+    }
 
-	/**
-	 * Validates start date and end date if their time span is a positive period.
-	 * 
-	 * @return <code>true</code>, if the time span is a positive period
-	 */
-	@Validation(path = { "start", "end" }, message = "This is not a valid time span")
-	public boolean isPositivePeriod() {
-		try {
-			Date startDate = start.getDate();
-			Date endDate = end.getDate();
-			if (startDate == null || endDate == null) {
-				// open periods are 'positive'
-				return true;
-			}
-			return startDate.before(endDate) || startDate.equals(endDate);
-		} catch (ConversionException ex) {
-			// at least one of the date fields can't be converted to a Date object
-			return false;
-		}
-	}
-	
-	/**
-	 * Calculates the number of days between start and end date, and
-	 * updates the "days" field with this value. This method is called 
-	 * automatically when any of the date fields change.
-	 */
-	@OnChange(path = { "start", "end" })
-	public void updateDays() {
-		if (!isValid()) {
-			days.setText("");
-		} else {
-			GregorianCalendar startCal = new GregorianCalendar();
-			startCal.setTime(start.getDate());
-			GregorianCalendar endCal = new GregorianCalendar();
-			endCal.setTime(end.getDate());
-			days.setLong((endCal.getTimeInMillis() - startCal.getTimeInMillis()) / MS_PER_DAY);
-		}
-	}
+    /**
+     * Validates start date and end date if their time span is a positive
+     * period.
+     * 
+     * @return <code>true</code>, if the time span is a positive period
+     */
+    @Validation(path = { "start", "end" }, message = "This is not a valid time span")
+    public boolean isPositivePeriod() {
+        try {
+            Date startDate = start.getDate();
+            Date endDate = end.getDate();
+            if (startDate == null || endDate == null) {
+                // open periods are 'positive'
+                return true;
+            }
+            return startDate.before(endDate) || startDate.equals(endDate);
+        } catch (ConversionException ex) {
+            // at least one of the date fields can't be converted to a Date object
+            return false;
+        }
+    }
 
-	public Date getStartDate() {
-		return start.getDate();
-	}
+    /**
+     * Calculates the number of days between start and end date, and updates the
+     * "days" field with this value. This method is called automatically when
+     * any of the date fields change.
+     */
+    @OnChange(path = { "start", "end" })
+    public void updateDays() {
+        if (!isValid()) {
+            days.setText("");
+        } else {
+            GregorianCalendar startCal = new GregorianCalendar();
+            startCal.setTime(start.getDate());
+            GregorianCalendar endCal = new GregorianCalendar();
+            endCal.setTime(end.getDate());
+            days.setLong((endCal.getTimeInMillis() - startCal.getTimeInMillis()) / MS_PER_DAY);
+        }
+    }
 
-	public void setStartDate(Date startDate) {
-		this.start.setDate(startDate);
-	}
+    public Date getStartDate() {
+        return start.getDate();
+    }
 
-	public Date getEndDate() {
-		return end.getDate();
-	}
+    public void setStartDate(Date startDate) {
+        this.start.setDate(startDate);
+    }
 
-	public void setEndDate(Date endDate) {
-		this.end.setDate(endDate);
-	}
-	
+    public Date getEndDate() {
+        return end.getDate();
+    }
+
+    public void setEndDate(Date endDate) {
+        this.end.setDate(endDate);
+    }
+
 }

@@ -2,11 +2,8 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics.meta;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,61 +13,82 @@ import org.beanfabrics.support.PropertySupport;
 import org.beanfabrics.support.PropertySupport.PropertyDeclaration;
 
 /**
- * The <code>MetadataRegistry</code> is a registry for presentation model meta
- * data.
+ * The {@link MetadataRegistry} is a registry for presentation model meta data.
  * 
  * @author Michael Karneim
  */
 public class MetadataRegistry {
-
+    /**
+     * Constructs a {@link MetadataRegistry}.
+     */
     public MetadataRegistry() {
         super();
     }
 
-    private final Map<Class<? extends PresentationModel>, PresentationModelInfo> modelInfos = new HashMap<Class<? extends PresentationModel>, PresentationModelInfo>();
+    private final Map<Class<? extends PresentationModel>, TypeInfo> modelTypes = new HashMap<Class<? extends PresentationModel>, TypeInfo>();
 
-    public PresentationModelInfo getPresentationModelInfo(Class<? extends PresentationModel> modelClass) {
-        PresentationModelInfo result = modelInfos.get(modelClass);
+    /**
+     * Returns the type information for the given model class. If the type is
+     * not already registered it is created and registered on-the-fly.
+     * 
+     * @param modelClass
+     * @return the type information for the given model class
+     */
+    public TypeInfo getTypeInfo(Class<? extends PresentationModel> modelClass) {
+        TypeInfo result = modelTypes.get(modelClass);
         if (result == null) {
-            result = createPresentationModelInfo(modelClass);
+            result = createTypeInfo(modelClass);
         }
         return result;
     }
 
-    public PathInfo getPathInfo(Class<? extends PresentationModel> modelClass) {
+    /**
+     * Returns the path element information for the given model class.
+     * 
+     * @param modelClass
+     * @return the path element information for the given model class
+     */
+    public PathElementInfo getPathElementInfo(Class<? extends PresentationModel> modelClass) {
         if (modelClass == null) {
             throw new IllegalArgumentException("modelClass==null");
         }
-        PresentationModelInfo typeDesc = getPresentationModelInfo(modelClass);
-        return new PathInfo(typeDesc);
+        TypeInfo typeDesc = getTypeInfo(modelClass);
+        return new PathElementInfo(typeDesc);
     }
 
-    public PathInfo getPathInfo(PresentationModelInfo modelInfo) {
-        if (modelInfo == null) {
-            throw new IllegalArgumentException("modelInfo==null");
+    /**
+     * Returns the path element information for the given type info.
+     * 
+     * @param typeInfo
+     * @return the path element information for the given type info
+     */
+    public PathElementInfo getPathElementInfo(TypeInfo typeInfo) {
+        if (typeInfo == null) {
+            throw new IllegalArgumentException("modelType==null");
         }
-        return new PathInfo(modelInfo);
+        return new PathElementInfo(typeInfo);
     }
 
-    private PresentationModelInfo createPresentationModelInfo(Class<? extends PresentationModel> modelClass) {
+    /**
+     * Creates the type information of the given model class.
+     * 
+     * @param modelClass
+     * @return the type information of the given model class
+     */
+    private TypeInfo createTypeInfo(Class<? extends PresentationModel> modelClass) {
         if (modelClass == null) {
             throw new IllegalArgumentException("modelClass==null");
         }
-        PresentationModelInfo result = new PresentationModelInfo(modelClass);
-        modelInfos.put(modelClass, result);
-        List<PropertyInfo> propertyInfos = createPropertyInfos(modelClass, result);
-        result.setProperties(propertyInfos);
-        return result;
-    }
+        TypeInfo result = new TypeInfo(modelClass);
+        modelTypes.put(modelClass, result);
 
-    private List<PropertyInfo> createPropertyInfos(Class<? extends PresentationModel> modelClass, PresentationModelInfo modelInfo) {
         List<PropertyDeclaration> propDecls = PropertySupport.findAllPropertyDeclarations(modelClass);
-        List<PropertyInfo> result = new ArrayList<PropertyInfo>(propDecls.size());
         for (PropertySupport.PropertyDeclaration decl : propDecls) {
             String name = decl.getName();
-            PresentationModelInfo typeDesc = getPresentationModelInfo(decl.getType());
-            result.add(new PropertyInfo(modelInfo, name, decl.getMember(), typeDesc));
+            TypeInfo typeDesc = getTypeInfo(decl.getType());
+            result.addProperty(name, decl.getMember(), typeDesc);
         }
         return result;
     }
+
 }

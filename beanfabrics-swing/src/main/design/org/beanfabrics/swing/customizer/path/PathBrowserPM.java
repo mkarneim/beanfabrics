@@ -7,8 +7,8 @@ package org.beanfabrics.swing.customizer.path;
 import java.net.URL;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathInfo;
-import org.beanfabrics.meta.PresentationModelInfo;
+import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.IconTextPM;
 import org.beanfabrics.model.MapPM;
@@ -34,16 +34,16 @@ public class PathBrowserPM extends AbstractPM {
 
     TextPM currentPath = new TextPM();
     TextPM currentType = new TextPM();
-    MapPM<PathInfo, PathInfoPM> children = new MapPM<PathInfo, PathInfoPM>();
+    MapPM<PathElementInfo, PathInfoPM> children = new MapPM<PathElementInfo, PathInfoPM>();
     OperationPM gotoSelectedChild = new OperationPM();
     OperationPM gotoCurrentPath = new OperationPM();
     OperationPM gotoParent = new OperationPM();
     IconTextPM status = new IconTextPM();
 
-    private PathInfo root;
-    private PathInfo currentOwner;
+    private PathElementInfo rootElement;
+    private PathElementInfo currentElement;
 
-    private PresentationModelInfo requiredModelInfo;
+    private TypeInfo requiredModelTypeInfo;
 
     public PathBrowserPM() {
         PMManager.setup(this);
@@ -57,20 +57,20 @@ public class PathBrowserPM extends AbstractPM {
         if (pathContext == null) {
             throw new IllegalArgumentException("pathContext==null");
         }
-        this.root = pathContext.root;
+        this.rootElement = pathContext.root;
         this.currentPath.setText(Path.getPathString(pathContext.initialPath));
-        this.requiredModelInfo = pathContext.requiredModelInfo;
+        this.requiredModelTypeInfo = pathContext.requiredModelTypeInfo;
         this.setCurrentPath(pathContext.initialPath);
     }
 
     private void setCurrentPath(Path path) {
         this.currentPath.setText(Path.getPathString(path));
-        PathInfo pathInfo = this.root == null ? null : this.root.getPathInfo(path);
-        if (pathInfo == null) {
+        PathElementInfo pathElementInfo = this.rootElement == null ? null : this.rootElement.getPathInfo(path);
+        if (pathElementInfo == null) {
             loadChildren(null);
         } else {
-            loadChildren(pathInfo.getParent());
-            selectChild(pathInfo);
+            loadChildren(pathElementInfo.getParent());
+            selectChild(pathElementInfo);
         }
     }
 
@@ -83,22 +83,22 @@ public class PathBrowserPM extends AbstractPM {
         }
     }
 
-    private void loadChildren(PathInfo aOwner) {
-        this.currentOwner = aOwner;
+    private void loadChildren(PathElementInfo aElement) {
+        this.currentElement = aElement;
         Path currentPath = this.getCurrentPath();
         children.clear();
-        if (aOwner == null) {
+        if (aElement == null) {
             // no owner -> so we load the root object
             PathInfoPM rootCell = new PathInfoPM();
-            rootCell.setPathInfo(this.root);
-            children.put(this.root, rootCell);
-            if (root.getPath().equals(currentPath)) {
-                children.getSelectedKeys().add(root);
+            rootCell.setPathElementInfo(this.rootElement);
+            children.put(this.rootElement, rootCell);
+            if (rootElement.getPath().equals(currentPath)) {
+                children.getSelectedKeys().add(rootElement);
             }
         } else {
-            for (PathInfo child : aOwner.getChildren()) {
+            for (PathElementInfo child : aElement.getChildren()) {
                 PathInfoPM cell = new PathInfoPM();
-                cell.setPathInfo(child);
+                cell.setPathElementInfo(child);
                 children.put(child, cell);
                 if (child.getPath().equals(currentPath)) {
                     children.getSelectedKeys().add(child);
@@ -107,12 +107,12 @@ public class PathBrowserPM extends AbstractPM {
         }
     }
 
-    public PresentationModelInfo getCurrentModelInfo() {
+    public TypeInfo getCurrentModelTypeInfo() {
         Path path = getCurrentPath();
-        if (path != null && this.root != null) {
-            PathInfo node = this.root.getPathInfo(path);
-            if (node != null) {
-                return node.getModelInfo();
+        if (path != null && this.rootElement != null) {
+            PathElementInfo element = this.rootElement.getPathInfo(path);
+            if (element != null) {
+                return element.getTypeInfo();
             }
         }
         return null;
@@ -123,7 +123,7 @@ public class PathBrowserPM extends AbstractPM {
         if (this.children.getSelection().isEmpty() == false) {
             PathInfoPM first = this.children.getSelection().getFirst();
             if (first != null) {
-                String pathStr = Path.getPathString(first.getPathInfo().getPath());
+                String pathStr = Path.getPathString(first.getPathElementInfo().getPath());
                 this.currentPath.setText(pathStr);
             }
         }
@@ -133,8 +133,8 @@ public class PathBrowserPM extends AbstractPM {
     void updateStatus() {
         if (this.currentPath.isEmpty()) {
             String txt = "Enter a valid path here.";
-            if (this.requiredModelInfo != null) {
-                txt += " A path is valid if it points to an PresentationModel of type " + requiredModelInfo.getName();
+            if (this.requiredModelTypeInfo != null) {
+                txt += " A path is valid if it points to an PresentationModel of type " + requiredModelTypeInfo.getName();
             }
             this.status.setText("<html>" + txt + "</html>");
             this.status.setIconUrl(WARNING_ICON);
@@ -147,7 +147,7 @@ public class PathBrowserPM extends AbstractPM {
 
     @OnChange(path = "currentPath")
     void updateNodeType() {
-        PresentationModelInfo desc = this.getCurrentModelInfo();
+        TypeInfo desc = this.getCurrentModelTypeInfo();
         if (desc == null) {
             currentType.setText(null);
             currentType.setDescription("Unknown type");
@@ -162,18 +162,18 @@ public class PathBrowserPM extends AbstractPM {
     @SortOrder(1)
     boolean canPathBeResolved() {
         Path path = Path.parse(this.currentPath.getText());
-        return (root != null && this.root.getPathInfo(path) != null);
+        return (rootElement != null && this.rootElement.getPathInfo(path) != null);
     }
 
     @Validation(path = "currentPath")
     @SortOrder(2)
-    ValidationState matchesRequiredModelInfo() {
-        if (this.requiredModelInfo == null) {
+    ValidationState matchesRequiredModelTypeInfo() {
+        if (this.requiredModelTypeInfo == null) {
             return null;
         } else {
-            PresentationModelInfo currentModelInfo = getCurrentModelInfo();
-            boolean valid = (currentModelInfo != null && this.requiredModelInfo.isAssignableFrom(currentModelInfo));
-            return valid ? null : new ValidationState("This path is invalid because it points to an invalid PresentationModel type. " + "\nRequired is " + this.requiredModelInfo.getName());
+            TypeInfo currentModelTypeInfo = getCurrentModelTypeInfo();
+            boolean valid = (currentModelTypeInfo != null && this.requiredModelTypeInfo.isAssignableFrom(currentModelTypeInfo));
+            return valid ? null : new ValidationState("This path is invalid because it points to an invalid PresentationModel type. " + "\nRequired is " + this.requiredModelTypeInfo.getName());
         }
     }
 
@@ -186,8 +186,8 @@ public class PathBrowserPM extends AbstractPM {
     public boolean canGotoSelectedChild() {
         PathInfoPM first = children.getSelection().getFirst();
         if (first != null) {
-            PathInfo nextDesc = first.getPathInfo();
-            if (nextDesc.hasChildren() == true) {
+            PathElementInfo nextPathElementInfo = first.getPathElementInfo();
+            if (nextPathElementInfo.hasChildren() == true) {
                 return true;
             }
         }
@@ -198,30 +198,30 @@ public class PathBrowserPM extends AbstractPM {
     public void gotoSelectedChild() {
         PathInfoPM cell = children.getSelection().getFirst();
         if (cell != null) {
-            PathInfo nextOwner = cell.getPathInfo();
-            if (nextOwner.hasChildren() == true) {
-                this.loadChildren(nextOwner);
+            PathElementInfo nextElement = cell.getPathElementInfo();
+            if (nextElement.hasChildren() == true) {
+                this.loadChildren(nextElement);
             }
         }
     }
 
     @Validation(path = "gotoParent", message = "Already on top")
     public boolean canGotoParent() {
-        return this.currentOwner != null;
+        return this.currentElement != null;
     }
 
     @Operation
     public void gotoParent() {
-        if (this.currentOwner == null) {
+        if (this.currentElement == null) {
             return;
         }
-        PathInfo nextSelectedChild = this.currentOwner;
-        PathInfo nextOwner = this.currentOwner.getParent();
-        this.loadChildren(nextOwner);
+        PathElementInfo nextSelectedChild = this.currentElement;
+        PathElementInfo nextElement = this.currentElement.getParent();
+        this.loadChildren(nextElement);
         this.selectChild(nextSelectedChild);
     }
 
-    private void selectChild(PathInfo child) {
+    private void selectChild(PathElementInfo child) {
         if (children.containsKey(child)) {
             children.getSelectedKeys().clear();
             children.getSelectedKeys().add(child);
@@ -230,10 +230,10 @@ public class PathBrowserPM extends AbstractPM {
 
     @Operation
     public void gotoCurrentPath() {
-        if (this.root != null) {
+        if (this.rootElement != null) {
             Path pathToChild = getCurrentPath();
 
-            PathInfo childPathInfo = this.root.getPathInfo(pathToChild);
+            PathElementInfo childPathInfo = this.rootElement.getPathInfo(pathToChild);
             if (childPathInfo != null) {
                 this.setCurrentPath(childPathInfo.getPath());
             } else {

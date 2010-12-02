@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Path;
 import org.beanfabrics.ViewClassDecorator;
-import org.beanfabrics.meta.PathInfo;
+import org.beanfabrics.meta.PathElementInfo;
 import org.beanfabrics.model.IListPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.PresentationModel;
@@ -64,7 +64,7 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
     }
 
     private void configurePathToList() {
-        PathContext ctx = new PathContext(PMManager.getInstance().getMetadata().getPathInfo(this.rootModelType), PMManager.getInstance().getMetadata().getPresentationModelInfo(this.requiredListModelType), this.bnList.getPath());
+        PathContext ctx = new PathContext(PMManager.getInstance().getMetadata().getPathElementInfo(this.rootModelType), PMManager.getInstance().getMetadata().getTypeInfo(this.requiredListModelType), this.bnList.getPath());
 
         this.pathToList.setPathContext(ctx);
     }
@@ -92,20 +92,18 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
     private void configurePathToRowCell() {
         CellConfig cellConfig = this.bnList == null ? null : this.bnList.getCellConfig();
         Path initialPath = cellConfig == null ? null : cellConfig.getPath();
-        Class elementModelType = getElementModelType();
-        System.out.println("BnListCustomizerPM.configurePathToRowCell() elementModelType=" + elementModelType);
-        PathInfo rootNodeDesc = elementModelType == null ? null : PMManager.getInstance().getMetadata().getPathInfo(elementModelType);
-        PathContext ctx = new PathContext(rootNodeDesc, null, initialPath);
+        Class elementJavaType = getElementJavaType();
+        PathElementInfo rootPathElementInfo = elementJavaType == null ? null : PMManager.getInstance().getMetadata().getPathElementInfo(elementJavaType);
+        PathContext ctx = new PathContext(rootPathElementInfo, null, initialPath);
         this.pathToRowCell.setPathContext(ctx);
     }
 
-    private Class getElementModelType() {
-        PathInfo pathInfo = getPathInfoOfList();
-        System.out.println("BnListCustomizerPM.getElementModelType() pathInfo=" + pathInfo);
-        if (pathInfo == null) {
+    private Class getElementJavaType() {
+        PathElementInfo pathElementInfo = getPathElementInfoOfList();
+        if (pathElementInfo == null) {
             return null;
         } else {
-            GenericType gt = pathInfo.getGenericType();
+            GenericType gt = pathElementInfo.getGenericType();
             GenericType typeParam = gt.getTypeParameter(IListPM.class.getTypeParameters()[0]);
             Type tArg = typeParam.narrow(typeParam.getType(), PresentationModel.class);
             if (tArg instanceof Class) {
@@ -116,7 +114,7 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
         }
     }
 
-    private PathInfo getPathInfoOfList() {
+    private PathElementInfo getPathElementInfoOfList() {
         if (this.bnList == null) {
             return null;
         }
@@ -126,14 +124,14 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
             if (path != null) {
                 Class cls = ds.getPresentationModelType();
                 if (cls != null) {
-                    PathInfo root = PMManager.getInstance().getMetadata().getPathInfo(cls);
+                    PathElementInfo root = PMManager.getInstance().getMetadata().getPathElementInfo(cls);
                     return root.getPathInfo(path);
                 }
             }
         }
         IListPM listPM = this.bnList.getPresentationModel();
         if (listPM != null) {
-            PathInfo info = PMManager.getInstance().getMetadata().getPathInfo(listPM.getClass());
+            PathElementInfo info = PMManager.getInstance().getMetadata().getPathElementInfo(listPM.getClass());
             return info;
         } else {
             return null;

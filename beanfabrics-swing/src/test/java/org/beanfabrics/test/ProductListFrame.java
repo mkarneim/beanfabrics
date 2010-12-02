@@ -13,8 +13,8 @@ import javax.swing.JScrollPane;
 
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.swing.BnButton;
-import org.beanfabrics.swing.table.BnTable;
 import org.beanfabrics.swing.table.BnColumnBuilder;
+import org.beanfabrics.swing.table.BnTable;
 
 @SuppressWarnings("serial")
 public class ProductListFrame extends JFrame {
@@ -60,6 +60,7 @@ public class ProductListFrame extends JFrame {
         getContentPane().add(getPanel(), BorderLayout.NORTH);
         //
     }
+
     /**
      * @wbp.nonvisual location=38,265
      * @return
@@ -71,6 +72,7 @@ public class ProductListFrame extends JFrame {
         }
         return provider;
     }
+
     /**
      * @wbp.nonvisual location=146,273
      * @return
@@ -94,12 +96,8 @@ public class ProductListFrame extends JFrame {
         if (bnTable == null) {
             bnTable = new BnTable();
             bnTable.setPath(new org.beanfabrics.Path("this.elements"));
-            bnTable.setColumns(new BnColumnBuilder()
-            	      .addColumn().withPath("this.name").withName("Name")
-            	      .addColumn().withPath("this.type").withName("Type").withWidth(80).withWidthFixed(true)
-            	      .addColumn().withPath("this.country").withName("Country").withWidth(80).withWidthFixed(true)
-            	      .addColumn().withPath("this.price").withName("Price").withWidth(70).withWidthFixed(true)
-            	      .build());
+            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("this.name").withName("Name").addColumn().withPath("this.type").withName("Type").withWidth(80).withWidthFixed(true).addColumn().withPath("this.country").withName("Country")
+                    .withWidth(80).withWidthFixed(true).addColumn().withPath("this.price").withName("Price").withWidth(70).withWidthFixed(true).build());
             bnTable.setModelProvider(getLocalProvider());
         }
         return bnTable;

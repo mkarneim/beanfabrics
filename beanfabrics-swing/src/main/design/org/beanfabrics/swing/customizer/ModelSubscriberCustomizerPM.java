@@ -10,8 +10,8 @@ import org.beanfabrics.Path;
 import org.beanfabrics.View;
 import org.beanfabrics.ViewClassDecorator;
 import org.beanfabrics.meta.MetadataRegistry;
-import org.beanfabrics.meta.PathInfo;
-import org.beanfabrics.meta.PresentationModelInfo;
+import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.support.OnChange;
@@ -48,13 +48,13 @@ public class ModelSubscriberCustomizerPM extends AbstractCustomizerPM {
     public void setModelSubscriber(ModelSubscriber aSubscriber) {
         this.subscriber = aSubscriber;
 
-        PresentationModelInfo requiredModelInfo;
+        TypeInfo requiredModelTypeInfo;
         if (aSubscriber instanceof View) {
             ViewClassDecorator deco = new ViewClassDecorator(((View)aSubscriber).getClass());
             Class c = deco.getExpectedModelType();
-            requiredModelInfo = this.metadata.getPresentationModelInfo(c);
+            requiredModelTypeInfo = this.metadata.getTypeInfo(c);
         } else {
-            requiredModelInfo = this.metadata.getPresentationModelInfo(PresentationModel.class);
+            requiredModelTypeInfo = this.metadata.getTypeInfo(PresentationModel.class);
         }
 
         IModelProvider provider = aSubscriber.getModelProvider();
@@ -62,11 +62,11 @@ public class ModelSubscriberCustomizerPM extends AbstractCustomizerPM {
             throw new IllegalStateException("Can't customize ModelSubscriber bean since no ModelProvider is assigned.");
         }
         Class<? extends PresentationModel> rootPresentationModelType = provider.getPresentationModelType();
-        PathInfo rootPathInfo = this.metadata.getPathInfo(rootPresentationModelType);
+        PathElementInfo rootPathElementInfo = this.metadata.getPathElementInfo(rootPresentationModelType);
 
         Path path = this.subscriber.getPath();
 
-        this.path.setPathContext(new PathContext(rootPathInfo, requiredModelInfo, path));
+        this.path.setPathContext(new PathContext(rootPathElementInfo, requiredModelTypeInfo, path));
     }
 
     @OnChange(path = "path")

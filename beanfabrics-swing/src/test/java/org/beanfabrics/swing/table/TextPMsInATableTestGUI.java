@@ -66,6 +66,7 @@ public class TextPMsInATableTestGUI extends JFrame {
         getContentPane().add(getPanel(), BorderLayout.CENTER);
         //
     }
+
     /**
      * @wbp.nonvisual location=28,415
      * @return
@@ -99,9 +100,7 @@ public class TextPMsInATableTestGUI extends JFrame {
     private BnTable getBnTable() {
         if (bnTable == null) {
             bnTable = new BnTable();
-            bnTable.setColumns(new BnColumnBuilder()
-            	      .addColumn().withPath("this").withName("Text")
-            	      .build());
+            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("this").withName("Text").build());
             bnTable.setPath(new org.beanfabrics.Path("this.elements"));
             bnTable.setModelProvider(getLocalProvider());
         }

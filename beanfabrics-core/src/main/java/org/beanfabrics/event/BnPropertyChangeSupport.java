@@ -2,8 +2,6 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 /*
  * This class is slightly based on Sun's PropertyChangeSupport source which has
  * the following copyright notice: Copyright 2002 Sun Microsystems, Inc. All

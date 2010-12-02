@@ -4,7 +4,7 @@
  */
 package org.beanfabrics.swing.customizer.table;
 
-import org.beanfabrics.meta.PresentationModelInfo;
+import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.BooleanPM;
 import org.beanfabrics.model.IOperationPM;
@@ -44,12 +44,12 @@ public class ColumnPM extends AbstractPM {
     public void setColumnContext(ColumnContext columnContext) {
         this.columnContext = columnContext;
         BnColumn col = columnContext.initialColumn;
-        this.path.setPathContext(new PathContext(columnContext.elementRoot, null, col.getPath()));
+        this.path.setPathContext(new PathContext(columnContext.rootPathElementInfo, null, col.getPath()));
         this.columnName.setText(col.getColumnName());
         this.width.setInteger(col.getWidth());
         this.fixedWidth.setBoolean(col.isWidthFixed());
-        PresentationModelInfo opTypeDesc = PMManager.getInstance().getMetadata().getPresentationModelInfo(IOperationPM.class);
-        this.operationPath.setPathContext(new PathContext(columnContext.elementRoot, opTypeDesc, col.getOperationPath()));
+        TypeInfo opModelTypeInfo = PMManager.getInstance().getMetadata().getTypeInfo(IOperationPM.class);
+        this.operationPath.setPathContext(new PathContext(columnContext.rootPathElementInfo, opModelTypeInfo, col.getOperationPath()));
         this.alignment.setText(this.alignment.getOptions().get(col.getAlignment()));
     }
 

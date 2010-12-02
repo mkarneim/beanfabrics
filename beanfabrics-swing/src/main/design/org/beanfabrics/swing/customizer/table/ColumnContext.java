@@ -4,20 +4,20 @@
  */
 package org.beanfabrics.swing.customizer.table;
 
-import org.beanfabrics.meta.PathInfo;
+import org.beanfabrics.meta.PathElementInfo;
 import org.beanfabrics.swing.table.BnColumn;
 
 /**
  * @author Michael Karneim
  */
 public class ColumnContext {
-    public final PathInfo elementRoot;
+    public final PathElementInfo rootPathElementInfo;
     public final BnColumn initialColumn;
 
-    public ColumnContext(PathInfo rootNodeDescriptor, BnColumn initialColumn) {
+    public ColumnContext(PathElementInfo aRootPathElementInfo, BnColumn aInitialColumn) {
         super();
-        this.elementRoot = rootNodeDescriptor;
-        this.initialColumn = initialColumn;
+        this.rootPathElementInfo = aRootPathElementInfo;
+        this.initialColumn = aInitialColumn;
     }
 
 }

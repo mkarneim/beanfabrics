@@ -144,18 +144,19 @@ public class GenericTypeTest {
         GenericType typeParam = gt.getTypeParameter(Collection.class.getTypeParameters()[0]);
         assertEquals("typeParam.getType()", String.class, typeParam.getType());
     }
-    
+
     private static class Outer<E extends Number> {
-    	private class Inner extends ArrayList<E> {
-    		
-    	}
-    	Inner inner;
+        private class Inner extends ArrayList<E> {
+
+        }
+
+        Inner inner;
     }
-    
+
     private static class Subclass extends Outer<Integer> {
-    	
+
     }
-    
+
     @Test
     public void testSubclass() {
         Class<?> cls = Subclass.class;

@@ -5,22 +5,22 @@
 package org.beanfabrics.swing.customizer.path;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathInfo;
-import org.beanfabrics.meta.PresentationModelInfo;
+import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.TypeInfo;
 
 /**
  * @author Michael Karneim
  */
 public class PathContext {
-    public final PathInfo root;
-    public final PresentationModelInfo requiredModelInfo;
+    public final PathElementInfo root;
+    public final TypeInfo requiredModelTypeInfo;
     public final Path initialPath;
 
-    public PathContext(PathInfo root, PresentationModelInfo requiredModelInfo, Path initialPath) {
+    public PathContext(PathElementInfo rootPathElementInfo, TypeInfo requiredModelTypeInfo, Path initialPath) {
         super();
         this.initialPath = initialPath;
-        this.requiredModelInfo = requiredModelInfo;
-        this.root = root;
+        this.requiredModelTypeInfo = requiredModelTypeInfo;
+        this.root = rootPathElementInfo;
     }
 
 }

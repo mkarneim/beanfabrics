@@ -73,18 +73,18 @@ public class MetadataRegistryTest {
     @Test
     public void describeTextPM() {
         Class cls = TextPM.class;
-        PresentationModelInfo info = this.metadata.getPresentationModelInfo(cls);
+        TypeInfo info = this.metadata.getTypeInfo(cls);
         assertEquals("info.getProperties().size()", 0, info.getProperties().size());
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
-        PresentationModelInfo info2 = this.metadata.getPresentationModelInfo(cls);
+        TypeInfo info2 = this.metadata.getTypeInfo(cls);
         assertEquals("info2", info, info2);
     }
 
     @Test
     public void describeListPM() {
         Class cls = ListPM.class;
-        PresentationModelInfo info = this.metadata.getPresentationModelInfo(cls);
+        TypeInfo info = this.metadata.getTypeInfo(cls);
         assertEquals("info.getProperties().size()", 0, info.getProperties().size());
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
@@ -93,7 +93,7 @@ public class MetadataRegistryTest {
     @Test
     public void describeListOfFilePM() {
         Class cls = ListOfFilePM.class;
-        PresentationModelInfo info = this.metadata.getPresentationModelInfo(cls);
+        TypeInfo info = this.metadata.getTypeInfo(cls);
         assertEquals("info.getProperties().size()", 0, info.getProperties().size());
         assertEquals("info.getJavaType()", cls, info.getJavaType());
     }
@@ -101,21 +101,21 @@ public class MetadataRegistryTest {
     @Test
     public void describeFilePM() {
         Class cls = FilePM.class;
-        PresentationModelInfo info = this.metadata.getPresentationModelInfo(cls);
+        TypeInfo info = this.metadata.getTypeInfo(cls);
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
         assertEquals("info.getProperties().size()", 1, info.getProperties().size());
         PropertyInfo pdesc = info.getProperties().iterator().next();
         assertEquals("pdesc.getName()", "path", pdesc.getName());
-        PresentationModelInfo textCellInfo = pdesc.getType();
-        assertEquals("textCellInfo", this.metadata.getPresentationModelInfo(TextPM.class), textCellInfo);
+        TypeInfo typeInfo = pdesc.getTypeInfo();
+        assertEquals("textCellInfo", this.metadata.getTypeInfo(TextPM.class), typeInfo);
     }
 
     @Test
     public void describeDirectoryPM() {
         // this test shows how to find out the actual type argument of a property of type IListPM.
         Class cls = DirectoryPM.class;
-        PresentationModelInfo info = this.metadata.getPresentationModelInfo(cls);
+        TypeInfo info = this.metadata.getTypeInfo(cls);
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
         assertEquals("info.getProperties().size()", 3, info.getProperties().size());
@@ -130,7 +130,7 @@ public class MetadataRegistryTest {
         // this test shows how to find out the actual type argument of a property of type IListPM.
 
         Class cls = AnotherDirectoryPM.class;
-        PresentationModelInfo info = this.metadata.getPresentationModelInfo(cls);
+        TypeInfo info = this.metadata.getTypeInfo(cls);
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
         assertEquals("info.getProperties().size()", 2, info.getProperties().size());
@@ -140,7 +140,7 @@ public class MetadataRegistryTest {
     @Test
     public void describeAnotherDirectoryPM2() {
         Class cls = AnotherDirectoryPM.class;
-        PresentationModelInfo info = this.metadata.getPresentationModelInfo(cls);
+        TypeInfo info = this.metadata.getTypeInfo(cls);
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
         PropertyInfo pInfo = info.getProperty("listOfFiles");
@@ -150,7 +150,7 @@ public class MetadataRegistryTest {
     @Test
     public void describeDirectoryPM2() {
         Class cls = DirectoryPM.class;
-        PresentationModelInfo info = this.metadata.getPresentationModelInfo(cls);
+        TypeInfo info = this.metadata.getTypeInfo(cls);
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
         PropertyInfo pInfo = info.getProperty("files");
@@ -160,7 +160,7 @@ public class MetadataRegistryTest {
     @Test
     public void describeThirdDirectoryPM() {
         Class cls = ThirdDirectoryPM.class;
-        PresentationModelInfo info = this.metadata.getPresentationModelInfo(cls);
+        TypeInfo info = this.metadata.getTypeInfo(cls);
         assertEquals("info.getJavaType()", cls, info.getJavaType());
 
         PropertyInfo pInfo = info.getProperty("files");

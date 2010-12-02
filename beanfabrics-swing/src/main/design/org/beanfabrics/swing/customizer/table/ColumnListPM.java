@@ -5,7 +5,7 @@
 package org.beanfabrics.swing.customizer.table;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathInfo;
+import org.beanfabrics.meta.PathElementInfo;
 import org.beanfabrics.model.ListPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
@@ -29,7 +29,7 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     protected final OperationPM moveUp = new OperationPM();
     protected final OperationPM moveDown = new OperationPM();
 
-    private PathInfo elementRoot;
+    private PathElementInfo rootPathElementInfo;
 
     public ColumnListPM() {
         super();
@@ -37,12 +37,12 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     }
 
     public void setColumnListContext(ColumnListContext clContext) {
-        this.elementRoot = clContext.elementRoot;
+        this.rootPathElementInfo = clContext.rootPathElementInfo;
         this.clear();
         if (clContext.initialColumns != null) {
             for (BnColumn col : clContext.initialColumns) {
                 ColumnPM cell = new ColumnPM();
-                ColumnContext colContext = new ColumnContext(this.elementRoot, col);
+                ColumnContext colContext = new ColumnContext(this.rootPathElementInfo, col);
                 cell.setColumnContext(colContext);
                 this.add(cell);
             }
@@ -68,7 +68,7 @@ public class ColumnListPM extends ListPM<ColumnPM> {
                 addColumun(path);
             }
         });
-        chooserMdl.setPathContext(new PathContext(this.elementRoot, null, new Path()));
+        chooserMdl.setPathContext(new PathContext(this.rootPathElementInfo, null, new Path()));
         chooserMdl.getContext().addParent(this.getContext());
         CustomizerUtil.get().openPathChooserDialog(chooserMdl);
 
@@ -76,13 +76,13 @@ public class ColumnListPM extends ListPM<ColumnPM> {
 
     @Validation(path = "addColumn", message = "Unknown element type")
     boolean canAddColumn() {
-        return this.elementRoot != null;
+        return this.rootPathElementInfo != null;
     }
 
     private void addColumun(Path path) {
         ColumnPM newCell = new ColumnPM();
         String header = createHeader(path);
-        ColumnContext colContext = new ColumnContext(this.elementRoot, new BnColumn(path, header));
+        ColumnContext colContext = new ColumnContext(this.rootPathElementInfo, new BnColumn(path, header));
         newCell.setColumnContext(colContext);
         this.add(newCell);
     }

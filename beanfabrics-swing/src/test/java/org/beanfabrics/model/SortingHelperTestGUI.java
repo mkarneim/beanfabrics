@@ -12,26 +12,26 @@ import org.beanfabrics.swing.table.BnTable;
  * @author Michael Karneim
  */
 public class SortingHelperTestGUI {
-	public static void main(String[] args) {
-		ListPM<ProductPM> list = new ListPM<ProductPM>();
+    public static void main(String[] args) {
+        ListPM<ProductPM> list = new ListPM<ProductPM>();
         list.add(new ProductPM("Apple", 5, 2.20));
         list.add(new ProductPM("Banana", 5, 1.20));
         list.add(new ProductPM("Orange", 5, 1.20));
         list.add(new ProductPM("Kiwi", 5, 1.20));
         list.add(new ProductPM("Pineapple", 5, 2.20));
-        
-		BnTable tbl = new BnTable();
-		tbl.setPath(new Path("this"));
-		tbl.setColumns(new BnColumn[] { new BnColumn(new Path("name"), "Name"), new BnColumn(new Path("number"), "Number"), new BnColumn(new Path("price"), "Price") });
-		Binder.bind(tbl, list);
-		JFrame f = new JFrame("Sorting Sample");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JScrollPane scr = new JScrollPane(tbl);
-		f.getContentPane().add(scr);
-		f.setSize(400, 400);
-		f.setLocationRelativeTo(null);
-		f.setVisible(true);
-	}
+
+        BnTable tbl = new BnTable();
+        tbl.setPath(new Path("this"));
+        tbl.setColumns(new BnColumn[] { new BnColumn(new Path("name"), "Name"), new BnColumn(new Path("number"), "Number"), new BnColumn(new Path("price"), "Price") });
+        Binder.bind(tbl, list);
+        JFrame f = new JFrame("Sorting Sample");
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JScrollPane scr = new JScrollPane(tbl);
+        f.getContentPane().add(scr);
+        f.setSize(400, 400);
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+    }
 
     private static class ProductPM extends AbstractPM {
         private TextPM name = new TextPM();

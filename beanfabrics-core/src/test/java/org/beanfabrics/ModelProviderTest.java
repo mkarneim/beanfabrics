@@ -222,26 +222,26 @@ public class ModelProviderTest {
         ProductPM root2 = new ProductPM();
         provider.setPresentationModel(root2);
     }
-    
+
     private static class MockBnTextField implements ModelSubscriber {
-		private IModelProvider modelProvider;
-		private Path path;
+        private IModelProvider modelProvider;
+        private Path path;
 
-		public IModelProvider getModelProvider() {
-			return modelProvider;
-		}
+        public IModelProvider getModelProvider() {
+            return modelProvider;
+        }
 
-		public void setModelProvider(IModelProvider modelProvider) {
-			this.modelProvider = modelProvider;
-		}
+        public void setModelProvider(IModelProvider modelProvider) {
+            this.modelProvider = modelProvider;
+        }
 
-		public Path getPath() {
-			return path;
-		}
+        public Path getPath() {
+            return path;
+        }
 
-		public void setPath(Path path) {
-			this.path = path;
-		}
+        public void setPath(Path path) {
+            this.path = path;
+        }
     }
 
     private static class Counter implements ModelProviderListener {

@@ -20,8 +20,8 @@ import org.beanfabrics.Path;
 import org.beanfabrics.swing.BnButton;
 import org.beanfabrics.swing.BnLabel;
 import org.beanfabrics.swing.BnTextField;
-import org.beanfabrics.swing.table.BnTable;
 import org.beanfabrics.swing.table.BnColumnBuilder;
+import org.beanfabrics.swing.table.BnTable;
 
 @SuppressWarnings("serial")
 public class ContactListFrame extends JFrame {
@@ -259,14 +259,8 @@ public class ContactListFrame extends JFrame {
             bnTable.setPath(new Path("elements"));
             //bnTable.setPath(new Path("elementsList"));
             bnTable.setModelProvider(getLocalProvider());
-            bnTable.setColumns(new BnColumnBuilder()
-            	      .addColumn().withPath("this.icon").withWidth(25).withWidthFixed(true)
-            	      .addColumn().withPath("lastname").withName("Name")
-            	      .addColumn().withPath("birthday").withName("Birthday").withWidth(80).withWidthFixed(true)
-            	      .addColumn().withPath("address.street").withName("Street")
-            	      .addColumn().withPath("this.children").withName("Children")
-            	      .addColumn().withPath("this.notes.content").withName("Notes")
-            	      .build());
+            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("this.icon").withWidth(25).withWidthFixed(true).addColumn().withPath("lastname").withName("Name").addColumn().withPath("birthday").withName("Birthday").withWidth(80)
+                    .withWidthFixed(true).addColumn().withPath("address.street").withName("Street").addColumn().withPath("this.children").withName("Children").addColumn().withPath("this.notes.content").withName("Notes").build());
         }
         return bnTable;
     }

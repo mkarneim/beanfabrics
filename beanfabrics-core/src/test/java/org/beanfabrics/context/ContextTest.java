@@ -123,14 +123,14 @@ public class ContextTest {
         assertEquals("pModel.levelTwo.levelThree.countServiceRemoved", 1, pModel.levelTwo.levelThree.countServiceRemoved);
         assertNull("pModel.levelTwo.levelThree.service", pModel.levelTwo.levelThree.service);
     }
-    
+
     @Test
     public void getService() {
-    	TopLevelPM topLevelMdl = new TopLevelPM();
+        TopLevelPM topLevelMdl = new TopLevelPM();
         Object service = new Object();
         topLevelMdl.getContext().addService(Object.class, service);
-        topLevelMdl.setLevelOne( new LevelOnePM());
-        
+        topLevelMdl.setLevelOne(new LevelOnePM());
+
         LevelThreePM levelThree = topLevelMdl.levelOne.levelTwo.levelThree;
         Object foundService = levelThree.getContext().getService(Object.class);
         assertEquals("foundService", service, foundService);

@@ -14,8 +14,8 @@ import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
 import org.beanfabrics.View;
 import org.beanfabrics.swing.BnLabel;
-import org.beanfabrics.swing.table.BnTable;
 import org.beanfabrics.swing.table.BnColumnBuilder;
+import org.beanfabrics.swing.table.BnTable;
 
 /*
  * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
@@ -116,10 +116,7 @@ public class PropertiesPanel extends JPanel implements View<PropertiesPM>, Model
         if (bnTable == null) {
             bnTable = new BnTable();
             bnTable.setPath(new org.beanfabrics.Path("this"));
-            bnTable.setColumns(new BnColumnBuilder()
-            	      .addColumn().withPath("this.key").withName("Key").withWidth(200).withWidthFixed(true)
-            	      .addColumn().withPath("this.value").withName("Value")
-            	      .build());
+            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("this.key").withName("Key").withWidth(200).withWidthFixed(true).addColumn().withPath("this.value").withName("Value").build());
             bnTable.setModelProvider(getLocalModelProvider());
             bnTable.setBackground(Color.WHITE);
             bnTable.setShowVerticalLines(true);
