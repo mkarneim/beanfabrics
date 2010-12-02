@@ -2,52 +2,70 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics.model;
 
 /**
+ * The {@link ITextPM} is the interface of PM components that support a text
+ * value.
+ * 
  * @author Michael Karneim
  */
 public interface ITextPM extends IValuePM {
     /**
-     * Returns the text value of this model.
+     * Returns the text value of this PM.
      * 
      * @return the text value
      */
     public String getText();
 
     /**
-     * Set the text to be stored in this model. If the argument is
+     * Set the value of this OPm to the given text. If the argument is
      * <code>null</code>, it will be changed into the empty string
      * <code>""</code>.
      * 
-     * @param aText the text to set
+     * @param aText the text value
      */
     public void setText(String aText);
 
     /**
-     * Returns if this object was modified (means: if the text value equals the
-     * default text).
+     * Returns whether this PM is modified. This PM is modified if the text
+     * value isn't equal to the default text.
+     * 
+     * @see #getText()
+     * @see #preset()
      */
     public boolean isModified();
 
     /**
-     * Sets the default text as text value.
+     * Sets the value of this PM to the value of the default text.
      */
     public void reset();
 
     /**
-     * Sets the text value as default text.
+     * Sets the default text of this PM to the text value of this PM.
      */
     public void preset();
 
+    /**
+     * Sets the {@link Options}. This attribute is used by some view components
+     * to show possible text values that can be choosen.
+     * 
+     * @param options
+     */
     public void setOptions(Options options);
 
+    /**
+     * Returns the options.
+     * 
+     * @return the options
+     * @see #setOptions(Options)
+     */
     public Options getOptions();
 
     /**
-     * Parses the content and formats it.
+     * Reformats the text value by first parsing it and the formatting it with
+     * an appropriate format. It is not required that this method has any
+     * effect.
      */
     public void reformat();
 }

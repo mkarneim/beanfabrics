@@ -51,9 +51,20 @@ public class DatePM extends TextPM implements IDatePM {
         if (oldFormat == newFormat) {
             return;
         }
+        boolean doReformat;
+        Date oldValue = null;
+        try {
+            oldValue = getDate();
+            doReformat = true;
+        } catch (ConversionException ex) {
+            doReformat = false;
+        }
         this.format = (DateFormat)newFormat.clone();
-        this.revalidate();
         this.getPropertyChangeSupport().firePropertyChange("format", oldFormat, newFormat); //$NON-NLS-1$
+        this.revalidate();
+        if (doReformat) {
+            setDate(oldValue);
+        }
     }
 
     /**

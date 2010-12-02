@@ -2,8 +2,6 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics.model;
 
 import java.math.BigDecimal;
@@ -44,7 +42,8 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
     }
 
     /**
-     * Parses the content and formats it according to this model's format.
+     * Reformats the text value by first parsing it and the formatting it using
+     * this PM's format.
      * 
      * @see #setFormat(DecimalFormat)
      */
@@ -94,6 +93,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
     /**
      * Sets the decimal format of this PM to the given value. This format will
      * be cloned before use.
+     * <p>
      * 
      * @param newFormat the new format for this model
      * @see #reformat()
@@ -103,19 +103,25 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         if (old == newFormat) {
             return;
         }
+        boolean doReformat;
+        BigDecimal oldValue = null;
+        try {
+            oldValue = getBigDecimal();
+            doReformat = true;
+        } catch (ConversionException ex) {
+            doReformat = false;
+        }
         DecimalFormat clonedformat = (DecimalFormat)newFormat.clone();
         clonedformat.setParseBigDecimal(true);
         this.format = clonedformat;
         this.revalidate();
         this.getPropertyChangeSupport().firePropertyChange("format", old, newFormat); //$NON-NLS-1$
+        if (doReformat) {
+            setBigDecimal(oldValue);
+        }
     }
 
-    /**
-     * Sets the value of this PM to the given {@link BigDecimal} value.
-     * 
-     * @param value
-     * @see #setText(String)
-     */
+    /** {@inheritDoc} */
     public void setBigDecimal(BigDecimal value) {
         if (value == null) {
             setText(null);
@@ -125,13 +131,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         }
     }
 
-    /**
-     * Returns the value of this PM as a {@link BigDecimal}.
-     * 
-     * @return the value of this PM as a {@link BigDecimal}
-     * @throws ConversionException if the text value can't be converted into a
-     *             valid {@link BigDecimal}
-     */
+    /** {@inheritDoc} */
     public BigDecimal getBigDecimal()
         throws ConversionException {
         if (this.isEmpty()) {
@@ -253,9 +253,19 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         return new BigDecimalComparable();
     }
 
-    private class BigDecimalComparable extends TextComparable {
+    /**
+     * The {@link BigDecimalComparable} delegates the comparison to the model's
+     * BigDecimal value if available, or otherwise falls back to the
+     * <code>super.compareTo(...)</code>.
+     * 
+     * @author Michael Karneim
+     */
+    protected class BigDecimalComparable extends TextComparable {
         BigDecimal bd;
 
+        /**
+         * Constructs a {@link BigDecimalComparable}.
+         */
         public BigDecimalComparable() {
             if (!isEmpty()) {
                 try {

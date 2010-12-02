@@ -186,6 +186,12 @@ public class TextPM extends AbstractValuePM implements ITextPM {
         return new TextComparable();
     }
 
+    /**
+     * The {@link TextComparable} delegates the comparison to the model's text
+     * value.
+     * 
+     * @author Michael Karneim
+     */
     protected class TextComparable implements Comparable {
         String text;
 

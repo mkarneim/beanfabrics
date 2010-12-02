@@ -91,4 +91,32 @@ public class BigDecimalPMTest {
         assertEquals("pM.isValid()", true, model.isValid());
         assertEquals("model.getText()", "125.57", model.getText());
     }
+
+    @Test
+    public void setFormat() {
+        Locale.setDefault(Locale.GERMANY);
+        BigDecimalPM pm = new BigDecimalPM();
+        DecimalFormat format = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.GERMANY);
+        pm.setFormat(format);
+        pm.setText("1.234.567,89");
+
+        DecimalFormat f2 = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.US);
+        pm.setFormat(f2);
+
+        assertEquals("1,234,567.89", pm.getText());
+    }
+    
+    @Test
+    public void setFormatWithInvalidNumber() {
+        Locale.setDefault(Locale.GERMANY);
+        BigDecimalPM pm = new BigDecimalPM();
+        DecimalFormat format = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.GERMANY);
+        pm.setFormat(format);
+        pm.setText("abcxyz");
+
+        DecimalFormat f2 = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.US);
+        pm.setFormat(f2);
+
+        assertEquals("abcxyz", pm.getText());
+    }
 }

@@ -10,6 +10,7 @@ import static org.junit.Assert.fail;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -98,6 +99,28 @@ public class DatePMTest {
 
         model.setDate(new Date());
         assertEquals("l.eventCount", 6, l.eventCount);
+    }
+
+    @Test
+    public void setFormat() {
+        Locale.setDefault(Locale.GERMANY);
+        DatePM pm = new DatePM();
+        pm.setText("14.01.1971");
+        DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
+        pm.setFormat(format);
+
+        assertEquals("Jan 14, 1971", pm.getText());
+    }
+    
+    @Test
+    public void setFormatWithInvalidDate() {
+        Locale.setDefault(Locale.GERMANY);
+        DatePM pm = new DatePM();
+        pm.setText("14.0");
+        DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
+        pm.setFormat(format);
+
+        assertEquals("14.0", pm.getText());
     }
 
     @Test

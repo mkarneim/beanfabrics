@@ -21,18 +21,18 @@ public interface IDatePM extends ITextPM {
     DateFormat getFormat();
 
     /**
-     * Set the format to be used by this object to check the input and convert
-     * the input to a {@link Date} and vice versa.
+     * Sets the date format for the text value of this PM. It is used for
+     * validation and conversion.
      * <p>
-     * I.e. to set a format showing date and time do:
+     * For example, to set a format with date and time component do:
      * 
      * <pre>
      * DateFormat format = DateFormat.getDateTimeInstance();
      * format.setLenient(false);
-     * setFormat(format);
+     * pm.setFormat(format);
      * </pre>
      * 
-     * @param newFormat format to use for {@link Date}-{@link String} conversion
+     * @param newFormat the new format
      */
     void setFormat(DateFormat newFormat);
 
