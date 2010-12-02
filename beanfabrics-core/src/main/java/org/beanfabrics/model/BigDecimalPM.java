@@ -20,8 +20,12 @@ import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 
 /**
- * The BigDecimalPM is a presentation model for a BigDecimal value. It is the
- * base class for all other 'numeric' presentation models.
+ * The {@link BigDecimalPM} is a {@link PresentationModel} for a
+ * {@link BigDecimal} value.
+ * <p>
+ * This class is the base class for any other 'numeric' presentation models in
+ * Beanfabrics since it has the most generic validation rule (see
+ * {@link BigDecimalValidationRule}) and content conversion methods.
  * 
  * @author Michael Karneim
  */
@@ -30,9 +34,13 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
     private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(BigDecimalPM.class);
     private DecimalFormat format;
 
+    /**
+     * Constructs a {@link BigDecimalPM}.
+     */
     public BigDecimalPM() {
         this.setFormat(this.createDefaultFormat());
-        this.getValidator().add(new DefaultValidationRule());
+        // Please note: to disable default validation rules just call getValidator().clear();
+        this.getValidator().add(new BigDecimalValidationRule());
     }
 
     /**
@@ -49,20 +57,34 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         }
     }
 
+    /**
+     * Creates the default format for this PM. This method is called from the
+     * constructor and usually returns a {@link DecimalFormat} for the current
+     * {@link Locale}.
+     * 
+     * @return the default format for this PM
+     */
     protected DecimalFormat createDefaultFormat() {
         return getDecimalFormat(Locale.getDefault());
     }
 
-    public static DecimalFormat getDecimalFormat(Locale locale) {
+    /**
+     * Factory method for creating a {@link DecimalFormat} for the specified
+     * {@link Locale}.
+     * 
+     * @param locale
+     * @return the new {@link DecimalFormat}.
+     */
+    protected static DecimalFormat getDecimalFormat(Locale locale) {
         DecimalFormat result = (DecimalFormat)NumberFormat.getInstance(locale);
         result.setParseBigDecimal(true);
         return result;
     }
 
     /**
-     * Returns the format.
+     * Returns the decimal format of this PM.
      * 
-     * @return the format
+     * @return the decimal format
      * @see #reformat()
      */
     public DecimalFormat getFormat() {
@@ -70,7 +92,8 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
     }
 
     /**
-     * Sets the format of this model. The format will be cloned prior use.
+     * Sets the decimal format of this PM to the given value. This format will
+     * be cloned before use.
      * 
      * @param newFormat the new format for this model
      * @see #reformat()
@@ -87,6 +110,12 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         this.getPropertyChangeSupport().firePropertyChange("format", old, newFormat); //$NON-NLS-1$
     }
 
+    /**
+     * Sets the value of this PM to the given {@link BigDecimal} value.
+     * 
+     * @param value
+     * @see #setText(String)
+     */
     public void setBigDecimal(BigDecimal value) {
         if (value == null) {
             setText(null);
@@ -96,6 +125,13 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         }
     }
 
+    /**
+     * Returns the value of this PM as a {@link BigDecimal}.
+     * 
+     * @return the value of this PM as a {@link BigDecimal}
+     * @throws ConversionException if the text value can't be converted into a
+     *             valid {@link BigDecimal}
+     */
     public BigDecimal getBigDecimal()
         throws ConversionException {
         if (this.isEmpty()) {
@@ -107,6 +143,12 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         return result;
     }
 
+    /**
+     * Sets the default value of this PM to the given {@link BigDecimal} value.
+     * 
+     * @param value
+     * @see #setDefaultText(String)
+     */
     public void setDefaultBigDecimal(BigDecimal value) {
         if (value == null) {
             setDefaultText(null);
@@ -115,6 +157,12 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         }
     }
 
+    /**
+     * Sets the value of this PM to the giben {@link BigInteger} value.
+     * 
+     * @param value
+     * @see #setText(String)
+     */
     public void setBigInteger(BigInteger value) {
         if (value == null) {
             setBigDecimal(null);
@@ -123,6 +171,13 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         }
     }
 
+    /**
+     * Returns the value of this PM as a {@link BigInteger}.
+     * 
+     * @return the value of this PM as a {@link BigInteger}
+     * @throws ConversionException if the text value can't be converted into a
+     *             valid {@link BigInteger}
+     */
     public BigInteger getBigInteger()
         throws ConversionException {
         if (isEmpty()) {
@@ -136,6 +191,12 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         }
     }
 
+    /**
+     * Sets the default value of this PM to the given {@link BigInteger} value.
+     * 
+     * @param value
+     * @see #setDefaultText(String)
+     */
     public void setDefaultBigInteger(BigInteger value) {
         if (value == null) {
             setDefaultBigDecimal(null);
@@ -144,7 +205,16 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         }
     }
 
-    private BigDecimal convert(String text) {
+    /**
+     * Converts the given text into a {@link BigDecimal}.
+     * 
+     * @param text
+     * @return a BigDecimal representation of the given text
+     * @throws ConversionException if the text value can't be converted into a
+     *             valid {@link BigDecimal}
+     */
+    private BigDecimal convert(String text)
+        throws ConversionException {
         if (format.isParseBigDecimal() == false) {
             throw new IllegalStateException("format must parse BigDecimal");
         }
@@ -157,7 +227,13 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         }
     }
 
-    public class DefaultValidationRule implements ValidationRule {
+    /**
+     * This rule evaluates to invalid if the PM's value can't be converted into
+     * a {@link BigDecimal}.
+     * 
+     * @author Michael Karneim
+     */
+    public class BigDecimalValidationRule implements ValidationRule {
         public ValidationState validate() {
             if (isEmpty()) {
                 return null;

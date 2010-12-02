@@ -103,7 +103,8 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
 
     public MapPM() {
         this.support.addListListener(this.selfListener);
-        this.getValidator().add(this.createDefaultValidationRule());
+        // Please note: to disable default validation rules just call getValidator().clear();
+        getValidator().add(new ListElementsValidationRule());
     }
 
     public boolean isRevalidateElementsOnChangeEnabled() {
@@ -1285,11 +1286,14 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         putAll(newMap);
     }
 
-    protected ValidationRule createDefaultValidationRule() {
-        return new DefaultValidationRule();
-    }
-
-    public class DefaultValidationRule implements ValidationRule {
+    /**
+     * This rule evaluates to invalid if at least one of the list elements is
+     * invalid.
+     * 
+     * @author Michael Karneim
+     */
+    public class ListElementsValidationRule implements ValidationRule {
+        /** {@inheritDoc} */
         public ValidationState validate() {
             if (isEmpty()) {
                 return null;

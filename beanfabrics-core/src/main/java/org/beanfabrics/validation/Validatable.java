@@ -2,19 +2,22 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics.validation;
 
 /**
- * The <code>Validatable</code> is an interface for classes that can be
- * validated.
+ * The <code>Validatable</code> interface declares the interface for classes
+ * that can be validated.
+ * <p>
+ * See the <a
+ * href="http://www.beanfabrics.org/index.php/Validation">online&nbsp;
+ * documentation on validation</a> for more information.
  * 
  * @author Michael Karneim
  */
 public interface Validatable {
     /**
-     * Updates the validation state of this object.
+     * Updates the validation state of this object, usually by calling
+     * {@link Validator#validate()}.
      */
     public void revalidate();
 
@@ -26,17 +29,20 @@ public interface Validatable {
     public ValidationState getValidationState();
 
     /**
-     * Returns <code>true</code> if this object is valid. This object is valid
-     * if it's validation state is <code>null</code>.
+     * Returns whether this object is valid. This object is valid if its
+     * validation state is <code>null</code>.
      * 
-     * @return <code>true</code> if this object is valid
+     * @return <code>true</code> if this object is valid, otherwise
+     *         <code>false</code>.
      */
     public boolean isValid();
 
     /**
-     * Returns the {@link Validator} of this validatable object.
+     * Returns the {@link Validator} of this object. The validator is
+     * responsible for creating the {@link ValidationState} of this object by
+     * evaluating a specific set of {@link ValidationRule}s.
      * 
-     * @return the <code>Validator</code> of this validatable object
+     * @return the <code>Validator</code> of this object
      */
     public Validator getValidator();
 }

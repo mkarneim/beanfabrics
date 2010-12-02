@@ -2,14 +2,19 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics.model;
 
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 
 /**
+ * The {@link AbstractValuePM} is the general superclass of PM components that
+ * implement the {@link IValuePM} interface.
+ * <p>
+ * Implementors usually represent information units that can be presented in a
+ * single field, have a title, have a description, can be mandatory, and can be
+ * editable.
+ * 
  * @author Michael Karneim
  */
 public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
@@ -18,8 +23,12 @@ public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
     private String description = null;
     private String title = null;
 
-    public AbstractValuePM() {
-        this.getValidator().add(new DefaultValidationRule());
+    /**
+     * Constructs a {@link AbstractValuePM}.
+     */
+    protected AbstractValuePM() {
+        // Please note: to disable default validation rules just call getValidator().clear();
+        this.getValidator().add(new MandatoryValidationRule());
     }
 
     /** {@inheritDoc} */
@@ -95,7 +104,16 @@ public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
         }
     }
 
-    public class DefaultValidationRule implements ValidationRule {
+    /**
+     * This rule evaluates to invalid if the PM's "mandatory" attribute is true
+     * and the PM is empty.
+     * 
+     * @author Michael Karneim
+     * @see AbstractValuePM#isMandatory()
+     * @see AbstractValuePM#isEmpty()
+     */
+    public class MandatoryValidationRule implements ValidationRule {
+        /** {@inheritDoc} */
         public ValidationState validate() {
             if (isEmpty()) {
                 if (isMandatory()) {

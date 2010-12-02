@@ -133,7 +133,8 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     protected ListPM(List<Entry> list) {
         entries = list;
         this.support.addListListener(this.selfListener);
-        this.getValidator().add(this.createDefaultValidationRule());
+        // Please note: to disable default validation rules just call getValidator().clear();
+        getValidator().add(new ListElementsValidationRule());
     }
 
     public boolean isRevalidateElementsOnChangeEnabled() {
@@ -612,10 +613,6 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
                 throw new UnsupportedOperationException("'set' ist not supported by this ListIterator");
             }
         };
-    }
-
-    protected ValidationRule createDefaultValidationRule() {
-        return new DefaultValidationRule();
     }
 
     private class SelectionImpl implements Selection<T> {
@@ -1247,12 +1244,13 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     }
 
     /**
-     * This validation rule defines that this model is invalid whenever a list
-     * element is invalid.
+     * This rule evaluates to invalid if at least one of the list elements is
+     * invalid.
      * 
      * @author Michael Karneim
      */
-    public class DefaultValidationRule implements ValidationRule {
+    public class ListElementsValidationRule implements ValidationRule {
+        /** {@inheritDoc} */
         public ValidationState validate() {
             if (isEmpty()) {
                 return null;

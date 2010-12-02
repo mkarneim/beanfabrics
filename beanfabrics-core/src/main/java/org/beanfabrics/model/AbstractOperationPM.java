@@ -2,8 +2,6 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics.model;
 
 import java.awt.Image;
@@ -21,11 +19,14 @@ public abstract class AbstractOperationPM extends AbstractPM implements IOperati
     private String description = null;
     private String title;
 
-    public AbstractOperationPM() {
+    /**
+     * Constructs a new {@link AbstractOperationPM}.
+     */
+    protected AbstractOperationPM() {
     }
 
-    // TODO (mk) TEST
     /** {@inheritDoc} */
+    // TODO (mk) TEST
     public void setIcon(Icon newIcon) {
         if (equals(newIcon, icon)) {
             return;
@@ -35,14 +36,14 @@ public abstract class AbstractOperationPM extends AbstractPM implements IOperati
         this.getPropertyChangeSupport().firePropertyChange("icon", old, newIcon);
     }
 
-    // TODO (mk) TEST
     /** {@inheritDoc} */
+    // TODO (mk) TEST
     public Icon getIcon() {
         return icon;
     }
 
-    // TODO (mk) TEST
     /** {@inheritDoc} */
+    // TODO (mk) TEST
     public void setIconUrl(URL url) {
         Image img = Toolkit.getDefaultToolkit().getImage(url);
         ImageIcon imgIcon = new ImageIcon(img);

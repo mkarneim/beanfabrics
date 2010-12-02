@@ -14,42 +14,57 @@ import org.beanfabrics.context.Context;
 import org.beanfabrics.support.PropertySupport;
 import org.beanfabrics.support.SupportMap;
 import org.beanfabrics.validation.CompositeValidationState;
+import org.beanfabrics.validation.Validatable;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 
 /**
+ * The {@link AbstractPM} is the general superclass of PM components.
+ * <p>
+ * Usually you will extend this class to create new PM components, or any of its
+ * descendents.
+ * 
  * @author Michael Karneim
  */
 public abstract class AbstractPM extends ValidatableBean implements PresentationModel {
     private final SupportMap supportMap = new SupportMap(this);
     private final ModelContext context = new ModelContext(this);
 
-    public AbstractPM() {
-        ValidationRule childrenValidationRule = createPropertiesValidationRule();
-        if (childrenValidationRule != null) {
-            getValidator().add(childrenValidationRule);
-        }
+    /**
+     * Constructs a {@link AbstractPM}.
+     */
+    protected AbstractPM() {
+        // Please note: to disable default validation rules just call getValidator().clear();
+        getValidator().add(new PropertiesValidationRule());
     }
 
+    /** {@inheritDoc} */
     public SupportMap getSupportMap() {
         return this.supportMap;
     }
 
+    /** {@inheritDoc} */
     public Context getContext() {
         return context;
     }
 
+    /** {@inheritDoc} */
+    public Comparable getComparable() {
+        return null;
+    }
+
+    /**
+     * Revalidates all properties of this PM.
+     * 
+     * @see Validatable#revalidate()
+     */
     public void revalidateProperties() {
         PropertySupport.get(this).revalidateProperties();
     }
 
-    protected ValidationRule createPropertiesValidationRule() {
-        return new PropertiesValidationRule();
-    }
-
     /**
-     * This rule defines that this object is invalid if any of its properties
-     * (that are NOT instances of {@link IOperationPM}) is invalid.
+     * This rule evaluates to invalid if at least one of this PM's direct
+     * children is invalid (but not an instance of {@link IOperationPM}).
      * 
      * @author Michel Karneim
      */
@@ -60,6 +75,7 @@ public abstract class AbstractPM extends ValidatableBean implements Presentation
             }
         };
 
+        /** {@inheritDoc} */
         public ValidationState validate() {
             List<ValidationState> states = new LinkedList<ValidationState>();
             for (PresentationModel child : PropertySupport.get(AbstractPM.this).filterProperties(this.filter)) {

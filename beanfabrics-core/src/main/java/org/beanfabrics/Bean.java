@@ -2,8 +2,6 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics;
 
 import java.beans.PropertyChangeListener;
@@ -11,47 +9,47 @@ import java.beans.PropertyChangeListener;
 import org.beanfabrics.event.BnPropertyChangeSupport;
 
 /**
- * Basic interface for classes that can be observed by
+ * The {@link Bean} is the basic interface for classes that can be observed by
  * {@link PropertyChangeListener} objects.
  * 
  * @author Michael Karneim
  */
 public interface Bean {
     /**
-     * Adds a PropertyChangeListener to the listener list. The listener is
-     * registered for all bound properties of this class.
+     * Adds the given <code>PropertyChangeListener</code> to this bean. The
+     * listener is registered for all bound properties of this class.
      * 
-     * @param l the PropertyChangeListener to be added
+     * @param listener the listener to add
      */
-    public void addPropertyChangeListener(PropertyChangeListener l);
+    public void addPropertyChangeListener(PropertyChangeListener listener);
 
     /**
-     * Removes a PropertyChangeListener from the listener list. This method
-     * should be used to remove PropertyChangeListeners that were registered for
-     * all bound properties of this class.
+     * Removes the given <code>PropertyChangeListener</code> from this bean.
+     * This method should be used to remove PropertyChangeListeners that were
+     * previously registered for all bound properties of this class.
      * 
-     * @param l the PropertyChangeListener to be removed
+     * @param listener the listener to remove
      */
-    public void removePropertyChangeListener(PropertyChangeListener l);
+    public void removePropertyChangeListener(PropertyChangeListener listener);
 
     /**
-     * Adds a PropertyChangeListener to the listener list for a specific
-     * property.
+     * Adds the given <code>PropertyChangeListener</code> to this bean for the
+     * specified property.
      * 
-     * @param propertyName a valid property name
-     * @param l the PropertyChangeListener to be added
+     * @param propertyName the property name of the property to observe
+     * @param listener the listener to add
      */
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener l);
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);
 
     /**
-     * Removes a PropertyChangeListener from the listener list for a specific
-     * property. This method should be used to remove PropertyChangeListeners
-     * that were registered for a specific bound property.
+     * Removes the given <code>PropertyChangeListener</code> from this bean for
+     * the specified property. This method should be used to remove a listener
+     * that was previously registered for a specific bound property.
      * 
-     * @param propertyName a valid property name
-     * @param l the PropertyChangeListener to be removed
+     * @param propertyName the property name of the observed property
+     * @param listener the listener to remove
      */
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener l);
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener);
 
     // TODO (mk) do we need that?
     public BnPropertyChangeSupport getPropertyChangeSupport();

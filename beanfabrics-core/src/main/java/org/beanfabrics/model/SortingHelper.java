@@ -65,43 +65,61 @@ class SortingHelper {
         }
     }
 
+    private static class ComparableComparator implements Comparator<Comparable> {
+
+        @Override
+        public int compare(Comparable c1, Comparable c2) {
+            final int result;
+            if (c1 == null) {
+                if (c2 == null) {
+                    result = 0;
+                } else {
+                    result = -1;
+                }
+            } else {
+                if (c2 == null) {
+                    result = 1;
+                } else {
+                    int classnameComparison = c1.getClass().getName().compareTo(c2.getClass().getName());
+                    if (classnameComparison != 0) {
+                        result = classnameComparison;
+                    } else {
+                        result = c1.compareTo(c2);
+                    }
+                }
+            }
+            return result;
+        }
+
+    }
+
     private static class ModelComparatorImpl implements Comparator<PresentationModel> {
         final int orderFactor;
+        private final ComparableComparator comparableComparator = new ComparableComparator();
 
         public ModelComparatorImpl(int orderFactor) {
             this.orderFactor = orderFactor;
         }
 
-        public int compare(PresentationModel o1, PresentationModel o2) {
-            if ((o1 == null || o1 instanceof IValuePM) && (o2 == null || o2 instanceof IValuePM)) {
-                return compare((IValuePM)o1, (IValuePM)o2);
-            } else {
-                // TODO (mk) we will support also comparison between other model types
-                // if they implement a special interface that has a getComparable() method
-                // or that is Comparable  itself
-                throw new UnsupportedOperationException("comparing objects of this type is not supported yet");
-            }
-        }
-
-        public int compare(IValuePM pModel1, IValuePM pModel2) {
+        public int compare(PresentationModel pm1, PresentationModel pm2) {
             final int result;
-            if (pModel1 == null) {
-                if (pModel2 == null) {
+            if (pm1 == null) {
+                if (pm2 == null) {
                     return 0;
                 }
                 result = -1;
             } else {
-                Comparable c1 = pModel1.getComparable();
+                Comparable c1 = pm1.getComparable();
                 if (c1 == null) {
                     result = -1;
-                } else if (pModel2 == null) {
+                } else if (pm2 == null) {
                     result = +1;
                 } else {
-                    Comparable c2 = pModel2.getComparable();
+                    Comparable c2 = pm2.getComparable();
                     if (c2 == null) {
                         result = +1;
                     } else {
-                        result = c1.compareTo(c2);
+                        result = comparableComparator.compare(c1, c2);
                     }
                 }
             }
@@ -122,15 +140,7 @@ class SortingHelper {
             PresentationModel pModel1 = PathEvaluation.evaluateOrNull(c1, path);
             PresentationModel pModel2 = PathEvaluation.evaluateOrNull(c2, path);
 
-            if (pModel1 != null && pModel1 instanceof IValuePM == false) {
-                throw new IllegalArgumentException("PresentationModel at path " + path.toString() + " must be instance of " + IValuePM.class.getName() + " but was " + pModel1.getClass().getName());
-            }
-            if (pModel2 != null && pModel2 instanceof IValuePM == false) {
-                throw new IllegalArgumentException("PresentationModel at path " + path.toString() + " must be instance of " + IValuePM.class.getName() + " but was " + pModel2.getClass().getName());
-            }
-            IValuePM valueMdl1 = (IValuePM)pModel1;
-            IValuePM valueMdl2 = (IValuePM)pModel2;
-            return delegate.compare(valueMdl1, valueMdl2);
+            return delegate.compare(pModel1, pModel2);
         }
     }
 
@@ -182,6 +192,7 @@ class SortingHelper {
             PresentationModel row2 = (PresentationModel)o2;
 
             return delegate.compare(row1, row2);
+
         }
     }
 }

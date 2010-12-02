@@ -36,7 +36,8 @@ public class DatePM extends TextPM implements IDatePM {
      */
     public DatePM() {
         this.setFormat(this.createDefaultFormat());
-        this.getValidator().add(new DefaultValidationRule());
+        // Please note: to disable default validation rules just call getValidator().clear();
+        this.getValidator().add(new DateValidationRule());
     }
 
     /** {@inheritDoc} */
@@ -160,7 +161,7 @@ public class DatePM extends TextPM implements IDatePM {
         }
     }
 
-    protected class DefaultValidationRule implements ValidationRule {
+    protected class DateValidationRule implements ValidationRule {
         public ValidationState validate() {
             if (isEmpty()) {
                 return null;

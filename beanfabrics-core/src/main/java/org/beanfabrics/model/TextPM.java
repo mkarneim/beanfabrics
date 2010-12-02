@@ -98,6 +98,9 @@ public class TextPM extends AbstractValuePM implements ITextPM {
      * <p>
      * Use {@link #reset()} to set the model's value to it's default value or
      * {@link #preset()} to set the model's default value to it's current value.
+     * <p>
+     * <b>Note:</b> Setting this default value does does not necessarily mean
+     * that the actual value of this PM is changed to that value also.
      * 
      * @param aText the text to set as default value
      */

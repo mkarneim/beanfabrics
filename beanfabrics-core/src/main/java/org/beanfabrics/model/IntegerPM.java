@@ -23,7 +23,13 @@ public class IntegerPM extends BigDecimalPM implements IIntegerPM {
     private long maxValue = Long.MAX_VALUE;
 
     public IntegerPM() {
-        this.getValidator().add(new DefaultValidationRule());
+        // Please note: to disable default validation rules just call getValidator().clear();
+        this.getValidator().add(new IntegerValidationRule());
+    }
+
+    public IntegerPM(Integer value) {
+        this();
+        setInteger(value);
     }
 
     public long getMinValue() {
@@ -134,7 +140,7 @@ public class IntegerPM extends BigDecimalPM implements IIntegerPM {
         }
     }
 
-    public class DefaultValidationRule implements ValidationRule {
+    public class IntegerValidationRule implements ValidationRule {
         public ValidationState validate() {
             if (isEmpty()) {
                 return null;

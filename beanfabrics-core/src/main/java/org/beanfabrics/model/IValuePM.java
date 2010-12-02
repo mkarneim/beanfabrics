@@ -34,5 +34,4 @@ public interface IValuePM extends PresentationModel {
      */
     public boolean isEmpty();
 
-    public Comparable getComparable();
 }

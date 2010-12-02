@@ -16,9 +16,12 @@ package org.beanfabrics.context;
  */
 public interface ContextOwner {
     /**
-     * Returns the owned {@link Context}.
+     * Returns the {@link Context}.
+     * <p>
+     * The context is assumed being constant. Implementors must not change their
+     * context reference during lifetime.
      * 
-     * @return the owned context.
+     * @return the context.
      */
     public Context getContext();
 }
