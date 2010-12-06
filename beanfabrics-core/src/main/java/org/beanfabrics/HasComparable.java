@@ -13,7 +13,8 @@ package org.beanfabrics;
  */
 public interface HasComparable {
     /**
-     * Returns the comparable substitute.
+     * Returns the comparable substitute. This substitute can be used for
+     * comparison of this object with another.
      * 
      * @return the comparable substitute
      */

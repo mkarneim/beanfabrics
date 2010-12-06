@@ -20,7 +20,7 @@ public interface IBigDecimalPM extends ITextPM {
      * @throws ConversionException if the text value can't be converted into a
      *             valid {@link BigDecimal}
      */
-    BigDecimal getBigDecimal()
+    public BigDecimal getBigDecimal()
         throws ConversionException;
 
     /**
@@ -29,5 +29,5 @@ public interface IBigDecimalPM extends ITextPM {
      * @param value
      * @see #setText(String)
      */
-    void setBigDecimal(BigDecimal value);
+    public void setBigDecimal(BigDecimal value);
 }

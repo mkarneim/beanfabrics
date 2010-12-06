@@ -182,12 +182,13 @@ public class TextPM extends AbstractValuePM implements ITextPM {
         this.getPropertyChangeSupport().firePropertyChange("options", old, this.options);
     }
 
+    /** {@inheritDoc} */
     public Comparable<?> getComparable() {
         return new TextComparable();
     }
 
     /**
-     * The {@link TextComparable} delegates the comparison to the model's text
+     * The {@link TextComparable} delegates the comparison to the PM's text
      * value.
      * 
      * @author Michael Karneim
@@ -195,6 +196,9 @@ public class TextPM extends AbstractValuePM implements ITextPM {
     protected class TextComparable implements Comparable {
         String text;
 
+        /**
+         * Constructs a {@link TextComparable}.
+         */
         public TextComparable() {
             this.text = TextPM.this.text.toLowerCase();
         }

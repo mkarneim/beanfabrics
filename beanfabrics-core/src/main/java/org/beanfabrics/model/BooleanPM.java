@@ -11,8 +11,8 @@ import java.util.ResourceBundle;
 import org.beanfabrics.util.ResourceBundleFactory;
 
 /**
- * The {@link BooleanPM} is a {@link PresentationModel} for a {@link Boolean}
- * value.
+ * The {@link BooleanPM} is a {@link PresentationModel} that contains a
+ * {@link Boolean} value.
  * <p>
  * The default value is {@link Boolean#FALSE}.
  * <p>

@@ -2,24 +2,33 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics.model;
 
 import java.math.BigDecimal;
 
 /**
- * The DecimalPM is a presentation model for decimal numbers. It offers
- * conversion methods for Double and Float.
+ * The {@link DecimalPM} is a {@link PresentationModel} that contains a decimal
+ * number. It offers setter and getter methods for Double and Float.
  * 
  * @author Michael Karneim
  */
-// TODO UNIT TEST
 public class DecimalPM extends BigDecimalPM {
+    /**
+     * Constructs a {@link DecimalPM}.
+     */
     public DecimalPM() {
 
     }
 
+    /**
+     * Returns the value of this PM as a {@link Double}.
+     * 
+     * @return the value of this PM as a Double
+     * @throws ConversionException if the text value of this PM can't be
+     *             converted to a double value using the defined format
+     * @see #setFormat(java.text.DecimalFormat)
+     * @see #getText()
+     */
     public Double getDouble()
         throws ConversionException {
         if (this.isEmpty()) {
@@ -30,6 +39,12 @@ public class DecimalPM extends BigDecimalPM {
         }
     }
 
+    /**
+     * Sets the value of this PM to the given {@link Double} value.
+     * 
+     * @param value the double value
+     * @see #setText(String)
+     */
     public void setDouble(Double value) {
         if (value == null) {
             this.setBigDecimal(null);
@@ -38,6 +53,13 @@ public class DecimalPM extends BigDecimalPM {
         }
     }
 
+    /**
+     * Returns the value of this PM as a {@link Float}.
+     * 
+     * @return the value of this PM as a Float
+     * @throws ConversionException if the text value of this PM can't be
+     *             converted to a float value using the defined format
+     */
     public Float getFloat()
         throws ConversionException {
         if (this.isEmpty()) {
@@ -48,6 +70,11 @@ public class DecimalPM extends BigDecimalPM {
         }
     }
 
+    /**
+     * Sets the value of this PM to the given {@link Float}.
+     * 
+     * @param value the float value
+     */
     public void setFloat(Float value) {
         if (value == null) {
             this.setBigDecimal(null);

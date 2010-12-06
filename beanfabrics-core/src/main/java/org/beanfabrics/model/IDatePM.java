@@ -2,27 +2,35 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics.model;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
+ * The {@link IDatePM} is the interface of {@link PresentationModel} components
+ * that contain a {@link Date} value.
+ * <p>
+ * The date format used for formatting and pasring can be set by calling
+ * {@link #setFormat(DateFormat)}. The default text format is {@link Locale}
+ * dependent.
+ * 
  * @author Michael Karneim
  * @author Max Gensthaler
  */
 public interface IDatePM extends ITextPM {
     /**
-     * Return the format to be used by this object to check the input and
-     * convert the input to a {@link Date} and vice versa.
+     * Returns the date format used for parsing and converting between the text
+     * and date value. This format is used for validation also.
+     * 
+     * @return the date format used for parsing and converting
      */
-    DateFormat getFormat();
+    public DateFormat getFormat();
 
     /**
-     * Sets the date format for the text value of this PM. It is used for
-     * validation and conversion.
+     * Sets the date format used for parsing and converting between the text and
+     * date value. This format is used for validation also.
      * <p>
      * For example, to set a format with date and time component do:
      * 
@@ -31,24 +39,27 @@ public interface IDatePM extends ITextPM {
      * format.setLenient(false);
      * pm.setFormat(format);
      * </pre>
+     * <P>
+     * Implementors must try to reformat the content to match the new format.
      * 
      * @param newFormat the new format
      */
-    void setFormat(DateFormat newFormat);
+    public void setFormat(DateFormat newFormat);
 
     /**
-     * Return the date represented by this object.
+     * Returns the value of this PM as a {@link Date}.
      * 
-     * @throws ConversionException thrown if the text of this object cannot be
-     *             parsed as date by the given format
+     * @return the value of this PM as a Date
+     * @throws ConversionException if the text value of this PM cannot be
+     *             converted to a {@link Date} using the defined format
      */
-    Date getDate()
+    public Date getDate()
         throws ConversionException;
 
     /**
-     * Set the {@link Date} to be represented by this object.
+     * Sets the value of this PM to the given {@link Date}.
      * 
-     * @param date {@link Date} to set
+     * @param date the date value
      */
-    void setDate(Date date);
+    public void setDate(Date date);
 }

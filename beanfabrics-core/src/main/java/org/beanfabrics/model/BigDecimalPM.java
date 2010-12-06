@@ -18,7 +18,7 @@ import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 
 /**
- * The {@link BigDecimalPM} is a {@link PresentationModel} for a
+ * The {@link BigDecimalPM} is a {@link PresentationModel} that contains a
  * {@link BigDecimal} value.
  * <p>
  * This class is the base class for any other 'numeric' presentation models in
@@ -93,9 +93,10 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
     /**
      * Sets the decimal format of this PM to the given value. This format will
      * be cloned before use.
-     * <p>
+     * <P>
+     * Implementors must try to reformat the content to match the new format.
      * 
-     * @param newFormat the new format for this model
+     * @param newFormat the new format
      * @see #reformat()
      */
     public void setFormat(DecimalFormat newFormat) {
@@ -234,6 +235,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
      * @author Michael Karneim
      */
     public class BigDecimalValidationRule implements ValidationRule {
+        /** {@inheritDoc} */
         public ValidationState validate() {
             if (isEmpty()) {
                 return null;

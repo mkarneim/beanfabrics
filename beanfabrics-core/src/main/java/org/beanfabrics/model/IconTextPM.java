@@ -2,8 +2,6 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics.model;
 
 import java.awt.Image;
@@ -14,12 +12,22 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 /**
+ * The {@link IconTextPM} is an extended {@link TextPM} that holds an additional
+ * {@link Icon} attribute.
+ * <p>
+ * <b>Please Note:</b> this class will be moved to the
+ * org.beanfabrics.swing.model package soon.
+ * 
  * @author Michael Karneim
  */
-// TODO (mk) JUNIT TEST
 public class IconTextPM extends TextPM implements IIconPM {
     private Icon icon;
 
+    /**
+     * Sets the {@link Icon} value of this PM.
+     * 
+     * @param newIcon
+     */
     public void setIcon(Icon newIcon) {
         if (equals(newIcon, icon)) {
             return;
@@ -29,10 +37,18 @@ public class IconTextPM extends TextPM implements IIconPM {
         this.getPropertyChangeSupport().firePropertyChange("icon", old, newIcon);
     }
 
+    /** {@inheritDoc} */
     public Icon getIcon() {
         return icon;
     }
 
+    /**
+     * Sets the {@link URL} to the resource containing an {@link Image} that
+     * should be used as {@link Icon} value of this PM.
+     * 
+     * @param url the URL to the {@link Image} resource
+     * @see #setIcon(Icon)
+     */
     public void setIconUrl(URL url) {
         if (url == null) {
             this.setIcon(null);
@@ -43,8 +59,4 @@ public class IconTextPM extends TextPM implements IIconPM {
         }
     }
 
-    @Override
-    public boolean isEmpty() {
-        return icon == null && super.isEmpty();
-    }
 }

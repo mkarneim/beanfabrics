@@ -9,11 +9,9 @@ import org.beanfabrics.validation.ValidationState;
 
 /**
  * The {@link AbstractValuePM} is the general superclass of PM components that
- * implement the {@link IValuePM} interface.
- * <p>
- * Implementors usually represent information units that can be presented in a
- * single field, have a title, have a description, can be mandatory, and can be
- * editable.
+ * implement the {@link IValuePM} interface and contain some 'value' and other
+ * additional attributes which are generally usefull for user interface
+ * programming, like title, description, mandatory, and editable.
  * 
  * @author Michael Karneim
  */

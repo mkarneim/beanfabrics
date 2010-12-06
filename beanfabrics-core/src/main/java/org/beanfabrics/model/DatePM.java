@@ -2,8 +2,6 @@
  * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-// TODO javadoc - remove this comment only when the class and all non-public
-// methods and fields are documented
 package org.beanfabrics.model;
 
 import java.text.DateFormat;
@@ -18,12 +16,15 @@ import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 
 /**
- * The DatePM is a presentation model for {@link Date} objects. The text format
- * is locale dependent but can be changed manually by calling
- * {@link #setFormat(DateFormat)}.
+ * The {@link DatePM} is a {@link PresentationModel} that contains a
+ * {@link Date} value.
+ * <p>
+ * The date format used for formatting and pasring can be set by calling
+ * {@link #setFormat(DateFormat)}. The default text format is {@link Locale}
+ * dependent.
  * 
- * @author Max Gensthaler
  * @author Michael Karneim
+ * @author Max Gensthaler
  */
 public class DatePM extends TextPM implements IDatePM {
     protected static final String KEY_MESSAGE_INVALID_DATE = "message.invalidDate";
@@ -31,8 +32,9 @@ public class DatePM extends TextPM implements IDatePM {
     private DateFormat format;
 
     /**
-     * Constructs a new instance with the default format (just showing the date,
-     * not the time).
+     * Constructs a {@link DatePM} using the default format.
+     * 
+     * @see #createDefaultFormat()
      */
     public DatePM() {
         this.setFormat(this.createDefaultFormat());
@@ -68,8 +70,12 @@ public class DatePM extends TextPM implements IDatePM {
     }
 
     /**
-     * This returns a localized {@link DateFormat} for converting a {@link Date}
-     * to a {@link String} and vice versa.
+     * Creates and returns a localized {@link DateFormat} for formatting a
+     * {@link Date} to a {@link String} and converting a <code>String</code> to
+     * a <code>Date</code>.
+     * 
+     * @return a localized {@link DateFormat} for formatting and parsing this
+     *         PM's value
      */
     protected DateFormat createDefaultFormat() {
         return getDateFormat(Locale.getDefault());
@@ -103,6 +109,11 @@ public class DatePM extends TextPM implements IDatePM {
         }
     }
 
+    /**
+     * Sets the default value of this PM to the given {@link Date} value.
+     * 
+     * @param date the default value
+     */
     public void setDefaultDate(Date date) {
         if (date == null) {
             this.setDefaultText(null);
@@ -111,13 +122,23 @@ public class DatePM extends TextPM implements IDatePM {
         }
     }
 
+    /** {@inheritDoc} */
     public Comparable<?> getComparable() {
         return new DateComparable();
     }
 
+    /**
+     * The {@link DateComparable} delegates the comparison to the PM's date
+     * value.
+     * 
+     * @author Michael Karneim
+     */
     private class DateComparable extends TextComparable {
         private Long time;
 
+        /**
+         * Constructs a {@link DateComparable}.
+         */
         public DateComparable() {
             if (!isEmpty()) {
                 try {
@@ -172,7 +193,14 @@ public class DatePM extends TextPM implements IDatePM {
         }
     }
 
-    protected class DateValidationRule implements ValidationRule {
+    /**
+     * This rule evaluates to invalid if the PM's value can't be converted into
+     * a {@link Date}.
+     * 
+     * @author Michael Karneim
+     */
+    public class DateValidationRule implements ValidationRule {
+        /** {@inheritDoc} */
         public ValidationState validate() {
             if (isEmpty()) {
                 return null;
@@ -187,7 +215,14 @@ public class DatePM extends TextPM implements IDatePM {
         }
     }
 
-    public static DateFormat getDateFormat(Locale locale) {
+    /**
+     * Factory method for creating a {@link DateFormat} for the specified
+     * {@link Locale}.
+     * 
+     * @param locale
+     * @return the new {@link DateFormat}.
+     */
+    protected static DateFormat getDateFormat(Locale locale) {
         DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
         format.setLenient(false);
         return format;
