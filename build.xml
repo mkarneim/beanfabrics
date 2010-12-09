@@ -200,7 +200,7 @@
 	<target name="dist" depends="init, clean, create-bin-zip, create-project-zip" description="Create the distribution files.">
 	</target>
 					
-	<target name="release" depends="init, dist, upload" description="Release the distribution to googlecode.com">
+	<target name="dist-and-upload" depends="init, dist, upload" description="Release the distribution to googlecode.com">
 	</target>
 
 </project>
