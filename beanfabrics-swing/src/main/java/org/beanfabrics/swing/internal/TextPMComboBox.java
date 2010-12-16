@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Set;
 
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
@@ -116,13 +115,16 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor, Vi
     public boolean isConnected() {
         return this.pModel != null;
     }
-    
+
     /**
-     * Returns whether this component is connected to a PM that provides {@link Options}.
-     * @return <code>true</code> when this component has access to some {@link Options} 
+     * Returns whether this component is connected to a PM that provides
+     * {@link Options}.
+     * 
+     * @return <code>true</code> when this component has access to some
+     *         {@link Options}
      */
     protected boolean hasOptions() {
-    	return isConnected() && pModel.getOptions()!=null;
+        return isConnected() && pModel.getOptions() != null;
     }
 
     /**
@@ -197,8 +199,8 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor, Vi
             if (isConnected() == false) {
                 return null;
             }
-            if ( index <0 || index >= pModel.getOptions().size()) {
-            	return null;
+            if (index < 0 || index >= pModel.getOptions().size()) {
+                return null;
             }
             return pModel.getOptions().getValue(index);
         }

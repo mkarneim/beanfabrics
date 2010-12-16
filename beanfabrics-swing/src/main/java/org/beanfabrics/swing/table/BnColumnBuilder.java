@@ -25,13 +25,13 @@ import org.beanfabrics.Path;
  * @author Michael Karneim
  */
 public class BnColumnBuilder {
-    
+
     public static final int ALIGNMENT_LEFT = SwingConstants.LEFT;
     public static final int ALIGNMENT_RIGHT = SwingConstants.RIGHT;
     public static final int ALIGNMENT_TRAILING = SwingConstants.TRAILING;
     public static final int ALIGNMENT_LEADING = SwingConstants.LEADING;
     public static final int ALIGNMENT_CENTER = SwingConstants.CENTER;
-    
+
     public static void main(String[] args) {
         new BnColumnBuilder().addColumn().withPath("this.name").withName("Name").addColumn().withPath("this.phone").withName("Phone").withWidth(100).withWidthFixed(true).build();
     }

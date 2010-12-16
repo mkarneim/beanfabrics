@@ -402,11 +402,12 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
      * @param paths one or more Path objects must be specified to define which
      *            pM properties will be used for comparison.
      */
-    // TODO (mk) TEST
     public void sortBy(boolean ascending, Path... paths) {
-        SortKey[] newSortKeys = new SortKey[paths.length];
-        for (int i = 0; i < paths.length; ++i) {
-            newSortKeys[i] = new SortKey(ascending, paths[i]);
+        List<SortKey> newSortKeys = new ArrayList<SortKey>();
+        for (Path path : paths) {
+            if (path != null) {
+                newSortKeys.add(new SortKey(ascending, path));
+            }
         }
         sortBy(newSortKeys);
     }

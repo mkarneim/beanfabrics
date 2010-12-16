@@ -239,7 +239,7 @@ public class BnTableSelectionModel implements ListSelectionModel {
         int endIndex = Math.max(index0, index1);
 
         updateLeadAnchorIndices(index0, index1);
-        if ( index0 == -1) {
+        if (index0 == -1) {
             list.getSelection().clear();
         } else {
             list.getSelection().setInterval(beginIndex, endIndex);

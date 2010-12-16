@@ -111,7 +111,7 @@ public class DatePMTest {
 
         assertEquals("Jan 14, 1971", pm.getText());
     }
-    
+
     @Test
     public void setFormatWithInvalidDate() {
         Locale.setDefault(Locale.GERMANY);

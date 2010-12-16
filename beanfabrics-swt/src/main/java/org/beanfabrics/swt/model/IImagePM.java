@@ -11,5 +11,5 @@ import org.eclipse.swt.graphics.Image;
  * @author Michael Karneim
  */
 public interface IImagePM extends IValuePM {
-	public Image getImage();
+    public Image getImage();
 }

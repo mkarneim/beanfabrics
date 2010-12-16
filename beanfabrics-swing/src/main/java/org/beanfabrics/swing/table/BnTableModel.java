@@ -201,6 +201,9 @@ public class BnTableModel extends AbstractTableModel {
      */
     public SortKey getSortKey(int col) {
         Path colPath = getColumnPath(col);
+        if (colPath == null) {
+            return null;
+        }
         Collection<SortKey> sortKeys = list.getSortKeys();
         for (SortKey sortKey : sortKeys) {
             if (colPath.equals(sortKey.getSortPath())) {

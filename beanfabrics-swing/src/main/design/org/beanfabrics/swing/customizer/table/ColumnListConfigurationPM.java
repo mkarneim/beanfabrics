@@ -10,13 +10,15 @@ import org.beanfabrics.swing.table.BnColumn;
 public class ColumnListConfigurationPM extends AbstractPM {
     public interface Model {
         ColumnListContext getColumnListContext();
+
         void apply(BnColumn[] cols);
     }
+
     private Model model;
-    
+
     ColumnListPM list = new ColumnListPM();
     OperationPM apply = new OperationPM();
-    
+
     public ColumnListConfigurationPM(Model aModel) {
         PMManager.setup(this);
         setModel(aModel);
@@ -26,16 +28,15 @@ public class ColumnListConfigurationPM extends AbstractPM {
         this.model = aModel;
         list.setColumnListContext(aModel.getColumnListContext());
     }
-    
+
     @Operation
     public void apply() {
         model.apply(list.getData());
     }
-    @Validation(path="apply")
+
+    @Validation(path = "apply")
     public boolean canApply() {
         return list.isValid();
     }
 
-    
-    
 }

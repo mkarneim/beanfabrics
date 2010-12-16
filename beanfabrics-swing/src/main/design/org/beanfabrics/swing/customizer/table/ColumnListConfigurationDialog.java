@@ -3,10 +3,17 @@ package org.beanfabrics.swing.customizer.table;
 import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Link;
@@ -14,14 +21,7 @@ import org.beanfabrics.ModelProvider;
 import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
 import org.beanfabrics.View;
-import java.awt.GridBagLayout;
 import org.beanfabrics.swing.BnButton;
-import java.awt.GridBagConstraints;
-import javax.swing.JButton;
-import java.awt.Insets;
-import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /**
  * The ColumnListConfigurationDialog is a {@link View} on a
@@ -125,10 +125,10 @@ public class ColumnListConfigurationDialog extends JDialog implements View<Colum
             buttonPanel = new JPanel();
             buttonPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
             GridBagLayout gbl_buttonPanel = new GridBagLayout();
-            gbl_buttonPanel.columnWidths = new int[]{0, 0, 0};
-            gbl_buttonPanel.rowHeights = new int[]{0, 0};
-            gbl_buttonPanel.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
-            gbl_buttonPanel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+            gbl_buttonPanel.columnWidths = new int[] { 0, 0, 0 };
+            gbl_buttonPanel.rowHeights = new int[] { 0, 0 };
+            gbl_buttonPanel.columnWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
+            gbl_buttonPanel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
             buttonPanel.setLayout(gbl_buttonPanel);
             GridBagConstraints gbc_bnbtnOk = new GridBagConstraints();
             gbc_bnbtnOk.anchor = GridBagConstraints.WEST;
@@ -153,28 +153,30 @@ public class ColumnListConfigurationDialog extends JDialog implements View<Colum
         }
         return columnListPanel;
     }
+
     private BnButton getBnbtnOk() {
         if (bnbtnOk == null) {
-        	bnbtnOk = new BnButton();
-        	bnbtnOk.addActionListener(new ActionListener() {
-        	    public void actionPerformed(ActionEvent e) {
-        	        dispose();
-        	    }
-        	});
-        	bnbtnOk.setPath(new Path("this.apply"));
-        	bnbtnOk.setText("Ok");
-        	bnbtnOk.setModelProvider(getLocalModelProvider());
+            bnbtnOk = new BnButton();
+            bnbtnOk.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    dispose();
+                }
+            });
+            bnbtnOk.setPath(new Path("this.apply"));
+            bnbtnOk.setText("Ok");
+            bnbtnOk.setModelProvider(getLocalModelProvider());
         }
         return bnbtnOk;
     }
+
     private JButton getBtnCancel() {
         if (btnCancel == null) {
-        	btnCancel = new JButton("Cancel");
-        	btnCancel.addActionListener(new ActionListener() {
-        	    public void actionPerformed(ActionEvent e) {
-        	        dispose();
-        	    }
-        	});
+            btnCancel = new JButton("Cancel");
+            btnCancel.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    dispose();
+                }
+            });
         }
         return btnCancel;
     }

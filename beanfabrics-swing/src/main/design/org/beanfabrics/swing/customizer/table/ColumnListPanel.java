@@ -22,8 +22,8 @@ import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
 import org.beanfabrics.View;
 import org.beanfabrics.swing.BnButton;
-import org.beanfabrics.swing.table.BnTable;
 import org.beanfabrics.swing.table.BnColumnBuilder;
+import org.beanfabrics.swing.table.BnTable;
 
 /**
  * The <code>ColumnListPanel</code> is a view on a {@link ColumnListPM}.
@@ -120,14 +120,9 @@ public class ColumnListPanel extends JPanel implements View<ColumnListPM>, Model
     private BnTable getBnTable() {
         if (bnTable == null) {
             bnTable = new BnTable();
-            bnTable.setColumns(new BnColumnBuilder()
-            	      .addColumn().withPath("this.path").withName("path").withWidth(120).withOperationPath("this.path.choosePath")
-            	      .addColumn().withPath("this.columnName").withName("columnName").withWidthFixed(true)
-            	      .addColumn().withPath("this.width").withName("width").withWidth(55).withWidthFixed(true)
-            	      .addColumn().withPath("this.fixedWidth").withName("fixedWidth").withWidth(45).withWidthFixed(true)
-            	      .addColumn().withPath("this.alignment").withName("alignment").withWidth(45).withWidthFixed(true)
-            	      .addColumn().withPath("this.operationPath").withName("operationPath").withWidth(80).withWidthFixed(true).withOperationPath("this.operationPath.choosePath")
-            	      .build());
+            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("this.path").withName("path").withWidth(120).withOperationPath("this.path.choosePath").addColumn().withPath("this.columnName").withName("columnName").withWidthFixed(true)
+                    .addColumn().withPath("this.width").withName("width").withWidth(55).withWidthFixed(true).addColumn().withPath("this.fixedWidth").withName("fixedWidth").withWidth(45).withWidthFixed(true).addColumn().withPath("this.alignment")
+                    .withName("alignment").withWidth(45).withWidthFixed(true).addColumn().withPath("this.operationPath").withName("operationPath").withWidth(80).withWidthFixed(true).withOperationPath("this.operationPath.choosePath").build());
             bnTable.setPath(new org.beanfabrics.Path("this"));
             bnTable.setModelProvider(getLocalProvider());
             // Customize rendering

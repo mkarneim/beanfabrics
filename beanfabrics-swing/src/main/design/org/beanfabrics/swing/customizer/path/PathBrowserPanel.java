@@ -39,8 +39,8 @@ import org.beanfabrics.swing.BnTextField;
 import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 import org.beanfabrics.swing.customizer.util.SeparatorLabel;
 import org.beanfabrics.swing.customizer.util.ToolbarButton;
-import org.beanfabrics.swing.table.BnTable;
 import org.beanfabrics.swing.table.BnColumnBuilder;
+import org.beanfabrics.swing.table.BnTable;
 
 /**
  * The <code>PathBrowserPanel</code> is the view on a {@link PathBrowserPM}.
@@ -183,10 +183,7 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
                 }
             });
             bnTable.setPath(new org.beanfabrics.Path("this.children"));
-            bnTable.setColumns(new BnColumnBuilder()
-            	      .addColumn().withPath("this.name").withName("Name").withWidth(140).withWidthFixed(true)
-            	      .addColumn().withPath("this.type").withName("Type").withWidth(200)
-            	      .build());
+            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("this.name").withName("Name").withWidth(140).withWidthFixed(true).addColumn().withPath("this.type").withName("Type").withWidth(200).build());
             bnTable.setModelProvider(getLocalProvider());
             bnTable.setGridColor(bnTable.getBackground());
             bnTable.setIntercellSpacing(new Dimension(0, 0));

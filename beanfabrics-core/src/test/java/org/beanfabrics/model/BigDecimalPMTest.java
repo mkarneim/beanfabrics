@@ -105,7 +105,7 @@ public class BigDecimalPMTest {
 
         assertEquals("1,234,567.89", pm.getText());
     }
-    
+
     @Test
     public void setFormatWithInvalidNumber() {
         Locale.setDefault(Locale.GERMANY);

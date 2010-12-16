@@ -15,30 +15,30 @@ import org.beanfabrics.Path;
  * @author Michael Karneim
  */
 public class ViewConfig {
-	private List<Column> columns;
+    private List<Column> columns;
 
-	public ViewConfig(Column[] columns) {
-		this.columns = Collections.unmodifiableList(Arrays.asList(columns));
-	}
+    public ViewConfig(Column[] columns) {
+        this.columns = Collections.unmodifiableList(Arrays.asList(columns));
+    }
 
-	public ViewConfig(List<Column> columns) {
-		this.columns = Collections.unmodifiableList(new ArrayList<Column>(columns));
-	}
+    public ViewConfig(List<Column> columns) {
+        this.columns = Collections.unmodifiableList(new ArrayList<Column>(columns));
+    }
 
-	public List<Column> getColumns() {
-		return this.columns;
-	}
+    public List<Column> getColumns() {
+        return this.columns;
+    }
 
-	public static class Column {
-		public final Path path;
-		public final String header;
-		public final int width;
+    public static class Column {
+        public final Path path;
+        public final String header;
+        public final int width;
 
-		public Column(Path path, String header, int with) {
-			super();
-			this.path = path;
-			this.header = header;
-			this.width = with;
-		}
-	}
+        public Column(Path path, String header, int with) {
+            super();
+            this.path = path;
+            this.header = header;
+            this.width = with;
+        }
+    }
 }

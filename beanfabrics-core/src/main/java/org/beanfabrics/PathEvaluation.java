@@ -155,9 +155,15 @@ public class PathEvaluation implements Iterable<PathEvaluation.Entry> {
     /**
      * Evaluates the given path at the given root and returns the value at the
      * end.
+     * 
+     * @param root
+     * @param path
      */
     public static PresentationModel evaluate(PresentationModel root, Path path)
         throws IllegalArgumentException, EvaluationException {
+        if (path == null) {
+            throw new IllegalArgumentException("path==null");
+        }
         PathEvaluation eval = new PathEvaluation(root, path);
         if (eval.isCompletelyResolved()) {
             return eval.getResult().value;
@@ -169,9 +175,15 @@ public class PathEvaluation implements Iterable<PathEvaluation.Entry> {
     /**
      * Evaluates the given path at the given root and returns the value at the
      * end if it can be found, null otherwise.
+     * 
+     * @param root
+     * @param path
      */
     public static PresentationModel evaluateOrNull(PresentationModel root, Path path)
         throws IllegalArgumentException {
+        if (path == null) {
+            return null;
+        }
         PathEvaluation eval = new PathEvaluation(root, path);
         if (eval.isCompletelyResolved()) {
             return eval.getResult().value;
