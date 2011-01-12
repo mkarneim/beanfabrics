@@ -48,6 +48,7 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
     private BnTextField dateTextField;
     private BnComboBox localeComboBox;
     private JPanel panel;
+    private BnComboBox bnComboBox;
 
     /**
      * Launch the application
@@ -118,6 +119,8 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
         if (panel == null) {
             panel = new JPanel();
             final GridBagLayout gridBagLayout = new GridBagLayout();
+            gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0 };
+            gridBagLayout.rowHeights = new int[] { 0, 64, 0, 0, 0, 0 };
             gridBagLayout.columnWidths = new int[] { 0, 0, 7 };
             panel.setLayout(gridBagLayout);
             final GridBagConstraints gridBagConstraints_6 = new GridBagConstraints();
@@ -125,24 +128,24 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
             gridBagConstraints_6.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints_6.gridx = 1;
             gridBagConstraints_6.gridy = 3;
-            gridBagConstraints_6.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints_6.insets = new Insets(2, 2, 5, 2);
             panel.add(getDateTextField(), gridBagConstraints_6);
             final GridBagConstraints gridBagConstraints_4 = new GridBagConstraints();
             gridBagConstraints_4.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints_4.gridx = 0;
             gridBagConstraints_4.gridy = 4;
-            gridBagConstraints_4.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints_4.insets = new Insets(2, 2, 5, 5);
             panel.add(getAutoConvertDateLabel(), gridBagConstraints_4);
             final GridBagConstraints gridBagConstraints_7 = new GridBagConstraints();
             gridBagConstraints_7.gridwidth = 2;
             gridBagConstraints_7.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints_7.gridx = 1;
             gridBagConstraints_7.gridy = 4;
-            gridBagConstraints_7.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints_7.insets = new Insets(2, 2, 5, 2);
             panel.add(getAutoConvertDateTextField(), gridBagConstraints_7);
             final GridBagConstraints gridBagConstraints_8 = new GridBagConstraints();
             gridBagConstraints_8.fill = GridBagConstraints.HORIZONTAL;
-            gridBagConstraints_8.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints_8.insets = new Insets(2, 2, 2, 5);
             gridBagConstraints_8.gridy = 5;
             gridBagConstraints_8.gridx = 0;
             panel.add(getDateTimeLabel(), gridBagConstraints_8);
@@ -166,24 +169,38 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
         return localeComboBox;
     }
 
+    private BnComboBox getBnComboBox() {
+        if (bnComboBox == null) {
+            bnComboBox = new BnComboBox();
+            bnComboBox.setPath(new org.beanfabrics.Path("this.style"));
+            bnComboBox.setModelProvider(getLocalProvider());
+        }
+        return bnComboBox;
+    }
+
     private BnTextField getDateTextField() {
         if (dateTextField == null) {
             final GridBagConstraints gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints.gridx = 0;
             gridBagConstraints.gridy = 0;
-            gridBagConstraints.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints.insets = new Insets(2, 2, 5, 5);
             panel.add(getLocaleLabel(), gridBagConstraints);
             final GridBagConstraints gridBagConstraints_1 = new GridBagConstraints();
-            gridBagConstraints_1.gridwidth = 2;
             gridBagConstraints_1.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints_1.gridx = 1;
             gridBagConstraints_1.gridy = 0;
-            gridBagConstraints_1.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints_1.insets = new Insets(2, 2, 5, 5);
             panel.add(getLocaleComboBox(), gridBagConstraints_1);
+            GridBagConstraints gbc_bnComboBox = new GridBagConstraints();
+            gbc_bnComboBox.insets = new Insets(0, 0, 5, 0);
+            gbc_bnComboBox.fill = GridBagConstraints.HORIZONTAL;
+            gbc_bnComboBox.gridx = 2;
+            gbc_bnComboBox.gridy = 0;
+            getPanel().add(getBnComboBox(), gbc_bnComboBox);
             final GridBagConstraints gridBagConstraints_2 = new GridBagConstraints();
             gridBagConstraints_2.gridwidth = 3;
-            gridBagConstraints_2.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints_2.insets = new Insets(2, 2, 5, 2);
             gridBagConstraints_2.gridy = 1;
             gridBagConstraints_2.gridx = 0;
             panel.add(getSeparator(), gridBagConstraints_2);
@@ -191,17 +208,17 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
             gridBagConstraints_3.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints_3.gridx = 0;
             gridBagConstraints_3.gridy = 2;
-            gridBagConstraints_3.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints_3.insets = new Insets(2, 2, 5, 5);
             panel.add(getDefaultLocaleDateLabel(), gridBagConstraints_3);
             final GridBagConstraints gridBagConstraints_5 = new GridBagConstraints();
             gridBagConstraints_5.weightx = 1;
             gridBagConstraints_5.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints_5.gridx = 1;
             gridBagConstraints_5.gridy = 2;
-            gridBagConstraints_5.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints_5.insets = new Insets(2, 2, 5, 5);
             panel.add(getDefaultLocaleDateTextField(), gridBagConstraints_5);
             final GridBagConstraints gridBagConstraints_4 = new GridBagConstraints();
-            gridBagConstraints_4.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints_4.insets = new Insets(2, 2, 5, 2);
             gridBagConstraints_4.gridy = 2;
             gridBagConstraints_4.gridx = 2;
             panel.add(getDefaultLocaleDateButton(), gridBagConstraints_4);
@@ -209,7 +226,7 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
             gridBagConstraints_6.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints_6.gridx = 0;
             gridBagConstraints_6.gridy = 3;
-            gridBagConstraints_6.insets = new Insets(2, 2, 2, 2);
+            gridBagConstraints_6.insets = new Insets(2, 2, 5, 5);
             panel.add(getDateLabel(), gridBagConstraints_6);
             dateTextField = new BnTextField();
             dateTextField.setPath(new org.beanfabrics.Path("this.date"));
@@ -310,29 +327,55 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
         return defaultLocaleDateButton;
     }
 
-    public static class DateTestModel extends AbstractPM {
-        protected final IDatePM defaultLocaleDate = new DatePM();
-        protected final IOperationPM setDefaultLocaleDate = new OperationPM();
-        protected final IDatePM date = new DatePM();
-        protected final IDatePM autoConvertDate = new DatePM();
-        protected final ITextPM locale = new TextPM();
-        protected final IDatePM dateTime = new DatePM();
-
-        public DateTestModel() {
+    public static class LocalePM extends TextPM {
+        Options<Locale> localeOptions = getLocaleOptions(new Locale[] { Locale.GERMAN, Locale.US, Locale.UK });
+        public LocalePM() {
             PMManager.setup(this);
-            setDefaultLocaleDate.setTitle("now");
-            locale.setOptions(getLocaleOptions(new Locale[] { Locale.GERMAN, Locale.US, Locale.UK }));
-            locale.setText(Locale.getDefault().getDisplayName());
-            date.setDate(new Date());
-            dateTime.setFormat(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
         }
-
-        private Options<Locale> getLocaleOptions(Locale[] locales) {
+        
+        public Options<Locale> getOptions() {
+            return localeOptions;
+        }
+        
+        private static Options<Locale> getLocaleOptions(Locale[] locales) {
             Options<Locale> opts = new Options<Locale>();
             for (Locale locale : locales) {
                 opts.put(locale, locale.getDisplayName());
             }
             return opts;
+        }
+    }
+    
+    public static class StylePM extends TextPM {
+        Options<Integer> styleOptions = new Options<Integer>();
+        public StylePM() {
+            styleOptions.put(DateFormat.SHORT, "Short");
+            styleOptions.put(DateFormat.MEDIUM, "Medium");
+            styleOptions.put(DateFormat.LONG, "Long");
+            styleOptions.put(DateFormat.FULL, "Full");
+            PMManager.setup(this);
+        }
+        public Options<Integer> getOptions() {
+            return styleOptions;
+        }
+    }
+    
+    public static class DateTestModel extends AbstractPM {
+        protected final IDatePM defaultLocaleDate = new DatePM();
+        protected final IOperationPM setDefaultLocaleDate = new OperationPM();
+        protected final IDatePM date = new DatePM();
+        protected final IDatePM autoConvertDate = new DatePM();
+        protected final LocalePM locale = new LocalePM();
+        protected final IDatePM dateTime = new DatePM();
+        protected final StylePM style = new StylePM();
+
+        public DateTestModel() {
+            PMManager.setup(this);
+            setDefaultLocaleDate.setTitle("now");            
+            locale.setText(locale.getOptions().get(Locale.GERMAN));
+            style.setText(style.getOptions().get(DateFormat.MEDIUM));
+            date.setDate(new Date());
+            dateTime.setFormat(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT));
         }
 
         @Operation
@@ -352,28 +395,39 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
             }
         }
 
-        @OnChange(path = "locale")
+        @OnChange(path = { "locale", "style" })
         private void updateDate() {
             try {
                 Locale localeValue = (Locale)locale.getOptions().getKey(locale.getText());
-                date.setFormat(DatePM.getDateFormat(localeValue));
+                int aStyle = (Integer)style.getOptions().getKey(style.getText());
+                
+                date.setFormat(getDateFormat(localeValue, aStyle));
+                
             } catch (NoSuchElementException ex) {
                 // ignore
             }
         }
 
-        @OnChange(path = "locale")
+        private DateFormat getDateFormat(Locale localeValue, int style) {
+            DateFormat result = DateFormat.getDateInstance(style, localeValue);
+            result.setLenient(false);
+            return result;
+        }
+
+        @OnChange(path = { "locale", "style" })
         private void updateAutoConvertDate() {
             try {
                 Locale localeValue = (Locale)locale.getOptions().getKey(locale.getText());
-
+                int aStyle = (Integer)style.getOptions().getKey(style.getText());
                 Date date;
                 try {
                     date = autoConvertDate.getDate();
                 } catch (ConversionException e) {
                     date = null;
                 }
-                autoConvertDate.setFormat(DatePM.getDateFormat(localeValue));
+                
+                autoConvertDate.setFormat(getDateFormat(localeValue, aStyle));
+                
                 if (date != null) {
                     autoConvertDate.setDate(date);
                 }
@@ -382,4 +436,5 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
             }
         }
     }
+
 }

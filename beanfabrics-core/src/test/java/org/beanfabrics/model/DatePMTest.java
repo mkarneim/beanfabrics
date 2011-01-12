@@ -12,6 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -38,18 +39,21 @@ public class DatePMTest {
     }
 
     static Locale oldLocale;
+    static DatePM.DateFormatProvider oldDateFormatProvider;
 
     @BeforeClass
     public static void setUpClass()
         throws Exception {
         oldLocale = Locale.getDefault();
         Locale.setDefault(Locale.GERMANY);
+        oldDateFormatProvider = DatePM.getDefaultDateFormatProvider();
     }
 
     @AfterClass
     public static void tearDownClass()
         throws Exception {
         Locale.setDefault(oldLocale);
+        DatePM.setDefaultDateFormatProvider(oldDateFormatProvider);
     }
 
     @Test
@@ -92,9 +96,10 @@ public class DatePMTest {
         model.addPropertyChangeListener(l);
 
         model.setText("14.01.1971");
+        assertEquals("model.isValid()", true, model.isValid());
         assertEquals("l.eventCount", 2, l.eventCount);
         model.setText("31.02");
-        assertEquals("pM.isValid()", false, model.isValid());
+        assertEquals("model.isValid()", false, model.isValid());
         assertEquals("l.eventCount", 4, l.eventCount);
 
         model.setDate(new Date());
@@ -102,15 +107,71 @@ public class DatePMTest {
     }
 
     @Test
-    public void setFormat() {
+    public void setGermanFormat() {
         Locale.setDefault(Locale.GERMANY);
         DatePM pm = new DatePM();
-        pm.setText("14.01.1971");
-        DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
+        pm.setText("14.01.2011");
+        assertEquals("pm.isValid()", true, pm.isValid());
+        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
         pm.setFormat(format);
 
-        assertEquals("Jan 14, 1971", pm.getText());
+        assertEquals("1/14/11", pm.getText());
     }
+
+    @Test
+    public void setUSFormat() {
+        Locale.setDefault(Locale.US);
+        DatePM pm = new DatePM();
+        Calendar cal = Calendar.getInstance();
+        cal.set(2011, 0, 14);
+        pm.setDate(cal.getTime());        
+        assertEquals("pm.isValid()", true, pm.isValid());
+        assertEquals("pm.getText()", "Jan 14, 2011", pm.getText());
+        Locale.setDefault(Locale.GERMAN);
+        DateFormat format = DateFormat.getDateInstance();
+        pm.setFormat(format);
+
+        assertEquals("14.01.2011", pm.getText());
+    }
+    
+    @Test
+    public void setUSFormat2() {
+        Locale.setDefault(Locale.US);
+        DatePM pm = new DatePM();
+        pm.setText("Jan 14, 2011");
+        assertEquals("pm.isValid()", true, pm.isValid());
+        Locale.setDefault(Locale.GERMAN);
+        DateFormat format = DateFormat.getDateInstance();        
+        pm.setFormat(format);
+
+        assertEquals("14.01.2011", pm.getText());
+    }
+
+    @Test
+    public void useCustomDateFormatProvider() {
+        DatePM.setDefaultDateFormatProvider( new DatePM.DateFormatProvider(){
+            @Override
+            public DateFormat getDateFormat() {
+                DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
+                format.setLenient(false);
+                return format;
+            }            
+        });
+        
+        Locale.setDefault(Locale.US);
+        DatePM pm = new DatePM();
+        Calendar cal = Calendar.getInstance();
+        cal.set(2011, 0, 14);
+        pm.setDate(cal.getTime());        
+        assertEquals("pm.isValid()", true, pm.isValid());
+        assertEquals("pm.getText()", "1/14/11", pm.getText());
+        Locale.setDefault(Locale.GERMAN);
+        DateFormat format = DateFormat.getDateInstance();
+        pm.setFormat(format);
+
+        assertEquals("14.01.2011", pm.getText());
+    }
+    
 
     @Test
     public void setFormatWithInvalidDate() {

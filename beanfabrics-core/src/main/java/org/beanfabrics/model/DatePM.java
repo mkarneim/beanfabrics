@@ -29,17 +29,71 @@ import org.beanfabrics.validation.ValidationState;
 public class DatePM extends TextPM implements IDatePM {
     protected static final String KEY_MESSAGE_INVALID_DATE = "message.invalidDate";
     private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(DatePM.class);
+
+    /**
+     * The {@link DateFormatProvider} is a factory for the default
+     * {@link DateFormat} used by newly created {@link DatePM} instances.
+     * 
+     * @see DatePM#setDefaultDateFormatProvider(DateFormatProvider)
+     */
+    public static class DateFormatProvider {
+        /**
+         * Creates and returns a new {@link DateFormat}
+         * 
+         * @return a new {@link DateFormat}
+         */
+        public DateFormat getDateFormat() {
+            DateFormat format = DateFormat.getDateInstance();
+            format.setLenient(false);
+            return format;
+        }
+    }
+
+    private static DateFormatProvider DEFAULT_DATE_FORMAT_PROVIDER = new DateFormatProvider();
+
+    /**
+     * Returns the {@link DateFormatProvider} that is used to create the default
+     * {@link DateFormat} used by newly created {@link DatePM} instances.
+     * 
+     * @return the {@link DateFormatProvider}
+     */
+    public static synchronized DateFormatProvider getDefaultDateFormatProvider() {
+        return DEFAULT_DATE_FORMAT_PROVIDER;
+    }
+
+    /**
+     * Sets the {@link DateFormatProvider} that is used to create the default
+     * {@link DateFormat} used by newly created {@link DatePM} instances.
+     * 
+     * @param provider
+     */
+    public static synchronized void setDefaultDateFormatProvider(DateFormatProvider provider) {
+        DEFAULT_DATE_FORMAT_PROVIDER = provider;
+    }
+
     private DateFormat format;
 
     /**
      * Constructs a {@link DatePM} using the default format.
      * 
-     * @see #createDefaultFormat()
+     * @see #getDefaultFormat()
      */
     public DatePM() {
-        this.setFormat(this.createDefaultFormat());
+        this.setFormat(this.getDefaultFormat());
         // Please note: to disable default validation rules just call getValidator().clear();
         this.getValidator().add(new DateValidationRule());
+    }
+
+    /**
+     * Returns a {@link DateFormat} for formatting a {@link Date} to a
+     * {@link String} and converting a <code>String</code> to a
+     * <code>Date</code>.
+     * 
+     * @return a localized {@link DateFormat} for formatting and parsing this
+     *         PM's value
+     */
+    protected DateFormat getDefaultFormat() {
+        return getDefaultDateFormatProvider().getDateFormat();
     }
 
     /** {@inheritDoc} */
@@ -67,18 +121,6 @@ public class DatePM extends TextPM implements IDatePM {
         if (doReformat) {
             setDate(oldValue);
         }
-    }
-
-    /**
-     * Creates and returns a localized {@link DateFormat} for formatting a
-     * {@link Date} to a {@link String} and converting a <code>String</code> to
-     * a <code>Date</code>.
-     * 
-     * @return a localized {@link DateFormat} for formatting and parsing this
-     *         PM's value
-     */
-    protected DateFormat createDefaultFormat() {
-        return getDateFormat(Locale.getDefault());
     }
 
     /** {@inheritDoc} */
@@ -215,16 +257,4 @@ public class DatePM extends TextPM implements IDatePM {
         }
     }
 
-    /**
-     * Factory method for creating a {@link DateFormat} for the specified
-     * {@link Locale}.
-     * 
-     * @param locale
-     * @return the new {@link DateFormat}.
-     */
-    protected static DateFormat getDateFormat(Locale locale) {
-        DateFormat format = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
-        format.setLenient(false);
-        return format;
-    }
 }
