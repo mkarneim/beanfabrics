@@ -43,24 +43,24 @@ public class BigDecimalPMTest {
 
     @Test
     public void setText1() {
-        BigDecimalPM model = new BigDecimalPM();
-        model.setText("1234.56");
+        BigDecimalPM pm = new BigDecimalPM();
+        pm.setText("1234.56");
         BigDecimal bd = new BigDecimal("1234.56");
-        assertEquals("pM.getBigDecimal()", bd, model.getBigDecimal());
+        assertEquals("pM.getBigDecimal()", bd, pm.getBigDecimal());
     }
 
     @Test
     public void setText2() {
-        BigDecimalPM model = new BigDecimalPM();
-        model.setText("1234abc");
-        assertEquals("pM.isValid()", false, model.isValid());
+        BigDecimalPM pm = new BigDecimalPM();
+        pm.setText("1234abc");
+        assertEquals("pM.isValid()", false, pm.isValid());
     }
 
     @Test
     public void setText3() {
-        BigDecimalPM model = new BigDecimalPM();
-        model.setText("9223372036854775809");
-        assertEquals("pM.isValid()", true, model.isValid());
+        BigDecimalPM pm = new BigDecimalPM();
+        pm.setText("9223372036854775809");
+        assertEquals("pM.isValid()", true, pm.isValid());
     }
 
     @Test
@@ -68,10 +68,10 @@ public class BigDecimalPMTest {
         Locale old = Locale.getDefault();
         try {
             Locale.setDefault(Locale.GERMAN);
-            BigDecimalPM model = new BigDecimalPM();
-            model.setText("blah"); // invalid text
-            assertFalse("model.isValid()", model.isValid());
-            String message = model.getValidationState().getMessage();
+            BigDecimalPM pm = new BigDecimalPM();
+            pm.setText("blah"); // invalid text
+            assertFalse("pm.isValid()", pm.isValid());
+            String message = pm.getValidationState().getMessage();
             assertEquals("message", "Dies ist keine korrekte Zahl", message);
         } finally {
             Locale.setDefault(old);
@@ -80,16 +80,16 @@ public class BigDecimalPMTest {
 
     @Test
     public void formatting() {
-        BigDecimalPM model = new BigDecimalPM();
+        BigDecimalPM pm = new BigDecimalPM();
         DecimalFormat format = new DecimalFormat("#.##");
-        model.setFormat(format);
-        model.setText("125.5678");
-        assertEquals("model.getText()", "125.5678", model.getText());
+        pm.setFormat(new BigDecimalPM.Format(format));
+        pm.setText("125.5678");
+        assertEquals("pm.getText()", "125.5678", pm.getText());
 
-        model.reformat();
+        pm.reformat();
 
-        assertEquals("pM.isValid()", true, model.isValid());
-        assertEquals("model.getText()", "125.57", model.getText());
+        assertEquals("pM.isValid()", true, pm.isValid());
+        assertEquals("pm.getText()", "125.57", pm.getText());
     }
 
     @Test
@@ -97,11 +97,11 @@ public class BigDecimalPMTest {
         Locale.setDefault(Locale.GERMANY);
         BigDecimalPM pm = new BigDecimalPM();
         DecimalFormat format = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.GERMANY);
-        pm.setFormat(format);
+        pm.setFormat(new BigDecimalPM.Format(format));
         pm.setText("1.234.567,89");
 
         DecimalFormat f2 = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.US);
-        pm.setFormat(f2);
+        pm.setFormat(new BigDecimalPM.Format(f2));
 
         assertEquals("1,234,567.89", pm.getText());
     }
@@ -111,11 +111,11 @@ public class BigDecimalPMTest {
         Locale.setDefault(Locale.GERMANY);
         BigDecimalPM pm = new BigDecimalPM();
         DecimalFormat format = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.GERMANY);
-        pm.setFormat(format);
+        pm.setFormat(new BigDecimalPM.Format(format));
         pm.setText("abcxyz");
 
         DecimalFormat f2 = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.US);
-        pm.setFormat(f2);
+        pm.setFormat(new BigDecimalPM.Format(f2));
 
         assertEquals("abcxyz", pm.getText());
     }

@@ -8,9 +8,7 @@ package org.beanfabrics.model;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.Format;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Locale;
 
 /**
@@ -21,58 +19,16 @@ import java.util.Locale;
  */
 // TODO (mk) move this class to beanfabrics-ext.jar
 public class MoneyPM extends BigDecimalPM {
-    /**
-     * The simplified format is used by the parsing routine when the standard
-     * format fails.
-     */
-    private DecimalFormat simplifiedFormat;
 
     public MoneyPM() {
-        this.setSimplifiedFormat(this.createSimplifiedFormat());
     }
 
-    public BigDecimal getBigDecimal()
-        throws ConversionException {
-        try {
-            if (this.isEmpty()) {
-                return null;
-            }
-            String str = getText();
-            BigDecimal result;
-            try {
-                result = (BigDecimal)getFormat().parseObject(str);
-            } catch (ParseException e) {
-                result = (BigDecimal)getSimplifiedFormat().parseObject(str);
-            }
-            return result;
-        } catch (ParseException e) {
-            throw new ConversionException(e);
-        }
+    @Override
+    protected IFormat<BigDecimal> createDefaultFormat() {
+        return new Format(getCurrencyFormat(Locale.getDefault()));
     }
 
-    public DecimalFormat getSimplifiedFormat() {
-        return simplifiedFormat;
-    }
-
-    public void setSimplifiedFormat(DecimalFormat newFormat) {
-        Format old = this.simplifiedFormat;
-        if (old == newFormat) {
-            return;
-        }
-        this.simplifiedFormat = (DecimalFormat)newFormat.clone();
-        this.revalidate();
-        this.getPropertyChangeSupport().firePropertyChange("simplifiedFormat", old, newFormat); //$NON-NLS-1$
-    }
-
-    protected DecimalFormat createDefaultFormat() {
-        return getCurrencyFormat(Locale.getDefault());
-    }
-
-    protected DecimalFormat createSimplifiedFormat() {
-        return getDecimalFormat(Locale.getDefault());
-    }
-
-    public static DecimalFormat getCurrencyFormat(Locale locale) {
+    protected static DecimalFormat getCurrencyFormat(Locale locale) {
         DecimalFormat result = (DecimalFormat)NumberFormat.getCurrencyInstance(locale);
         result.setParseBigDecimal(true);
         return result;

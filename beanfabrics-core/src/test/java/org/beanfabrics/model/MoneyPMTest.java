@@ -8,6 +8,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Currency;
 import java.util.Locale;
 
 import junit.framework.JUnit4TestAdapter;
@@ -35,9 +37,9 @@ public class MoneyPMTest {
     }
 
     MoneyPM create() {
-        MoneyPM cell = new MoneyPM();
-        cell.setFormat(MoneyPM.getCurrencyFormat(Locale.GERMANY));
-        return cell;
+        MoneyPM pm = new MoneyPM();
+        pm.setFormat(new BigDecimalPM.Format(MoneyPM.getCurrencyFormat(Locale.GERMANY)));
+        return pm;
     }
 
     @Test
@@ -45,39 +47,99 @@ public class MoneyPMTest {
         create();
     }
 
-    @Test
-    public void validate() {
-        MoneyPM cell = create();
-        cell.setText("14 \u20AC");
-        assertEquals("pM.isValid()", true, cell.isValid());
+    //@Test
+    public void testeDecimalFormate()
+        throws Exception {
 
-        cell.setText("14,00 \u20AC");
-        assertEquals("pM.isValid()", true, cell.isValid());
+        DecimalFormat curFormat = new DecimalFormat("#000.00#");
+        // #000 -> Beliebig viele Stellen vor dem Komma, mindestens aber 3 (mit führenden Nullen)
+        // .00# -> Mindestens 2 Stellen nach dem Komma (mit angehängten Nullen), höchstens aber 3 Stellen (gerundet) 
+        System.out.println("format: " + curFormat.toPattern());
+        System.out.println(curFormat.format(-9.9));
+        System.out.println(curFormat.format(10.1));
+        System.out.println(curFormat.format(1000.1256));
 
-        cell.setText("140.000,00 \u20AC");
-        assertEquals("pM.isValid()", true, cell.isValid());
-
-        cell.setText("abc");
-        assertEquals("pM.isValid()", false, cell.isValid());
+        System.out.println("\nparse: " + curFormat.toPattern());
+        System.out.println(curFormat.parse("-9,9"));
+        System.out.println(curFormat.parse("10,1"));
+        System.out.println(curFormat.parse("1000,1256"));
     }
 
     @Test
-    public void setBigDecimal() {
-        MoneyPM cell = create();
-        BigDecimal val = new BigDecimal("1000.23");
-        cell.setBigDecimal(val);
+    public void testCurrency() {
+        Currency c = Currency.getInstance(Locale.JAPAN);
+        String sym = c.getSymbol(Locale.US);
+        System.out.println(sym);
+    }
 
-        BigDecimal res = cell.getBigDecimal();
+    @Test
+    public void validFormatsWithCurrencySymbol() {
+        MoneyPM pm = create();
+        pm.setText("14 \u20AC");
+        assertEquals("pm.isValid()", true, pm.isValid());
+
+        pm.setText("14,00 \u20AC");
+        assertEquals("pm.isValid()", true, pm.isValid());
+
+        pm.setText("140.000,00 \u20AC");
+        assertEquals("pm.isValid()", true, pm.isValid());
+    }
+
+    @Test
+    public void validFormatsWithoutCurrencySymbol() {
+        MoneyPM pm = create();
+        pm.setText("14");
+        assertEquals("pm.isValid()", true, pm.isValid());
+
+        pm.setText("14,00");
+        assertEquals("pm.isValid()", true, pm.isValid());
+
+        pm.setText("140.000,00");
+        assertEquals("pm.isValid()", true, pm.isValid());
+    }
+
+    @Test
+    public void invalidFormatsWithForeignCurrencySymbol() {
+        MoneyPM pm = create();
+        pm.setText("14 $");
+        assertEquals("pm.isValid()", false, pm.isValid());
+    }
+
+    @Test
+    public void invalidFormats() {
+        MoneyPM pm = create();
+        pm.setText("abc");
+        assertEquals("pm.isValid()", false, pm.isValid());
+    }
+
+    //    @Test
+    //    public void changeCurrency() {
+    //        MoneyPM pm = create();
+    //        pm.setCurrency( Currency.getInstance(Locale.US));
+    //        pm.setText("100");
+    //        assertEquals("pm.isValid()", true, pm.isValid());
+    //        pm.reformat();
+    //        String text = pm.getText();
+    //        assertEquals("text", "100,00 $", text);
+    //    }
+
+    @Test
+    public void setBigDecimal() {
+        MoneyPM pm = create();
+        BigDecimal val = new BigDecimal("1000.23");
+        pm.setBigDecimal(val);
+
+        BigDecimal res = pm.getBigDecimal();
         assertNotNull("res", res);
         assertEquals("res", val, res);
     }
 
     @Test
     public void getText() {
-        MoneyPM cell = create();
+        MoneyPM pm = create();
         BigDecimal val = new BigDecimal("1000.23");
-        cell.setBigDecimal(val);
+        pm.setBigDecimal(val);
 
-        assertEquals("pM.getText()", "1.000,23 \u20AC", cell.getText());
+        assertEquals("pm.getText()", "1.000,23 \u20AC", pm.getText());
     }
 }

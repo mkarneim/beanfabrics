@@ -82,4 +82,88 @@ public class DecimalPM extends BigDecimalPM {
             this.setBigDecimal(new BigDecimal(value));
         }
     }
+    
+    public void setByte(Byte value) {
+        if (value == null) {
+            setBigDecimal(null);
+        } else {
+            setBigDecimal(new BigDecimal(value));
+        }
+    }
+
+    public Byte getByte()
+        throws ConversionException {
+        if (isEmpty()) {
+            return null;
+        } else {
+            try {
+                return getBigDecimal().byteValueExact();
+            } catch (ArithmeticException ex) {
+                throw new ConversionException(ex);
+            }
+        }
+    }
+
+    public void setShort(Short value) {
+        if (value == null) {
+            setBigDecimal(null);
+        } else {
+            setBigDecimal(new BigDecimal(value));
+        }
+    }
+
+    public Short getShort()
+        throws ConversionException {
+        if (isEmpty()) {
+            return null;
+        } else {
+            try {
+                return getBigDecimal().shortValueExact();
+            } catch (ArithmeticException ex) {
+                throw new ConversionException(ex);
+            }
+        }
+    }
+
+    public void setInteger(Integer value) {
+        if (value == null) {
+            setBigDecimal(null);
+        } else {
+            setBigDecimal(new BigDecimal(value));
+        }
+    }
+
+    public Integer getInteger()
+        throws ConversionException {
+        if (isEmpty()) {
+            return null;
+        } else {
+            try {
+                return getBigDecimal().intValueExact();
+            } catch (ArithmeticException ex) {
+                throw new ConversionException(ex);
+            }
+        }
+    }
+
+    public void setLong(Long value) {
+        if (value == null) {
+            setBigDecimal(null);
+        } else {
+            setBigDecimal(new BigDecimal(value));
+        }
+    }
+
+    public Long getLong()
+        throws ConversionException {
+        if (isEmpty()) {
+            return null;
+        } else {
+            try {
+                return getBigDecimal().longValueExact();
+            } catch (ArithmeticException ex) {
+                throw new ConversionException(ex);
+            }
+        }
+    }
 }

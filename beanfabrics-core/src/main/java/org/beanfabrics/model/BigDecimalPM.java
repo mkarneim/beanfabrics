@@ -7,7 +7,6 @@ package org.beanfabrics.model;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
-import java.text.Format;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Locale;
@@ -30,13 +29,19 @@ import org.beanfabrics.validation.ValidationState;
 public class BigDecimalPM extends TextPM implements IBigDecimalPM {
     private static final String KEY_MESSAGE_INVALID_NUMBER = "message.invalidNumber";
     private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(BigDecimalPM.class);
-    private DecimalFormat format;
+
+    public interface Parser {
+        public BigDecimal parse(String text)
+            throws ConversionException;
+    }
+
+    private IFormat<BigDecimal> format;
 
     /**
      * Constructs a {@link BigDecimalPM}.
      */
     public BigDecimalPM() {
-        this.setFormat(this.createDefaultFormat());
+        this.format = this.createDefaultFormat();
         // Please note: to disable default validation rules just call getValidator().clear();
         this.getValidator().add(new BigDecimalValidationRule());
     }
@@ -58,13 +63,13 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
 
     /**
      * Creates the default format for this PM. This method is called from the
-     * constructor and usually returns a {@link DecimalFormat} for the current
-     * {@link Locale}.
+     * constructor and usually returns a {@link BigDecimalPM.Format} with the default
+     * {@link DecimalFormat} of the current {@link Locale}.
      * 
      * @return the default format for this PM
      */
-    protected DecimalFormat createDefaultFormat() {
-        return getDecimalFormat(Locale.getDefault());
+    protected IFormat<BigDecimal> createDefaultFormat() {
+        return new Format(getDecimalFormat(Locale.getDefault()));
     }
 
     /**
@@ -81,27 +86,27 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
     }
 
     /**
-     * Returns the decimal format of this PM.
+     * Returns the {@link IFormat} of this PM used for converting between
+     * {@link BigDecimal} and {@link String} values.
      * 
-     * @return the decimal format
-     * @see #reformat()
+     * @return the format
      */
-    public DecimalFormat getFormat() {
+    public IFormat<BigDecimal> getFormat() {
         return format;
     }
 
     /**
-     * Sets the decimal format of this PM to the given value. This format will
-     * be cloned before use.
-     * <P>
-     * Implementors must try to reformat the content to match the new format.
+     * Sets the format of this PM and reformats the text value. The format is
+     * used for converting between {@link BigDecimal} and {@link String} values.
      * 
      * @param newFormat the new format
-     * @see #reformat()
      */
-    public void setFormat(DecimalFormat newFormat) {
-        Format old = this.format;
-        if (old == newFormat) {
+    public void setFormat(IFormat<BigDecimal> newFormat) {
+        if (newFormat == null) {
+            throw new IllegalArgumentException("newFormat == null");
+        }
+        IFormat<BigDecimal> oldFormat = this.format;
+        if (oldFormat == newFormat) {
             return;
         }
         boolean doReformat;
@@ -112,11 +117,9 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         } catch (ConversionException ex) {
             doReformat = false;
         }
-        DecimalFormat clonedformat = (DecimalFormat)newFormat.clone();
-        clonedformat.setParseBigDecimal(true);
-        this.format = clonedformat;
+        this.format = newFormat;
         this.revalidate();
-        this.getPropertyChangeSupport().firePropertyChange("format", old, newFormat); //$NON-NLS-1$
+        this.getPropertyChangeSupport().firePropertyChange("format", oldFormat, newFormat); //$NON-NLS-1$
         if (doReformat) {
             setBigDecimal(oldValue);
         }
@@ -216,16 +219,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
      */
     private BigDecimal convert(String text)
         throws ConversionException {
-        if (format.isParseBigDecimal() == false) {
-            throw new IllegalStateException("format must parse BigDecimal");
-        }
-        ParsePosition pos = new ParsePosition(0);
-        BigDecimal result = (BigDecimal)format.parse(text, pos);
-        if (result != null && pos.getIndex() == text.length()) {
-            return result;
-        } else {
-            throw new ConversionException("Can't convert '" + text + "' to BigDecimal");
-        }
+        return format.parse(text);
     }
 
     /**
@@ -321,5 +315,138 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
             BigDecimalComparable castedObj = (BigDecimalComparable)o;
             return ((this.bd == null ? castedObj.bd == null : this.bd.equals(castedObj.bd)));
         }
+    }
+
+    /**
+     * The {@link BigDecimalPM.Format} is a {@link IFormat} for converting between
+     * {@link BigDecimal} and {@link String}.
+     */
+    public static class Format implements IFormat<BigDecimal> {
+        private static final char PER_MILLE = '\u2030';
+        private static final String ALLOWED_SYMBOLS = "0#.,E;-%" + PER_MILLE;
+
+        private final DecimalFormat strictFormat;
+        private final DecimalFormat simplifiedFormat;
+
+        /**
+         * Creates a {@link BigDecimalPM.Format} using the given {@link DecimalFormat}.
+         * 
+         * @param format
+         */
+        public Format(DecimalFormat format) {
+            this.strictFormat = (DecimalFormat)format.clone();
+            this.strictFormat.setParseBigDecimal(true);
+            this.simplifiedFormat = createSimplifiedNumberFormat(strictFormat);
+        }
+
+        /**
+         * Creates a {@link BigDecimalPM.Format} using the given two formats.
+         * 
+         * @param aStrictFormat the strict format defines, how to format a
+         *            BigDecimal into a String and how to parse it
+         * @param aSimplifiedFormat the simplified format defines, how to parse
+         *            a String if the strict format fails to parse it
+         */
+        public Format(DecimalFormat aStrictFormat, DecimalFormat aSimplifiedFormat) {
+            this.strictFormat = (DecimalFormat)aStrictFormat.clone();
+            this.strictFormat.setParseBigDecimal(true);
+            this.simplifiedFormat = (DecimalFormat)aSimplifiedFormat.clone();
+            this.simplifiedFormat.setParseBigDecimal(true);
+        }
+
+        public DecimalFormat getStrictFormat() {
+            return strictFormat;
+        }
+
+        public DecimalFormat getSimplifiedFormat() {
+            return simplifiedFormat;
+        }
+
+        /** {@inheritDoc} */
+        public BigDecimal parse(String text)
+            throws ConversionException {
+            BigDecimal result;
+            try {
+                result = convert(strictFormat, text);
+            } catch (ConversionException ex) {
+                result = convert(simplifiedFormat, text);
+            }
+            return result;
+        }
+
+        /** {@inheritDoc} */
+        public String format(BigDecimal value) {
+            if (value == null) {
+                return null;
+            } else {
+                String result = strictFormat.format(value);
+                return result;
+            }
+        }
+
+        /**
+         * Converts the given text into a {@link BigDecimal}.
+         * 
+         * @param text
+         * @return a BigDecimal representation of the given text
+         * @throws ConversionException if the text value can't be converted into
+         *             a valid {@link BigDecimal}
+         */
+        private BigDecimal convert(DecimalFormat format, String text)
+            throws ConversionException {
+            if (format.isParseBigDecimal() == false) {
+                throw new IllegalStateException("format must parse BigDecimal");
+            }
+            text = text.trim();
+            if (text == null || text.length() == 0) {
+                return null;
+            }
+            ParsePosition pos = new ParsePosition(0);
+            BigDecimal result = (BigDecimal)format.parse(text, pos);
+            if (result != null && pos.getIndex() == text.length()) {
+                return result;
+            } else {
+                throw new ConversionException("Can't convert '" + text + "' to BigDecimal");
+            }
+        }
+
+        /**
+         * Creates a simplified version of the given format. A format is
+         * 'simplified' if it contains only those formatting symbols that have
+         * to to with the numeric representation. Any literals are removed.
+         * 
+         * @param aFormat
+         * @return a simplified version of the given format
+         */
+        public DecimalFormat createSimplifiedNumberFormat(DecimalFormat aFormat) {
+            // replace all 'bad' characters            
+            String pattern = aFormat.toPattern();
+            StringBuilder builder = new StringBuilder();
+
+            boolean escaped = false;
+            for (char c : pattern.toCharArray()) {
+                if (escaped) {
+                    escaped = false;
+                    continue;
+                }
+                if (c == '\'') {
+                    escaped = true;
+                    continue;
+                }
+                if (ALLOWED_SYMBOLS.indexOf(c) > -1) {
+                    builder.append(c);
+                }
+            }
+
+            // This can never happen since DecimalFormat throws an IllegalArgumentException: MalformedPattern
+            assert escaped == false : "Apostrophe must not be the last character in pattern: " + pattern;
+
+            String simplifiedPattern = builder.toString();
+
+            DecimalFormat simplifiedFormat = (DecimalFormat)aFormat.clone();
+            simplifiedFormat.applyPattern(simplifiedPattern);
+            return simplifiedFormat;
+        }
+
     }
 }
