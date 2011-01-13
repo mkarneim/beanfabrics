@@ -99,6 +99,7 @@
 	</target>
 					
 	<target name="prepare-javadoc-dir" depends="init">
+		<delete dir="${target.javadoc.dir}" />
 		<mkdir dir="${target.javadoc.dir}" />
 		<copy todir="${target.javadoc.dir}">
 			<fileset dir="${basedir}" includes="build.version readme.txt license.txt lgpl.txt 3rdparty-licenses.txt" />
