@@ -29,12 +29,6 @@ import org.beanfabrics.validation.ValidationState;
 public class BigDecimalPM extends TextPM implements IBigDecimalPM {
     private static final String KEY_MESSAGE_INVALID_NUMBER = "message.invalidNumber";
     private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(BigDecimalPM.class);
-
-    public interface Parser {
-        public BigDecimal parse(String text)
-            throws ConversionException;
-    }
-
     private IFormat<BigDecimal> format;
 
     /**
