@@ -144,7 +144,7 @@ public class CompositeValidationStateTest {
         assertEquals("validation message", "This value is mandatory", getFirstNonCompositeState(pm.getValidationState()).getMessage());
 
         assertFalse("pm.isValid()", pm.isValid());
-        assertEquals("count[0]", 9, count[0]);
+        assertEquals("count[0]", 8, count[0]);
         assertFalse("isValid[0]", isValid[0]);
     }
 

@@ -10,6 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
@@ -154,7 +155,7 @@ public class PropertySupport implements Support {
     /**
      * Setup this <code>PropertySupport</code> by processing only those
      * {@link Property} annotations that are found in the given {@link Class}
-     * and all superclasses of the supported {@link PresentationModel}.
+     * and all superclasses of the current {@link PresentationModel}.
      * 
      * @param cls
      */
@@ -167,7 +168,7 @@ public class PropertySupport implements Support {
     }
 
     /**
-     * This method adds the {@link #modelListener} to the supported
+     * This method adds the {@link #modelListener} to the current
      * {@link PresentationModel}.
      */
     private void addPropertyChangeListenerToPM() {
@@ -347,38 +348,6 @@ public class PropertySupport implements Support {
         }
     }
 
-    public static List<PropertyDeclaration> findAllPropertyDeclarations(Class cls) {
-        List<PropertyDeclaration> result = DECLARATION_CACHE.get(cls);
-        if (result == null) {
-            result = new LinkedList<PropertyDeclaration>();
-            findAllPropertyDeclarations(cls, result);
-            check(cls, result);
-            log(cls, result);
-            DECLARATION_CACHE.put(cls, result);
-        }
-        return result;
-    }
-
-    private static void check(Class cls, List<PropertyDeclaration> decls) {
-        Map<String, PropertyDeclaration> map = new HashMap<String, PropertyDeclaration>();
-        for (PropertyDeclaration currentDecl : decls) {
-            String key = currentDecl.getName();
-            if (map.containsKey(key)) {
-                PropertyDeclaration firstDecl = map.get(key);
-                if (currentDecl.isAbstract()) {
-                    // abstract declarations are always allowed since they do not shadow a property
-                } else if (firstDecl.isAbstract()) {
-                    // an abstract declaration can be refined by a concrete declaration
-                    map.put(key, currentDecl);
-                } else {
-                    throw new IllegalStateException("Illegal property declaration found in class '" + cls.getName() + "':\nmember " + currentDecl.getMember() + " shadows " + firstDecl.getMember() + "!");
-                }
-            } else {
-                map.put(key, currentDecl);
-            }
-        }
-    }
-
     private static void log(Class cls, List<PropertyDeclaration> decls) {
         if (LOG.isDebugEnabled()) {
             StringBuilder builder = new StringBuilder();
@@ -390,39 +359,175 @@ public class PropertySupport implements Support {
         }
     }
 
-    private static void findAllPropertyDeclarations(Class cls, List<PropertyDeclaration> result) {
-        // First process members declared in superclass and interfaces
-        Class superCls = cls.getSuperclass();
+    /**
+     * Returns a list of all non-conflicting, explicit and inplicit property
+     * declarations that can be found in the given class (and its superclasses
+     * and interfaces).
+     * 
+     * @param cls
+     * @return a list of all non-conflicting, explicit and inplicit property
+     *         declarations of the given class
+     */
+    public static List<PropertyDeclaration> getPropertyDeclarations(Class cls) {
+        // Find all members that can be interpreted as Property declarations
+        List<PropertyDeclaration> decls = findAllPropertyDeclarations(cls);
+        // Resolve any conflicts in these declarations
+        List<PropertyDeclaration> result = resolveConflicts(decls);
+        log(cls, result);
+        return result;
+    }
+
+    private static List<PropertyDeclaration> resolveConflicts(List<PropertyDeclaration> decls) {
+        List<PropertyDeclaration> result = new ArrayList<PropertyDeclaration>(decls.size());
+        // Check for conflicting property declarations based on fields
+        // Only the maximum of one field property declaration for the same key is allowd
+        Map<String, PropertyDeclaration> fieldMap = new HashMap<String, PropertyDeclaration>();
+        for (PropertyDeclaration currentDecl : new ArrayList<PropertyDeclaration>(decls)) {
+            if (!(currentDecl.getMember() instanceof Field)) {
+                continue;
+            }
+            String key = currentDecl.getName();
+            PropertyDeclaration oldDecl = fieldMap.get(key);
+            if (oldDecl == null) {
+                // No conflict
+                fieldMap.put(key, currentDecl);
+            } else {
+                // Conflict: property is already declared based on a field member                 
+                // -> We can't solve this conflict
+                throw new IllegalStateException("Illegal property declaration:\nmember " + currentDecl.getMember() + " shadows " + oldDecl.getMember() + "!");
+
+            }
+        }
+
+        // Check for conflicting property declarations based on fields and methods
+        Map<String, PropertyDeclaration> map = new HashMap<String, PropertyDeclaration>();
+        for (PropertyDeclaration currentDecl : new ArrayList<PropertyDeclaration>(decls)) {
+            String key = currentDecl.getName();
+            PropertyDeclaration oldDecl = map.get(key);
+            if (oldDecl == null) {
+                // No conflict
+                map.put(key, currentDecl);
+                result.add(currentDecl);
+            } else {
+                // Conflict: property is already declared
+                // Can we solve it?
+                if (currentDecl.getMember() instanceof Method) {
+                    // Method wins
+                    // -> replace old declaration
+                    map.put(key, currentDecl);
+                    result.remove(oldDecl);
+                    result.add(currentDecl);
+                    result.add(currentDecl);
+                } else if (oldDecl.getMember() instanceof Method) {
+                    // Method wins
+                    // -> ignore current declaration
+                    // Nothing to do
+                } else {
+                    // Both declarations are based on field members
+                    // -> We can't solve this conflict
+                    throw new IllegalStateException("Illegal property declaration:\nmember " + currentDecl.getMember() + " shadows " + oldDecl.getMember() + "!");
+                }
+            }
+        }
+        return result;
+    }
+
+    private static List<PropertyDeclaration> findAllPropertyDeclarations(Class cls) {
+        List<PropertyDeclaration> result = DECLARATION_CACHE.get(cls);
+        if (result == null) {
+            result = new ArrayList<PropertyDeclaration>();
+            findAllPropertyDeclarations(cls, result);
+            DECLARATION_CACHE.put(cls, result);
+        }
+        return result;
+    }
+
+    private static void findAllPropertyDeclarations(Class currentClass, List<PropertyDeclaration> result) {
+        if (!PresentationModel.class.isAssignableFrom(currentClass)) {
+            // Skip classes that are not of type PresentationModel
+            return;
+        }
+        // Process superclass and interfaces
+        Class superCls = currentClass.getSuperclass();
         if (superCls != null) {
             findAllPropertyDeclarations(superCls, result);
         }
-        Class[] interfaces = cls.getInterfaces();
+        Class[] interfaces = currentClass.getInterfaces();
         for (Class i : interfaces) {
             findAllPropertyDeclarations(i, result);
         }
 
-        // now process members declared in current class
-        Method[] allDeclMethods = cls.getDeclaredMethods();
-        Field[] allDeclFields = cls.getDeclaredFields();
-        Method[] annoDeclMethods = (Method[])getAnnotated(allDeclMethods, Property.class).toArray(new Method[0]);
-        Field[] annoDeclFields = (Field[])getAnnotated(allDeclFields, Property.class).toArray(new Field[0]);
-        Method[] potentialPropMethods;
-        Field[] potentialPropFields;
-        if (annoDeclMethods.length == 0 && annoDeclFields.length == 0) {
-            potentialPropMethods = allDeclMethods;
-            potentialPropFields = allDeclFields;
-        } else {
-            potentialPropMethods = annoDeclMethods;
-            potentialPropFields = annoDeclFields;
-        }
-        List<MethodDecl> methodDecls = findMethodDecls(potentialPropMethods);
-        result.addAll(methodDecls);
-        List<FieldDecl> fieldDecls = findFieldDecls(potentialPropFields);
-        result.addAll(fieldDecls);
+        //// Now process the current class        
+        // Check for Convention-over-Configuration
+        boolean hasPropertyAnnotations = hasPropertyAnnotations(currentClass);
+        if (hasPropertyAnnotations) {
+            // The current class contains members that are annotated with @Property
+            // -> Since we implement Convention-over-Configuration we only process these members
 
+            // Search for methods that are annotated with @Property  
+            Method[] allDeclMethods = currentClass.getDeclaredMethods();
+            Method[] annoDeclMethods = (Method[])filterAnnotatedMembers(allDeclMethods, Property.class).toArray(new Method[0]);
+            List<MethodDecl> methodsWithPropertyDecls = filterPropertyMethods(annoDeclMethods);
+            // Add search result
+            result.addAll(methodsWithPropertyDecls);
+
+            // Search for fields that are annotated with @Property
+            Field[] allDeclFields = currentClass.getDeclaredFields();
+            Field[] annoDeclFields = (Field[])filterAnnotatedMembers(allDeclFields, Property.class).toArray(new Field[0]);
+            List<FieldDecl> fieldsWithPropertyDecls = filterPropertyFields(annoDeclFields);
+            // Add search result
+            result.addAll(fieldsWithPropertyDecls);
+        } else {
+            // The current class contains no @Property annotation.
+            // -> We will process all members of type PresentationModel
+
+            // Search for methods with return type PresentationModel  
+            Method[] allDeclMethods = currentClass.getDeclaredMethods();
+            List<MethodDecl> methodsWithPropertyDecls = filterPropertyMethods(allDeclMethods);
+            // Add search result
+            result.addAll(methodsWithPropertyDecls);
+
+            // Search for fields of type PresentationModel
+            Field[] allDeclFields = currentClass.getDeclaredFields();
+            List<FieldDecl> fieldsWithPropertyDecls = filterPropertyFields(allDeclFields);
+            // Add search result
+            result.addAll(fieldsWithPropertyDecls);
+        }
     }
 
-    private static <T extends AccessibleObject> List<T> getAnnotated(T[] allDecl, Class<Property> annoType) {
+    /**
+     * Checks whether the given class has at least one declared member with a
+     * Property annotation.
+     * 
+     * @param cls
+     * @return <code>true</code> if the given class has at least one declared
+     *         member with a Property annotation.
+     */
+    private static boolean hasPropertyAnnotations(Class cls) {
+        for (Field field : cls.getDeclaredFields()) {
+            if (hasPropertyAnnotation(field)) {
+                return true;
+            }
+        }
+        for (Method method : cls.getDeclaredMethods()) {
+            if (hasPropertyAnnotation(method)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether the given element is annotated with Property.
+     * 
+     * @param element
+     * @return <code>true</code> if the given element is annotated with Property
+     */
+    private static boolean hasPropertyAnnotation(AnnotatedElement element) {
+        return element.isAnnotationPresent(Property.class);
+    }
+
+    private static <T extends AccessibleObject> List<T> filterAnnotatedMembers(T[] allDecl, Class<Property> annoType) {
         ArrayList<T> result = new ArrayList<T>();
         for (T decl : allDecl) {
             Annotation anno = decl.getAnnotation(annoType);
@@ -433,103 +538,79 @@ public class PropertySupport implements Support {
         return result;
     }
 
-    private static List<MethodDecl> findMethodDecls(Method[] potentialPropMethods) {
+    private static List<MethodDecl> filterPropertyMethods(Method[] potentialPropMethods) {
         List<MethodDecl> result = new LinkedList<MethodDecl>();
         for (Method method : potentialPropMethods) {
-            GetterChecker checker = new GetterChecker(method);
-            if (checker.isValid()) {
-                Property anno = method.getAnnotation(Property.class);
-                String name;
-                if (anno != null && false == DEFAULT_NAME.equals(anno.value())) {
-                    name = anno.value();
-                } else {
-                    name = getFieldname(method);
-                }
-                MethodDecl element = new MethodDecl(name, method);
-                result.add(element);
+            // The name of this method has to begin with "get"
+            if (false == method.getName().startsWith("get")) {
+                continue;
             }
+            // The return type of this method has to be assignable from PresentationModel
+            if (false == PresentationModel.class.isAssignableFrom(method.getReturnType())) {
+                continue;
+            }
+            // This method must not have any parameters
+            if (method.getParameterTypes().length != 0) {
+                continue;
+            }
+            Property anno = method.getAnnotation(Property.class);
+            String name;
+            if (anno != null && false == DEFAULT_NAME.equals(anno.value())) {
+                name = anno.value();
+            } else {
+                name = getFieldname(method);
+            }
+            MethodDecl element = new MethodDecl(name, method);
+            result.add(element);
         }
         return result;
     }
 
-    private static class GetterChecker {
-        private IllegalAnnotationException exception;
-
-        public GetterChecker(Method method) {
-            if (false == method.getName().startsWith("get")) {
-                this.exception = new IllegalAnnotationException("The name of the annotated method hast to begin with \"get\".");
-            }
-            if (false == PresentationModel.class.isAssignableFrom(method.getReturnType())) {
-                this.exception = new IllegalAnnotationException("The return type of the annotated method has to be " + PresentationModel.class.getName() + ".");
-            }
-            if (method.getParameterTypes().length != 0) {
-                this.exception = new IllegalAnnotationException("The annotated method must not have any parameters.");
-            }
-        }
-
-        public boolean isValid() {
-            return exception == null;
-        }
-
-        public IllegalAnnotationException getException() {
-            return exception;
-        }
-    }
-
-    private static List<FieldDecl> findFieldDecls(Field[] potentialPropFields) {
+    private static List<FieldDecl> filterPropertyFields(Field[] potentialPropFields) {
         List<FieldDecl> result = new LinkedList<FieldDecl>();
         for (Field field : potentialPropFields) {
-            if (PresentationModel.class.isAssignableFrom(field.getType())) {
-                Property anno = field.getAnnotation(Property.class);
-                String name;
-                if (anno != null && false == DEFAULT_NAME.equals(anno.value())) {
-                    name = anno.value();
-                } else {
-                    name = field.getName();
-                }
-                FieldDecl element = new FieldDecl(name, field);
-                result.add(element);
+            // The type of this field has to be assignable from PresentationModel
+            if (false == PresentationModel.class.isAssignableFrom(field.getType())) {
+                continue;
             }
+            Property anno = field.getAnnotation(Property.class);
+            String name;
+            if (anno != null && false == DEFAULT_NAME.equals(anno.value())) {
+                name = anno.value();
+            } else {
+                name = field.getName();
+            }
+            FieldDecl element = new FieldDecl(name, field);
+            result.add(element);
+
         }
         return result;
-    }
-
-    private static List<FieldDecl> findAllFieldDecls(Class cls) {
-        Collection<Field> allFields = ReflectionUtil.getAllFields(cls);
-        Field[] array = (Field[])allFields.toArray(new Field[allFields.size()]);
-        return findFieldDecls(array);
     }
 
     private Properties loadProperties(Class cls) {
         try {
-            List<PropertyDeclaration> decls = findAllPropertyDeclarations(cls);
+            List<PropertyDeclaration> decls = getPropertyDeclarations(cls);
+
             Properties result = new Properties();
             for (PropertyDeclaration decl : decls) {
                 Object value = null;
-                if (!decl.isAbstract()) {
-                    if (decl instanceof MethodDecl) {
-                        value = ReflectionUtil.invokeMethod(presentationModel, ((MethodDecl)decl).getMethod());
-                    } else if (decl instanceof FieldDecl) {
-                        value = ReflectionUtil.getFieldValue(presentationModel, ((FieldDecl)decl).getField());
-                    } else {
-                        throw new RuntimeException("Should never be thrown. What should decl else be?");
-                    }
-
-                    if (value == null || value instanceof PresentationModel) {
-                        String name = decl.getName();
-                        Class<? extends PresentationModel> type = decl.getType();
-                        LOG.debug("Defining property " + decl.getName() + " with: " + value);
-                        result.put(name, (PresentationModel)value, type);
-                    } else {
-                        throw new IllegalStateException("Return type of member '" + decl.getMember() + "' must implement " + PresentationModel.class.getName());
-                    }
+                if (decl instanceof MethodDecl) {
+                    value = ReflectionUtil.invokeMethod(presentationModel, ((MethodDecl)decl).getMethod());
+                } else if (decl instanceof FieldDecl) {
+                    value = ReflectionUtil.getFieldValue(presentationModel, ((FieldDecl)decl).getField());
                 } else {
+                    throw new RuntimeException("Should never be thrown. What should decl else be?");
+                }
+
+                if (value == null || value instanceof PresentationModel) {
                     String name = decl.getName();
-                    if (result.getType(name) == null) {
-                        LOG.debug("Declaring property " + decl.getName() + " with type: " + decl.getType());
-                        Class<? extends PresentationModel> type = decl.getType();
-                        result.put(name, type);
+                    Class<? extends PresentationModel> type = decl.getType();
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Defining property " + decl.getName() + " with: " + value);
                     }
+                    result.put(name, (PresentationModel)value, type);
+                } else {
+                    throw new IllegalStateException("Return type of member '" + decl.getMember() + "' must implement " + PresentationModel.class.getName());
                 }
             }
             return result;

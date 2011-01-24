@@ -124,7 +124,7 @@ public class DatePMTest {
         DatePM pm = new DatePM();
         Calendar cal = Calendar.getInstance();
         cal.set(2011, 0, 14);
-        pm.setDate(cal.getTime());        
+        pm.setDate(cal.getTime());
         assertEquals("pm.isValid()", true, pm.isValid());
         assertEquals("pm.getText()", "Jan 14, 2011", pm.getText());
         Locale.setDefault(Locale.GERMAN);
@@ -133,7 +133,7 @@ public class DatePMTest {
 
         assertEquals("14.01.2011", pm.getText());
     }
-    
+
     @Test
     public void setUSFormat2() {
         Locale.setDefault(Locale.US);
@@ -141,7 +141,7 @@ public class DatePMTest {
         pm.setText("Jan 14, 2011");
         assertEquals("pm.isValid()", true, pm.isValid());
         Locale.setDefault(Locale.GERMAN);
-        DateFormat format = DateFormat.getDateInstance();        
+        DateFormat format = DateFormat.getDateInstance();
         pm.setFormat(format);
 
         assertEquals("14.01.2011", pm.getText());
@@ -149,20 +149,20 @@ public class DatePMTest {
 
     @Test
     public void useCustomDateFormatProvider() {
-        DatePM.setDefaultDateFormatProvider( new DatePM.DateFormatProvider(){
+        DatePM.setDefaultDateFormatProvider(new DatePM.DateFormatProvider() {
             @Override
             public DateFormat getDateFormat() {
                 DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
                 format.setLenient(false);
                 return format;
-            }            
+            }
         });
-        
+
         Locale.setDefault(Locale.US);
         DatePM pm = new DatePM();
         Calendar cal = Calendar.getInstance();
         cal.set(2011, 0, 14);
-        pm.setDate(cal.getTime());        
+        pm.setDate(cal.getTime());
         assertEquals("pm.isValid()", true, pm.isValid());
         assertEquals("pm.getText()", "1/14/11", pm.getText());
         Locale.setDefault(Locale.GERMAN);
@@ -171,7 +171,6 @@ public class DatePMTest {
 
         assertEquals("14.01.2011", pm.getText());
     }
-    
 
     @Test
     public void setFormatWithInvalidDate() {

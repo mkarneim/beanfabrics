@@ -82,7 +82,7 @@ public class MetadataRegistry {
         TypeInfo result = new TypeInfo(modelClass);
         modelTypes.put(modelClass, result);
 
-        List<PropertyDeclaration> propDecls = PropertySupport.findAllPropertyDeclarations(modelClass);
+        List<PropertyDeclaration> propDecls = PropertySupport.getPropertyDeclarations(modelClass);
         for (PropertySupport.PropertyDeclaration decl : propDecls) {
             String name = decl.getName();
             TypeInfo typeDesc = getTypeInfo(decl.getType());

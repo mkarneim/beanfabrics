@@ -6,6 +6,7 @@ package org.beanfabrics.support;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.fail;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -14,6 +15,7 @@ import junit.framework.JUnit4TestAdapter;
 
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.PMManager;
+import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.model.TextPM;
 import org.junit.Test;
 
@@ -57,7 +59,7 @@ public class PropertySupportTest {
         AnnotatedCarModel mdl = new AnnotatedCarModel();
         assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("model"));
         mdl.carmodel.setText("foo");
-        assertEquals("mdl.changeCount", 1, mdl.changeCount);
+        assertEquals("mdl.changeCount", 2, mdl.changeCount);
     }
 
     @Test
@@ -65,7 +67,7 @@ public class PropertySupportTest {
         CarModel mdl = new CarModel();
         assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("model"));
         mdl.carmodel.setText("foo");
-        assertEquals("mdl.changeCount", 1, mdl.changeCount);
+        assertEquals("mdl.changeCount", 2, mdl.changeCount);
     }
 
     public static class AnnotatedPersonModel extends AbstractPM {
@@ -125,12 +127,12 @@ public class PropertySupportTest {
         assertNotNull("getProperty(\"lastname\")", PropertySupport.get(mdl).getProperty("lastname"));
     }
 
-    public static interface AnnotatedInterface {
+    public static interface AnnotatedInterfaceA extends PresentationModel {
         @Property
         TextPM getFirstname();
     }
 
-    public static class AnnotatedImplModel extends AbstractPM implements AnnotatedInterface {
+    public static class AnnotatedImplModel extends AbstractPM implements AnnotatedInterfaceA {
         @Property
         protected final TextPM lastname = new TextPM();
         private ReferencedClass ref = new ReferencedClass();
@@ -175,7 +177,7 @@ public class PropertySupportTest {
         }
     }
 
-    public static class AnnotatedChildModel extends UnAnnotatedParentModel implements AnnotatedInterface {
+    public static class AnnotatedChildModel extends UnAnnotatedParentModel implements AnnotatedInterfaceA {
         @Property
         protected final TextPM lastname = new TextPM();
         private static final ReferencedClass ref = new ReferencedClass();
@@ -219,6 +221,50 @@ public class PropertySupportTest {
 
         pA.setText("huhu");
         assertEquals("listener.count", 1, listener.count);
+    }
+
+    interface SomeInterfacePM extends PresentationModel {
+        public TextPM getSomeText();
+    }
+
+    class SomeClassPM extends AbstractPM implements SomeInterfacePM {
+        TextPM someText = new TextPM();
+
+        public SomeClassPM() {
+            PMManager.setup(this);
+        }
+
+        public TextPM getSomeText() {
+            return someText;
+        }
+    }
+
+    @Test
+    public void allowedShadowing() {
+        try {
+            SomeClassPM pm = new SomeClassPM();
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    class SomeOtherClassPM extends SomeClassPM {
+        TextPM someText = new TextPM();
+
+        public SomeOtherClassPM() {
+            PMManager.setup(this);
+        }
+
+    }
+
+    @Test
+    public void forbiddenShadowing() {
+        try {
+            SomeOtherClassPM pm = new SomeOtherClassPM();
+            fail("Expected IllegalStateException");
+        } catch (Exception ex) {
+            assertEquals("ex.getClass()", IllegalStateException.class, ex.getClass());
+        }
     }
 
 }
