@@ -5,7 +5,7 @@
 
 	<groupId>org.beanfabrics</groupId>
 	<artifactId>beanfabrics</artifactId>
-	<version>0.8.7</version>
+	<version>0.8.8</version>
 	<packaging>pom</packaging>
 
 	<name>Beanfabrics</name>
