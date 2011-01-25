@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2011 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.model;
@@ -329,14 +329,15 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
 
     public static class LocalePM extends TextPM {
         Options<Locale> localeOptions = getLocaleOptions(new Locale[] { Locale.GERMAN, Locale.US, Locale.UK });
+
         public LocalePM() {
             PMManager.setup(this);
         }
-        
+
         public Options<Locale> getOptions() {
             return localeOptions;
         }
-        
+
         private static Options<Locale> getLocaleOptions(Locale[] locales) {
             Options<Locale> opts = new Options<Locale>();
             for (Locale locale : locales) {
@@ -345,9 +346,10 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
             return opts;
         }
     }
-    
+
     public static class StylePM extends TextPM {
         Options<Integer> styleOptions = new Options<Integer>();
+
         public StylePM() {
             styleOptions.put(DateFormat.SHORT, "Short");
             styleOptions.put(DateFormat.MEDIUM, "Medium");
@@ -355,11 +357,12 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
             styleOptions.put(DateFormat.FULL, "Full");
             PMManager.setup(this);
         }
+
         public Options<Integer> getOptions() {
             return styleOptions;
         }
     }
-    
+
     public static class DateTestModel extends AbstractPM {
         protected final IDatePM defaultLocaleDate = new DatePM();
         protected final IOperationPM setDefaultLocaleDate = new OperationPM();
@@ -371,7 +374,7 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
 
         public DateTestModel() {
             PMManager.setup(this);
-            setDefaultLocaleDate.setTitle("now");            
+            setDefaultLocaleDate.setTitle("now");
             locale.setText(locale.getOptions().get(Locale.GERMAN));
             style.setText(style.getOptions().get(DateFormat.MEDIUM));
             date.setDate(new Date());
@@ -400,9 +403,9 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
             try {
                 Locale localeValue = (Locale)locale.getOptions().getKey(locale.getText());
                 int aStyle = (Integer)style.getOptions().getKey(style.getText());
-                
+
                 date.setFormat(getDateFormat(localeValue, aStyle));
-                
+
             } catch (NoSuchElementException ex) {
                 // ignore
             }
@@ -425,9 +428,9 @@ public class DatePMTestGUI extends JFrame implements View<DatePMTestGUI.DateTest
                 } catch (ConversionException e) {
                     date = null;
                 }
-                
+
                 autoConvertDate.setFormat(getDateFormat(localeValue, aStyle));
-                
+
                 if (date != null) {
                     autoConvertDate.setDate(date);
                 }

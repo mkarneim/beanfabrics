@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2011 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.model;
@@ -57,8 +57,8 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
 
     /**
      * Creates the default format for this PM. This method is called from the
-     * constructor and usually returns a {@link BigDecimalPM.Format} with the default
-     * {@link DecimalFormat} of the current {@link Locale}.
+     * constructor and usually returns a {@link BigDecimalPM.Format} with the
+     * default {@link DecimalFormat} of the current {@link Locale}.
      * 
      * @return the default format for this PM
      */
@@ -312,8 +312,8 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
     }
 
     /**
-     * The {@link BigDecimalPM.Format} is a {@link IFormat} for converting between
-     * {@link BigDecimal} and {@link String}.
+     * The {@link BigDecimalPM.Format} is a {@link IFormat} for converting
+     * between {@link BigDecimal} and {@link String}.
      */
     public static class Format implements IFormat<BigDecimal> {
         private static final char PER_MILLE = '\u2030';
@@ -323,7 +323,8 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         private final DecimalFormat simplifiedFormat;
 
         /**
-         * Creates a {@link BigDecimalPM.Format} using the given {@link DecimalFormat}.
+         * Creates a {@link BigDecimalPM.Format} using the given
+         * {@link DecimalFormat}.
          * 
          * @param format
          */

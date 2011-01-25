@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2011 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 package org.beanfabrics.model;
@@ -82,7 +82,7 @@ public class DecimalPM extends BigDecimalPM {
             this.setBigDecimal(new BigDecimal(value));
         }
     }
-    
+
     public void setByte(Byte value) {
         if (value == null) {
             setBigDecimal(null);

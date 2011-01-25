@@ -1,8 +1,9 @@
 package org.beanfabrics.model;
 
 /**
- * The {@link IFormat} defines the programming interface for formatting instances
- * of a specific type into Strings and for parsing Strings back into objects.
+ * The {@link IFormat} defines the programming interface for formatting
+ * instances of a specific type into Strings and for parsing Strings back into
+ * objects.
  * 
  * @author Michael Karneim
  * @param <T>

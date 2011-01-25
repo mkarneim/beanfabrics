@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2011 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -59,7 +59,7 @@ import org.beanfabrics.swing.table.cellrenderer.BnTableCellRenderer;
  * @author Michael Karneim
  * @beaninfo
  */
-@SuppressWarnings( { "serial" })
+@SuppressWarnings({ "serial" })
 public class BnTable extends JTable implements View<IListPM<? extends PresentationModel>>, ModelSubscriber {
     private final static Logger LOG = LoggerFactory.getLogger(BnTable.class);
 

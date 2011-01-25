@@ -1,5 +1,5 @@
 /*
- * Beanfabrics Framework Copyright (C) 2010 by Michael Karneim, beanfabrics.org
+ * Beanfabrics Framework Copyright (C) 2011 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
 // TODO javadoc - remove this comment only when the class and all non-public
@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * @author Michael Karneim
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.METHOD, ElementType.FIELD })
+@Target({ ElementType.METHOD, ElementType.FIELD })
 @Processor(ServiceProcessor.class)
 public @interface Service {
     Class value() default Object.class;
