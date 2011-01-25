@@ -40,13 +40,13 @@ public class OnChangeSupportTest {
     }
 
     @Test
-    public void onCangeMethodIsCalledOnSetup() {
+    public void onCangeMethodIsNotCalledOnSetup() {
         SomeClassPM pm = new SomeClassPM();
         // Name
-        assertEquals("pm.callCountOfUpdateLengthOfName", 1, pm.callCountOfUpdateLengthOfName);
-        assertEquals("pm.lengthOfName.getInteger()", 5, (int)pm.lengthOfName.getInteger());
+        assertEquals("pm.callCountOfUpdateLengthOfName", 0, pm.callCountOfUpdateLengthOfName);
+        assertEquals("pm.lengthOfName.getInteger()", 0, (int)pm.lengthOfName.getInteger());
         // Note
-        assertEquals("pm.callCountOfNoteHasChanged", 1, pm.callCountOfNoteHasChanged);
+        assertEquals("pm.callCountOfNoteHasChanged", 0, pm.callCountOfNoteHasChanged);
     }
 
     @Test
@@ -54,12 +54,12 @@ public class OnChangeSupportTest {
         SomeClassPM pm = new SomeClassPM();
         // Name
         pm.name.setText("Bye");
-        assertEquals("pm.callCountOfUpdateLengthOfName", 2, pm.callCountOfUpdateLengthOfName);
+        assertEquals("pm.callCountOfUpdateLengthOfName", 1, pm.callCountOfUpdateLengthOfName);
         assertEquals("pm.lengthOfName.getInteger()", 3, (int)pm.lengthOfName.getInteger());
         // Note
-        assertEquals("pm.callCountOfNoteHasChanged", 1, pm.callCountOfNoteHasChanged);
+        assertEquals("pm.callCountOfNoteHasChanged", 0, pm.callCountOfNoteHasChanged);
         pm.note.setText("Some note");
-        assertEquals("pm.callCountOfNoteHasChanged", 2, pm.callCountOfNoteHasChanged);
+        assertEquals("pm.callCountOfNoteHasChanged", 1, pm.callCountOfNoteHasChanged);
     }
 
 }

@@ -58,7 +58,7 @@ public class OnChangeSupport implements Support {
             paths[i] = Path.parse(anno.path()[i]);
         }
         OnChangeMethodSupport result = new OnChangeMethodSupport(pModel, paths, m);
-        result.callAnnotatedMethod();
+        //result.callAnnotatedMethod();
         return result;
     }
 

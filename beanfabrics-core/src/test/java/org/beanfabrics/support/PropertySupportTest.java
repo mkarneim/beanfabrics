@@ -59,7 +59,7 @@ public class PropertySupportTest {
         AnnotatedCarModel mdl = new AnnotatedCarModel();
         assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("model"));
         mdl.carmodel.setText("foo");
-        assertEquals("mdl.changeCount", 2, mdl.changeCount);
+        assertEquals("mdl.changeCount", 1, mdl.changeCount);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class PropertySupportTest {
         CarModel mdl = new CarModel();
         assertNotNull("getProperty()", PropertySupport.get(mdl).getProperty("model"));
         mdl.carmodel.setText("foo");
-        assertEquals("mdl.changeCount", 2, mdl.changeCount);
+        assertEquals("mdl.changeCount", 1, mdl.changeCount);
     }
 
     public static class AnnotatedPersonModel extends AbstractPM {
