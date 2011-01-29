@@ -165,7 +165,7 @@ public class PathObservationTest {
         assertEquals("o.hasTarget()", false, o.hasTarget());
         assertEquals("o.getTarget()", null, o.getTarget());
         TextPM country = new TextPM();
-        root.selectedContact.address.country = root.selectedContact.address.country = country;
+        root.selectedContact.address.country = country;
         PropertySupport.get(root.selectedContact.address).refresh();
         assertEquals("o.hasTarget()", true, o.hasTarget());
         assertEquals("o.getTarget()", country, o.getTarget());
