@@ -17,25 +17,25 @@ import javax.swing.ImageIcon;
  * <p>
  * <b>Please Note:</b> this class will be moved to the
  * org.beanfabrics.swing.model package soon.
- * 
+ *
  * @author Michael Karneim
  */
 public class IconPM extends AbstractValuePM implements IIconPM {
     private Icon icon;
-    private Comparable<?> comparable = new IconComparable();
+    private final Comparable<?> comparable = new IconComparable();
 
     /**
      * Sets the {@link Icon} value of this PM.
-     * 
+     *
      * @param newIcon
      */
     public void setIcon(Icon newIcon) {
         if (equals(newIcon, icon)) {
             return;
         }
-        Icon old = this.icon;
-        this.icon = newIcon;
-        this.getPropertyChangeSupport().firePropertyChange("icon", old, newIcon);
+        Icon old = icon;
+        icon = newIcon;
+        getPropertyChangeSupport().firePropertyChange("icon", old, newIcon);
     }
 
     /** {@inheritDoc} */
@@ -46,17 +46,17 @@ public class IconPM extends AbstractValuePM implements IIconPM {
     /**
      * Sets the {@link URL} to the resource containing an {@link Image} that
      * should be used as {@link Icon} value of this PM.
-     * 
+     *
      * @param url the URL to the {@link Image} resource
      * @see #setIcon(Icon)
      */
     public void setIconUrl(URL url) {
         if (url == null) {
-            this.setIcon(null);
+            setIcon(null);
         } else {
             Image img = Toolkit.getDefaultToolkit().getImage(url);
             ImageIcon imgIcon = new ImageIcon(img);
-            this.setIcon(imgIcon);
+            setIcon(imgIcon);
         }
     }
 
@@ -66,7 +66,8 @@ public class IconPM extends AbstractValuePM implements IIconPM {
     }
 
     /** {@inheritDoc} */
-    public Comparable<?> getComparable() {
+    @Override
+	public Comparable<?> getComparable() {
         return comparable;
     }
 
@@ -81,7 +82,7 @@ public class IconPM extends AbstractValuePM implements IIconPM {
     public class IconComparable implements Comparable {
         /**
          * Returns the {@link Icon} used for comparison.
-         * 
+         *
          * @return the Icon used for comparison
          */
         protected Icon getIcon() {
@@ -128,7 +129,7 @@ public class IconPM extends AbstractValuePM implements IIconPM {
             if (o.getClass() != getClass()) {
                 return false;
             }
-            Icon thisIcon = this.getIcon();
+            Icon thisIcon = getIcon();
             Icon oIcon = ((IconComparable)o).getIcon();
 
             if (thisIcon == null || oIcon == null) {
@@ -142,6 +143,11 @@ public class IconPM extends AbstractValuePM implements IIconPM {
                     return thisIcon.equals(oIcon);
                 }
             }
+        }
+
+        @Override
+        public int hashCode() {
+        	return icon.hashCode();
         }
     }
 }

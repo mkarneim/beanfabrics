@@ -18,7 +18,7 @@ import org.beanfabrics.validation.ValidationState;
  * The <code>TextPM</code> is a presentation model for a text value.
  * <p>
  * The default value is a empty string.
- * 
+ *
  * @author Michael Karneim
  */
 public class TextPM extends AbstractValuePM implements ITextPM {
@@ -46,7 +46,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
      * Constructs a new <code>TextPM<code>.
      */
     public TextPM() {
-        this.getValidator().add(new DefaultOptionsValidationRule());
+        getValidator().add(new DefaultOptionsValidationRule());
     }
 
     /** {@inheritDoc} */
@@ -68,25 +68,25 @@ public class TextPM extends AbstractValuePM implements ITextPM {
         if (aText == null) {
             aText = "";
         }
-        if (equals(this.text, aText)) {
+        if (equals(text, aText)) {
             return;
         }
-        String old = this.text;
-        this.text = aText;
-        this.revalidate();
-        this.updateModified();
-        this.getPropertyChangeSupport().firePropertyChange("text", old, this.text);
+        String old = text;
+        text = aText;
+        revalidate();
+        updateModified();
+        getPropertyChangeSupport().firePropertyChange("text", old, text);
     }
 
     private void updateModified() {
-        Boolean old = this.modified;
-        this.modified = (this.text == null && this.defaultText == null) || !(this.text != null && this.text.equals(this.defaultText));
-        this.getPropertyChangeSupport().firePropertyChange("modified", old, this.modified);
+        Boolean old = modified;
+        modified = (text == null && defaultText == null) || !(text != null && text.equals(defaultText));
+        getPropertyChangeSupport().firePropertyChange("modified", old, modified);
     }
 
     /**
      * Get the default text value of this model.
-     * 
+     *
      * @return the default text value
      */
     protected String getDefaultText() {
@@ -101,18 +101,18 @@ public class TextPM extends AbstractValuePM implements ITextPM {
      * <p>
      * <b>Note:</b> Setting this default value does does not necessarily mean
      * that the actual value of this PM is changed to that value also.
-     * 
+     *
      * @param aText the text to set as default value
      */
     protected void setDefaultText(String aText) {
         if (aText == null) {
             aText = "";
         }
-        String old = this.defaultText;
-        this.defaultText = aText;
-        this.updateModified();
-        this.revalidate();
-        this.getPropertyChangeSupport().firePropertyChange("defaultText", old, this.defaultText);
+        String old = defaultText;
+        defaultText = aText;
+        updateModified();
+        revalidate();
+        getPropertyChangeSupport().firePropertyChange("defaultText", old, defaultText);
     }
 
     public boolean isRestrictedToOptions() {
@@ -122,7 +122,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
     /**
      * If set to <code>true</code> this <code>TextPM</code> is only valid if
      * it's text content is contained in it's options.
-     * 
+     *
      * @param restrictedToOptions
      */
     public void setRestrictedToOptions(boolean restrictedToOptions) {
@@ -130,8 +130,8 @@ public class TextPM extends AbstractValuePM implements ITextPM {
             return;
         }
         this.restrictedToOptions = restrictedToOptions;
-        this.revalidate();
-        this.getPropertyChangeSupport().firePropertyChange("restrictedToOptions", !this.restrictedToOptions, this.restrictedToOptions); //$NON-NLS-1$
+        revalidate();
+        getPropertyChangeSupport().firePropertyChange("restrictedToOptions", !this.restrictedToOptions, this.restrictedToOptions); //$NON-NLS-1$
     }
 
     /** {@inheritDoc} */
@@ -143,17 +143,17 @@ public class TextPM extends AbstractValuePM implements ITextPM {
 
     /** {@inheritDoc} */
     public boolean isModified() {
-        return this.modified;
+        return modified;
     }
 
     /** {@inheritDoc} */
     public void reset() {
-        this.setText(this.getDefaultText());
+        setText(getDefaultText());
     }
 
     /** {@inheritDoc} */
     public void preset() {
-        this.setDefaultText(this.getText());
+        setDefaultText(this.getText());
     }
 
     /** {@inheritDoc} */
@@ -166,31 +166,32 @@ public class TextPM extends AbstractValuePM implements ITextPM {
     }
 
     public void setOptions(Options newOptions) {
-        if (this.options == newOptions) {
+        if (options == newOptions) {
             return;
         }
-        Options old = this.options;
-        if (this.options != null) {
-            this.options.removeOptionsListener(optionsListener);
+        Options old = options;
+        if (options != null) {
+            options.removeOptionsListener(optionsListener);
         }
-        this.options = newOptions;
+        options = newOptions;
 
-        if (this.options != null) {
-            this.options.addOptionsListener(optionsListener);
+        if (options != null) {
+            options.addOptionsListener(optionsListener);
         }
         revalidate();
-        this.getPropertyChangeSupport().firePropertyChange("options", old, this.options);
+        getPropertyChangeSupport().firePropertyChange("options", old, options);
     }
 
     /** {@inheritDoc} */
-    public Comparable<?> getComparable() {
+    @Override
+	public Comparable<?> getComparable() {
         return new TextComparable();
     }
 
     /**
      * The {@link TextComparable} delegates the comparison to the PM's text
      * value.
-     * 
+     *
      * @author Michael Karneim
      */
     protected class TextComparable implements Comparable {
@@ -200,7 +201,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
          * Constructs a {@link TextComparable}.
          */
         public TextComparable() {
-            this.text = TextPM.this.text.toLowerCase();
+            text = TextPM.this.text.toLowerCase();
         }
 
         /** {@inheritDoc} */
@@ -209,7 +210,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
                 throw new IllegalArgumentException("o must be instance of" + TextComparable.class);
             }
             TextComparable oc = (TextComparable)o;
-            return this.text.compareTo(oc.text);
+            return text.compareTo(oc.text);
         }
 
         @Override
@@ -224,11 +225,16 @@ public class TextPM extends AbstractValuePM implements ITextPM {
                 return false;
             }
             TextComparable castedObj = (TextComparable)o;
-            return ((this.text == null ? castedObj.text == null : this.text.equals(castedObj.text)));
+            return ((text == null ? castedObj.text == null : text.equals(castedObj.text)));
+        }
+
+        @Override
+        public int hashCode() {
+        	return text.hashCode();
         }
     }
 
-    private OptionsListener optionsListener = new OptionsListener() {
+    private final OptionsListener optionsListener = new OptionsListener() {
         public void changed(OptionsEvent evt) {
             revalidate();
             getPropertyChangeSupport().firePropertyChange("options", null, null);

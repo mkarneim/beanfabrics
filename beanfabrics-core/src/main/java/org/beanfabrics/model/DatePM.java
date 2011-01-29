@@ -22,7 +22,7 @@ import org.beanfabrics.validation.ValidationState;
  * The date format used for formatting and pasring can be set by calling
  * {@link #setFormat(DateFormat)}. The default text format is {@link Locale}
  * dependent.
- * 
+ *
  * @author Michael Karneim
  * @author Max Gensthaler
  */
@@ -33,13 +33,13 @@ public class DatePM extends TextPM implements IDatePM {
     /**
      * The {@link DateFormatProvider} is a factory for the default
      * {@link DateFormat} used by newly created {@link DatePM} instances.
-     * 
+     *
      * @see DatePM#setDefaultDateFormatProvider(DateFormatProvider)
      */
     public static class DateFormatProvider {
         /**
          * Creates and returns a new {@link DateFormat}
-         * 
+         *
          * @return a new {@link DateFormat}
          */
         public DateFormat getDateFormat() {
@@ -54,7 +54,7 @@ public class DatePM extends TextPM implements IDatePM {
     /**
      * Returns the {@link DateFormatProvider} that is used to create the default
      * {@link DateFormat} used by newly created {@link DatePM} instances.
-     * 
+     *
      * @return the {@link DateFormatProvider}
      */
     public static synchronized DateFormatProvider getDefaultDateFormatProvider() {
@@ -64,7 +64,7 @@ public class DatePM extends TextPM implements IDatePM {
     /**
      * Sets the {@link DateFormatProvider} that is used to create the default
      * {@link DateFormat} used by newly created {@link DatePM} instances.
-     * 
+     *
      * @param provider
      */
     public static synchronized void setDefaultDateFormatProvider(DateFormatProvider provider) {
@@ -75,20 +75,20 @@ public class DatePM extends TextPM implements IDatePM {
 
     /**
      * Constructs a {@link DatePM} using the default format.
-     * 
+     *
      * @see #getDefaultFormat()
      */
     public DatePM() {
-        this.setFormat(this.getDefaultFormat());
+        setFormat(getDefaultFormat());
         // Please note: to disable default validation rules just call getValidator().clear();
-        this.getValidator().add(new DateValidationRule());
+        getValidator().add(new DateValidationRule());
     }
 
     /**
      * Returns a {@link DateFormat} for formatting a {@link Date} to a
      * {@link String} and converting a <code>String</code> to a
      * <code>Date</code>.
-     * 
+     *
      * @return a localized {@link DateFormat} for formatting and parsing this
      *         PM's value
      */
@@ -103,7 +103,7 @@ public class DatePM extends TextPM implements IDatePM {
 
     /** {@inheritDoc} */
     public void setFormat(DateFormat newFormat) {
-        Format oldFormat = this.format;
+        Format oldFormat = format;
         if (oldFormat == newFormat) {
             return;
         }
@@ -115,9 +115,9 @@ public class DatePM extends TextPM implements IDatePM {
         } catch (ConversionException ex) {
             doReformat = false;
         }
-        this.format = (DateFormat)newFormat.clone();
-        this.getPropertyChangeSupport().firePropertyChange("format", oldFormat, newFormat); //$NON-NLS-1$
-        this.revalidate();
+        format = (DateFormat)newFormat.clone();
+        getPropertyChangeSupport().firePropertyChange("format", oldFormat, newFormat); //$NON-NLS-1$
+        revalidate();
         if (doReformat) {
             setDate(oldValue);
         }
@@ -127,7 +127,7 @@ public class DatePM extends TextPM implements IDatePM {
     public Date getDate()
         throws ConversionException {
 
-        if (this.isEmpty()) {
+        if (isEmpty()) {
             return null;
         }
         String str = getText();
@@ -153,26 +153,27 @@ public class DatePM extends TextPM implements IDatePM {
 
     /**
      * Sets the default value of this PM to the given {@link Date} value.
-     * 
+     *
      * @param date the default value
      */
     public void setDefaultDate(Date date) {
         if (date == null) {
-            this.setDefaultText(null);
+            setDefaultText(null);
         } else {
-            this.setDefaultText(format.format(date));
+            setDefaultText(format.format(date));
         }
     }
 
     /** {@inheritDoc} */
-    public Comparable<?> getComparable() {
+    @Override
+	public Comparable<?> getComparable() {
         return new DateComparable();
     }
 
     /**
      * The {@link DateComparable} delegates the comparison to the PM's date
      * value.
-     * 
+     *
      * @author Michael Karneim
      */
     private class DateComparable extends TextComparable {
@@ -193,7 +194,8 @@ public class DatePM extends TextPM implements IDatePM {
         }
 
         /** {@inheritDoc} */
-        public int compareTo(Object o) {
+        @Override
+		public int compareTo(Object o) {
             if (o == null) {
                 throw new IllegalArgumentException("o == null");
             }
@@ -201,7 +203,7 @@ public class DatePM extends TextPM implements IDatePM {
                 throw new IllegalArgumentException("incompatible comparable class");
             }
             DateComparable oc = (DateComparable)o;
-            if (this.time == null) {
+            if (time == null) {
                 if (oc.time == null) {
                     return super.compareTo(o);
                 } else {
@@ -211,7 +213,7 @@ public class DatePM extends TextPM implements IDatePM {
                 if (oc.time == null) {
                     return 1;
                 } else {
-                    return this.time.compareTo(oc.time);
+                    return time.compareTo(oc.time);
                 }
             }
         }
@@ -231,14 +233,19 @@ public class DatePM extends TextPM implements IDatePM {
                 return false;
             }
             DateComparable castedObj = (DateComparable)o;
-            return ((this.time == null ? castedObj.time == null : this.time.equals(castedObj.time)));
+            return ((time == null ? castedObj.time == null : time.equals(castedObj.time)));
+        }
+
+        @Override
+        public int hashCode() {
+        	return time.hashCode();
         }
     }
 
     /**
      * This rule evaluates to invalid if the PM's value can't be converted into
      * a {@link Date}.
-     * 
+     *
      * @author Michael Karneim
      */
     public class DateValidationRule implements ValidationRule {
