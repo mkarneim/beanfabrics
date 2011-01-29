@@ -32,7 +32,7 @@ public class BnTableRowSorter2 extends RowSorter<BnTableModel> {
 
     public static void uninstall(BnTable table) {
         RowSorter rowSorter = table.getRowSorter();
-        if (rowSorter instanceof BnTableRowSorter) {
+        if (rowSorter instanceof BnTableRowSorter2) {
             ((BnTableRowSorter2)rowSorter).dismiss();
         }
         table.setRowSorter(null);
@@ -42,7 +42,6 @@ public class BnTableRowSorter2 extends RowSorter<BnTableModel> {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             onSortKeysChanged();
-
         }
     };
     private final BnTableModel model;
@@ -52,13 +51,13 @@ public class BnTableRowSorter2 extends RowSorter<BnTableModel> {
     public BnTableRowSorter2(BnTableModel model) {
         super();
         this.model = model;
-        this.list = model.getPresentationModel();
-        this.updateViewSortKeys();
-        this.list.addPropertyChangeListener("sortKeys", pcl);
+        list = model.getPresentationModel();
+        updateViewSortKeys();
+        list.addPropertyChangeListener("sortKeys", pcl);
     }
 
     public void dismiss() {
-        this.list.removePropertyChangeListener("sortKeys", pcl);
+        list.removePropertyChangeListener("sortKeys", pcl);
     }
 
     @Override
@@ -161,7 +160,7 @@ public class BnTableRowSorter2 extends RowSorter<BnTableModel> {
      * This method is called whenever the IListPM has changed it's sort keys.
      */
     protected void onSortKeysChanged() {
-        this.updateViewSortKeys();
+        updateViewSortKeys();
         fireSortOrderChanged();
         fireRowSorterChanged(null);
     }
