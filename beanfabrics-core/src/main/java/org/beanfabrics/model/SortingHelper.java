@@ -20,11 +20,10 @@ import org.beanfabrics.util.OrderPreservingMap;
 
 /**
  * Internal helper class for sorting models by one ore more of their properties.
- * 
+ *
  * @author Michael Karneim
  */
 class SortingHelper {
-
     public <K, V extends PresentationModel> void sortBy(OrderPreservingMap<K, V> map, SortKey... sortKeys) {
         if (map.isEmpty()) {
             return;
@@ -38,7 +37,7 @@ class SortingHelper {
             list.add(entry);
         }
 
-        List<SortKey> reverseKeys = new ArrayList(Arrays.asList(sortKeys));
+        List<SortKey> reverseKeys = new ArrayList<SortKey>(Arrays.asList(sortKeys));
         Collections.reverse(reverseKeys);
         for (SortKey key : reverseKeys) {
             Path path = key.getSortPath();
@@ -56,7 +55,7 @@ class SortingHelper {
         if (list.isEmpty()) {
             return; // nothing to do
         }
-        List<SortKey> reverseKeys = new ArrayList(Arrays.asList(sortKeys));
+        List<SortKey> reverseKeys = new ArrayList<SortKey>(Arrays.asList(sortKeys));
         Collections.reverse(reverseKeys);
         for (SortKey key : reverseKeys) {
             Path path = key.getSortPath();
@@ -66,8 +65,6 @@ class SortingHelper {
     }
 
     private static class ComparableComparator implements Comparator<Comparable> {
-
-        @Override
         public int compare(Comparable c1, Comparable c2) {
             final int result;
             if (c1 == null) {
@@ -90,11 +87,10 @@ class SortingHelper {
             }
             return result;
         }
-
     }
 
     private static class ModelComparatorImpl implements Comparator<PresentationModel> {
-        final int orderFactor;
+        private final int orderFactor;
         private final ComparableComparator comparableComparator = new ComparableComparator();
 
         public ModelComparatorImpl(int orderFactor) {
@@ -109,13 +105,13 @@ class SortingHelper {
                 }
                 result = -1;
             } else {
-                Comparable c1 = pm1.getComparable();
+                Comparable<?> c1 = pm1.getComparable();
                 if (c1 == null) {
                     result = -1;
                 } else if (pm2 == null) {
                     result = +1;
                 } else {
-                    Comparable c2 = pm2.getComparable();
+                    Comparable<?> c2 = pm2.getComparable();
                     if (c2 == null) {
                         result = +1;
                     } else {
@@ -128,8 +124,8 @@ class SortingHelper {
     }
 
     private static class PathComparator implements Comparator<PresentationModel> {
-        private Path path;
-        private Comparator<PresentationModel> delegate;
+        private final Path path;
+        private final Comparator<PresentationModel> delegate;
 
         public PathComparator(Comparator<PresentationModel> delegate, Path path) {
             this.delegate = delegate;
@@ -145,8 +141,8 @@ class SortingHelper {
     }
 
     private static class Entry<K, V> {
-        K key;
-        V value;
+        private final K key;
+        private final V value;
 
         public Entry(K key, V value) {
             super();
@@ -163,36 +159,29 @@ class SortingHelper {
         }
     }
 
-    private static class EntryComparator implements Comparator {
+    private static class EntryComparator implements Comparator<Entry> {
         final PathComparator delegate;
 
         public EntryComparator(PathComparator delegate) {
             this.delegate = delegate;
         }
 
-        public int compare(Object o1, Object o2) {
-            Entry e1 = (Entry)o1;
-            Entry e2 = (Entry)o2;
+        public int compare(Entry e1, Entry e2) {
             PresentationModel row1 = (PresentationModel)e1.getValue();
             PresentationModel row2 = (PresentationModel)e2.getValue();
-
             return delegate.compare(row1, row2);
         }
     }
 
-    private static class RowComparator implements Comparator {
+    private static class RowComparator implements Comparator<PresentationModel> {
         private final PathComparator delegate;
 
         public RowComparator(PathComparator delegate) {
             this.delegate = delegate;
         }
 
-        public int compare(Object o1, Object o2) {
-            PresentationModel row1 = (PresentationModel)o1;
-            PresentationModel row2 = (PresentationModel)o2;
-
+        public int compare(PresentationModel row1, PresentationModel row2) {
             return delegate.compare(row1, row2);
-
         }
     }
 }
