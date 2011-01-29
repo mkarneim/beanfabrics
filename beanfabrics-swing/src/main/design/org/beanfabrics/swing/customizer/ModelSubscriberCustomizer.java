@@ -26,7 +26,7 @@ import org.beanfabrics.swing.customizer.util.TitlePanel;
 /**
  * The <code>ModelSubscriberCustomizer</code> is a Java Beans {@link Customizer}
  * for a {@link ModelSubscriber}.
- * 
+ *
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
@@ -40,15 +40,16 @@ public class ModelSubscriberCustomizer extends CustomizerBasePanel<ModelSubscrib
 
     public ModelSubscriberCustomizer() {
         setPresentationModel(getModelSubscriberCustomizerPM());
-        this.setLayout(new BorderLayout());
-        this.add(this.getCenterPanel());
-        setBackground(this.getDefaultBackground());
+        setLayout(new BorderLayout());
+        this.add(getCenterPanel());
+        setBackground(getDefaultBackground());
 
         CustomizerUtil.get().setupGUI(this);
         add(getTitlePanel(), BorderLayout.NORTH);
     }
 
-    public void setObject(Object bean) {
+    @Override
+	public void setObject(Object bean) {
         if (bean == null || bean instanceof ModelSubscriber) {
             try {
                 setModelSubscriber((ModelSubscriber)bean);
@@ -61,14 +62,15 @@ public class ModelSubscriberCustomizer extends CustomizerBasePanel<ModelSubscrib
     }
 
     public void setModelSubscriber(final ModelSubscriber aSubscriber) {
-        this.getPresentationModel().setFunctions(new ModelSubscriberCustomizerPM.Functions() {
-            public void setPath(Path path) {
-                Path oldValue = aSubscriber.getPath();
+        getPresentationModel().setFunctions(new ModelSubscriberCustomizerPM.Functions() {
+            @Override
+			public void setPath(Path path) {
+                Path oldValue = (aSubscriber == null ? null : aSubscriber.getPath());
                 aSubscriber.setPath(path);
                 ModelSubscriberCustomizer.this.firePropertyChange("path", oldValue, path);
             }
         });
-        this.getPresentationModel().setModelSubscriber(aSubscriber);
+        getPresentationModel().setModelSubscriber(aSubscriber);
     }
 
     private JPanel getCenterPanel() {
@@ -99,7 +101,7 @@ public class ModelSubscriberCustomizer extends CustomizerBasePanel<ModelSubscrib
 
     /**
      * Returns the local {@link ModelProvider} for this class.
-     * 
+     *
      * @wbp.nonvisual location=10,430
      * @return the local <code>ModelProvider</code>
      */
@@ -111,7 +113,8 @@ public class ModelSubscriberCustomizer extends CustomizerBasePanel<ModelSubscrib
         return localProvider;
     }
 
-    public void setPresentationModel(ModelSubscriberCustomizerPM aPm) {
+    @Override
+	public void setPresentationModel(ModelSubscriberCustomizerPM aPm) {
         super.setPresentationModel(aPm);
         getLocalProvider().setPresentationModel(aPm);
     }

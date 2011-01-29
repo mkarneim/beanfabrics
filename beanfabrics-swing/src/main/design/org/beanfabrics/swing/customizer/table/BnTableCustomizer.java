@@ -29,7 +29,7 @@ import org.beanfabrics.swing.table.BnTable;
 /**
  * The <code>BnTableCustomizer</code> is a JavaBeans {@link Customizer} for a
  * {@link BnTable}.
- * 
+ *
  * @author Michael Karneim
  */
 public class BnTableCustomizer extends CustomizerBasePanel<BnTableCustomizerPM> implements Customizer {
@@ -45,15 +45,16 @@ public class BnTableCustomizer extends CustomizerBasePanel<BnTableCustomizerPM> 
 
     public BnTableCustomizer() {
         setPresentationModel(getBnTableCustomizerPM());
-        this.setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
         add(getCenterPanel(), BorderLayout.CENTER);
         add(getTitlePanel(), BorderLayout.NORTH);
-        setBackground(this.getDefaultBackground());
+        setBackground(getDefaultBackground());
         //
         CustomizerUtil.get().setupGUI(this);
     }
 
-    public void setObject(Object bean) {
+    @Override
+	public void setObject(Object bean) {
         if (bean == null || bean instanceof BnTable) {
             try {
                 setBnTable((BnTable)bean);
@@ -66,26 +67,27 @@ public class BnTableCustomizer extends CustomizerBasePanel<BnTableCustomizerPM> 
     }
 
     public void setBnTable(final BnTable bnTable) {
-        this.getBnTableCustomizerPM().setFunctions(new BnTableCustomizerPM.Functions() {
-
-            public void setPath(Path newValue) {
-                Path oldValue = bnTable.getPath();
+        getBnTableCustomizerPM().setFunctions(new BnTableCustomizerPM.Functions() {
+            @Override
+			public void setPath(Path newValue) {
+                Path oldValue = (bnTable == null ? null : bnTable.getPath());
                 bnTable.setPath(newValue);
                 BnTableCustomizer.this.firePropertyChange("path", oldValue, newValue);
             }
 
-            public void setBnColumns(BnColumn[] newValue) {
-                BnColumn[] oldValue = bnTable.getColumns();
+            @Override
+			public void setBnColumns(BnColumn[] newValue) {
+                BnColumn[] oldValue = (bnTable == null ? null : bnTable.getColumns());
                 bnTable.setColumns(newValue);
                 BnTableCustomizer.this.firePropertyChange("columns", oldValue, newValue);
             }
         });
-        this.getBnTableCustomizerPM().setBnTable(bnTable);
+        getBnTableCustomizerPM().setBnTable(bnTable);
     }
 
     /**
      * Returns the local {@link ModelProvider} for this class.
-     * 
+     *
      * @wbp.nonvisual location=16,357
      * @return the local <code>ModelProvider</code>
      */

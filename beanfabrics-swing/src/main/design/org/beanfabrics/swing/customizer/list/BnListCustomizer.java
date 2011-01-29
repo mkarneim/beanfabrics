@@ -26,7 +26,7 @@ import org.beanfabrics.swing.list.CellConfig;
 /**
  * The <code>BnListCustomizer</code> is a JavaBeans {@link Customizer} for a
  * {@link BnList}.
- * 
+ *
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
@@ -48,7 +48,8 @@ public class BnListCustomizer extends CustomizerBasePanel<BnListCustomizerPM> im
         //
     }
 
-    public void setObject(Object bean) {
+    @Override
+	public void setObject(Object bean) {
         if (bean == null || bean instanceof BnList) {
             try {
                 setBnList((BnList)bean);
@@ -61,34 +62,38 @@ public class BnListCustomizer extends CustomizerBasePanel<BnListCustomizerPM> im
     }
 
     public void setBnList(final BnList bnList) {
-        this.getPresentationModel().setFunctions(new BnListCustomizerPM.Functions() {
-            public void setPathToList(Path newValue) {
-                Path oldValue = bnList.getPath();
+        getPresentationModel().setFunctions(new BnListCustomizerPM.Functions() {
+            @Override
+			public void setPathToList(Path newValue) {
+                Path oldValue = (bnList == null ? null : bnList.getPath());
                 bnList.setPath(newValue);
                 BnListCustomizer.this.firePropertyChange("path", oldValue, newValue);
             }
 
-            public void setCellConfig(CellConfig newValue) {
-                CellConfig oldValue = bnList.getCellConfig();
+            @Override
+			public void setCellConfig(CellConfig newValue) {
+                CellConfig oldValue = (bnList == null ? null : bnList.getCellConfig());
                 bnList.setCellConfig(newValue);
                 BnListCustomizer.this.firePropertyChange("cellConfig", oldValue, newValue);
             }
         });
-        this.getPresentationModel().setBnList(bnList);
+        getPresentationModel().setBnList(bnList);
     }
 
-    public BnListCustomizerPM getPresentationModel() {
+    @Override
+	public BnListCustomizerPM getPresentationModel() {
         return getLocalProvider().getPresentationModel();
     }
 
-    public void setPresentationModel(BnListCustomizerPM pModel) {
+    @Override
+	public void setPresentationModel(BnListCustomizerPM pModel) {
         super.setPresentationModel(pModel);
         getLocalProvider().setPresentationModel(pModel);
     }
 
     /**
      * Returns the local {@link ModelProvider} for this class.
-     * 
+     *
      * @wbp.nonvisual location=10,430
      * @return the local <code>ModelProvider</code>
      */
