@@ -33,14 +33,12 @@ import org.junit.Test;
  * @author Michael Karneim
  */
 public abstract class IListPMInterfaceAbstractTest {
-    static Class ELEMENT_TYPE;
     static int INITIAL_NUMBER_OF_ELEMENTS;
     static int[] INITIAL_SELECTED_ELEMENT_INDEXES;
 
     @BeforeClass
     public static void setUpClass()
         throws Exception {
-        ELEMENT_TYPE = RowPM.class;
         INITIAL_NUMBER_OF_ELEMENTS = 10;
         INITIAL_SELECTED_ELEMENT_INDEXES = new int[] { 0, 1, 2, 3, 4 };
     }
@@ -58,32 +56,32 @@ public abstract class IListPMInterfaceAbstractTest {
     class MyListListener implements ListListener {
         final List<ListEvent> events = new ArrayList<ListEvent>();
 
-        @Override
+        /** {@inheritDoc} */
         public void elementChanged(ElementChangedEvent evt) {
             events.add(evt);
         }
 
-        @Override
+        /** {@inheritDoc} */
         public void elementsAdded(ElementsAddedEvent evt) {
             events.add(evt);
         }
 
-        @Override
+        /** {@inheritDoc} */
         public void elementsDeselected(ElementsDeselectedEvent evt) {
             events.add(evt);
         }
 
-        @Override
+        /** {@inheritDoc} */
         public void elementsRemoved(ElementsRemovedEvent evt) {
             events.add(evt);
         }
 
-        @Override
+        /** {@inheritDoc} */
         public void elementsReplaced(ElementsReplacedEvent evt) {
             events.add(evt);
         }
 
-        @Override
+        /** {@inheritDoc} */
         public void elementsSelected(ElementsSelectedEvent evt) {
             events.add(evt);
         }
@@ -122,9 +120,9 @@ public abstract class IListPMInterfaceAbstractTest {
             row.section.setInteger(i % 2);
             elements.add(row);
         }
-        this.list = create(elements, INITIAL_SELECTED_ELEMENT_INDEXES);
-        this.listListener = new MyListListener();
-        this.list.addListListener(this.listListener);
+        list = create(elements, INITIAL_SELECTED_ELEMENT_INDEXES);
+        listListener = new MyListListener();
+        list.addListListener(listListener);
     }
 
     private String createRandomText(Random rnd) {
@@ -245,7 +243,7 @@ public abstract class IListPMInterfaceAbstractTest {
 
         listListener.clear();
 
-        List old = new ArrayList(elements);
+        List<RowPM> old = new ArrayList<RowPM>(elements);
         old.remove(0);
         list.getSelection().retainAll(old);
 
