@@ -53,7 +53,7 @@ public abstract class IListPMInterfaceAbstractTest {
         }
     }
 
-    class MyListListener implements ListListener {
+    static class MyListListener implements ListListener {
         final List<ListEvent> events = new ArrayList<ListEvent>();
 
         /** {@inheritDoc} */
