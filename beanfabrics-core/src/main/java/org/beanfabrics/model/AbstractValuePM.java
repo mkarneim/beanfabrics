@@ -4,6 +4,9 @@
  */
 package org.beanfabrics.model;
 
+import java.util.ResourceBundle;
+
+import org.beanfabrics.util.ResourceBundleFactory;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 
@@ -12,10 +15,12 @@ import org.beanfabrics.validation.ValidationState;
  * implement the {@link IValuePM} interface and contain some 'value' and other
  * additional attributes which are generally usefull for user interface
  * programming, like title, description, mandatory, and editable.
- * 
+ *
  * @author Michael Karneim
  */
 public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
+    protected static final String KEY_MESSAGE_MANDATORY = "message.mandatory";
+    private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(AbstractValuePM.class);
     private boolean editable = true;
     private boolean mandatory = false;
     private String description = null;
@@ -26,7 +31,7 @@ public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
      */
     protected AbstractValuePM() {
         // Please note: to disable default validation rules just call getValidator().clear();
-        this.getValidator().add(new MandatoryValidationRule());
+        getValidator().add(new MandatoryValidationRule());
     }
 
     /** {@inheritDoc} */
@@ -41,8 +46,8 @@ public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
         }
         String oldDesc = this.description;
         this.description = description;
-        this.revalidate();
-        this.getPropertyChangeSupport().firePropertyChange("description", oldDesc, description);
+        revalidate();
+        getPropertyChangeSupport().firePropertyChange("description", oldDesc, description);
     }
 
     /** {@inheritDoc} */
@@ -57,8 +62,8 @@ public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
         }
         boolean old = this.mandatory;
         this.mandatory = mandatory;
-        this.revalidate();
-        this.getPropertyChangeSupport().firePropertyChange("mandatory", old, mandatory);
+        revalidate();
+        getPropertyChangeSupport().firePropertyChange("mandatory", old, mandatory);
     }
 
     /** {@inheritDoc} */
@@ -73,8 +78,8 @@ public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
         }
         String old = this.title;
         this.title = title;
-        this.revalidate();
-        this.getPropertyChangeSupport().firePropertyChange("title", old, this.title);
+        revalidate();
+        getPropertyChangeSupport().firePropertyChange("title", old, this.title);
     }
 
     /** {@inheritDoc} */
@@ -89,8 +94,8 @@ public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
         }
         boolean old = this.editable;
         this.editable = editable;
-        this.revalidate();
-        this.getPropertyChangeSupport().firePropertyChange("editable", old, this.editable);
+        revalidate();
+        getPropertyChangeSupport().firePropertyChange("editable", old, this.editable);
     }
 
     @Override
@@ -105,7 +110,7 @@ public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
     /**
      * This rule evaluates to invalid if the PM's "mandatory" attribute is true
      * and the PM is empty.
-     * 
+     *
      * @author Michael Karneim
      * @see AbstractValuePM#isMandatory()
      * @see AbstractValuePM#isEmpty()
@@ -115,7 +120,7 @@ public abstract class AbstractValuePM extends AbstractPM implements IValuePM {
         public ValidationState validate() {
             if (isEmpty()) {
                 if (isMandatory()) {
-                    String message = "This value is mandatory"; // TODO i18n
+                    String message = resourceBundle.getString(KEY_MESSAGE_MANDATORY);
                     String desc = getDescription();
                     if (desc != null) {
                         message += ": " + desc;

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Locale;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -34,7 +35,7 @@ import org.junit.Test;
  * <p>
  * To fulfill this condition {@link CompositeValidationState#equals(Object)} had
  * to override it's super implementation.
- * 
+ *
  * @author Max Gensthaler
  */
 public class CompositeValidationStateTest {
@@ -55,14 +56,14 @@ public class CompositeValidationStateTest {
         }
 
         private void init() {
-            this.selectedProject.setMandatory(true);
-            this.selectedAgent.setMandatory(true);
+            selectedProject.setMandatory(true);
+            selectedAgent.setMandatory(true);
         }
 
         @OnChange(path = "this.selectedProject")
         protected void updateSelectedAgent() {
-            boolean b = this.selectedProject.isValid();
-            this.selectedAgent.setEditable(b);
+            boolean b = selectedProject.isValid();
+            selectedAgent.setEditable(b);
         }
     }
 
@@ -79,11 +80,11 @@ public class CompositeValidationStateTest {
             for (String project : serverProjects) {
                 projectOpts.put(project, project);
             }
-            this.setOptions(projectOpts);
+            setOptions(projectOpts);
             // init text value
             if (serverProjects.length == 1) {
-                this.setText(serverProjects[0]);
-                this.setEditable(false);
+                setText(serverProjects[0]);
+                setEditable(false);
             }
         }
 
@@ -103,6 +104,7 @@ public class CompositeValidationStateTest {
 
     @Test
     public void fireEvents() {
+        Locale.setDefault(Locale.ENGLISH);
         final AgentsModel pm = new AgentsModel();
 
         ModelProvider prov = new ModelProvider();

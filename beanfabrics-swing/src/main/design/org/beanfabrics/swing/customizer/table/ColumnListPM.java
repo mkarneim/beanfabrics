@@ -4,6 +4,8 @@
  */
 package org.beanfabrics.swing.customizer.table;
 
+import java.util.ResourceBundle;
+
 import org.beanfabrics.Path;
 import org.beanfabrics.meta.PathElementInfo;
 import org.beanfabrics.model.ListPM;
@@ -15,15 +17,22 @@ import org.beanfabrics.swing.customizer.path.PathChooserPM;
 import org.beanfabrics.swing.customizer.path.PathContext;
 import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 import org.beanfabrics.swing.table.BnColumn;
+import org.beanfabrics.util.ResourceBundleFactory;
 import org.beanfabrics.validation.ValidationState;
 
 /**
  * The <code>ColumnListPM</code> is a {@link ListPM} for {@link ColumnPM}
  * elements.
- * 
+ *
  * @author Michael Karneim
  */
 public class ColumnListPM extends ListPM<ColumnPM> {
+    protected static final String KEY_MESSAGE_SELECT_TO_MOVE_UP = "message.selectToMoveUp";
+    protected static final String KEY_MESSAGE_SELECT_TO_MOVE_DOWN = "message.selectToMoveDown";
+    protected static final String KEY_MESSAGE_ALREADY_AT_TOP = "message.alreadyAtTop";
+    protected static final String KEY_MESSAGE_ALREADY_AT_BOTTOM = "message.alreadyAtBottom";
+    private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(ColumnListPM.class);
+
     protected final OperationPM addColumn = new OperationPM();
     protected final OperationPM removeColumns = new OperationPM();
     protected final OperationPM moveUp = new OperationPM();
@@ -37,12 +46,12 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     }
 
     public void setColumnListContext(ColumnListContext clContext) {
-        this.rootPathElementInfo = clContext.rootPathElementInfo;
-        this.clear();
+        rootPathElementInfo = clContext.rootPathElementInfo;
+        clear();
         if (clContext.initialColumns != null) {
             for (BnColumn col : clContext.initialColumns) {
                 ColumnPM cell = new ColumnPM();
-                ColumnContext colContext = new ColumnContext(this.rootPathElementInfo, col);
+                ColumnContext colContext = new ColumnContext(rootPathElementInfo, col);
                 cell.setColumnContext(colContext);
                 this.add(cell);
             }
@@ -51,7 +60,7 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     }
 
     public BnColumn[] getData() {
-        BnColumn[] result = new BnColumn[this.size()];
+        BnColumn[] result = new BnColumn[size()];
         int i = 0;
         for (ColumnPM cell : this) {
             result[i] = cell.getBnColumn();
@@ -64,25 +73,26 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     public void addColumn() {
         PathChooserPM chooserMdl = new PathChooserPM();
         chooserMdl.setFunctions(new PathChooserPM.Functions() {
-            public void apply(Path path) {
+            @Override
+			public void apply(Path path) {
                 addColumun(path);
             }
         });
-        chooserMdl.setPathContext(new PathContext(this.rootPathElementInfo, null, new Path()));
-        chooserMdl.getContext().addParent(this.getContext());
+        chooserMdl.setPathContext(new PathContext(rootPathElementInfo, null, new Path()));
+        chooserMdl.getContext().addParent(getContext());
         CustomizerUtil.get().openPathChooserDialog(chooserMdl);
 
     }
 
     @Validation(path = "addColumn", message = "Unknown element type")
     boolean canAddColumn() {
-        return this.rootPathElementInfo != null;
+        return rootPathElementInfo != null;
     }
 
     private void addColumun(Path path) {
         ColumnPM newCell = new ColumnPM();
         String header = createHeader(path);
-        ColumnContext colContext = new ColumnContext(this.rootPathElementInfo, new BnColumn(path, header));
+        ColumnContext colContext = new ColumnContext(rootPathElementInfo, new BnColumn(path, header));
         newCell.setColumnContext(colContext);
         this.add(newCell);
     }
@@ -104,7 +114,7 @@ public class ColumnListPM extends ListPM<ColumnPM> {
 
     @Operation
     public void removeColumns() {
-        this.removeAll(this.getSelection());
+        removeAll(getSelection());
 
     }
 
@@ -118,11 +128,13 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     @Validation(path = "moveUp")
     ValidationState validateMoveUp() {
         if (getSelection().size() != 1) {
-            return new ValidationState("Select single entry to move up");
+            String message = resourceBundle.getString(KEY_MESSAGE_SELECT_TO_MOVE_UP);
+            return new ValidationState(message);
         }
         int index = getSelection().getMinIndex();
         if (index == 0) {
-            return new ValidationState("Already at top");
+            String message = resourceBundle.getString(KEY_MESSAGE_ALREADY_AT_TOP);
+            return new ValidationState(message);
         }
         return null;
     }
@@ -137,11 +149,13 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     @Validation(path = "moveDown")
     public ValidationState validateMoveDown() {
         if (getSelection().size() != 1) {
-            return new ValidationState("Select single entry to move down");
+            String message = resourceBundle.getString(KEY_MESSAGE_SELECT_TO_MOVE_DOWN);
+            return new ValidationState(message);
         }
         int index = getSelection().getMinIndex();
         if (index == size() - 1) {
-            return new ValidationState("Already at bottom");
+            String message = resourceBundle.getString(KEY_MESSAGE_ALREADY_AT_BOTTOM);
+            return new ValidationState(message);
         }
         return null;
     }

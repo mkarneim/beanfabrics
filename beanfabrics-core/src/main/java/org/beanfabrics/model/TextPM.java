@@ -245,7 +245,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
         public ValidationState validate() {
             if (isRestrictedToOptions() && getOptions() != null && !isEmpty()) {
                 if (getOptions().containsValue(text) == false) {
-                    final String message = resourceBundle.getString(KEY_MESSAGE_VALUE_NOT_AN_OPTION);
+                    String message = resourceBundle.getString(KEY_MESSAGE_VALUE_NOT_AN_OPTION);
                     return new ValidationState(message);
                 }
             }

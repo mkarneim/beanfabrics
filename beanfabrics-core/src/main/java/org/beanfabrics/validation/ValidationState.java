@@ -9,7 +9,7 @@ package org.beanfabrics.validation;
  * {@link ValidationRule#validate()} and indicates that this rule has found some
  * invalid state. It contains a human readable text message which usually is
  * reported to the application user.
- * 
+ *
  * @author Michael Karneim
  */
 public class ValidationState {
@@ -18,7 +18,7 @@ public class ValidationState {
     /**
      * Factory-method for creating a {@link ValidationState} from the specified
      * message or <code>null</code> if the message is <code>null</code>.
-     * 
+     *
      * @param message String
      * @return the <code>ValidationState</code> if <code>message</code> is not
      *         <code>null</code>, otherwise returns <code>null</code>
@@ -33,7 +33,7 @@ public class ValidationState {
 
     /**
      * Constructs a new instance with the given message.
-     * 
+     *
      * @param message the message text of this <code>ValidationState</code>
      * @throws IllegalArgumentException when message is <code>null</code>
      */
@@ -47,21 +47,22 @@ public class ValidationState {
 
     /**
      * Returns the message for this instance.
-     * 
+     *
      * @return String
      */
     public String getMessage() {
-        return this.message;
+        return message;
     }
 
     /**
      * Returns <code>true</code> when this instance is equal to the given
      * object.
-     * 
+     *
      * @param other Object to compare <code>this</code> instance to
      * @return boolean <code>true</code> if this instance and the given object
      *         are equal, else <code>false</code>
      */
+    @Override
     public boolean equals(Object other) {
         if (other == null) {
             return false;
@@ -70,14 +71,14 @@ public class ValidationState {
             return false;
         }
         ValidationState otherState = (ValidationState)other;
-        if (this.message == null && otherState.message == null) {
+        if (message == null && otherState.message == null) {
             return true;
         } else {
-            return (this.message != null && this.message.equals(otherState.message));
+            return (message != null && message.equals(otherState.message));
         }
     }
 
-    /** {@inheritDoc} */
+    @Override
     public int hashCode() {
         int hashCode = 1;
         hashCode = 31 * hashCode + (message == null ? 0 : message.hashCode());

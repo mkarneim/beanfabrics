@@ -7,7 +7,9 @@
 package org.beanfabrics.model;
 
 import java.math.BigDecimal;
+import java.util.ResourceBundle;
 
+import org.beanfabrics.util.ResourceBundleFactory;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 
@@ -15,16 +17,20 @@ import org.beanfabrics.validation.ValidationState;
  * The IntegerPM is a presentation model for integer numbers. The default range
  * for valid numbers is between {@link Long#MIN_VALUE} and
  * {@link Long#MAX_VALUE}.
- * 
+ *
  * @author Michael Karneim
  */
 public class IntegerPM extends BigDecimalPM implements IIntegerPM {
+    protected static final String KEY_MESSAGE_VALUE_TOO_SMALL = "message.valueTooSmall";
+    protected static final String KEY_MESSAGE_VALUE_TOO_BIG = "message.valueTooBig";
+    protected static final String KEY_MESSAGE_INVALID_NUMBER = "message.invalidNumber";
+    private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(IntegerPM.class);
     private long minValue = Long.MIN_VALUE;
     private long maxValue = Long.MAX_VALUE;
 
     public IntegerPM() {
         // Please note: to disable default validation rules just call getValidator().clear();
-        this.getValidator().add(new IntegerValidationRule());
+        getValidator().add(new IntegerValidationRule());
     }
 
     public IntegerPM(Integer value) {
@@ -38,7 +44,7 @@ public class IntegerPM extends BigDecimalPM implements IIntegerPM {
 
     public void setMinValue(long minValue) {
         this.minValue = minValue;
-        this.revalidate();
+        revalidate();
     }
 
     public long getMaxValue() {
@@ -47,13 +53,13 @@ public class IntegerPM extends BigDecimalPM implements IIntegerPM {
 
     public void setMaxValue(long maxValue) {
         this.maxValue = maxValue;
-        this.revalidate();
+        revalidate();
     }
 
     public void setMinMaxValueRange(long minValue, long maxValue) {
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.revalidate();
+        revalidate();
     }
 
     public void setByte(Byte value) {
@@ -148,14 +154,17 @@ public class IntegerPM extends BigDecimalPM implements IIntegerPM {
             try {
                 long value = getLong();
                 if (value < minValue) {
-                    return new ValidationState("This value is too small"); // TODO (mk) i18n
+                    String message = resourceBundle.getString(KEY_MESSAGE_VALUE_TOO_SMALL);
+                    return new ValidationState(message);
                 }
                 if (value > maxValue) {
-                    return new ValidationState("This value is too big"); // TODO (mk) i18n
+                    String message = resourceBundle.getString(KEY_MESSAGE_VALUE_TOO_BIG);
+                    return new ValidationState(message);
                 }
                 return null;
             } catch (ConversionException e) {
-                return new ValidationState("Not an integer number"); // TODO (mk) i18n
+                String message = resourceBundle.getString(KEY_MESSAGE_INVALID_NUMBER);
+                return new ValidationState(message);
             }
         }
     }

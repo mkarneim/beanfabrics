@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.beanfabrics.Path;
@@ -35,6 +36,7 @@ import org.beanfabrics.event.ElementsSelectedEvent;
 import org.beanfabrics.event.ListListener;
 import org.beanfabrics.event.ListSupport;
 import org.beanfabrics.util.Interval;
+import org.beanfabrics.util.ResourceBundleFactory;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 
@@ -42,10 +44,13 @@ import org.beanfabrics.validation.ValidationState;
  * The ListPM is a list of presentation models. Basically it provides methods
  * for adding, removing, accessing and iterating elements and informs listeners
  * about changes. It also maintains a {@link Selection}.
- * 
+ *
  * @author Michael Karneim
  */
 public class ListPM<T extends PresentationModel> extends AbstractPM implements IListPM<T> {
+    protected static final String KEY_MESSAGE_INVALID_ELEMENTS = "message.invalidElements";
+    private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(ListPM.class);
+
     private static final Integer UNKNOWN = null;
     private static final int NONE = -1;
 
@@ -109,7 +114,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     /**
      * Constructs an empty list with the specified initial capacity.
-     * 
+     *
      * @param initialCapacity the initial capacity of the list.
      */
     public ListPM(int initialCapacity) {
@@ -118,7 +123,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     /**
      * Constructs a <code>ListPM</code> with the specified list of entries.
-     * 
+     *
      * @param list the initial list of entries
      */
     public ListPM(ArrayList<Entry> list) {
@@ -127,7 +132,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     /**
      * Constructs a <code>ListPM</code> with the specified list of entries.
-     * 
+     *
      * @param list the initial list of entries
      */
     protected ListPM(List<Entry> list) {
@@ -161,7 +166,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         }
         revalidateProperties();
         BnPropertyChangeEvent newEvent = new BnPropertyChangeEvent(this, null, null, null, evt);
-        this.getPropertyChangeSupport().firePropertyChange(newEvent);
+        getPropertyChangeSupport().firePropertyChange(newEvent);
     }
 
     /**
@@ -210,7 +215,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     private void onAdd(T element) {
         element.addPropertyChangeListener(this.elementsPcl);
         if (element instanceof ContextOwner) {
-            ((ContextOwner)element).getContext().addParent(this.getContext());
+            ((ContextOwner)element).getContext().addParent(getContext());
         }
 
     }
@@ -218,7 +223,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     private void onRemove(T element) {
         element.removePropertyChangeListener(this.elementsPcl);
         if (element instanceof ContextOwner) {
-            ((ContextOwner)element).getContext().removeParent(this.getContext());
+            ((ContextOwner)element).getContext().removeParent(getContext());
         }
     }
 
@@ -396,7 +401,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     /**
      * Sorts the entries of this list pM by comparing the cells at the end of
      * the given paths.
-     * 
+     *
      * @param ascending if true, the resulting order will be ascending,
      *            otherwise descending.
      * @param paths one or more Path objects must be specified to define which
@@ -436,7 +441,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         } else {
             this.sortKeys = Collections.unmodifiableCollection(Arrays.asList(newSortKeys));
         }
-        this.getPropertyChangeSupport().firePropertyChange("sortKeys", oldValue, this.sortKeys);
+        getPropertyChangeSupport().firePropertyChange("sortKeys", oldValue, this.sortKeys);
     }
 
     /**
@@ -489,7 +494,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     /**
      * Returns a sorted array of all indices of the given elements starting with
      * the smallest index.
-     * 
+     *
      * @param col all elements to get the index from
      * @return a sorted array of all indices of the given elements
      */
@@ -877,7 +882,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         /**
          * Returns the index of the next selected element AFTER the given index,
          * or -1 if no element is found.
-         * 
+         *
          * @param index
          * @return the index of the next selected element after the given index,
          *         or -1 if no element is found.
@@ -1222,7 +1227,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         /**
          * Returns a new Collection with all selected elements. Modification on
          * this collection will not influence the original selection.
-         * 
+         *
          * @return a new Collection with all selected elements.
          */
         public Collection<T> toCollection() {
@@ -1247,7 +1252,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     /**
      * This rule evaluates to invalid if at least one of the list elements is
      * invalid.
-     * 
+     *
      * @author Michael Karneim
      */
     public class ListElementsValidationRule implements ValidationRule {
@@ -1258,8 +1263,8 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
             }
             for (T pModel1 : ListPM.this) {
                 if (pModel1.isValid() == false) {
-                    // TODO (mk) i18n
-                    return new ValidationState("One or more elements are invalid");
+                    String message = resourceBundle.getString(KEY_MESSAGE_INVALID_ELEMENTS);
+                    return new ValidationState(message);
                 }
             }
             return null;

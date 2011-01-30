@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.beanfabrics.Path;
@@ -37,6 +38,7 @@ import org.beanfabrics.event.ListListener;
 import org.beanfabrics.event.ListSupport;
 import org.beanfabrics.util.Interval;
 import org.beanfabrics.util.OrderPreservingMap;
+import org.beanfabrics.util.ResourceBundleFactory;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 
@@ -44,10 +46,12 @@ import org.beanfabrics.validation.ValidationState;
  * The MapPM is a map of presentation models. Basically it provides methods for
  * adding, removing, accessing and iterating elements and informs listeners
  * about changes. It also maintains a {@link Selection}.
- * 
+ *
  * @author Michael Karneim
  */
 public class MapPM<K, V extends PresentationModel> extends AbstractPM implements IMapPM<K, V> {
+    protected static final String KEY_MESSAGE_INVALID_ELEMENTS = "message.invalidElements";
+    private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(ListPM.class);
 
     private static final int NONE = -1;
 
@@ -55,7 +59,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
 
     private final SelectedKeysImpl selectedKeys = new SelectedKeysImpl();
 
-    private final Selection selection = new SelectionImpl();
+    private final Selection<V> selection = new SelectionImpl();
 
     private final ListSupport support = new ListSupport(this);
 
@@ -123,7 +127,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         }
         revalidateProperties();
         BnPropertyChangeEvent newEvent = new BnPropertyChangeEvent(this, null, null, null, evt);
-        this.getPropertyChangeSupport().firePropertyChange(newEvent);
+        getPropertyChangeSupport().firePropertyChange(newEvent);
     }
 
     /**
@@ -202,14 +206,14 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     private void onRemove(V element) {
         element.removePropertyChangeListener(this.elementsPcl);
         if (element instanceof ContextOwner) {
-            ((ContextOwner)element).getContext().removeParent(this.getContext());
+            ((ContextOwner)element).getContext().removeParent(getContext());
         }
     }
 
     private void onAdd(V element) {
         element.addPropertyChangeListener(this.elementsPcl);
         if (element instanceof ContextOwner) {
-            ((ContextOwner)element).getContext().addParent(this.getContext());
+            ((ContextOwner)element).getContext().addParent(getContext());
         }
     }
 
@@ -304,7 +308,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     /**
      * Sorts the entries of this map by comparing the {@link PresentationModel}s
      * at the end of the given paths.
-     * 
+     *
      * @param ascending if true, the resulting order will be ascending,
      *            otherwise descending.
      * @param paths one or more Path objects must be specified to define which
@@ -342,7 +346,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         } else {
             this.sortKeys = Collections.unmodifiableCollection(Arrays.asList(newSortKeys));
         }
-        this.getPropertyChangeSupport().firePropertyChange("sortKeys", oldValue, this.sortKeys);
+        getPropertyChangeSupport().firePropertyChange("sortKeys", oldValue, this.sortKeys);
     }
 
     /**
@@ -547,7 +551,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     /**
      * Returns a set of all keys of the elements in the given collection. For
      * elements that are not in this map no key is inserted into the result.
-     * 
+     *
      * @param col
      * @return a set of all keys of the elements in the given collection
      */
@@ -786,7 +790,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         /**
          * Returns a new Collection with all selected elements. Modification on
          * this collection will not influence the original selection.
-         * 
+         *
          * @return a new Collection with all selected elements.
          */
         public Collection<V> toCollection() {
@@ -954,7 +958,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
          */
         public Iterator<K> iterator() {
             return new Iterator<K>() {
-                private Iterator<K> impl = elements.iterator();
+                private final Iterator<K> impl = elements.iterator();
                 private K last;
 
                 public boolean hasNext() {
@@ -1291,7 +1295,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     /**
      * This rule evaluates to invalid if at least one of the list elements is
      * invalid.
-     * 
+     *
      * @author Michael Karneim
      */
     public class ListElementsValidationRule implements ValidationRule {
@@ -1302,8 +1306,8 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             }
             for (V element : MapPM.this) {
                 if (element.isValid() == false) {
-                    // TODO (mk) i18n
-                    return new ValidationState("One or more elements are invalid");
+                    String message = resourceBundle.getString(KEY_MESSAGE_INVALID_ELEMENTS);
+                    return new ValidationState(message);
                 }
             }
             return null;

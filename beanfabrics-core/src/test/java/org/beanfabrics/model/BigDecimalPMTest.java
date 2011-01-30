@@ -9,6 +9,7 @@ import static org.junit.Assert.assertFalse;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 import junit.framework.JUnit4TestAdapter;
@@ -43,24 +44,25 @@ public class BigDecimalPMTest {
 
     @Test
     public void setText1() {
+        Locale.setDefault(Locale.ENGLISH);
         BigDecimalPM pm = new BigDecimalPM();
         pm.setText("1234.56");
         BigDecimal bd = new BigDecimal("1234.56");
-        assertEquals("pM.getBigDecimal()", bd, pm.getBigDecimal());
+        assertEquals("pm.getBigDecimal()", bd, pm.getBigDecimal());
     }
 
     @Test
     public void setText2() {
         BigDecimalPM pm = new BigDecimalPM();
         pm.setText("1234abc");
-        assertEquals("pM.isValid()", false, pm.isValid());
+        assertEquals("pm.isValid()", false, pm.isValid());
     }
 
     @Test
     public void setText3() {
         BigDecimalPM pm = new BigDecimalPM();
         pm.setText("9223372036854775809");
-        assertEquals("pM.isValid()", true, pm.isValid());
+        assertEquals("pm.isValid()", true, pm.isValid());
     }
 
     @Test
@@ -80,6 +82,7 @@ public class BigDecimalPMTest {
 
     @Test
     public void formatting() {
+        Locale.setDefault(Locale.ENGLISH);
         BigDecimalPM pm = new BigDecimalPM();
         DecimalFormat format = new DecimalFormat("#.##");
         pm.setFormat(new BigDecimalPM.Format(format));
@@ -88,7 +91,7 @@ public class BigDecimalPMTest {
 
         pm.reformat();
 
-        assertEquals("pM.isValid()", true, pm.isValid());
+        assertEquals("pm.isValid()", true, pm.isValid());
         assertEquals("pm.getText()", "125.57", pm.getText());
     }
 
@@ -96,11 +99,11 @@ public class BigDecimalPMTest {
     public void setFormat() {
         Locale.setDefault(Locale.GERMANY);
         BigDecimalPM pm = new BigDecimalPM();
-        DecimalFormat format = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.GERMANY);
+        DecimalFormat format = (DecimalFormat)NumberFormat.getNumberInstance(Locale.GERMANY);
         pm.setFormat(new BigDecimalPM.Format(format));
         pm.setText("1.234.567,89");
 
-        DecimalFormat f2 = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.US);
+        DecimalFormat f2 = (DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
         pm.setFormat(new BigDecimalPM.Format(f2));
 
         assertEquals("1,234,567.89", pm.getText());
@@ -110,11 +113,11 @@ public class BigDecimalPMTest {
     public void setFormatWithInvalidNumber() {
         Locale.setDefault(Locale.GERMANY);
         BigDecimalPM pm = new BigDecimalPM();
-        DecimalFormat format = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.GERMANY);
+        DecimalFormat format = (DecimalFormat)NumberFormat.getNumberInstance(Locale.GERMANY);
         pm.setFormat(new BigDecimalPM.Format(format));
         pm.setText("abcxyz");
 
-        DecimalFormat f2 = (DecimalFormat)DecimalFormat.getNumberInstance(Locale.US);
+        DecimalFormat f2 = (DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
         pm.setFormat(new BigDecimalPM.Format(f2));
 
         assertEquals("abcxyz", pm.getText());
