@@ -37,3 +37,5 @@ is not a derived work in that sense.
 
 The Eclipse SWT libraries are distributes under the Eclipse Public License.
 For more information see epl.txt or http://www.eclipse.org/legal/epl-v10.html.
+
+
