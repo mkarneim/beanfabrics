@@ -59,13 +59,15 @@ public class BnList extends JList implements View<IListPM>, ModelSubscriber {
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(IListPM pModel) {
-        if (pModel == this.presentationModel) {
+    public void setPresentationModel(IListPM newModel) {
+        IListPM oldModel = this.presentationModel;
+        if (newModel == oldModel) {
             return;
         }
         disconnect();
-        this.presentationModel = pModel;
+        this.presentationModel = newModel;
         connect();
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /** {@inheritDoc} */

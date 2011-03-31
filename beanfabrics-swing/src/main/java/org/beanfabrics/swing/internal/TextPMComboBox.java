@@ -81,16 +81,18 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor, Vi
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(ITextPM pModel) {
+    public void setPresentationModel(ITextPM newModel) {
+        ITextPM oldModel = this.pModel;
         if (this.pModel != null) {
             this.pModel.removePropertyChangeListener(propertyListener);
         }
-        this.pModel = pModel;
+        this.pModel = newModel;
         if (this.pModel != null) {
             this.pModel.addPropertyChangeListener(propertyListener);
             this.setEditor(createBnComboBoxEditor());
         }
         refresh();
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /**

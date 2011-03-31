@@ -107,15 +107,17 @@ public class DatePMCalendarChooserButton extends JButton implements View<IDatePM
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(IDatePM mdl) {
+    public void setPresentationModel(IDatePM newModel) {
+        IDatePM oldModel = this.pModel;
         if (this.pModel != null) {
             this.pModel.removePropertyChangeListener(listener);
         }
-        this.pModel = mdl;
+        this.pModel = newModel;
         if (this.pModel != null) {
             this.pModel.addPropertyChangeListener(listener);
         }
         refresh();
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /**

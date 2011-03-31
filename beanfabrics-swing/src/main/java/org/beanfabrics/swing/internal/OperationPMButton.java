@@ -57,15 +57,17 @@ public class OperationPMButton extends JButton implements View<IOperationPM> {
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(IOperationPM pModel) {
+    public void setPresentationModel(IOperationPM newModel) {
+        IOperationPM oldModel = this.pModel;
         if (this.isConnected()) {
             this.pModel.removePropertyChangeListener(this.listener);
         }
-        this.pModel = pModel;
-        if (pModel != null) {
+        this.pModel = newModel;
+        if (newModel != null) {
             this.pModel.addPropertyChangeListener(this.listener);
         }
         this.refresh();
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /**

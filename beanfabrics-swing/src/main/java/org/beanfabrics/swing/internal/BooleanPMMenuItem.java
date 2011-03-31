@@ -58,15 +58,17 @@ public class BooleanPMMenuItem extends JCheckBoxMenuItem implements View<IBoolea
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(IBooleanPM pModel) {
+    public void setPresentationModel(IBooleanPM newModel) {
+        IBooleanPM oldModel = this.pModel;
         if (this.pModel != null) {
             this.pModel.removePropertyChangeListener(listener);
         }
-        this.pModel = pModel;
+        this.pModel = newModel;
         if (this.pModel != null) {
             this.pModel.addPropertyChangeListener(listener);
         }
         this.refresh();
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /**

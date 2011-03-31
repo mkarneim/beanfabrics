@@ -115,14 +115,17 @@ public class TextPMPasswordField extends JPasswordField implements View<ITextPM>
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(ITextPM pModel) {
-        if (this.isConnected())
-            this.document.getPresentationModel().removePropertyChangeListener(this.listener);
-        this.document.setPresentationModel(pModel);
-        if (pModel != null) {
-            pModel.addPropertyChangeListener(listener);
+    public void setPresentationModel(ITextPM newModel) {
+        ITextPM oldModel = this.document.getPresentationModel();
+        if (oldModel != null) {
+            oldModel.removePropertyChangeListener(this.listener);
+        }
+        this.document.setPresentationModel(newModel);
+        if (newModel != null) {
+            newModel.addPropertyChangeListener(listener);
         }
         this.refresh();
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /**

@@ -40,14 +40,16 @@ public class BnCalendarChooser extends CalendarChooser implements View<IDatePM>,
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(IDatePM pModel) {
+    public void setPresentationModel(IDatePM newModel) {
+        IDatePM oldModel = this.pModel;
         if (this.pModel != null) {
             this.pModel.removePropertyChangeListener(pcl);
         }
-        this.pModel = pModel;
+        this.pModel = newModel;
         if (this.pModel != null) {
             this.pModel.addPropertyChangeListener(pcl);
         }
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /** {@inheritDoc} */

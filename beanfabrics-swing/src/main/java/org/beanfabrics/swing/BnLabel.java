@@ -203,15 +203,17 @@ public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(ITextPM pModel) {
+    public void setPresentationModel(ITextPM newModel) {
+        ITextPM oldModel = this.pModel;
         if (this.pModel != null) {
             this.pModel.removePropertyChangeListener(listener);
         }
-        this.pModel = pModel;
+        this.pModel = newModel;
         if (this.pModel != null) {
             this.pModel.addPropertyChangeListener(listener);
         }
         refresh();
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /** {@inheritDoc} */

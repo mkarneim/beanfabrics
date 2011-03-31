@@ -179,18 +179,20 @@ public class BnIconLabel extends JLabel implements View<IIconPM>, ModelSubscribe
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(IIconPM pModel) {
-        if (pModel != null && pModel instanceof ITextPM == false && pModel instanceof IIconPM == false) {
+    public void setPresentationModel(IIconPM newModel) {
+        IIconPM oldModel = this.pModel;
+        if (newModel != null && newModel instanceof ITextPM == false && newModel instanceof IIconPM == false) {
             throw new IllegalArgumentException("pModel must be an instance of ITextPM or IIconPM");
         }
         if (this.pModel != null) {
             this.pModel.removePropertyChangeListener(listener);
         }
-        this.pModel = pModel;
+        this.pModel = newModel;
         if (this.pModel != null) {
             this.pModel.addPropertyChangeListener(listener);
         }
         refresh();
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /** {@inheritDoc} */

@@ -152,15 +152,15 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(IListPM<? extends PresentationModel> pModel) {
-        if (pModel == this.presentationModel) {
+    public void setPresentationModel(IListPM<? extends PresentationModel> newModel) {
+        IListPM<? extends PresentationModel> oldModel = this.presentationModel;
+        if (newModel == oldModel) {
             return;
         }
         disconnect();
-
-        this.presentationModel = pModel;
-
+        this.presentationModel = newModel;
         connect();
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /** {@inheritDoc} */

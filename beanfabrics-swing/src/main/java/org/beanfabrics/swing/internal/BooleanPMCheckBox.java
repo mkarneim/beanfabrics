@@ -62,7 +62,8 @@ public class BooleanPMCheckBox extends JCheckBox implements View<IBooleanPM> {
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(IBooleanPM pModel) {
+    public void setPresentationModel(IBooleanPM newModel) {
+        IBooleanPM oldModel = this.pModel;
         if (this.pModel != null) {
             this.pModel.removePropertyChangeListener(listener);
         }
@@ -70,11 +71,12 @@ public class BooleanPMCheckBox extends JCheckBox implements View<IBooleanPM> {
         // invoke 'refresh' in between in order to clear old attributes
         // this is necessary for correct display in tables
         this.refresh();
-        this.pModel = pModel;
+        this.pModel = newModel;
         if (this.pModel != null) {
             this.pModel.addPropertyChangeListener(listener);
         }
         this.refresh();
+        this.firePropertyChange("presentationModel", oldModel, newModel);
     }
 
     /**
