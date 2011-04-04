@@ -43,6 +43,13 @@ public class BnComboBoxEditor extends BnTextField implements ComboBoxEditor {
     }
 
     public void setItem(Object anObject) {
-        this.setText((String)anObject);
+        String newText = (String)anObject;
+        if ( getText() == null && newText == null ) {
+            return;            
+        }
+        if ( getText() != null && getText().equals(newText)) {
+            return;            
+        }
+        this.setText(newText);
     }
 }
