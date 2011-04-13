@@ -110,6 +110,7 @@ public class BnTableRowSorter extends RowSorter<BnTableModel> {
         this.model = model;
         int colNum = model.getColumnCount();
         this.sortKeys = new SortKeys(colNum);
+        this.sortKeys.refresh();
         this.list = model.getPresentationModel();
         this.list.addPropertyChangeListener("sortKeys", pcl);
     }
