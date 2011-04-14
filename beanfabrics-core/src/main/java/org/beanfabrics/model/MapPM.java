@@ -46,7 +46,7 @@ import org.beanfabrics.validation.ValidationState;
  * The MapPM is a map of presentation models. Basically it provides methods for
  * adding, removing, accessing and iterating elements and informs listeners
  * about changes. It also maintains a {@link Selection}.
- *
+ * 
  * @author Michael Karneim
  */
 public class MapPM<K, V extends PresentationModel> extends AbstractPM implements IMapPM<K, V> {
@@ -101,6 +101,12 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     private boolean revalidateElementsOnChangeEnabled = false;
 
     /**
+     * This sorter implements the sorting algorithm used by
+     * {@link #sortBy(SortKey...)}.
+     */
+    private Sorter sorter = new DefaultSorter();
+
+    /**
      * The sort keys reflect the sorting state of this list.
      */
     private Collection<SortKey> sortKeys = Collections.emptyList();
@@ -109,6 +115,30 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         this.support.addListListener(this.selfListener);
         // Please note: to disable default validation rules just call getValidator().clear();
         getValidator().add(new ListElementsValidationRule());
+    }
+
+    /**
+     * Returns the {@link Sorter}. The sorter defines the sorting alorithm used
+     * {@link #sortBy(SortKey...)}.
+     * 
+     * @return the {@link Sorter}
+     */
+    public Sorter getSorter() {
+        return sorter;
+    }
+
+    /**
+     * Sets the {@link Sorter}.
+     * <p>
+     * See {@link #getSorter()} for details.
+     * 
+     * @param sorter
+     */
+    public void setSorter(Sorter sorter) {
+        if (sorter == null) {
+            throw new IllegalArgumentException("sorter==null");
+        }
+        this.sorter = sorter;
     }
 
     public boolean isRevalidateElementsOnChangeEnabled() {
@@ -304,17 +334,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         swap(indexA, indexB);
     }
 
-    // TODO (mk) TEST
-    /**
-     * Sorts the entries of this map by comparing the {@link PresentationModel}s
-     * at the end of the given paths.
-     *
-     * @param ascending if true, the resulting order will be ascending,
-     *            otherwise descending.
-     * @param paths one or more Path objects must be specified to define which
-     *            {@link PresentationModel} properties will be used for
-     *            comparison.
-     */
+    /** {@inheritDoc} */
     public void sortBy(boolean ascending, Path... paths) {
         List<SortKey> newSortKeys = new ArrayList<SortKey>();
         for (Path path : paths) {
@@ -324,14 +344,16 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         }
         sortBy(newSortKeys);
     }
-
+    
+    /** {@inheritDoc} */
     public void sortBy(Collection<SortKey> newSortKeys) {
         sortBy(newSortKeys.toArray(new SortKey[newSortKeys.size()]));
     }
-
+    
+    /** {@inheritDoc} */
     public void sortBy(SortKey... newSortKeys) {
         OrderPreservingMap<K, V> map = new OrderPreservingMap<K, V>(entries);
-        new SortingHelper().sortBy(map, newSortKeys);
+        getSorter().sortBy(map, newSortKeys);
         Set<K> oldSelection = new HashSet<K>(this.selectedKeys);
         this.clear();
         this.putAll(map);
@@ -551,7 +573,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     /**
      * Returns a set of all keys of the elements in the given collection. For
      * elements that are not in this map no key is inserted into the result.
-     *
+     * 
      * @param col
      * @return a set of all keys of the elements in the given collection
      */
@@ -790,7 +812,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         /**
          * Returns a new Collection with all selected elements. Modification on
          * this collection will not influence the original selection.
-         *
+         * 
          * @return a new Collection with all selected elements.
          */
         public Collection<V> toCollection() {
@@ -1295,7 +1317,7 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     /**
      * This rule evaluates to invalid if at least one of the list elements is
      * invalid.
-     *
+     * 
      * @author Michael Karneim
      */
     public class ListElementsValidationRule implements ValidationRule {

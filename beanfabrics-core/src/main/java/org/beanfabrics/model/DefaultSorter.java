@@ -19,11 +19,12 @@ import org.beanfabrics.PathEvaluation;
 import org.beanfabrics.util.OrderPreservingMap;
 
 /**
- * Internal helper class for sorting models by one ore more of their properties.
- *
+ * The {@link DefaultSorter} is the default {@link Sorter} used by
+ * {@link ListPM#sortBy(SortKey...)} and {@link MapPM#sortBy(SortKey...)}.
+ * 
  * @author Michael Karneim
  */
-class SortingHelper {
+class DefaultSorter implements Sorter {
     public <K, V extends PresentationModel> void sortBy(OrderPreservingMap<K, V> map, SortKey... sortKeys) {
         if (map.isEmpty()) {
             return;

@@ -44,7 +44,7 @@ import org.beanfabrics.validation.ValidationState;
  * The ListPM is a list of presentation models. Basically it provides methods
  * for adding, removing, accessing and iterating elements and informs listeners
  * about changes. It also maintains a {@link Selection}.
- *
+ * 
  * @author Michael Karneim
  */
 public class ListPM<T extends PresentationModel> extends AbstractPM implements IListPM<T> {
@@ -101,6 +101,12 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     private final List<Entry> entries;
 
     /**
+     * This sorter implements the sorting algorithm used by
+     * {@link #sortBy(SortKey...)}.
+     */
+    private Sorter sorter = new DefaultSorter();
+
+    /**
      * The sort keys reflect the sorting state of this list.
      */
     private Collection<SortKey> sortKeys = Collections.emptyList();
@@ -114,7 +120,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     /**
      * Constructs an empty list with the specified initial capacity.
-     *
+     * 
      * @param initialCapacity the initial capacity of the list.
      */
     public ListPM(int initialCapacity) {
@@ -123,7 +129,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     /**
      * Constructs a <code>ListPM</code> with the specified list of entries.
-     *
+     * 
      * @param list the initial list of entries
      */
     public ListPM(ArrayList<Entry> list) {
@@ -132,7 +138,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
 
     /**
      * Constructs a <code>ListPM</code> with the specified list of entries.
-     *
+     * 
      * @param list the initial list of entries
      */
     protected ListPM(List<Entry> list) {
@@ -140,6 +146,30 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         this.support.addListListener(this.selfListener);
         // Please note: to disable default validation rules just call getValidator().clear();
         getValidator().add(new ListElementsValidationRule());
+    }
+
+    /**
+     * Returns the {@link Sorter}. The sorter defines the sorting alorithm used
+     * {@link #sortBy(SortKey...)}.
+     * 
+     * @return the {@link Sorter}
+     */
+    public Sorter getSorter() {
+        return sorter;
+    }
+
+    /**
+     * Sets the {@link Sorter}.
+     * <p>
+     * See {@link #getSorter()} for details.
+     * 
+     * @param sorter
+     */
+    public void setSorter(Sorter sorter) {
+        if (sorter == null) {
+            throw new IllegalArgumentException("sorter==null");
+        }
+        this.sorter = sorter;
     }
 
     public boolean isRevalidateElementsOnChangeEnabled() {
@@ -398,15 +428,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         swap(indexA, indexB);
     }
 
-    /**
-     * Sorts the entries of this list pM by comparing the cells at the end of
-     * the given paths.
-     *
-     * @param ascending if true, the resulting order will be ascending,
-     *            otherwise descending.
-     * @param paths one or more Path objects must be specified to define which
-     *            pM properties will be used for comparison.
-     */
+    /** {@inheritDoc} */
     public void sortBy(boolean ascending, Path... paths) {
         List<SortKey> newSortKeys = new ArrayList<SortKey>();
         for (Path path : paths) {
@@ -416,17 +438,19 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         }
         sortBy(newSortKeys);
     }
-
+    
+    /** {@inheritDoc} */
     public void sortBy(Collection<SortKey> newSortKeys) {
         sortBy(newSortKeys.toArray(new SortKey[newSortKeys.size()]));
     }
-
+    
+    /** {@inheritDoc} */
     public void sortBy(SortKey... newSortKeys) {
         ArrayList<T> list = new ArrayList<T>();
         for (Entry entry : entries) {
             list.add(entry.element);
         }
-        new SortingHelper().sortBy(list, newSortKeys);
+        getSorter().sortBy(list, newSortKeys);
         Collection<T> oldSelection = new ArrayList<T>(this.selection);
         this.clear();
         this.addAll(list);
@@ -494,7 +518,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     /**
      * Returns a sorted array of all indices of the given elements starting with
      * the smallest index.
-     *
+     * 
      * @param col all elements to get the index from
      * @return a sorted array of all indices of the given elements
      */
@@ -882,7 +906,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         /**
          * Returns the index of the next selected element AFTER the given index,
          * or -1 if no element is found.
-         *
+         * 
          * @param index
          * @return the index of the next selected element after the given index,
          *         or -1 if no element is found.
@@ -1227,7 +1251,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         /**
          * Returns a new Collection with all selected elements. Modification on
          * this collection will not influence the original selection.
-         *
+         * 
          * @return a new Collection with all selected elements.
          */
         public Collection<T> toCollection() {
@@ -1252,7 +1276,7 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
     /**
      * This rule evaluates to invalid if at least one of the list elements is
      * invalid.
-     *
+     * 
      * @author Michael Karneim
      */
     public class ListElementsValidationRule implements ValidationRule {

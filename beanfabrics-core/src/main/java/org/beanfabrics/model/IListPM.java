@@ -91,10 +91,30 @@ public interface IListPM<T extends PresentationModel> extends PresentationModel,
      */
     public void swap(T elemA, T elemB);
 
+    /**
+     * Sorts the elements of this list PM by comparing the child nodes at the
+     * end of the given paths.
+     * 
+     * @param ascending if true, the resulting order will be ascending,
+     *            otherwise descending.
+     * @param paths one or more Path objects that define the sort keys
+     */
     public void sortBy(boolean ascending, Path... path);
 
+    /**
+     * Sorts the elements of this list PM by the specified sort keys.
+     * 
+     * @param newSortKeys the sort keys used for sorting the elements of this
+     *            list PM
+     */
     public void sortBy(Collection<SortKey> newSortKeys);
 
+    /**
+     * Sorts the elements of this list PM by the specified sort keys.
+     * 
+     * @param newSortKeys the sort keys used for sorting the elements of this
+     *            list PM
+     */
     public void sortBy(SortKey... sortKeys);
 
     /**

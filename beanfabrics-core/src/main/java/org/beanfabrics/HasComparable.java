@@ -15,7 +15,9 @@ public interface HasComparable {
     /**
      * Returns the comparable substitute. This substitute can be used for
      * comparison of this object with another.
-     * 
+     * <p>
+     * Override this method to control how instances of this class are sorted
+     * by a Sorter. 
      * @return the comparable substitute
      */
     public Comparable<?> getComparable();
