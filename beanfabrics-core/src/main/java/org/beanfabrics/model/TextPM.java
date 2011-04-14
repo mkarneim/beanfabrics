@@ -6,6 +6,8 @@
 // methods and fields are documented
 package org.beanfabrics.model;
 
+import java.text.CollationKey;
+import java.text.Collator;
 import java.util.ResourceBundle;
 
 import org.beanfabrics.event.OptionsEvent;
@@ -17,8 +19,8 @@ import org.beanfabrics.validation.ValidationState;
 /**
  * The <code>TextPM</code> is a presentation model for a text value.
  * <p>
- * The default value is a empty string.
- *
+ * The default value is an empty string.
+ * 
  * @author Michael Karneim
  */
 public class TextPM extends AbstractValuePM implements ITextPM {
@@ -86,7 +88,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
 
     /**
      * Get the default text value of this model.
-     *
+     * 
      * @return the default text value
      */
     protected String getDefaultText() {
@@ -101,7 +103,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
      * <p>
      * <b>Note:</b> Setting this default value does does not necessarily mean
      * that the actual value of this PM is changed to that value also.
-     *
+     * 
      * @param aText the text to set as default value
      */
     protected void setDefaultText(String aText) {
@@ -121,8 +123,8 @@ public class TextPM extends AbstractValuePM implements ITextPM {
 
     /**
      * If set to <code>true</code> this <code>TextPM</code> is only valid if
-     * it's text content is contained in it's options.
-     *
+     * its text content is contained in its options.
+     * 
      * @param restrictedToOptions
      */
     public void setRestrictedToOptions(boolean restrictedToOptions) {
@@ -182,26 +184,36 @@ public class TextPM extends AbstractValuePM implements ITextPM {
         getPropertyChangeSupport().firePropertyChange("options", old, options);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * <p>
+     * The default implementation returns a {@link TextComparable} or one of its subclasses.
+     *  */
     @Override
-	public Comparable<?> getComparable() {
+    public Comparable<?> getComparable() {
         return new TextComparable();
     }
 
     /**
-     * The {@link TextComparable} delegates the comparison to the PM's text
-     * value.
-     *
+     * The {@link TextComparable} delegates the comparison to a {@link CollationKey} constructed
+     * from the PM's text using a {@link Collator}.
+     * 
      * @author Michael Karneim
      */
     protected class TextComparable implements Comparable {
-        String text;
+        CollationKey key;
 
         /**
-         * Constructs a {@link TextComparable}.
+         * Constructs a {@link TextComparable} using the locale-sensitve default {@link Collator}.
          */
         public TextComparable() {
-            text = TextPM.this.text.toLowerCase();
+            this(Collator.getInstance());
+        }
+        /**
+         * Constructs a {@link TextComparable} using the given {@link Collator}.
+         * @param collator
+         */
+        public TextComparable(Collator collator) {
+            key = collator.getCollationKey(TextPM.this.text);
         }
 
         /** {@inheritDoc} */
@@ -210,7 +222,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
                 throw new IllegalArgumentException("o must be instance of" + TextComparable.class);
             }
             TextComparable oc = (TextComparable)o;
-            return text.compareTo(oc.text);
+            return key.compareTo(oc.key);
         }
 
         @Override
@@ -224,13 +236,14 @@ public class TextPM extends AbstractValuePM implements ITextPM {
             if (o.getClass() != getClass()) {
                 return false;
             }
-            TextComparable castedObj = (TextComparable)o;
-            return ((text == null ? castedObj.text == null : text.equals(castedObj.text)));
+            TextComparable oc = (TextComparable)o;
+
+            return key.equals(oc.key);
         }
 
         @Override
         public int hashCode() {
-        	return text.hashCode();
+            return key.hashCode();
         }
     }
 
