@@ -293,7 +293,7 @@ public class ReflectionUtil {
         return result;
     }
 
-    public static synchronized void setFieldValue(Object owner, Field field, Object value)
+    public static void setFieldValue(Object owner, Field field, Object value)
         throws IllegalArgumentException, IllegalAccessException {
         if (!field.isAccessible()) {
             field.setAccessible(true);
@@ -301,7 +301,7 @@ public class ReflectionUtil {
         field.set(owner, value);
     }
 
-    public static synchronized Object getFieldValue(Object owner, Field f)
+    public static Object getFieldValue(Object owner, Field f)
         throws IllegalArgumentException, IllegalAccessException {
         if (!f.isAccessible()) {
             f.setAccessible(true);
@@ -310,7 +310,7 @@ public class ReflectionUtil {
         return result;
     }
 
-    public static synchronized Object invokeMethod(Object owner, Method m, Object... args)
+    public static Object invokeMethod(Object owner, Method m, Object... args)
         throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         callCount++;
         if (!m.isAccessible()) {
@@ -359,7 +359,7 @@ public class ReflectionUtil {
         return sb.toString();
     }
 
-    public static synchronized <T> T newInstance(Class<T> cls)
+    public static <T> T newInstance(Class<T> cls)
         throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException, InstantiationException {
         Constructor<T> constr = cls.getConstructor((Class[])null);
         if (!constr.isAccessible()) {
