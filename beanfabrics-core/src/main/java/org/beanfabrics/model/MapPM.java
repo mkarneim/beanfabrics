@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -1301,12 +1302,60 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         if (newMap.size() > 0) {
             int beginIndex = entries.size();
             entries.putAll(aMap);
-            for (V element : aMap.values()) {
+            for (V element : newMap.values()) {
                 onAdd(element);
             }
             support.fireElementsAdded(beginIndex, newMap.size());
         }
+    }
+    
+    public void putAll(Collection<Entry<K,V>> aEntries) {
+        Map<? extends K,? extends V> aMap = toMap(aEntries);
+        HashSet<K> duplicateKeys = new HashSet<K>(aMap.keySet());
+        duplicateKeys.retainAll(this.entries.keySetReference());
+        // first: replace all elements with duplicate keys
+        int[] indices = indicesOfKeys(duplicateKeys);
+        Interval[] aintv = Interval.createIntervals(indices);
+        for (Interval intv : aintv) {
+            LinkedList<V> replaced = new LinkedList<V>();
+            for (int index = intv.startIndex; index <= intv.endIndex; index++) {
+                K key = getKey(index);
+                V newValue = aMap.get(key);
+                V old = this.entries.put(key, newValue);
+                onRemove(old);
+                replaced.add(old);
+                onAdd(newValue);
+            }
+            support.fireElementsReplaced(intv.startIndex, intv.endIndex - intv.startIndex + 1, (Collection<PresentationModel>)replaced);
+        }
+        // second: add all elements with new keys        
+        Collection<Entry<K,V>> newEntries = removeAllKeys( aEntries, duplicateKeys);
+        if (newEntries.size() > 0) {
+            int beginIndex = entries.size();
+            entries.putAll(newEntries);
+            for (Entry<K,V> entry : newEntries) {
+                onAdd(entry.getValue());
+            }
+            support.fireElementsAdded(beginIndex, newEntries.size());
+        }
+    }
 
+    private Collection<Entry<K, V>> removeAllKeys(Collection<Entry<K, V>> aEntries, HashSet<K> keys) {
+        Collection<Entry<K, V>> result = new ArrayList<Entry<K,V>>();
+        for( Entry<K,V> entry: aEntries) {
+            if ( !keys.contains( entry.getKey())) {
+                result.add( entry);
+            }
+        }
+        return result;
+    }
+
+    private Map<? extends K, ? extends V> toMap(Collection<Entry<K,V>> aEntries) {
+        Map<K,V> result = new HashMap<K,V>();
+        for( Entry<K,V> entry: aEntries) {
+            result.put( entry.getKey(), entry.getValue());
+        }
+        return result;
     }
 
     public void setAll(Map<K, V> newMap) {
