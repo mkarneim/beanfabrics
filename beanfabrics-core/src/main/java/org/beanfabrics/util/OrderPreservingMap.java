@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 /**
  * The <code>OrderPreservingMap</code> is a {@link Map} that preserves the oder
@@ -77,6 +78,15 @@ public class OrderPreservingMap<K, V> implements Map<K, V>, Cloneable {
             for (Entry<? extends K, ? extends V> entry : other.entrySet()) {
                 this.put(entry.getKey(), entry.getValue());
             }
+        }
+    }
+    
+    public void putAll(Collection<Entry<K,V>> entries) {
+        if ( entries == null ) {
+            return;
+        }
+        for (Entry<K,V> entry : entries) {
+            this.put(entry.getKey(), entry.getValue());
         }
     }
 
