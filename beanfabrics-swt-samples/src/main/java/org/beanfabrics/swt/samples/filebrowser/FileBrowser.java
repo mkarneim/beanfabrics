@@ -2,7 +2,7 @@
  * Beanfabrics Framework Copyright (C) 2011 by Michael Karneim, beanfabrics.org
  * Use is subject to license terms. See license.txt.
  */
-package org.beanfabrics.swt.samples;
+package org.beanfabrics.swt.samples.filebrowser;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
