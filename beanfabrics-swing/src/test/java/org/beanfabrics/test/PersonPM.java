@@ -21,8 +21,9 @@ public class PersonPM extends AbstractPM {
     public AddressPM address;
     @Property
     public final IOperationPM save = new AbstractOperationPM() {
-        public void execute() {
+        public boolean execute() {
             result.setText("name=" + name + ", address=" + address.toString());
+            return true; // success
         }
     };
     @Property

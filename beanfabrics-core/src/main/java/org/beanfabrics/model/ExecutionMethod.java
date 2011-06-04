@@ -19,10 +19,14 @@ package org.beanfabrics.model;
 public interface ExecutionMethod {
     /**
      * Performs some action. Usually this method is called from
-     * {@link OperationPM#execute()}.
+     * {@link OperationPM#execute()}. It returns <code>true</code> if 
+     * the action has been successfully performed. It returns <code>false</code> or
+     * throws an exception if the actions has not been performed successfully and
+     * any subsequent operations should be skipped.
      * 
+     * @returns <code>true</code> if the action was successfully performed
      * @throws Throwable if any exception occurs while performing the action
      */
-    public void execute()
+    public boolean execute()
         throws Throwable;
 }

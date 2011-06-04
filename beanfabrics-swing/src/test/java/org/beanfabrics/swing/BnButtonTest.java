@@ -7,6 +7,10 @@ package org.beanfabrics.swing;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import junit.framework.JUnit4TestAdapter;
 
 import org.beanfabrics.IModelProvider;
@@ -18,6 +22,7 @@ import org.beanfabrics.model.IOperationPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.TextPM;
+import org.beanfabrics.support.Operation;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
 import org.junit.Before;
@@ -79,9 +84,10 @@ public class BnButtonTest {
     public void testSetPresentationModel() {
         final Counter counter = new Counter();
         final IOperationPM op = new AbstractOperationPM() {
-            public void execute()
+            public boolean execute()
                 throws Throwable {
                 counter.increase();
+                return true; // success
             }
         };
         this.button.setPresentationModel(op);
@@ -117,9 +123,10 @@ public class BnButtonTest {
         throws Throwable {
         final Counter counter = new Counter();
         final IOperationPM op = new AbstractOperationPM() {
-            public void execute()
+            public boolean execute()
                 throws Throwable {
                 counter.increase();
+                return true; // success
             }
         };
         this.button.setPresentationModel(op);
@@ -130,12 +137,56 @@ public class BnButtonTest {
         this.button.doClick();
         assertEquals("counter.get()", 1, counter.get());
     }
+    
+    @Test
+    public void continuesActionEventProcessingWhenReturnValueIsTrue() throws Throwable {
+    	TestModel2 testModel2 = new TestModel2();
+    	this.provider.setPresentationModel(testModel2);
+        this.button.setPath(new Path("this.op"));
+        this.button.setModelProvider(this.provider);
+        class MyListener implements ActionListener {
+        	public boolean actionPerformed=false;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				actionPerformed = true;
+			}
+        }
+        MyListener myListener = new MyListener();
+        this.button.addActionListener(myListener);
+        
+        testModel2.defaultOpReturnValue = true;
+        
+        this.button.doClick();
+    	assertEquals( "myListener.actionPerformed", true, myListener.actionPerformed);
+    }
+    @Test
+    public void stopsActionEventProcessingWhenReturnValueIsFalse() throws Throwable {
+    	TestModel2 testModel2 = new TestModel2();
+    	this.provider.setPresentationModel(testModel2);
+        this.button.setPath(new Path("this.op"));
+        this.button.setModelProvider(this.provider);
+        class MyListener implements ActionListener {
+        	public boolean actionPerformed=false;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				actionPerformed = true;
+			}
+        }
+        MyListener myListener = new MyListener();
+        this.button.addActionListener(myListener);
+        
+        testModel2.defaultOpReturnValue = false;
+        
+        this.button.doClick();
+    	assertEquals( "myListener.actionPerformed", false, myListener.actionPerformed);
+    }
 
     @Test
     public void getIcon() {
         final IOperationPM op = new AbstractOperationPM() {
-            public void execute()
+            public boolean execute()
                 throws Throwable {
+            	return true; // success
             }
         };
         op.setIconUrl(BnButtonTest.class.getResource("sample.gif"));
@@ -145,13 +196,13 @@ public class BnButtonTest {
 
     private static class TestModel extends AbstractPM {
         protected final AbstractOperationPM op = new AbstractOperationPM() {
-            public void execute()
+            public boolean execute()
                 throws Throwable {
-                TestModel.this.op();
+                return TestModel.this.op();
             }
         };
         protected final TextPM pM = new TextPM();
-
+        
         public TestModel() {
             PMManager.setup(this);
             this.pM.setDescription("Insert digits");
@@ -174,8 +225,23 @@ public class BnButtonTest {
             });
         }
 
-        public void op() {
+        public boolean op() {
             this.op.check();
+            return true; // success
+        }
+    }
+    
+    private static class TestModel2 extends AbstractPM {
+        protected final OperationPM op = new OperationPM();
+        public boolean defaultOpReturnValue = true;
+        
+        public TestModel2() {
+            PMManager.setup(this);
+        }
+        @Operation
+        public boolean op() {
+            this.op.check();
+            return defaultOpReturnValue; 
         }
     }
 

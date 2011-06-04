@@ -93,9 +93,9 @@ public class OperationPMAction extends AbstractAction implements View<IOperation
         }
     }
 
-    protected void execute()
+    protected boolean execute()
         throws Throwable {
-        this.pModel.execute();
+        return this.pModel.execute();
     }
 
     /**

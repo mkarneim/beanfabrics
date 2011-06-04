@@ -37,7 +37,7 @@ public class BnPushButtonDecorator extends AbstractDecorator<Button> implements 
     private boolean textSetManually = false;
 
     /**
-     * Create the BnPushButton2
+     * Create the BnPushButtonDecorator
      */
     public BnPushButtonDecorator(Button button) {
         super(button);
@@ -56,7 +56,7 @@ public class BnPushButtonDecorator extends AbstractDecorator<Button> implements 
     }
 
     /**
-     * Create the BnPushButton2
+     * Create the BnPushButtonDecorator
      * 
      * @param parent
      * @param style is ignored
@@ -66,7 +66,7 @@ public class BnPushButtonDecorator extends AbstractDecorator<Button> implements 
     }
 
     /**
-     * Create the BnPushButton2
+     * Create the BnPushButtonDecorator
      * 
      * @param parent
      */
@@ -77,7 +77,11 @@ public class BnPushButtonDecorator extends AbstractDecorator<Button> implements 
     protected void hookControl(Button button) {
         button.addSelectionListener(new SelectionListener() {
             public void widgetSelected(SelectionEvent evt) {
-                executeOperation();
+                boolean doContinue = executeOperation();
+                if ( !doContinue) {
+                	// We should stop any further processing of this event
+                	evt.doit = false;
+                }
             }
 
             public void widgetDefaultSelected(SelectionEvent evt) {
@@ -139,14 +143,15 @@ public class BnPushButtonDecorator extends AbstractDecorator<Button> implements 
         }
     }
 
-    private void executeOperation() {
+    private boolean executeOperation() {
         try {
             if (pModel != null) {
-                pModel.execute();
+                return pModel.execute();
             }
         } catch (Throwable e) {
             ExceptionUtil.getInstance().handleException("", e);
         }
+        return true; 
     }
 
     /** {@inheritDoc} */

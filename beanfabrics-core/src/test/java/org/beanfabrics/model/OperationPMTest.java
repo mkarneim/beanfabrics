@@ -73,4 +73,49 @@ public class OperationPMTest {
         pModel.bar.execute();
         assertEquals("pModel.barCount.getInteger()", 1, (int)pModel.barCount.getInteger());
     }
+    
+    class ChildPM extends AbstractPM {
+    	OperationPM myOpA = new OperationPM();
+    	OperationPM myOpB = new OperationPM();
+    	public ChildPM() {
+    		PMManager.setup(this);
+    	}
+    	@Operation
+    	boolean myOpA() {
+    		return true;
+    	}
+    	@Operation
+    	boolean myOpB() {
+    		return false;
+    	}
+    }
+    class ParentPM extends AbstractPM {
+    	ChildPM child = new ChildPM();
+    	boolean executedParentOpA = false;
+    	boolean executedParentOpB = false;
+    	public ParentPM() {
+    		PMManager.setup(this);
+    	}
+    	@Operation(path="child.myOpA")
+    	void parentOpA() {
+    		executedParentOpA = true;
+    	}
+    	@Operation(path="child.myOpA")
+    	void parentOpB() {
+    		executedParentOpB = true;
+    	}
+    }
+    
+    @Test
+    public void continueOperationExecutionWhenReturnValueIsTrue() throws Throwable {
+    	ParentPM pm = new ParentPM();
+    	pm.child.myOpA.execute();
+    	assertEquals( "pm.executedParentOpA", true, pm.executedParentOpA);
+    }
+    @Test
+    public void stopOperationExecutionWhenReturnValueIsFalse() throws Throwable {
+    	ParentPM pm = new ParentPM();
+    	pm.child.myOpB.execute();
+    	assertEquals( "pm.executedParentOpB", false, pm.executedParentOpB);
+    }
 }

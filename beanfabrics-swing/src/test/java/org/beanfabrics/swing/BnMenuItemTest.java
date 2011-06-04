@@ -95,9 +95,10 @@ public class BnMenuItemTest {
         final Counter counter = new Counter();
         final IOperationPM op = new AbstractOperationPM() {
             @Override
-            public void execute()
+            public boolean execute()
                 throws Throwable {
                 counter.increase();
+                return true; // success
             }
         };
         this.menuItem.setPresentationModel(op);
@@ -134,9 +135,10 @@ public class BnMenuItemTest {
         final Counter counter = new Counter();
         final IOperationPM op = new AbstractOperationPM() {
             @Override
-            public void execute()
+            public boolean execute()
                 throws Throwable {
                 counter.increase();
+                return true; // success
             }
         };
         this.menuItem.setPresentationModel(op);
@@ -152,8 +154,9 @@ public class BnMenuItemTest {
     public void getIcon() {
         final IOperationPM op = new AbstractOperationPM() {
             @Override
-            public void execute()
+            public boolean execute()
                 throws Throwable {
+            	return true; // success
             }
         };
         op.setIconUrl(BnButtonTest.class.getResource("sample.gif"));
@@ -164,9 +167,10 @@ public class BnMenuItemTest {
     private static class TestModel extends AbstractPM {
         protected final AbstractOperationPM op = new AbstractOperationPM() {
             @Override
-            public void execute()
+            public boolean execute()
                 throws Throwable {
                 TestModel.this.op();
+                return true; // success
             }
         };
 

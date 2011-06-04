@@ -83,7 +83,7 @@ public abstract class AbstractOperationPM extends AbstractPM implements IOperati
     }
 
     /** {@inheritDoc} */
-    public abstract void execute()
+    public abstract boolean execute()
         throws Throwable;
 
     /** {@inheritDoc} */

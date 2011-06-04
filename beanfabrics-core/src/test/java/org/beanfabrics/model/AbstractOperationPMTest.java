@@ -39,8 +39,9 @@ public class AbstractOperationPMTest {
         public AbstractOperationPM createAbstractOperation() {
             AbstractOperationPM op = new AbstractOperationPM() {
                 @Override
-                public void execute()
+                public boolean execute()
                     throws Throwable {
+                	return true; // success
                 }
             };
             return op;
@@ -57,8 +58,9 @@ public class AbstractOperationPMTest {
         throws Throwable {
         final boolean[] didInvoke = new boolean[1];
         AbstractOperationPM op = new AbstractOperationPM() {
-            public void execute() {
+            public boolean execute() {
                 didInvoke[0] = true;
+                return true; // success
             }
         };
 

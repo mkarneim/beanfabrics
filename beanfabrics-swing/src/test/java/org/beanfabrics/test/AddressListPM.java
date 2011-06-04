@@ -13,32 +13,33 @@ import org.beanfabrics.support.OnChange;
 import org.beanfabrics.support.PropertySupport;
 
 public class AddressListPM extends AbstractPM {
-    final ListPM<AddressPM> elements = new ListPM<AddressPM>();
-    AddressPM selected;
-    final IOperationPM addSome = new AbstractOperationPM() {
-        @Override
-        public void execute()
-            throws Throwable {
-            addSome();
-        }
-    };
+	final ListPM<AddressPM> elements = new ListPM<AddressPM>();
+	AddressPM selected;
+	final IOperationPM addSome = new AbstractOperationPM() {
+		@Override
+		public boolean execute()
+				throws Throwable {
+			addSome();
+			return true; // success
+		}
+	};
 
-    public AddressListPM() {
-        PMManager.setup(this);
-    }
+	public AddressListPM() {
+		PMManager.setup(this);
+	}
 
-    @OnChange(path = "elements")
-    private void onElementsChanged() {
-        selected = elements.getSelection().getFirst();
-        PropertySupport.get(this).refresh();
-    }
+	@OnChange(path = "elements")
+	private void onElementsChanged() {
+		selected = elements.getSelection().getFirst();
+		PropertySupport.get(this).refresh();
+	}
 
-    public void addSome() {
-        addSome.check();
-        for (int i = 0; i < 10; ++i) {
-            AddressPM pModel = new AddressPM();
-            pModel.appartment.setText("#" + i);
-            elements.add(pModel);
-        }
-    }
+	public void addSome() {
+		addSome.check();
+		for (int i = 0; i < 10; ++i) {
+			AddressPM pModel = new AddressPM();
+			pModel.appartment.setText("#" + i);
+			elements.add(pModel);
+		}
+	}
 }

@@ -62,9 +62,10 @@ public class BnTableTestGUI extends JFrame {
     public static class GroupModel extends AbstractPM {
         ListPM<PersonModel> persons = new ListPM<PersonModel>();
         IOperationPM remove = new AbstractOperationPM() {
-            public void execute()
+            public boolean execute()
                 throws Throwable {
                 GroupModel.this.remove();
+                return true; // success
             }
         };
 

@@ -34,11 +34,15 @@ public class OperationPM extends AbstractOperationPM {
     }
 
     /** {@inheritDoc} */
-    public void execute()
+    public boolean execute()
         throws Throwable {
         for (ExecutionMethod exe : executionMethods) {
-            exe.execute();
+            boolean continueExecution = exe.execute();
+            if ( !continueExecution) {
+            	return false;
+            }
         }
+        return true;
     }
 
     public synchronized Collection<ExecutionMethod> getExecutionMethods() {

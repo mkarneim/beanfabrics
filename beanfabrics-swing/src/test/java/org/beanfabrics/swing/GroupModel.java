@@ -30,9 +30,10 @@ public class GroupModel extends AbstractPM {
     protected PersonModel selected;
 
     protected final IOperationPM remove = new AbstractOperationPM() {
-        public void execute()
+        public boolean execute()
             throws Throwable {
             GroupModel.this.remove();
+            return true; // success
         }
     };
 

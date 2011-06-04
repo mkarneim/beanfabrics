@@ -65,11 +65,10 @@ public class OperationSupport implements Support {
         private final Method annotatedMethod;
         private final org.beanfabrics.model.ExecutionMethod executionMethod = new org.beanfabrics.model.ExecutionMethod() {
 
-            public void execute()
+            public boolean execute()
                 throws Throwable {
-                callAnnotatedMethod();
+                return callAnnotatedMethod();
             }
-
         };
 
         private ExecutionMethodSupport(PresentationModel owner, Method annotatedMethod) {
@@ -77,6 +76,12 @@ public class OperationSupport implements Support {
 
             if (annotatedMethod.getParameterTypes() != null && annotatedMethod.getParameterTypes().length > 0) {
                 throw new IllegalArgumentException("method '" + annotatedMethod.getName() + "' must not declare any parameter when annotated with @ExecutionMethod");
+            }
+            if (annotatedMethod.getReturnType() != null) {
+            	Class<?> retType = annotatedMethod.getReturnType();
+            	if ( !retType.equals( Void.TYPE) && !retType.equals( Boolean.TYPE) && !retType.equals(Boolean.class)) {
+            		throw new IllegalArgumentException("method '" + annotatedMethod.getName() + "' must not declare any return type other than 'void', 'Boolean' or 'boolean' when annotated with @ExecutionMethod");
+            	}
             }
 
             this.owner = owner;
@@ -135,9 +140,14 @@ public class OperationSupport implements Support {
             }
         }
 
-        private void callAnnotatedMethod() {
+        private boolean callAnnotatedMethod() {
             try {
-                ReflectionUtil.invokeMethod(owner, annotatedMethod, (Object[])null);
+                Object result = ReflectionUtil.invokeMethod(owner, annotatedMethod, (Object[])null);
+                if ( result == null) {
+                	return true;
+                } else {
+                	return ((Boolean)result).booleanValue();
+                }
             } catch (IllegalArgumentException e) {
                 throw new UndeclaredThrowableException(e);
             } catch (IllegalAccessException e) {

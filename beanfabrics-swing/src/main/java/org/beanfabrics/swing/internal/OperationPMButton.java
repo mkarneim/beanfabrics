@@ -85,8 +85,10 @@ public class OperationPMButton extends JButton implements View<IOperationPM> {
     protected void fireActionPerformed(ActionEvent evt) {
         if (this.isConnected() && this.isAutoExecute()) {
             try {
-                this.execute();
-                super.fireActionPerformed(evt);
+                boolean doContinue = this.execute();
+                if ( doContinue) {
+                	super.fireActionPerformed(evt);
+                }
             } catch (Throwable t) {
                 ExceptionUtil.getInstance().handleException("Error during invocation of pModel", t);
             }
@@ -95,9 +97,9 @@ public class OperationPMButton extends JButton implements View<IOperationPM> {
         }
     }
 
-    protected void execute()
+    protected boolean execute()
         throws Throwable {
-        this.pModel.execute();
+        return this.pModel.execute();
     }
 
     /**

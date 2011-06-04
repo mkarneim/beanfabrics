@@ -19,10 +19,10 @@ import org.beanfabrics.validation.Validator;
 public interface IOperationPM extends PresentationModel {
     /**
      * Executes this operation.
-     * 
+     * @return <code>true</code> if this operation has been executed successfully
      * @throws Throwable
      */
-    public void execute()
+    public boolean execute()
         throws Throwable;
 
     /**
