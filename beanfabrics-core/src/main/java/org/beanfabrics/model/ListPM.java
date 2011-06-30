@@ -428,6 +428,18 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         swap(indexA, indexB);
     }
 
+    /**
+     * Reverses the order of the elements.
+     */
+    public void reverse() {
+        List<T> list = new ArrayList<T>(this.toCollection());
+        Collections.reverse(list);
+        Collection<T> oldSelection = new ArrayList<T>(this.selection);
+        this.clear();
+        this.addAll(list);
+        this.selection.addAll(oldSelection);
+    }
+
     /** {@inheritDoc} */
     public void sortBy(boolean ascending, Path... paths) {
         List<SortKey> newSortKeys = new ArrayList<SortKey>();
@@ -438,14 +450,24 @@ public class ListPM<T extends PresentationModel> extends AbstractPM implements I
         }
         sortBy(newSortKeys);
     }
-    
+
     /** {@inheritDoc} */
     public void sortBy(Collection<SortKey> newSortKeys) {
         sortBy(newSortKeys.toArray(new SortKey[newSortKeys.size()]));
     }
-    
+
     /** {@inheritDoc} */
     public void sortBy(SortKey... newSortKeys) {
+        if (newSortKeys != null && newSortKeys.length == 1 && getSortKeys().size() == 1) {
+            SortKey invertedSortKey = getSortKeys().iterator().next().invert();
+            if (invertedSortKey.equals(newSortKeys[0])) {
+                // the new sort key is the inversion of the old sort key
+                // -> just reverse the order
+                reverse();
+                setSortKeys(newSortKeys);
+                return;
+            }
+        }
         ArrayList<T> list = new ArrayList<T>();
         for (Entry entry : entries) {
             list.add(entry.element);

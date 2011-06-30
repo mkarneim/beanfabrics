@@ -89,4 +89,14 @@ public class SortKey {
             return false;
         return true;
     }
+
+    /**
+     * Returns the inverted sortkey. The inverted sortkey has the same sort path
+     * but an inverted ascending attibute.
+     * 
+     * @return the inverted sortkey
+     */
+    public SortKey invert() {
+        return new SortKey(!isAscending(), getSortPath());
+    }
 }

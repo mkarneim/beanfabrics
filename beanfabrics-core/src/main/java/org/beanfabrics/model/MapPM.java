@@ -335,6 +335,20 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         swap(indexA, indexB);
     }
 
+    /**
+     * Reverses the order of the elements.
+     */
+    public void reverse() {
+        OrderPreservingMap<K, V> map = new OrderPreservingMap<K, V>(entries);
+        List keys = new ArrayList(map.orderedKeysReference());
+        Collections.reverse(keys);
+        map.reorder(keys);
+        Set<K> oldSelection = new HashSet<K>(this.selectedKeys);
+        this.clear();
+        this.putAll(map);
+        this.getSelectedKeys().addAll(oldSelection);
+    }
+
     /** {@inheritDoc} */
     public void sortBy(boolean ascending, Path... paths) {
         List<SortKey> newSortKeys = new ArrayList<SortKey>();
@@ -345,14 +359,24 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
         }
         sortBy(newSortKeys);
     }
-    
+
     /** {@inheritDoc} */
     public void sortBy(Collection<SortKey> newSortKeys) {
         sortBy(newSortKeys.toArray(new SortKey[newSortKeys.size()]));
     }
-    
+
     /** {@inheritDoc} */
     public void sortBy(SortKey... newSortKeys) {
+        if (newSortKeys != null && newSortKeys.length == 1 && getSortKeys().size() == 1) {
+            SortKey invertedSortKey = getSortKeys().iterator().next().invert();
+            if (invertedSortKey.equals(newSortKeys[0])) {
+                // the new sort key is the inversion of the old sort key
+                // -> just reverse the order
+                reverse();
+                setSortKeys(newSortKeys);
+                return;
+            }
+        }
         OrderPreservingMap<K, V> map = new OrderPreservingMap<K, V>(entries);
         getSorter().sortBy(map, newSortKeys);
         Set<K> oldSelection = new HashSet<K>(this.selectedKeys);
@@ -1308,9 +1332,9 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             support.fireElementsAdded(beginIndex, newMap.size());
         }
     }
-    
-    public void putAll(Collection<Entry<K,V>> aEntries) {
-        Map<? extends K,? extends V> aMap = toMap(aEntries);
+
+    public void putAll(Collection<Entry<K, V>> aEntries) {
+        Map<? extends K, ? extends V> aMap = toMap(aEntries);
         HashSet<K> duplicateKeys = new HashSet<K>(aMap.keySet());
         duplicateKeys.retainAll(this.entries.keySetReference());
         // first: replace all elements with duplicate keys
@@ -1329,11 +1353,11 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
             support.fireElementsReplaced(intv.startIndex, intv.endIndex - intv.startIndex + 1, (Collection<PresentationModel>)replaced);
         }
         // second: add all elements with new keys        
-        Collection<Entry<K,V>> newEntries = removeAllKeys( aEntries, duplicateKeys);
+        Collection<Entry<K, V>> newEntries = removeAllKeys(aEntries, duplicateKeys);
         if (newEntries.size() > 0) {
             int beginIndex = entries.size();
             entries.putAll(newEntries);
-            for (Entry<K,V> entry : newEntries) {
+            for (Entry<K, V> entry : newEntries) {
                 onAdd(entry.getValue());
             }
             support.fireElementsAdded(beginIndex, newEntries.size());
@@ -1341,19 +1365,19 @@ public class MapPM<K, V extends PresentationModel> extends AbstractPM implements
     }
 
     private Collection<Entry<K, V>> removeAllKeys(Collection<Entry<K, V>> aEntries, HashSet<K> keys) {
-        Collection<Entry<K, V>> result = new ArrayList<Entry<K,V>>();
-        for( Entry<K,V> entry: aEntries) {
-            if ( !keys.contains( entry.getKey())) {
-                result.add( entry);
+        Collection<Entry<K, V>> result = new ArrayList<Entry<K, V>>();
+        for (Entry<K, V> entry : aEntries) {
+            if (!keys.contains(entry.getKey())) {
+                result.add(entry);
             }
         }
         return result;
     }
 
-    private Map<? extends K, ? extends V> toMap(Collection<Entry<K,V>> aEntries) {
-        Map<K,V> result = new HashMap<K,V>();
-        for( Entry<K,V> entry: aEntries) {
-            result.put( entry.getKey(), entry.getValue());
+    private Map<? extends K, ? extends V> toMap(Collection<Entry<K, V>> aEntries) {
+        Map<K, V> result = new HashMap<K, V>();
+        for (Entry<K, V> entry : aEntries) {
+            result.put(entry.getKey(), entry.getValue());
         }
         return result;
     }
