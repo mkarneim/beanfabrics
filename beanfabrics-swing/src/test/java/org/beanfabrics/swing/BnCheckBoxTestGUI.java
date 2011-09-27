@@ -9,11 +9,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.BooleanPM;
 import org.beanfabrics.model.PMManager;
+import org.beanfabrics.support.OnChange;
 
 /**
  * @author Michael Karneim
@@ -30,6 +33,30 @@ public class BnCheckBoxTestGUI extends JFrame {
         public MyModel() {
             PMManager.setup(this);
         }
+
+//        @OnChange(path = "test")
+//        public void testChanged() {
+//            if (test.getBoolean()) {
+//                int retval = JOptionPane.showConfirmDialog(null, "Dou you really want to set this value to 'true'?", "Confirmation required", JOptionPane.YES_NO_OPTION);
+//                if (retval != JOptionPane.YES_OPTION) {
+//                    test.setBoolean(false);
+//                }
+//            }
+//        }
+        
+      @OnChange(path = "test")
+      public void testChanged() {
+          if (test.getBoolean()) {
+              SwingUtilities.invokeLater(new Runnable() {
+                  public void run() {
+                      int retval = JOptionPane.showConfirmDialog(null, "Dou you really want to set this value to 'true'?", "Confirmation required", JOptionPane.YES_NO_OPTION);
+                      if (retval != JOptionPane.YES_OPTION) {
+                          test.setBoolean(false);
+                      }
+                  }
+              });
+          }
+      }
     }
 
     /**
@@ -39,6 +66,8 @@ public class BnCheckBoxTestGUI extends JFrame {
      */
     public static void main(String args[]) {
         try {
+            System.getProperties().list(System.out);
+            
             BnCheckBoxTestGUI frame = new BnCheckBoxTestGUI();
             frame.setVisible(true);
         } catch (Exception e) {
@@ -79,7 +108,7 @@ public class BnCheckBoxTestGUI extends JFrame {
         if (valueBnCheckBox == null) {
             valueBnCheckBox = new BnCheckBox();
             valueBnCheckBox.setPath(new org.beanfabrics.Path("this.test"));
-            valueBnCheckBox.setModelProvider(provider);
+            valueBnCheckBox.setModelProvider(getLocalProvider());
             valueBnCheckBox.setText("Value");
         }
         return valueBnCheckBox;
@@ -89,7 +118,7 @@ public class BnCheckBoxTestGUI extends JFrame {
         if (bnTextField == null) {
             bnTextField = new BnTextField();
             bnTextField.setPath(new org.beanfabrics.Path("this.test"));
-            bnTextField.setModelProvider(provider);
+            bnTextField.setModelProvider(getLocalProvider());
         }
         return bnTextField;
     }
