@@ -11,6 +11,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.lang.ref.WeakReference;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JComponent;
@@ -46,6 +47,7 @@ public class BnComboBoxCellEditor extends AbstractCellEditor implements TableCel
             fireEditingCanceled();
         }
     };
+    private WeakReference<BnComboBox> cacheEntry = new WeakReference<BnComboBox>(null);
 
     public BnComboBoxCellEditor() {
         super();
@@ -60,9 +62,16 @@ public class BnComboBoxCellEditor extends AbstractCellEditor implements TableCel
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         if (value instanceof ITextPM) {
-            if (((ITextPM)value).getOptions() != null) {
-                BnComboBox comboBox = createBnComboBox();
-                comboBox.setPresentationModel((ITextPM)value);
+            ITextPM pm = (ITextPM)value;
+            // We only support editing this value if the options are configured
+            if (pm.getOptions() != null) {
+                BnComboBox comboBox = cacheEntry.get();
+                // we can reuse the comboBox from cache if it is bound to the same pm
+                if (comboBox == null || comboBox.getPresentationModel() != pm) {
+                    comboBox = createBnComboBox();
+                    comboBox.setPresentationModel((ITextPM)value);
+                    cacheEntry = new WeakReference<BnComboBox>(comboBox);
+                }
                 return comboBox;
             }
         }

@@ -10,6 +10,7 @@ package org.beanfabrics.swing.table.celleditor;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.ref.WeakReference;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -30,6 +31,8 @@ public class BnTextFieldCellEditor extends AbstractCellEditor implements TableCe
         }
     };
 
+    private WeakReference<BnTextField> cacheEntry = new WeakReference<BnTextField>(null);
+
     public BnTextFieldCellEditor() {
         //
     }
@@ -45,10 +48,16 @@ public class BnTextFieldCellEditor extends AbstractCellEditor implements TableCe
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         if (value instanceof ITextPM) {
-            BnTextField textField = createBnTextField();
-            textField.setPresentationModel((ITextPM)value);
-            textField.setSelectAllOnFocusGainedEnabled(!isSelected);
-            textField.selectAll();
+            ITextPM pm = (ITextPM)value;
+            BnTextField textField = cacheEntry.get();
+            // we can reuse the textfield from cache if it is bound to the same pm
+            if (textField == null || textField.getPresentationModel() != pm) {
+                textField = createBnTextField();
+                textField.setPresentationModel(pm);
+                textField.setSelectAllOnFocusGainedEnabled(!isSelected);
+                textField.selectAll();
+                cacheEntry = new WeakReference<BnTextField>(textField);
+            }
             return textField;
         }
         return null;

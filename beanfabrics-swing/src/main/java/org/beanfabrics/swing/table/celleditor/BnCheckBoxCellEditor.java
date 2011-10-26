@@ -10,6 +10,7 @@ package org.beanfabrics.swing.table.celleditor;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.ref.WeakReference;
 import java.util.EventObject;
 
 import javax.swing.AbstractCellEditor;
@@ -30,7 +31,8 @@ public class BnCheckBoxCellEditor extends AbstractCellEditor implements TableCel
             fireEditingStopped();
         }
     };
-
+    private WeakReference<BnCheckBox> cacheEntry = new WeakReference<BnCheckBox>(null);
+    
     public BnCheckBoxCellEditor() {
 
     }
@@ -44,8 +46,14 @@ public class BnCheckBoxCellEditor extends AbstractCellEditor implements TableCel
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         if (value instanceof IBooleanPM) {
-            BnCheckBox checkBox = createBnCheckBox();
-            checkBox.setPresentationModel((IBooleanPM)value);
+            IBooleanPM pm = (IBooleanPM)value;
+            BnCheckBox checkBox = cacheEntry.get();
+            // we can reuse the checkbox from cache if it is bound to the same pm
+            if (checkBox == null || checkBox.getPresentationModel() != pm) {
+                checkBox = createBnCheckBox();
+                checkBox.setPresentationModel((IBooleanPM)value);
+                cacheEntry = new WeakReference<BnCheckBox>(checkBox);
+            }
             return checkBox;
         }
         return null;
