@@ -24,6 +24,7 @@ import org.beanfabrics.model.BooleanPM;
 import org.beanfabrics.model.DatePM;
 import org.beanfabrics.model.IOperationPM;
 import org.beanfabrics.model.ListPM;
+import org.beanfabrics.model.Options;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.TextPM;
 import org.beanfabrics.swing.BnButton;
@@ -50,10 +51,13 @@ public class BnTableTestGUI extends JFrame {
 
     public static class PersonModel extends AbstractPM {
         TextPM name = new TextPM();
-        DatePM birthday = new DatePM();
+        DatePM birthdate = new DatePM();
         BooleanPM active = new BooleanPM();
+        TextPM eyeColor = new TextPM();
 
         public PersonModel() {
+            Options<String> colors = Options.create("black","brown","blue","green");
+            eyeColor.setOptions(colors);
             PMManager.setup(this);
             name.setEditable(false);
         }
@@ -78,7 +82,7 @@ public class BnTableTestGUI extends JFrame {
             for (int i = 0; i < 5; ++i) {
                 PersonModel p = new PersonModel();
                 p.name.setText("Name " + i);
-                p.birthday.setDate(new Date());
+                p.birthdate.setDate(new Date());
                 persons.add(p);
             }
         }
@@ -157,7 +161,7 @@ public class BnTableTestGUI extends JFrame {
     private BnTable getBnTable() {
         if (bnTable == null) {
             bnTable = new BnTable();
-            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("name").withName("Name").addColumn().withPath("birthday").withName("Birthday").addColumn().withPath("active").withName("Active").build());
+            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("name").withName("Name").addColumn().withPath("birthdate").withName("Birthdate").addColumn().withPath("active").withName("Active").addColumn().withPath("eyeColor").withName("Eye Color").build());
             bnTable.setModelProvider(getLocalProvider());
             bnTable.setPath(new Path("this.persons"));
         }

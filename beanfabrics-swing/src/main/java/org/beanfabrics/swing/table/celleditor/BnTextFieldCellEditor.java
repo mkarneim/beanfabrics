@@ -67,5 +67,21 @@ public class BnTextFieldCellEditor extends AbstractCellEditor implements TableCe
         // in Beanfabrics we don't need to return a value
         return null;
     }
+    
+    @Override
+    public boolean stopCellEditing() { 
+        clearCacheEntry();
+        return super.stopCellEditing();
+    }
+
+    @Override
+    public void  cancelCellEditing() { 
+        clearCacheEntry();
+        super.cancelCellEditing();
+    }
+    
+    private void clearCacheEntry() {
+        cacheEntry = new WeakReference<BnTextField>(null);        
+    }
 
 }

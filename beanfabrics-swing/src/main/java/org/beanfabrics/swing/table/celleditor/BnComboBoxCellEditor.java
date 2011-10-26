@@ -82,4 +82,20 @@ public class BnComboBoxCellEditor extends AbstractCellEditor implements TableCel
         // in Beanfabrics we don't need to return a value
         return null;
     }
+
+    @Override
+    public boolean stopCellEditing() {
+        clearCacheEntry();
+        return super.stopCellEditing();
+    }
+
+    @Override
+    public void cancelCellEditing() {
+        clearCacheEntry();
+        super.cancelCellEditing();
+    }
+
+    private void clearCacheEntry() {
+        cacheEntry = new WeakReference<BnComboBox>(null);
+    }
 }

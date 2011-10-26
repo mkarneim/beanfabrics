@@ -32,7 +32,7 @@ public class BnCheckBoxCellEditor extends AbstractCellEditor implements TableCel
         }
     };
     private WeakReference<BnCheckBox> cacheEntry = new WeakReference<BnCheckBox>(null);
-    
+
     public BnCheckBoxCellEditor() {
 
     }
@@ -66,6 +66,22 @@ public class BnCheckBoxCellEditor extends AbstractCellEditor implements TableCel
 
     public boolean shouldSelectCell(EventObject anEvent) {
         return false;
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+        clearCacheEntry();
+        return super.stopCellEditing();
+    }
+
+    @Override
+    public void cancelCellEditing() {
+        clearCacheEntry();
+        super.cancelCellEditing();
+    }
+
+    private void clearCacheEntry() {
+        cacheEntry = new WeakReference<BnCheckBox>(null);
     }
 
 }
