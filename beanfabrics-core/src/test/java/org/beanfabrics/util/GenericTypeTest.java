@@ -5,7 +5,7 @@
 package org.beanfabrics.util;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -66,6 +66,18 @@ public class GenericTypeTest {
         GenericType gt = new GenericType(cls);
         GenericType typeParam = gt.getTypeParameter(Collection.class.getTypeParameters()[0]);
         assertEquals("typeParam.getType()", String.class, typeParam.getType());
+    }
+    
+    private static class NoGenericClass extends Object {
+    	//typeParam.getTypeParameter(Collection.class.getTypeParameters()[0]);
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testNoGenericClass() {
+        Class<?> cls = NoGenericClass.class;
+        GenericType gt = new GenericType(cls);
+        // this must throw an IllegalArgumentException
+        GenericType typeParam1 = gt.getTypeParameter(Collection.class.getTypeParameters()[0]);
     }
 
     private static interface IntegerStringMap extends Map<Integer, String> {
@@ -152,6 +164,10 @@ public class GenericTypeTest {
         }
 
         Inner inner;
+        
+        public Inner getInner() {
+        	return inner;
+        }
     }
 
     private static class Subclass extends Outer<Integer> {
@@ -159,12 +175,55 @@ public class GenericTypeTest {
     }
 
     @Test
-    public void testSubclass() {
+    public void testSubclassField() {
         Class<?> cls = Subclass.class;
         GenericType gt = new GenericType(cls);
         GenericType innerType = gt.getFieldType("inner");
         GenericType typeParam = innerType.getTypeParameter(Collection.class.getTypeParameters()[0]);
         assertEquals("typeParam.getType()", Integer.class, typeParam.getType());
+    }
+    
+    @Test
+    public void testSubclassMethod() {
+        Class<?> cls = Subclass.class;
+        GenericType gt = new GenericType(cls);
+        GenericType innerType = gt.getMethodReturnType("getInner");
+        GenericType typeParam = innerType.getTypeParameter(Collection.class.getTypeParameters()[0]);
+        assertEquals("typeParam.getType()", Integer.class, typeParam.getType());
+    }
+    
+    private static class NonGenericOuter {
+        private class Inner extends ArrayList<String> {
+
+        }
+
+        Inner inner;
+        
+        public Inner getInner() {
+        	return inner;
+        }
+    }
+
+    private static class NonGenericSubclass extends NonGenericOuter {
+
+    }
+    
+    @Test
+    public void testNonGenericSubclass() {
+        Class<?> cls = NonGenericSubclass.class;
+        GenericType gt = new GenericType(cls);
+        GenericType innerType = gt.getFieldType("inner");
+        GenericType typeParam = innerType.getTypeParameter(Collection.class.getTypeParameters()[0]);
+        assertEquals("typeParam.getType()", String.class, typeParam.getType());
+    }
+    
+    @Test
+    public void testNonGenericSubclassMethod() {
+        Class<?> cls = NonGenericSubclass.class;
+        GenericType gt = new GenericType(cls);
+        GenericType innerType = gt.getMethodReturnType("getInner");
+        GenericType typeParam = innerType.getTypeParameter(Collection.class.getTypeParameters()[0]);
+        assertEquals("typeParam.getType()", String.class, typeParam.getType());
     }
 
     private static class DoubleBind<E extends Cloneable & Serializable> {

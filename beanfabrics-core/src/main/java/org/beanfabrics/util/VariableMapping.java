@@ -12,6 +12,7 @@ import java.util.Map;
 /**
  * The {@link VariableMapping} maps type variables to type values.
  * 
+ * @author Michael Karneim
  */
 public class VariableMapping {
 
@@ -34,15 +35,16 @@ public class VariableMapping {
 			mapping.putAll(aParentMapping.mapping);
 		}
 	}
-	
+
 	/**
-	 * Creates a copy of the given variable mapping and populates it
-	 * with the type variable mapping of the given parameterized type.
+	 * Creates a copy of the given variable mapping and populates it with the
+	 * type variable mapping of the given parameterized type.
 	 * 
 	 * @param aParentMapping
 	 * @param parameterizedType
 	 */
-	public VariableMapping(VariableMapping aParentMapping, ParameterizedType parameterizedType) {
+	public VariableMapping(VariableMapping aParentMapping,
+			ParameterizedType parameterizedType) {
 		this(aParentMapping);
 		this.addToMapping(parameterizedType);
 	}
@@ -124,14 +126,14 @@ public class VariableMapping {
 	}
 
 	/**
-	 * Maps the type parameters of the given parameterized type to their
-	 * actual type arguments.
+	 * Maps the type parameters of the given parameterized type to their actual
+	 * type arguments.
 	 * 
 	 * @param parameterizedType
 	 */
 	private void addToMapping(ParameterizedType parameterizedType) {
-		if ( parameterizedType.getOwnerType() instanceof ParameterizedType) {
-			addToMapping((ParameterizedType)parameterizedType.getOwnerType());
+		if (parameterizedType.getOwnerType() instanceof ParameterizedType) {
+			addToMapping((ParameterizedType) parameterizedType.getOwnerType());
 		}
 
 		// .... extends MyClass<X,String>

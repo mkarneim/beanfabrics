@@ -22,25 +22,39 @@ public class GenericType {
 	private final Type type;
 
 	/**
-	 * Creates a {@link GenericType} with the given mapping for the given type.
+	 * Creates a {@link GenericType} with the given mapping for the given
+	 * parameterized type.
 	 * 
 	 * @param aMapping
-	 * @param aType
-	 *            must be one of {@link ParameterizedType}, {@link TypeVariable}
-	 *            or {@link Class}
+	 * @param aParameterizedType
 	 */
-	private GenericType(VariableMapping aMapping, Type aType) {
-		super();
-		if (!(aType instanceof ParameterizedType || aType instanceof Class || aType instanceof TypeVariable)) {
-			throw new IllegalArgumentException(String.format(
-					"Type %s not supported", aType));
-		}
+	private GenericType(VariableMapping aMapping,
+			ParameterizedType aParameterizedType) {
 		this.mapping = aMapping;
-		if (aType instanceof TypeVariable) {
-			this.type = aMapping.tryResolve((TypeVariable<?>) aType);
-		} else {
-			this.type = aType;
-		}
+		this.type = aParameterizedType;
+	}
+
+	/**
+	 * Creates a {@link GenericType} with the given mapping for the given class.
+	 * 
+	 * @param aMapping
+	 * @param aClass
+	 */
+	private GenericType(VariableMapping aMapping, Class aClass) {
+		this.mapping = aMapping;
+		this.type = aClass;
+	}
+
+	/**
+	 * Creates a {@link GenericType} with the given mapping for the given type
+	 * variable.
+	 * 
+	 * @param aMapping
+	 * @param aTypeVariable
+	 */
+	private GenericType(VariableMapping aMapping, TypeVariable<?> aTypeVariable) {
+		this.mapping = aMapping;
+		this.type = aMapping.tryResolve((TypeVariable<?>) aTypeVariable);
 	}
 
 	/**
@@ -53,9 +67,10 @@ public class GenericType {
 	}
 
 	/**
-	 * Returns the type represented by this {@link GenericType}.
+	 * Returns the type represented by this {@link GenericType}. This can be one
+	 * of {@link Class}, {@link ParameterizedType}, and {@link TypeVariable}.
 	 * 
-	 * @return
+	 * @return the type represented by this {@link GenericType}.
 	 */
 	public Type getType() {
 		return type;
@@ -67,30 +82,43 @@ public class GenericType {
 	 * 
 	 * @param variable
 	 *            must parameterize this type or one of it's super types
-	 * @return the value of the given {@link TypeVariable} as a
+	 * @return the actual value of the given {@link TypeVariable} as a
 	 *         {@link GenericType}
+	 * @throws IllegalArgumentException
+	 *             if the variable does not parameterize this type
+	 * @throws UnsupportedOperationException
+	 *             if the type parameter resolution is not supported for this
+	 *             type
 	 */
 	public GenericType getTypeParameter(
-			TypeVariable<? extends Class<?>> variable) {
+			TypeVariable<? extends Class<?>> variable)
+			throws IllegalArgumentException, IllegalStateException {
 		assertThatTypeVariableDoesParameterizeAClass(variable);
+		GenericType result;
 		if (type instanceof Class<?>) {
 			Class<?> cls = (Class<?>) type;
-//			Class<?> parameterizedClass = (Class<?>) variable.getGenericDeclaration();
-//			// Break-Condition
-//			if (parameterizedClass.equals(cls)) {
-//				GenericType result = new GenericType(mapping, variable);
-//				return result;
-//			}
-			GenericType result = getTypeParameterForClass(mapping, cls,
-					variable);
-			return result;
+			// Class<?> parameterizedClass = (Class<?>)
+			// variable.getGenericDeclaration();
+			// // Break-Condition
+			// if (parameterizedClass.equals(cls)) {
+			// GenericType result = new GenericType(mapping, variable);
+			// return result;
+			// }
+			result = getTypeParameterForClass(mapping, cls, variable);
 		} else if (type instanceof ParameterizedType) {
 			ParameterizedType pType = (ParameterizedType) type;
-			GenericType result = getTypeParameterForParameterizedType(mapping,
-					pType, variable);
-			return result;
+			Class<?> rawType = (Class<?>) pType.getRawType();
+			result = getTypeParameterForClass(mapping, rawType, variable);
+
 		} else {
-			throw new IllegalStateException();
+			throw new UnsupportedOperationException(String.format(
+					"Type parameter resolution not supported for %s", type));
+		}
+		if (result == null) {
+			throw new IllegalArgumentException(String.format(
+					"%s does not parameterize this type %s!", variable, type));
+		} else {
+			return result;
 		}
 	}
 
@@ -102,6 +130,8 @@ public class GenericType {
 	 *            must denote a field in this type or one of it's super types.
 	 * @return the type of the field with the given name as a
 	 *         {@link GenericType}
+	 * @throws UnsupportedOperationException
+	 *             if field type resolution is not supported for this type
 	 */
 	public GenericType getFieldType(String fieldname) {
 		if (type instanceof ParameterizedType) {
@@ -114,16 +144,20 @@ public class GenericType {
 			GenericType result = getFieldType(mapping, rawType, fieldname);
 			return result;
 		} else {
-			throw new IllegalStateException();
+			throw new UnsupportedOperationException(String.format(
+					"field type resolution not supported for %s", type));
 		}
 	}
 
 	/**
-	 * Returns the GenericType of the this types method with the given name
-	 * without method parameters.
+	 * Returns the return type of the method with the given name (having no
+	 * parameters) as a {@link GenericType}.
 	 * 
 	 * @param methodName
-	 * @return
+	 * @return the return type of the method as a {@link GenericType}.
+	 * @throws UnsupportedOperationException
+	 *             if method return type resolution is not supported for this
+	 *             type
 	 */
 	public GenericType getMethodReturnType(String methodName) {
 		if (type instanceof ParameterizedType) {
@@ -138,7 +172,8 @@ public class GenericType {
 					methodName);
 			return result;
 		} else {
-			throw new IllegalStateException();
+			throw new UnsupportedOperationException(String.format(
+					"method return type resolution not supported for %s", type));
 		}
 	}
 
@@ -212,13 +247,12 @@ public class GenericType {
 	private static GenericType getTypeParameterForClass(
 			VariableMapping currentMapping, Class<?> forClass,
 			TypeVariable<?> var) {
-		
+
 		assertThatTypeVariableDoesParameterizeAClass(var);
 		Class<?> parameterizedClass = (Class<?>) var.getGenericDeclaration();
-		// Break-Condition
+		// Break-Condition 1
 		if (parameterizedClass.equals(forClass)) {
-			GenericType result = new GenericType(currentMapping, var);
-			return result;
+			return getGenericType(currentMapping, var);
 		}
 
 		// if the parameterized class is a super type of forClass
@@ -248,7 +282,8 @@ public class GenericType {
 				}
 			}
 		}
-		// the variable is not ...
+		// Break-Condition 2
+		// the given variable does not parameterize the given class
 		return null;
 	}
 
@@ -256,7 +291,7 @@ public class GenericType {
 			TypeVariable<?> var) {
 		if (!(var.getGenericDeclaration() instanceof Class<?>)) {
 			throw new IllegalArgumentException(String.format(
-					"Variable %s must parameterize a class!", var));
+					"Type parameters are supported only for classes, but %s is a declared for %s", var, var.getGenericDeclaration()));
 		}
 	}
 
@@ -264,6 +299,8 @@ public class GenericType {
 			VariableMapping currentMapping,
 			ParameterizedType forParameterizedType, TypeVariable<?> var) {
 		assertThatTypeVariableDoesParameterizeAClass(var);
+		currentMapping = new VariableMapping(currentMapping,
+				forParameterizedType);
 		Class<?> rawType = (Class<?>) forParameterizedType.getRawType();
 		return getTypeParameterForClass(currentMapping, rawType, var);
 	}
@@ -285,8 +322,8 @@ public class GenericType {
 	}
 
 	private static GenericType getTypeParameterForType(
-			VariableMapping currentMapping, Type forType,
-			TypeVariable<?> var) throws AssertionError {
+			VariableMapping currentMapping, Type forType, TypeVariable<?> var)
+			throws AssertionError {
 		assertThatTypeVariableDoesParameterizeAClass(var);
 		if (forType instanceof Class<?>) {
 			GenericType result = getTypeParameterForClass(currentMapping,
@@ -294,8 +331,6 @@ public class GenericType {
 			return result;
 		} else if (forType instanceof ParameterizedType) {
 			ParameterizedType parameterizedType = (ParameterizedType) forType;
-			currentMapping = new VariableMapping(currentMapping,
-					parameterizedType);
 			GenericType result = getTypeParameterForParameterizedType(
 					currentMapping, parameterizedType, var);
 			return result;
@@ -327,40 +362,15 @@ public class GenericType {
 					ownerClass = (Class<?>) parameterizedSuperType.getRawType();
 				} else if (superType instanceof Class<?>) {
 					ownerClass = (Class<?>) superType;
-					currentMapping = new VariableMapping(currentMapping);
 				} else {
 					throw new IllegalStateException();
 				}
 			}
 		}
 
-		type = field.getGenericType(); // z.B. BClass<String, Integer>
+		type = field.getGenericType(); // e.g. BClass<String, Integer>
 
-		// try to resolve type
-		if (type instanceof TypeVariable) {
-			type = currentMapping.tryResolve((TypeVariable<?>) type);
-		}
-
-		if (type instanceof ParameterizedType) {
-			ParameterizedType parameterizedType = (ParameterizedType) type;
-			currentMapping = new VariableMapping(currentMapping,
-					parameterizedType);
-			// e.g. <X1, X2 extends Number> =>
-			// <String, Integer>
-		} else if (type instanceof Class<?>) {
-			// We can't go any further
-		} else if (type instanceof TypeVariable<?>) {
-			// We can't go any further
-		} else {
-			throw new IllegalStateException("Type not supported so far: "
-					+ type.getClass().getName());
-		}
-
-		if (type != null) {
-			return new GenericType(currentMapping, type);
-		} else {
-			throw new IllegalStateException();
-		}
+		return getGenericType(currentMapping, type);
 	}
 
 	private static GenericType getMethodReturnType(
@@ -389,7 +399,6 @@ public class GenericType {
 					ownerClass = (Class<?>) parameterizedSuperType.getRawType();
 				} else if (superType instanceof Class<?>) {
 					ownerClass = (Class<?>) superType;
-					currentMapping = new VariableMapping(currentMapping);
 				} else {
 					throw new IllegalStateException();
 				}
@@ -398,9 +407,14 @@ public class GenericType {
 
 		type = method.getGenericReturnType();
 
+		return getGenericType(currentMapping, type);
+	}
+
+	private static GenericType getGenericType(VariableMapping currentMapping,
+			Type type) {
 		// try to resolve type
-		if (type instanceof TypeVariable) {
-			type = currentMapping.tryResolve((TypeVariable<?>) type);
+		if (type == null) {
+			throw new IllegalArgumentException("Type must not be null!");
 		}
 
 		if (type instanceof ParameterizedType) {
@@ -408,21 +422,15 @@ public class GenericType {
 			currentMapping = new VariableMapping(currentMapping,
 					parameterizedType);
 			// e.g. <X1, X2 extends Number> => <String, Integer>
+			return new GenericType(currentMapping, parameterizedType);
 		} else if (type instanceof Class<?>) {
-			// We can't go any further
+			return new GenericType(currentMapping, (Class) type);
 		} else if (type instanceof TypeVariable<?>) {
-			// We can't go any further
+			return new GenericType(currentMapping, (TypeVariable<?>) type);
 		} else {
 			throw new IllegalStateException("Type not supported so far: "
 					+ type.getClass().getName());
 		}
-
-		if (type != null) {
-			return new GenericType(currentMapping, type);
-		} else {
-			throw new IllegalStateException();
-		}
-
 	}
 
 }
