@@ -46,7 +46,7 @@ public class VariableMapping {
 	public VariableMapping(VariableMapping aParentMapping,
 			ParameterizedType parameterizedType) {
 		this(aParentMapping);
-		this.addToMapping(parameterizedType);
+		this.addTypeArgumentsOfParameterizedType(parameterizedType);
 	}
 
 	/**
@@ -131,9 +131,9 @@ public class VariableMapping {
 	 * 
 	 * @param parameterizedType
 	 */
-	private void addToMapping(ParameterizedType parameterizedType) {
+	private void addTypeArgumentsOfParameterizedType(ParameterizedType parameterizedType) {
 		if (parameterizedType.getOwnerType() instanceof ParameterizedType) {
-			addToMapping((ParameterizedType) parameterizedType.getOwnerType());
+			addTypeArgumentsOfParameterizedType((ParameterizedType) parameterizedType.getOwnerType());
 		}
 
 		// .... extends MyClass<X,String>

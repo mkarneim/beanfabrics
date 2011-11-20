@@ -94,7 +94,7 @@ public class GenericType {
 			TypeVariable<? extends Class<?>> variable)
 			throws IllegalArgumentException, IllegalStateException {
 		assertThatTypeVariableDoesParameterizeAClass(variable);
-		GenericType result;
+		GenericType result = null;
 		if (type instanceof Class<?>) {
 			Class<?> cls = (Class<?>) type;
 			// Class<?> parameterizedClass = (Class<?>)
@@ -104,12 +104,19 @@ public class GenericType {
 			// GenericType result = new GenericType(mapping, variable);
 			// return result;
 			// }
-			result = getTypeParameterForClass(mapping, cls, variable);
+			VariableMapping aMapping = resolveTypeVariableInClass(variable,
+					cls, mapping);
+			if (aMapping != null) {
+				result = getGenericType(aMapping, variable);
+			}
 		} else if (type instanceof ParameterizedType) {
 			ParameterizedType pType = (ParameterizedType) type;
 			Class<?> rawType = (Class<?>) pType.getRawType();
-			result = getTypeParameterForClass(mapping, rawType, variable);
-
+			VariableMapping aMapping = resolveTypeVariableInClass(variable,
+					rawType, mapping);
+			if (aMapping != null) {
+				result = getGenericType(aMapping, variable);
+			}
 		} else {
 			throw new UnsupportedOperationException(String.format(
 					"Type parameter resolution not supported for %s", type));
@@ -244,26 +251,34 @@ public class GenericType {
 		}
 	}
 
-	private static GenericType getTypeParameterForClass(
-			VariableMapping currentMapping, Class<?> forClass,
-			TypeVariable<?> var) {
-
+	/**
+	 * Resolves the variable mapping for the given type variable in the given
+	 * class (or its superclass hierarchy).
+	 * 
+	 * @param var
+	 * @param inClass
+	 * @param currentMapping
+	 * @return
+	 */
+	private static VariableMapping resolveTypeVariableInClass(
+			TypeVariable<?> var, Class<?> inClass,
+			final VariableMapping currentMapping) {
 		assertThatTypeVariableDoesParameterizeAClass(var);
 		Class<?> parameterizedClass = (Class<?>) var.getGenericDeclaration();
 		// Break-Condition 1
-		if (parameterizedClass.equals(forClass)) {
-			return getGenericType(currentMapping, var);
+		if (parameterizedClass.equals(inClass)) {
+			return currentMapping;
 		}
 
 		// if the parameterized class is a super type of forClass
-		if (parameterizedClass.isAssignableFrom(forClass)) {
+		if (parameterizedClass.isAssignableFrom(inClass)) {
 			// process Superclass
 			{
-				Type aSuperType = forClass.getGenericSuperclass();
-				if (aSuperType != null
-						&& isAssignableFrom(parameterizedClass, aSuperType)) {
-					GenericType result = getTypeParameterForType(
-							currentMapping, aSuperType, var);
+				Type inSuperType = inClass.getGenericSuperclass();
+				if (inSuperType != null
+						&& isAssignableFrom(parameterizedClass, inSuperType)) {
+					VariableMapping result = resolveTypeVariableInType(var,
+							inSuperType, currentMapping);
 					if (result != null) {
 						return result;
 					}
@@ -271,11 +286,11 @@ public class GenericType {
 			}
 
 			// process Superinterfaces
-			Type[] superInterfaceTypes = forClass.getGenericInterfaces();
-			for (Type aSuperType : superInterfaceTypes) {
-				if (isAssignableFrom(parameterizedClass, aSuperType)) {
-					GenericType result = getTypeParameterForType(
-							currentMapping, aSuperType, var);
+			Type[] superInterfaceTypes = inClass.getGenericInterfaces();
+			for (Type inSuperType : superInterfaceTypes) {
+				if (isAssignableFrom(parameterizedClass, inSuperType)) {
+					VariableMapping result = resolveTypeVariableInType(var,
+							inSuperType, currentMapping);
 					if (result != null) {
 						return result;
 					}
@@ -290,19 +305,21 @@ public class GenericType {
 	private static void assertThatTypeVariableDoesParameterizeAClass(
 			TypeVariable<?> var) {
 		if (!(var.getGenericDeclaration() instanceof Class<?>)) {
-			throw new IllegalArgumentException(String.format(
-					"Type parameters are supported only for classes, but %s is a declared for %s", var, var.getGenericDeclaration()));
+			throw new IllegalArgumentException(
+					String.format(
+							"Type parameters are supported only for classes, but %s is a declared for %s",
+							var, var.getGenericDeclaration()));
 		}
 	}
 
-	private static GenericType getTypeParameterForParameterizedType(
-			VariableMapping currentMapping,
-			ParameterizedType forParameterizedType, TypeVariable<?> var) {
+	private static VariableMapping resolveTypeVariableInParameterizedType(
+			TypeVariable<?> var, ParameterizedType inParameterizedType,
+			VariableMapping currentMapping) {
 		assertThatTypeVariableDoesParameterizeAClass(var);
 		currentMapping = new VariableMapping(currentMapping,
-				forParameterizedType);
-		Class<?> rawType = (Class<?>) forParameterizedType.getRawType();
-		return getTypeParameterForClass(currentMapping, rawType, var);
+				inParameterizedType);
+		Class<?> inClass = (Class<?>) inParameterizedType.getRawType();
+		return resolveTypeVariableInClass(var, inClass, currentMapping);
 	}
 
 	private static boolean isAssignableFrom(Class<?> aClass, Type aType) {
@@ -321,21 +338,21 @@ public class GenericType {
 		}
 	}
 
-	private static GenericType getTypeParameterForType(
-			VariableMapping currentMapping, Type forType, TypeVariable<?> var)
-			throws AssertionError {
+	private static VariableMapping resolveTypeVariableInType(
+			TypeVariable<?> var, Type inType,
+			final VariableMapping currentMapping) throws AssertionError {
 		assertThatTypeVariableDoesParameterizeAClass(var);
-		if (forType instanceof Class<?>) {
-			GenericType result = getTypeParameterForClass(currentMapping,
-					(Class<?>) forType, var);
+		if (inType instanceof Class<?>) {
+			VariableMapping result = resolveTypeVariableInClass(var,
+					(Class<?>) inType, currentMapping);
 			return result;
-		} else if (forType instanceof ParameterizedType) {
-			ParameterizedType parameterizedType = (ParameterizedType) forType;
-			GenericType result = getTypeParameterForParameterizedType(
-					currentMapping, parameterizedType, var);
+		} else if (inType instanceof ParameterizedType) {
+			ParameterizedType inParameterizedType = (ParameterizedType) inType;
+			VariableMapping result = resolveTypeVariableInParameterizedType(
+					var, inParameterizedType, currentMapping);
 			return result;
 		} else {
-			throw new AssertionError("Unexpected type: " + forType);
+			throw new AssertionError("Unexpected type: " + inType);
 		}
 	}
 
@@ -353,7 +370,8 @@ public class GenericType {
 						break findfield;
 					}
 				}
-				// Extend Mapping by Superclass
+				// field not found so far
+				// -> search superclass
 				Type superType = ownerClass.getGenericSuperclass();
 				if (superType instanceof ParameterizedType) {
 					ParameterizedType parameterizedSuperType = (ParameterizedType) superType;
@@ -390,9 +408,15 @@ public class GenericType {
 						break findmethod;
 					}
 				}
-				// Extend Mapping by Superclass
+				// method not found so far.
+				// -> search superclass
 				Type superType = ownerClass.getGenericSuperclass();
-				if (superType instanceof ParameterizedType) {
+				if (superType == null) {
+					// method not found
+					throw new IllegalArgumentException(String.format(
+							"Method %s() not found in type %s!", methodName,
+							startClass));
+				} else if (superType instanceof ParameterizedType) {
 					ParameterizedType parameterizedSuperType = (ParameterizedType) superType;
 					currentMapping = new VariableMapping(currentMapping,
 							parameterizedSuperType);
@@ -400,7 +424,8 @@ public class GenericType {
 				} else if (superType instanceof Class<?>) {
 					ownerClass = (Class<?>) superType;
 				} else {
-					throw new IllegalStateException();
+					throw new IllegalStateException(String.format("%s",
+							superType));
 				}
 			}
 		}

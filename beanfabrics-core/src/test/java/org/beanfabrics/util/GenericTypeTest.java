@@ -55,6 +55,7 @@ public class GenericTypeTest {
         GenericType typeParam = gt.getTypeParameter(Collection.class.getTypeParameters()[0]);
         assertEquals("typeParam.getType()", String.class, typeParam.getType());
     }
+    
 
     private static abstract class StringCollectionClass implements Collection<String> {
 
@@ -157,6 +158,10 @@ public class GenericTypeTest {
         GenericType typeParam = gt.getTypeParameter(Collection.class.getTypeParameters()[0]);
         assertEquals("typeParam.getType()", String.class, typeParam.getType());
     }
+    
+    
+    
+    
 
     private static class Outer<E extends Number> {
         private class Inner extends ArrayList<E> {
@@ -491,7 +496,14 @@ public class GenericTypeTest {
         Type narrowedType = typeParam0.narrow(typeParam0.getType(), Object.class);
         assertEquals("narrowedType", ITextPM.class, narrowedType);
         // TODO here we need some other API to get both of the given bounds: ITextPM & IIconPM
-
+    }
+    
+    @Test
+    public void testMethodInMyView() {
+        Class<?> cls = MyView.class;
+        GenericType gt = new GenericType(cls);
+        GenericType typeParam = gt.getMethodReturnType("getPresentationModel");
+        assertTrue("typeParam.getType() instanceof TypeVariable", typeParam.getType() instanceof TypeVariable);
     }
 
     private static class MyChildView extends MyView {
@@ -508,7 +520,14 @@ public class GenericTypeTest {
         Type narrowedType = typeParam0.narrow(typeParam0.getType(), Object.class);
         assertEquals("narrowedType", ITextPM.class, narrowedType);
         // TODO here we need some other API to get both of the given bounds: ITextPM & IIconPM
-
+    }
+    
+    @Test
+    public void testMethodInMyChildView() {
+        Class<?> cls = MyChildView.class;
+        GenericType gt = new GenericType(cls);
+        GenericType typeParam = gt.getMethodReturnType("getPresentationModel");
+        assertTrue("typeParam.getType() instanceof TypeVariable", typeParam.getType() instanceof TypeVariable);
     }
 
     private static class MyConcreteView extends MyView<IconTextPM> {
@@ -520,6 +539,26 @@ public class GenericTypeTest {
         Class<?> cls = MyConcreteView.class;
         GenericType gt = new GenericType(cls);
         GenericType typeParam0 = gt.getTypeParameter(View.class.getTypeParameters()[0]);
+        assertEquals("typeParam0.getType()", IconTextPM.class, typeParam0.getType());
+    }
+    
+    @Test
+    public void testMethodInMyConcreteView() {
+        Class<?> cls = MyConcreteView.class;
+        GenericType gt = new GenericType(cls);
+        GenericType typeParam0 = gt.getMethodReturnType("getPresentationModel");
+        assertEquals("typeParam0.getType()", IconTextPM.class, typeParam0.getType());
+    }
+    
+    private static class MyConcreteSubView extends MyConcreteView {
+
+    }
+    
+    @Test
+    public void testMethodInMyConcreteSubView() {
+        Class<?> cls = MyConcreteSubView.class;
+        GenericType gt = new GenericType(cls);
+        GenericType typeParam0 = gt.getMethodReturnType("getPresentationModel");
         assertEquals("typeParam0.getType()", IconTextPM.class, typeParam0.getType());
     }
 
