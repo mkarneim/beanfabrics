@@ -9,104 +9,139 @@ import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@link VariableMapping} maps type variables to type values.
+ * 
+ */
 public class VariableMapping {
-    private final VariableMapping parentMapping;
-    private final Map<TypeVariable<?>, Type> mapping = new HashMap<TypeVariable<?>, Type>();
 
-    VariableMapping(VariableMapping aParentMapping, ParameterizedType forPClass) {
-        parentMapping = aParentMapping;
-        addParameterMapping(forPClass);
-    }
+	private final Map<TypeVariable<?>, Type> mapping = new HashMap<TypeVariable<?>, Type>();
 
-    public VariableMapping(VariableMapping aParentMapping) {
-        parentMapping = aParentMapping;
-    }
+	/**
+	 * Creates an empty variable mapping.
+	 */
+	public VariableMapping() {
+		this(null);
+	}
 
-    public VariableMapping createMapping(ParameterizedType forPClass) {
-        VariableMapping result = new VariableMapping(this, forPClass);
-        return result;
-    }
+	/**
+	 * Creates a copy of the given variable mapping.
+	 * 
+	 * @param aParentMapping
+	 */
+	public VariableMapping(VariableMapping aParentMapping) {
+		if (aParentMapping != null) {
+			mapping.putAll(aParentMapping.mapping);
+		}
+	}
+	
+	/**
+	 * Creates a copy of the given variable mapping and populates it
+	 * with the type variable mapping of the given parameterized type.
+	 * 
+	 * @param aParentMapping
+	 * @param parameterizedType
+	 */
+	public VariableMapping(VariableMapping aParentMapping, ParameterizedType parameterizedType) {
+		this(aParentMapping);
+		this.addToMapping(parameterizedType);
+	}
 
-    private boolean containsKey(TypeVariable<?> var) {
-        return mapping.containsKey(var) || (parentMapping != null && parentMapping.containsKey(var));
-    }
+	/**
+	 * Returns <code>true</code> if the given variable is mapped to some value.
+	 * 
+	 * @param variable
+	 * @return <code>true</code> if the given variable is mapped to some value
+	 */
+	public boolean isMapped(TypeVariable<?> variable) {
+		return mapping.containsKey(variable);
+	}
 
-    private boolean containsValue(Type type) {
-        return mapping.containsValue(type) || (parentMapping != null && parentMapping.containsValue(type));
-    }
+	/**
+	 * Resolves the mapped value of the given variable. Returns the mapped
+	 * value.
+	 * 
+	 * @param variable
+	 *            the variable to resolve
+	 * @return the value that is mapped to this variable
+	 */
+	public Type resolve(TypeVariable<?> variable) {
+		Type value = mapping.get(variable);
+		if (value instanceof TypeVariable<?>
+				&& isMapped((TypeVariable<?>) value)) {
+			return resolve((TypeVariable<?>) value);
+		}
+		return value;
+	}
 
-    public boolean contains(TypeVariable<?> var) {
-        return containsKey(var) || containsValue(var);
-    }
+	/**
+	 * Tries to resolve the mapped value of the given variable. Returns the
+	 * mapped value if a mapping is found, or the variable itself, if it is not
+	 * found.
+	 * 
+	 * @param var
+	 * @return
+	 */
+	public Type tryResolve(TypeVariable<?> var) {
+		Type resolvedType = resolve(var);
+		if (resolvedType != null) {
+			return resolvedType;
+		} else {
+			return var;
+		}
+	}
 
-    public Type resolve(TypeVariable<?> var) {
-        Type value = mapping.get(var);
-        if (value == null && parentMapping != null) {
-            value = parentMapping.resolve(var);
-        }
-        if (value == null && containsKey(var)) {
-            return var;
-        }
-        if (value instanceof TypeVariable<?> && containsKey((TypeVariable<?>)value)) {
-            return resolve((TypeVariable<?>)value);
-        }
-        return value;
-    }
+	/**
+	 * Maps the given variable to the given value.
+	 * 
+	 * @param variable
+	 * @param toValue
+	 * @throws IllegalArgumentException
+	 *             if the variable is already mapped
+	 */
+	private void add(TypeVariable<?> variable, Type toValue)
+			throws IllegalArgumentException {
+		if (variable != toValue) {
+			Type old = mapping.put(variable, toValue);
+			if (old != null && old != toValue) {
+				throw new IllegalArgumentException("var already mapped! var="
+						+ variable);
+			}
+		}
+		// throw new IllegalArgumentException();
+	}
 
-    public Type tryResolve(Type type) {
-        if (type instanceof TypeVariable<?>) {
-            return tryResolve((TypeVariable<?>)type);
-        } else {
-            return type;
-        }
-    }
+	/**
+	 * Maps the given variables to the given values.
+	 * 
+	 * @param variables
+	 * @param toValues
+	 */
+	private void add(TypeVariable<?>[] variables, Type[] toValues) {
+		for (int i = 0; i < variables.length; i++) {
+			add(variables[i], toValues[i]);
+		}
+	}
 
-    public Type tryResolve(TypeVariable<?> var) {
-        Type resolvedType = resolve(var);
-        if (resolvedType != null) {
-            return resolvedType;
-        } else {
-            return var;
-        }
-    }
+	/**
+	 * Maps the type parameters of the given parameterized type to their
+	 * actual type arguments.
+	 * 
+	 * @param parameterizedType
+	 */
+	private void addToMapping(ParameterizedType parameterizedType) {
+		if ( parameterizedType.getOwnerType() instanceof ParameterizedType) {
+			addToMapping((ParameterizedType)parameterizedType.getOwnerType());
+		}
 
-    private void put(TypeVariable<?> var, Type value) {
-        if (var != value) {
-            Type old = mapping.put(var, value);
-            if (old != null && old != value) {
-                throw new IllegalArgumentException("var already mapped! var=" + var);
-            }
-        }
-        // throw new IllegalArgumentException();
-    }
+		// .... extends MyClass<X,String>
+		Type[] args = parameterizedType.getActualTypeArguments();
 
-    private void putAll(TypeVariable<?>[] vars, Type[] values) {
-        for (int i = 0; i < vars.length; i++) {
-            put(vars[i], values[i]);
-        }
-    }
+		// public class MyClass<X,Y> ....
+		Class<?> forRawClass = (Class<?>) parameterizedType.getRawType();
+		TypeVariable<?>[] params = forRawClass.getTypeParameters();
 
-    private void addParameterMapping(ParameterizedType forPClass) {
-        // .... extends MyClass<X,String> 
-        Type[] args = forPClass.getActualTypeArguments();
-
-        // public class MyClass<X,Y> ....
-        Class<?> forRawClass = (Class<?>)forPClass.getRawType();
-        TypeVariable<?>[] params = forRawClass.getTypeParameters();
-
-        this.putAll(params, args);
-        processOuterClass(forPClass);
-    }
-
-    private void processOuterClass(ParameterizedType forPClass) {
-        Type declaringType = forPClass.getOwnerType();
-        if (declaringType instanceof ParameterizedType) {
-            ParameterizedType pOuterType = (ParameterizedType)declaringType;
-            if (pOuterType != null) {
-                processOuterClass(pOuterType);
-            }
-            addParameterMapping(pOuterType);
-        }
-    }
+		this.add(params, args);
+	}
 
 }

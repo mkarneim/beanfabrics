@@ -7,6 +7,7 @@ package org.beanfabrics.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
@@ -166,6 +167,23 @@ public class GenericTypeTest {
         assertEquals("typeParam.getType()", Integer.class, typeParam.getType());
     }
 
+    private static class DoubleBind<E extends Cloneable & Serializable> {
+    }
+
+    @Test
+    public void testDoubleBind() {
+        Class<?> cls = DoubleBind.class;
+        GenericType gt = new GenericType(cls);
+        GenericType typeParam = gt.getTypeParameter(DoubleBind.class.getTypeParameters()[0]);
+        assertTrue("typeParam.getType() instanceof TypeVariable", typeParam.getType() instanceof TypeVariable);
+        
+        TypeVariable typeVar = (TypeVariable)typeParam.getType();
+        Type[] bounds = typeVar.getBounds();
+        assertEquals("bounds[0]", Cloneable.class, bounds[0]);
+        assertEquals("bounds[1]", Serializable.class, bounds[1]);
+    }
+    
+    
     private static class ChildStringList extends StringList {
 
     }
@@ -532,5 +550,39 @@ public class GenericTypeTest {
         GenericType typeParam1 = fieldGT.getTypeParameter(Map.class.getTypeParameters()[1]);
         assertEquals("typeParam1.getType()", Integer.class, typeParam1.getType());
     }
+    
+    class X12Class extends ArrayList<String> {
+    	class X13Class extends ArrayList<Integer> {
+    		class X14Class extends ArrayList<Exception> {
+    			
+    		}
+    	}
+    }
+    
+    @Test
+    public void testX12Class() {
+        Class<?> cls = X12Class.class;
+        GenericType gt = new GenericType(cls);
+        GenericType typeParam0 = gt.getTypeParameter(Collection.class.getTypeParameters()[0]);
+       
+        assertEquals("typeParam0.getType()", String.class, typeParam0.getType());
+    }
+    
+    @Test
+    public void testX13Class() {
+        Class<?> cls = X12Class.X13Class.class;
+        GenericType gt = new GenericType(cls);
+        GenericType typeParam0 = gt.getTypeParameter(Collection.class.getTypeParameters()[0]);
+       
+        assertEquals("typeParam0.getType()", Integer.class, typeParam0.getType());
+    }
 
+    @Test
+    public void testX14Class() {
+        Class<?> cls = X12Class.X13Class.X14Class.class;
+        GenericType gt = new GenericType(cls);
+        GenericType typeParam0 = gt.getTypeParameter(Collection.class.getTypeParameters()[0]);
+       
+        assertEquals("typeParam0.getType()", Exception.class, typeParam0.getType());
+    }
 }
