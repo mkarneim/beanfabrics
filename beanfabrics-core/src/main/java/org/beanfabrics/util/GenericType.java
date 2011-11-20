@@ -72,12 +72,15 @@ public class GenericType {
 	 */
 	public GenericType getTypeParameter(
 			TypeVariable<? extends Class<?>> variable) {
-		if (!(variable.getGenericDeclaration() instanceof Class<?>)) {
-			throw new IllegalArgumentException(String.format(
-					"Variable %s must parameterize a class!", variable));
-		}
+		assertThatTypeVariableDoesParameterizeAClass(variable);
 		if (type instanceof Class<?>) {
 			Class<?> cls = (Class<?>) type;
+//			Class<?> parameterizedClass = (Class<?>) variable.getGenericDeclaration();
+//			// Break-Condition
+//			if (parameterizedClass.equals(cls)) {
+//				GenericType result = new GenericType(mapping, variable);
+//				return result;
+//			}
 			GenericType result = getTypeParameterForClass(mapping, cls,
 					variable);
 			return result;
@@ -209,12 +212,8 @@ public class GenericType {
 	private static GenericType getTypeParameterForClass(
 			VariableMapping currentMapping, Class<?> forClass,
 			TypeVariable<?> var) {
-		// Precondition: The type variable must parameterize a class
-		if (!(var.getGenericDeclaration() instanceof Class<?>)) {
-			throw new IllegalArgumentException(String.format(
-					"Variable %s must parameterize a class!", var));
-			// return null;
-		}
+		
+		assertThatTypeVariableDoesParameterizeAClass(var);
 		Class<?> parameterizedClass = (Class<?>) var.getGenericDeclaration();
 		// Break-Condition
 		if (parameterizedClass.equals(forClass)) {
@@ -253,13 +252,18 @@ public class GenericType {
 		return null;
 	}
 
-	private static GenericType getTypeParameterForParameterizedType(
-			VariableMapping currentMapping,
-			ParameterizedType forParameterizedType, TypeVariable<?> var) {
+	private static void assertThatTypeVariableDoesParameterizeAClass(
+			TypeVariable<?> var) {
 		if (!(var.getGenericDeclaration() instanceof Class<?>)) {
 			throw new IllegalArgumentException(String.format(
 					"Variable %s must parameterize a class!", var));
 		}
+	}
+
+	private static GenericType getTypeParameterForParameterizedType(
+			VariableMapping currentMapping,
+			ParameterizedType forParameterizedType, TypeVariable<?> var) {
+		assertThatTypeVariableDoesParameterizeAClass(var);
 		Class<?> rawType = (Class<?>) forParameterizedType.getRawType();
 		return getTypeParameterForClass(currentMapping, rawType, var);
 	}
@@ -281,31 +285,23 @@ public class GenericType {
 	}
 
 	private static GenericType getTypeParameterForType(
-			VariableMapping currentMapping, Type forSuperType,
+			VariableMapping currentMapping, Type forType,
 			TypeVariable<?> var) throws AssertionError {
-		if (!(var.getGenericDeclaration() instanceof Class<?>)) {
-			throw new IllegalArgumentException(String.format(
-					"Variable %s must parameterize a class!", var));
-		}
-		if (forSuperType instanceof Class<?>) {
+		assertThatTypeVariableDoesParameterizeAClass(var);
+		if (forType instanceof Class<?>) {
 			GenericType result = getTypeParameterForClass(currentMapping,
-					(Class<?>) forSuperType, var);
-			if (result != null) {
-				return result;
-			}
-		} else if (forSuperType instanceof ParameterizedType) {
-			ParameterizedType parameterizedType = (ParameterizedType) forSuperType;
+					(Class<?>) forType, var);
+			return result;
+		} else if (forType instanceof ParameterizedType) {
+			ParameterizedType parameterizedType = (ParameterizedType) forType;
 			currentMapping = new VariableMapping(currentMapping,
 					parameterizedType);
 			GenericType result = getTypeParameterForParameterizedType(
 					currentMapping, parameterizedType, var);
-			if (result != null) {
-				return result;
-			}
+			return result;
 		} else {
-			throw new AssertionError("Unexpected superType: " + forSuperType);
+			throw new AssertionError("Unexpected type: " + forType);
 		}
-		return null;
 	}
 
 	private static GenericType getFieldType(VariableMapping currentMapping,
