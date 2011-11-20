@@ -5,11 +5,12 @@
 package org.beanfabrics.util;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -245,6 +246,47 @@ public class GenericTypeTest {
         Type[] bounds = typeVar.getBounds();
         assertEquals("bounds[0]", Cloneable.class, bounds[0]);
         assertEquals("bounds[1]", Serializable.class, bounds[1]);
+    }
+    
+    private static interface NumericContainer<T extends Number> {
+    	
+    }
+    private static interface SerializableContainer<T extends Serializable> {
+    	
+    }
+    
+    private static interface DoubleBind2<T extends Number & Serializable> extends NumericContainer<T>, SerializableContainer<T> {
+    	
+    }
+    
+    @Test
+    public void testDoubleBind2() {
+        Class<?> cls = DoubleBind2.class;
+        GenericType gt = new GenericType(cls);
+        GenericType typeParam = gt.getTypeParameter(NumericContainer.class.getTypeParameters()[0]);
+        assertTrue("typeParam.getType() instanceof TypeVariable", typeParam.getType() instanceof TypeVariable);
+        
+        TypeVariable typeVar = (TypeVariable)typeParam.getType();
+        Type[] bounds = typeVar.getBounds();
+        assertEquals("bounds[0]", Number.class, bounds[0]);
+        assertEquals("bounds[1]", Serializable.class, bounds[1]);
+    }
+    
+    private static interface DoubleBind3<T extends BigDecimal> extends DoubleBind2<T> {
+    	
+    }
+    
+    @Test
+    public void testDoubleBind3() {
+        Class<?> cls = DoubleBind3.class;
+        GenericType gt = new GenericType(cls);
+        GenericType typeParam = gt.getTypeParameter(NumericContainer.class.getTypeParameters()[0]);
+        assertTrue("typeParam.getType() instanceof TypeVariable", typeParam.getType() instanceof TypeVariable);
+        
+        TypeVariable typeVar = (TypeVariable)typeParam.getType();
+        Type[] bounds = typeVar.getBounds();
+        assertEquals("bounds.length", 1, bounds.length);
+        assertEquals("bounds[0]", BigDecimal.class, bounds[0]);
     }
     
     
