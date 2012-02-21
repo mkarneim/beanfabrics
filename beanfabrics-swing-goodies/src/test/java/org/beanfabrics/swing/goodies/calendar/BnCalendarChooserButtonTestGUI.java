@@ -4,6 +4,7 @@
  */
 package org.beanfabrics.swing.goodies.calendar;
 
+import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.JFrame;
@@ -33,14 +34,14 @@ public class BnCalendarChooserButtonTestGUI {
         f.setSize(300, 300);
         f.setLocationRelativeTo(null);
 
-        DatePM cell = new DatePM();
+        DatePM pm = new DatePM();
+        pm.setDate( new Date());
 
-        ModelProvider provider = new ModelProvider(cell);
+        ModelProvider provider = new ModelProvider(pm);
         btn.setModelProvider(provider);
         btn.setPath(new Path("this"));
         tf.setModelProvider(provider);
         tf.setPath(new Path("this"));
-
         f.setVisible(true);
     }
 }

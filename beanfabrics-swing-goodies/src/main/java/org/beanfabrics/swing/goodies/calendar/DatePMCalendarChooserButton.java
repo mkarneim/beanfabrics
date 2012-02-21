@@ -145,7 +145,8 @@ public class DatePMCalendarChooserButton extends JButton implements View<IDatePM
                 this.setBackground(Color.RED);
             }
             this.setToolTipText(tooltip);
-            this.setEnabled(true);
+            boolean editable = pModel.isEditable();
+            this.setEnabled(editable);
         } else {
             this.setToolTipText(null);
             this.setEnabled(false);
