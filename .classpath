@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="beanfabrics-core/src/main/java"/>
-	<classpathentry kind="src" path="beanfabrics-swt/src/main/resources"/>
-	<classpathentry kind="src" path="beanfabrics-swt/src/main/java"/>
-	<classpathentry kind="src" path="beanfabrics-swt/src/test/java"/>
-	<classpathentry kind="src" path="beanfabrics-swt/src/test/resources"/>
-	<classpathentry kind="src" path="beanfabrics-swt-samples/src/test/resources"/>
-	<classpathentry kind="src" path="beanfabrics-swt-samples/src/main/java"/>
 	<classpathentry kind="src" path="beanfabrics-core/src/main/resources"/>
 	<classpathentry kind="src" path="beanfabrics-core/src/test/java"/>
 	<classpathentry kind="src" path="beanfabrics-core/src/test/resources"/>
-	<classpathentry kind="src" path="beanfabrics-swing/src/main/design"/>
 	<classpathentry kind="src" path="beanfabrics-swing/src/main/java"/>
 	<classpathentry kind="src" path="beanfabrics-swing/src/main/java6"/>
 	<classpathentry kind="src" path="beanfabrics-swing/src/main/resources"/>
+	<classpathentry kind="src" path="beanfabrics-swing/src/main/design"/>
 	<classpathentry kind="src" path="beanfabrics-swing/src/test/java"/>
 	<classpathentry kind="src" path="beanfabrics-swing/src/test/resources"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/main/java"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/main/resources"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/test/java"/>
+	<classpathentry kind="src" path="beanfabrics-swt/src/test/resources"/>
+	<classpathentry kind="src" path="beanfabrics-swt-samples/src/main/java"/>
+	<classpathentry kind="src" path="beanfabrics-swt-samples/src/test/resources"/>
 	<classpathentry kind="src" path="beanfabrics-swing-samples/src/main/java"/>
 	<classpathentry kind="src" path="beanfabrics-swing-samples/src/main/resources"/>
 	<classpathentry kind="src" path="beanfabrics-swing-samples/src/test/resources"/>

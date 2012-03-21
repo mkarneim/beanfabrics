@@ -1,5 +1,5 @@
 Beanfabrics - Creating a Presentation Model Component Framework for Java Desktop Applications
-Copyright (C) 2008, 2009, 2010, 2011 by Michael Karneim, beanfabrics.org
+Copyright (C) 2008-2012 by Michael Karneim, beanfabrics.org
 
 Visit http://beanfabrics.googlecode.com for more information.
 
