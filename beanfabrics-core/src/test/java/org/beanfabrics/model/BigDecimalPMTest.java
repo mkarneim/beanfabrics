@@ -14,7 +14,8 @@ import java.util.Locale;
 
 import junit.framework.JUnit4TestAdapter;
 
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -27,13 +28,14 @@ public class BigDecimalPMTest {
 
     static Locale oldLocale;
 
-    @BeforeClass
-    public static void setupClass() {
+    @Before
+    public void setTemporaryDefaultLocale() {
         oldLocale = Locale.getDefault();
         Locale.setDefault(Locale.US);
     }
 
-    public static void tearDownClass() {
+    @After
+    public void resetTemporaryDefaultLocale() {
         Locale.setDefault(oldLocale);
     }
 
@@ -43,83 +45,147 @@ public class BigDecimalPMTest {
     }
 
     @Test
-    public void setText1() {
-        Locale.setDefault(Locale.ENGLISH);
+    public void canConvertTextIntoBigDecimal() {
+        // Given:
         BigDecimalPM pm = new BigDecimalPM();
+        // When:
         pm.setText("1234.56");
+        // Then:
         BigDecimal bd = new BigDecimal("1234.56");
         assertEquals("pm.getBigDecimal()", bd, pm.getBigDecimal());
     }
 
     @Test
-    public void setText2() {
+    public void alphanumericTextMustBeInvalid() {
+        // Given:
         BigDecimalPM pm = new BigDecimalPM();
+        // When:
         pm.setText("1234abc");
+        // Then:
         assertEquals("pm.isValid()", false, pm.isValid());
     }
 
     @Test
-    public void setText3() {
+    public void reallyBigIntegerIsValid() {
+        // Given:
         BigDecimalPM pm = new BigDecimalPM();
+        // When:
         pm.setText("9223372036854775809");
+        // Then:
         assertEquals("pm.isValid()", true, pm.isValid());
     }
 
     @Test
     public void validationMessageIsLocalized() {
-        Locale old = Locale.getDefault();
-        try {
-            Locale.setDefault(Locale.GERMAN);
-            BigDecimalPM pm = new BigDecimalPM();
-            pm.setText("blah"); // invalid text
-            assertFalse("pm.isValid()", pm.isValid());
-            String message = pm.getValidationState().getMessage();
-            assertEquals("message", "Dies ist keine korrekte Zahl", message);
-        } finally {
-            Locale.setDefault(old);
-        }
+        // Given:
+        Locale.setDefault(Locale.GERMAN);
+        BigDecimalPM pm = new BigDecimalPM();
+        // When:
+        pm.setText("blah"); // invalid text
+        // Then:
+        assertFalse("pm.isValid()", pm.isValid());
+        String message = pm.getValidationState().getMessage();
+        assertEquals("message", "Dies ist keine korrekte Zahl", message);
     }
 
     @Test
-    public void formatting() {
-        Locale.setDefault(Locale.ENGLISH);
+    public void canReformatTextUsingCustomFormat() {
+        // Given:
         BigDecimalPM pm = new BigDecimalPM();
         DecimalFormat format = new DecimalFormat("#.##");
         pm.setFormat(new BigDecimalPM.Format(format));
+        // When:        
         pm.setText("125.5678");
         assertEquals("pm.getText()", "125.5678", pm.getText());
-
         pm.reformat();
-
+        // Then:
         assertEquals("pm.isValid()", true, pm.isValid());
         assertEquals("pm.getText()", "125.57", pm.getText());
     }
 
     @Test
-    public void setFormat() {
+    public void settingAFormatDoesReformatText() {
+        // Given:
         Locale.setDefault(Locale.GERMANY);
         BigDecimalPM pm = new BigDecimalPM();
-        DecimalFormat format = (DecimalFormat)NumberFormat.getNumberInstance(Locale.GERMANY);
-        pm.setFormat(new BigDecimalPM.Format(format));
+        DecimalFormat germanFormat = (DecimalFormat)NumberFormat.getNumberInstance(Locale.GERMANY);
+        DecimalFormat usFormat = (DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
+        pm.setFormat(new BigDecimalPM.Format(germanFormat));
+        // When:
         pm.setText("1.234.567,89");
-
-        DecimalFormat f2 = (DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
-        pm.setFormat(new BigDecimalPM.Format(f2));
-
+        pm.setFormat(new BigDecimalPM.Format(usFormat));
+        // Then:
         assertEquals("1,234,567.89", pm.getText());
     }
 
     @Test
-    public void setFormatWithInvalidNumber() {
+    public void settingAFormatOnInvalidContentDoesNotReformatText() {
+        // Given:
         Locale.setDefault(Locale.GERMANY);
         BigDecimalPM pm = new BigDecimalPM();
-        DecimalFormat format = (DecimalFormat)NumberFormat.getNumberInstance(Locale.GERMANY);
-        pm.setFormat(new BigDecimalPM.Format(format));
+        DecimalFormat germanFormat = (DecimalFormat)NumberFormat.getNumberInstance(Locale.GERMANY);
+        DecimalFormat usFormat = (DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
+        pm.setFormat(new BigDecimalPM.Format(germanFormat));
+        // When:
         pm.setText("abcxyz");
-
-        DecimalFormat f2 = (DecimalFormat)NumberFormat.getNumberInstance(Locale.US);
-        pm.setFormat(new BigDecimalPM.Format(f2));
-
+        pm.setFormat(new BigDecimalPM.Format(usFormat));
+        // Then:
         assertEquals("abcxyz", pm.getText());
     }
+
+    @Test
+    public void canUsePercentSignInFormat() {
+        // Given:
+        BigDecimalPM pm = new BigDecimalPM();
+        pm.setFormat(new BigDecimalPM.Format(new DecimalFormat("#.##%")));
+        // When:
+        pm.setBigDecimal(new BigDecimal("0.5123"));
+        // Then:
+        assertEquals("51.23%", pm.getText());
+    }
+
+    @Test
+    public void textWithoutPercentSignIsValid() {
+        // Given:
+        BigDecimalPM pm = new BigDecimalPM();
+        pm.setFormat(new BigDecimalPM.Format(new DecimalFormat("#.##%")));
+        String input = "10";
+
+        // When:
+        pm.setText(input);
+
+        // Then:        
+        assertEquals("pm.isValid()", true, pm.isValid());
+    }
+
+    @Test
+    public void reformattingANumberWithoutPercentageSignDoesMultiplyItWithMultiplier() {
+        // Given:
+        BigDecimalPM pm = new BigDecimalPM();
+        DecimalFormat percentFormat = new DecimalFormat("#.##%");
+        //percentFormat.setMultiplier(100); <- This is default
+        pm.setFormat(new BigDecimalPM.Format(percentFormat));
+        // When:
+        pm.setText("0.5123");
+        // Then:
+        assertEquals("pm.isValid()", true, pm.isValid());
+        pm.reformat();
+        assertEquals("51.23%", pm.getText());
+    }
+
+    @Test
+    public void reformattingANumberWithPercentageSignDoesNotMultiplyItWithMultiplier() {
+        // Given:
+        BigDecimalPM pm = new BigDecimalPM();
+        DecimalFormat percentFormat = new DecimalFormat("#.##%");
+        //percentFormat.setMultiplier(100); <- This is default
+        pm.setFormat(new BigDecimalPM.Format(percentFormat));
+        // When:
+        pm.setText("51.23%");
+        // Then:
+        assertEquals("pm.isValid()", true, pm.isValid());
+        pm.reformat();
+        assertEquals("51.23%", pm.getText());
+    }
+
 }

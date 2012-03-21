@@ -321,8 +321,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
      * between {@link BigDecimal} and {@link String}.
      */
     public static class Format implements IFormat<BigDecimal> {
-        private static final char PER_MILLE = '\u2030';
-        private static final String ALLOWED_SYMBOLS = "0#.,E;-%" + PER_MILLE;
+        private static final String ALLOWED_SYMBOLS = "0#.,E;-";
 
         private final DecimalFormat strictFormat;
         private final DecimalFormat simplifiedFormat;
@@ -413,7 +412,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         /**
          * Creates a simplified version of the given format. A format is
          * 'simplified' if it contains only those formatting symbols that have
-         * to to with the numeric representation. Any literals are removed.
+         * to do with the numeric representation. Any literals are removed.
          *
          * @param aFormat
          * @return a simplified version of the given format
