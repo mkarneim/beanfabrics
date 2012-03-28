@@ -122,7 +122,7 @@ public class BooleanPMRadioButton extends JRadioButton implements View<IBooleanP
                 tooltip = pModel.getValidationState().getMessage();
             }
             this.setToolTipText(tooltip);
-            this.setEnabled(true);
+            this.setEnabled(pModel.isEditable());
         }
     }
 

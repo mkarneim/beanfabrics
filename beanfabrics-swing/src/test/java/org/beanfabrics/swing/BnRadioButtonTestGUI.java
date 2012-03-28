@@ -45,6 +45,7 @@ public class BnRadioButtonTestGUI extends JFrame {
         private BooleanPM blue = new BooleanPM();
 
         public MyModel() {
+            //red.setEditable(false);
             PMManager.setup(this);
             red.setBoolean(true);
             this.addPropertyChangeListener(listener);
