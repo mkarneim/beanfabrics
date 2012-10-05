@@ -12,5 +12,5 @@ You have two options for building the Beanfabrics libraries: ANT or MAVEN.
   $ ant create-bin-zip
 
 = Building Beanfabrics using MAVEN =
-  ... Todo ...
-
+# To install beanfabrics to your local repository run
+  $ mvn install
