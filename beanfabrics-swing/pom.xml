@@ -14,6 +14,12 @@
 	<name>Beanfabrics Swing</name>
 	<description>Swing UI components for Beanfabrics</description>
 
+	<properties>
+		<!-- Common plugin settings -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.beanfabrics</groupId>

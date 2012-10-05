@@ -16,6 +16,9 @@
 
 	<properties>
 		<swt.version>3.3.0-v3346</swt.version>
+		<!-- Common plugin settings -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencies>
