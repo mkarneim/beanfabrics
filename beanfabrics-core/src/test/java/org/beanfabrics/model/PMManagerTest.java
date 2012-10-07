@@ -4,6 +4,7 @@ import static junit.framework.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
 
 import org.beanfabrics.support.OnChange;
+import org.beanfabrics.support.SortOrder;
 import org.beanfabrics.support.Validation;
 import org.junit.Test;
 
@@ -14,10 +15,10 @@ public class PMManagerTest {
     }
 
     private static interface SomeInterfacePM extends PresentationModel {
-        @Validation(path = "name")
+        @Validation(path = "name") @SortOrder(2)
         public boolean isNameValid();
 
-        @OnChange(path = "name")
+        @OnChange(path = "name") @SortOrder(1)
         void updateLengthOfName();
     }
 
@@ -40,7 +41,6 @@ public class PMManagerTest {
         public void updateLengthOfName() {
             lengthOfName.setInteger(name.getText().length());
         }
-
     }
 
     @Test
@@ -50,5 +50,6 @@ public class PMManagerTest {
         assertEquals("pm.lengthOfName.getInteger()", 7, (int)pm.lengthOfName.getInteger());
         pm.name.setText("valid");
         assertEquals("pm.name.isValid()", true, pm.name.isValid());
+        assertEquals("pm.lengthOfName.getInteger()", 5, (int)pm.lengthOfName.getInteger());
     }
 }
