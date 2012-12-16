@@ -52,8 +52,8 @@ public class MoneyPMTest {
         throws Exception {
 
         DecimalFormat curFormat = new DecimalFormat("#000.00#");
-        // #000 -> Beliebig viele Stellen vor dem Komma, mindestens aber 3 (mit f¸hrenden Nullen)
-        // .00# -> Mindestens 2 Stellen nach dem Komma (mit angeh‰ngten Nullen), hˆchstens aber 3 Stellen (gerundet) 
+        // #000 -> Beliebig viele Stellen vor dem Komma, mindestens aber 3 (mit f√ºhrenden Nullen)
+        // .00# -> Mindestens 2 Stellen nach dem Komma (mit angeh√§ngten Nullen), h√∂chstens aber 3 Stellen (gerundet) 
         System.out.println("format: " + curFormat.toPattern());
         System.out.println(curFormat.format(-9.9));
         System.out.println(curFormat.format(10.1));

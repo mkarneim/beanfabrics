@@ -43,10 +43,6 @@ import javax.swing.text.JTextComponent;
 public class CalendarButton extends JButton implements ActionListener {
     private JTextComponent textComponent;
     private JPopupMenu popup = null;
-    // SimpleDateFormat format = new
-    // SimpleDateFormat(FormatManager.getInstance().getDatePattern());
-    // //[PENDING,mk,29.02.2000: Hier keine Abhängigkeit ins Restprojekt
-    // einbauen!]
     private static final SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
     private CalendarChooser calendarBean;
     private int numberOfPreviousVisibleMonths = 0;

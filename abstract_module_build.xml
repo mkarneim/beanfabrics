@@ -114,7 +114,7 @@
 		<echo message="current classpath: ${toString:compile.main.classpath}" />
 		<javac classpathref="compile.main.classpath" destdir="${target.classes.dir}"
 			   source="${compile.source}" target="${compile.target}"
-			   debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
+			   debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}" encoding="UTF-8">
 			<src path="${src.main.java.dir}" />
 		</javac>
 	</target>
@@ -133,7 +133,7 @@
 		<javac classpathref="compile.test.classpath" destdir="${target.testclasses.dir}"
 			   source="${compile.source}" target="${compile.target}"
 			   debug="${compile.debug}" deprecation="${compile.deprecation}"
-			   optimize="${compile.optimize}">
+			   optimize="${compile.optimize}" encoding="UTF-8">
 			<src path="${src.test.java.dir}" />
 		</javac>
 		<copy todir="${target.testclasses.dir}">

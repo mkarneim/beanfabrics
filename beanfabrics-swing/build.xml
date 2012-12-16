@@ -36,7 +36,8 @@
 		<javac classpathref="compile.main.java6.classpath" destdir="${target.classes.java6.dir}"
 			   source="1.6" target="1.6"
 			   debug="${compile.debug}" deprecation="${compile.deprecation}"
-			   optimize="${compile.optimize}">
+			   optimize="${compile.optimize}"
+               encoding="UTF-8">
 			<src path="${src.main.java6.dir}" />
 		</javac>
 	</target>
@@ -46,7 +47,8 @@
 		<javac classpathref="compile.main.design.classpath" destdir="${target.classes.dir}"
 			   source="${compile.source}" target="${compile.target}"
 			   debug="${compile.debug}" deprecation="${compile.deprecation}"
-			   optimize="${compile.optimize}">
+			   optimize="${compile.optimize}" 
+               encoding="UTF-8">
 			<src path="${src.main.design.dir}" />
 		</javac>
 	</target>

@@ -15,7 +15,7 @@ import org.beanfabrics.model.PresentationModel;
  * 
  * @author Max Gensthaler
  */
-public interface PMListCellRenderer extends ListCellRenderer {
+public interface PMListCellRenderer extends ListCellRenderer<Object> {
     /**
      * Returns if this list cell renderer supports a certain
      * {@link PresentationModel}.

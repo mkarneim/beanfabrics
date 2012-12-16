@@ -19,7 +19,7 @@
 
 	<target name="compile-main-design" depends="init, prepare-classes-dir, compile-main">
 		<echo message="current classpath: ${toString:compile.main.design.classpath}" />
-		<javac classpathref="compile.main.design.classpath" destdir="${target.classes.dir}" source="${compile.source}" target="${compile.target}" debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
+		<javac classpathref="compile.main.design.classpath" destdir="${target.classes.dir}" source="${compile.source}" target="${compile.target}" debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}" encoding="UTF-8">
 			<src path="${src.main.design.dir}" />
 		</javac>
 	</target>
@@ -37,7 +37,7 @@
 		</copy>
 		<copy todir="${target.src.dir}">
 			<fileset dir="${src.main.java.dir}" />
-			<fileset dir="${src.main.resources.dir}" />		
+			<fileset dir="${src.main.resources.dir}" />
 			<fileset dir="${src.main.design.dir}" />
 		</copy>
 
