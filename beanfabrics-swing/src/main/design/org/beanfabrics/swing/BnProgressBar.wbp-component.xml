@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://www.eclipse.org/wb/WBPComponent">
+	<description>The BnProgressBar is a view on an IIntegerPM</description>
+	<!-- CREATION -->
+	<creation>
+		<source><![CDATA[new org.beanfabrics.swing.BnProgressBar()]]></source>		
+	</creation>
+	<!-- PROPERTIES -->
+	<properties-preferred names="modelProvider path"/>	
+	<properties-advanced names=""/>
+	<properties-hidden names="UI"/>		
+</component>	
