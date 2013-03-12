@@ -8,6 +8,9 @@ package org.beanfabrics.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
+
+import org.beanfabrics.util.ResourceBundleFactory;
 
 import org.beanfabrics.ValidatableBean;
 import org.beanfabrics.context.Context;
@@ -27,6 +30,8 @@ import org.beanfabrics.validation.ValidationState;
  * @author Michael Karneim
  */
 public abstract class AbstractPM extends ValidatableBean implements PresentationModel {
+    protected static final String KEY_MESSAGE_ONE_OR_MORE_INVALID = "message.one_or_more_invalid";
+    private final ResourceBundle resourceBundle = ResourceBundleFactory.getBundle(AbstractPM.class);
     private final SupportMap supportMap = new SupportMap(this);
     private final ModelContext context = new ModelContext(this);
 
@@ -86,8 +91,8 @@ public abstract class AbstractPM extends ValidatableBean implements Presentation
             if (states.isEmpty()) {
                 return null;
             } else {
-                // TODO (mk) i18n
-                return new CompositeValidationState("One or more properties are invalid", states);
+                String message = resourceBundle.getString(KEY_MESSAGE_ONE_OR_MORE_INVALID);
+                return new CompositeValidationState(message, states);
             }
         }
     }
