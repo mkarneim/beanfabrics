@@ -1,6 +1,6 @@
 /*
- * Beanfabrics Framework Copyright (C) by Michael Karneim, beanfabrics.org
- * Use is subject to license terms. See license.txt.
+ * Beanfabrics Framework Copyright (C) by Michael Karneim, beanfabrics.org Use is subject to license terms. See
+ * license.txt.
  */
 package org.beanfabrics.model;
 
@@ -9,7 +9,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.beanfabrics.meta.MetadataRegistry;
 import org.beanfabrics.support.AnnotatedClassProcessor;
@@ -27,6 +29,7 @@ import org.beanfabrics.util.ReflectionUtil;
 public class PMManager {
     private static final PMManager INSTANCE = new PMManager();
     private final MetadataRegistry metadata = new MetadataRegistry();
+    private final Map<Class<?>, List<Member>> membersPerClass = new IdentityHashMap<Class<?>, List<Member>>();
 
     public static void setup(PresentationModel model) {
         getInstance().processPresentationModel(model);
@@ -54,11 +57,15 @@ public class PMManager {
 
         Class cls = model.getClass();
 
-        List<Class> classes = ReflectionUtil.getAllClasses(cls);
-        processClasses(model, classes);
+        List<Member> members = membersPerClass.get(cls);
+        if (members == null) {
+            List<Class> classes = ReflectionUtil.getAllClasses(cls);
+            processClasses(model, classes);
 
-        List<Member> members = ReflectionUtil.getAllMembers(cls);
-        members = SupportUtil.sortMembers(members);
+            members = ReflectionUtil.getAllMembers(cls);
+            members = SupportUtil.sortMembers(members);
+            membersPerClass.put(cls, members);
+        }
         processMembers(model, members);
     }
 
@@ -110,7 +117,8 @@ public class PMManager {
         } else if (proc instanceof AnnotatedClassProcessor) {
             call((AnnotatedClassProcessor)proc, model, cls, anno);
         } else {
-            throw new IllegalStateException("Can't process annotation '" + anno.getClass().getName() + "' on class '" + cls.getName() + "' with processor '" + proc.getClass().getName() + "'");
+            throw new IllegalStateException("Can't process annotation '" + anno.getClass().getName() + "' on class '"
+                    + cls.getName() + "' with processor '" + proc.getClass().getName() + "'");
         }
     }
 
@@ -121,7 +129,9 @@ public class PMManager {
         } else if (proc instanceof AnnotatedFieldProcessor) {
             call((AnnotatedFieldProcessor)proc, model, field, anno);
         } else {
-            throw new IllegalStateException("Can't process annotation '" + anno.getClass().getName() + "' on field '" + field.getName() + "' of class '" + field.getDeclaringClass().getName() + "' with processor '" + proc.getClass().getName() + "'");
+            throw new IllegalStateException("Can't process annotation '" + anno.getClass().getName() + "' on field '"
+                    + field.getName() + "' of class '" + field.getDeclaringClass().getName() + "' with processor '"
+                    + proc.getClass().getName() + "'");
         }
     }
 
@@ -132,8 +142,9 @@ public class PMManager {
         } else if (proc instanceof AnnotatedMethodProcessor) {
             call((AnnotatedMethodProcessor)proc, model, method, anno);
         } else {
-            throw new IllegalStateException("Can't process annotation '" + anno.getClass().getName() + "' on method '" + method.getName() + "' of class '" + method.getDeclaringClass().getName() + "' with processor '" + proc.getClass().getName()
-                    + "'");
+            throw new IllegalStateException("Can't process annotation '" + anno.getClass().getName() + "' on method '"
+                    + method.getName() + "' of class '" + method.getDeclaringClass().getName() + "' with processor '"
+                    + proc.getClass().getName() + "'");
         }
     }
 
