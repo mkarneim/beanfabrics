@@ -1,7 +1,7 @@
 # Version-Number
 version.major=1
 version.minor=0
-version.build=0
+version.build=1
 
 # Release-Label: one of (Release-Final, Release-Devel)
 release.label=Release-Devel
