@@ -78,10 +78,10 @@ public class OperationSupport implements Support {
                 throw new IllegalArgumentException("method '" + annotatedMethod.getName() + "' must not declare any parameter when annotated with @ExecutionMethod");
             }
             if (annotatedMethod.getReturnType() != null) {
-            	Class<?> retType = annotatedMethod.getReturnType();
-            	if ( !retType.equals( Void.TYPE) && !retType.equals( Boolean.TYPE) && !retType.equals(Boolean.class)) {
-            		throw new IllegalArgumentException("method '" + annotatedMethod.getName() + "' must not declare any return type other than 'void', 'Boolean' or 'boolean' when annotated with @ExecutionMethod");
-            	}
+                Class<?> retType = annotatedMethod.getReturnType();
+                if (!retType.equals(Void.TYPE) && !retType.equals(Boolean.TYPE) && !retType.equals(Boolean.class)) {
+                    throw new IllegalArgumentException("method '" + annotatedMethod.getName() + "' must not declare any return type other than 'void', 'Boolean' or 'boolean' when annotated with @ExecutionMethod");
+                }
             }
 
             this.owner = owner;
@@ -140,19 +140,23 @@ public class OperationSupport implements Support {
             }
         }
 
-        private boolean callAnnotatedMethod() {
+        private boolean callAnnotatedMethod()
+            throws Throwable {
             try {
                 Object result = ReflectionUtil.invokeMethod(owner, annotatedMethod, (Object[])null);
-                if ( result == null) {
-                	return true;
+                if (result == null) {
+                    return true;
                 } else {
-                	return ((Boolean)result).booleanValue();
+                    return ((Boolean)result).booleanValue();
                 }
             } catch (IllegalArgumentException e) {
                 throw new UndeclaredThrowableException(e);
             } catch (IllegalAccessException e) {
-                throw new UndeclaredThrowableException(e);
+                throw new UndeclaredThrowableException(e, "IllegalAccessException on invoke '" + annotatedMethod + "'");
             } catch (InvocationTargetException e) {
+                if (e.getTargetException() != null) {
+                    throw e.getTargetException();
+                }
                 throw new UndeclaredThrowableException(e);
             }
         }
