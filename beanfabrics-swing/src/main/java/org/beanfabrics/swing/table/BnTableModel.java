@@ -26,7 +26,7 @@ import org.beanfabrics.event.ListListener;
 import org.beanfabrics.event.WeakListListener;
 import org.beanfabrics.model.IListPM;
 import org.beanfabrics.model.IOperationPM;
-import org.beanfabrics.model.ITextPM;
+import org.beanfabrics.model.IValuePM;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.model.SortKey;
 
@@ -118,10 +118,12 @@ public class BnTableModel extends AbstractTableModel {
         this.fireTableStructureChanged();
     }
 
+    @Override
     public int getColumnCount() {
         return this.colDefs.size();
     }
 
+    @Override
     public int getRowCount() {
         return this.list.size();
     }
@@ -131,6 +133,7 @@ public class BnTableModel extends AbstractTableModel {
         // we don't support changing a value with this method
     }
 
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         final Path path = this.colDefs.get(columnIndex).getPath();
         PresentationModel rowMdl = this.list.getAt(rowIndex);
@@ -173,8 +176,8 @@ public class BnTableModel extends AbstractTableModel {
             return false;
         } else {
             final Object value = this.getValueAt(rowIndex, columnIndex);
-            if (value instanceof ITextPM) {
-                return ((ITextPM)value).isEditable();
+            if (value instanceof IValuePM) {
+                return ((IValuePM)value).isEditable();
             } else if (value instanceof IOperationPM) {
                 return ((IOperationPM)value).isEnabled();
             } else {
