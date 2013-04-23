@@ -29,6 +29,7 @@ public class ExceptionUtil {
         if (this.exceptionHandler != null) {
             this.exceptionHandler.handleException(message, t);
         } else {
+            t.printStackTrace();
             ErrorPane.showErrorDialog(message, t);
         }
     }
