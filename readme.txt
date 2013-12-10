@@ -1,7 +1,10 @@
 Beanfabrics - Creating a Presentation Model Component Framework for Java Desktop Applications
-Copyright (C) 2008-2012 by Michael Karneim, beanfabrics.org
+Copyright (C) 2008-2013 by Michael Karneim, beanfabrics.org
 
-Visit http://beanfabrics.googlecode.com for more information.
+This projects source code was formerly hosted at http://beanfabrics.googlecode.com.
+Since December 2013 it is hosted at https://github.com/mkarneim/beanfabrics.
+
+Visit http://www.beanfabrics.org for more information.
 
 You have two options for building the Beanfabrics libraries: ANT or MAVEN.
 
