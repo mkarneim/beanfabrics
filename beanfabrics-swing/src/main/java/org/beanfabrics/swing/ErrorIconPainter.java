@@ -12,6 +12,7 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.image.ImageObserver;
+import java.io.Serializable;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -23,7 +24,7 @@ import javax.swing.SwingConstants;
  * 
  * @author Michael Karneim
  */
-public class ErrorIconPainter {
+public class ErrorIconPainter implements Serializable {
 
     private static final URL ERROR_ICON = ErrorIconPainter.class.getResource("error_overlay.gif"); // TODO configure via file
     private static final URL ERROR_ICON_FOCUSED = ErrorIconPainter.class.getResource("error_overlay.gif"); // TODO configure via file

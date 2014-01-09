@@ -1,0 +1,7 @@
+
+description = 'Beanfabrics Swing Samples'
+dependencies {
+  compile project(':beanfabrics-core')
+  compile project(':beanfabrics-swing')
+    testCompile group: 'junit', name: 'junit', version:'4.10'
+}

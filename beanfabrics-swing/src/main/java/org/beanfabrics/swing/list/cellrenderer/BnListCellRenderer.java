@@ -7,6 +7,7 @@
 package org.beanfabrics.swing.list.cellrenderer;
 
 import java.awt.Component;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,8 @@ import org.beanfabrics.swing.list.BnList;
  * 
  * @author Michael Karneim
  */
-public class BnListCellRenderer implements ListCellRenderer {
+@SuppressWarnings("serial")
+public class BnListCellRenderer implements ListCellRenderer, Serializable {
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         if (value instanceof PresentationModel) {
             for (PMListCellRenderer renderer : installedRenderers) {

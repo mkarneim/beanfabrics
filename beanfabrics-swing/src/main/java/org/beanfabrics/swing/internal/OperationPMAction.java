@@ -7,6 +7,7 @@
 package org.beanfabrics.swing.internal;
 
 import java.awt.event.ActionEvent;
+import java.io.Serializable;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -32,11 +33,13 @@ public class OperationPMAction extends AbstractAction implements View<IOperation
     private static final Logger LOG = LoggerFactory.getLogger(OperationPMAction.class);
 
     private IOperationPM pModel;
-    private transient WeakPropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private WeakPropertyChangeListener listener = new MyWeakPropertyChangeListener();
+    
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             refresh();
         }
-    };
+    }
 
     public OperationPMAction() {
 

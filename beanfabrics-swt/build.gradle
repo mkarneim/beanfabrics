@@ -1,0 +1,7 @@
+
+description = 'Beanfabrics SWT'
+dependencies {
+  compile project(':beanfabrics-core')
+    compile group: 'org.eclipse.swt.win32.win32', name: 'x86', version:'3.3.0-v3346'
+    testCompile group: 'junit', name: 'junit', version:'4.10'
+}

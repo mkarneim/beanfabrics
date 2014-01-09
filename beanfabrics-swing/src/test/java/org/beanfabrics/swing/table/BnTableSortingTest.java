@@ -104,10 +104,10 @@ public class BnTableSortingTest {
         listPm.fill(rows);
         assertEquals("pm.size()", rows.length, listPm.size());
         listPm.sortBy(true, new Path("number"));
-        System.out.println(listPm.getContentString());
+        //System.out.println(listPm.getContentString());
         listPm.sortBy(false, new Path("number"));
-        System.out.println();
-        System.out.println(listPm.getContentString());
+        //System.out.println();
+        //System.out.println(listPm.getContentString());
         for(int i=0, k=rows.length-1; i<rows.length; ++i, --k) {
             assertSame("pm.getAt(i="+i+")==rows[k="+k+"]", rows[k], listPm.getAt(i));
         }
@@ -127,10 +127,10 @@ public class BnTableSortingTest {
         mapPm.fill(rows);
         assertEquals("pm.size()", rows.length, mapPm.size());
         mapPm.sortBy(true, new Path("number"));
-        System.out.println(mapPm.getContentString());
+        //System.out.println(mapPm.getContentString());
         mapPm.sortBy(false, new Path("number"));
-        System.out.println();
-        System.out.println(mapPm.getContentString());
+        //System.out.println();
+        //System.out.println(mapPm.getContentString());
         for(int i=0, k=rows.length-1; i<rows.length; ++i, --k) {
             assertSame("pm.getAt(i="+i+")==rows[k="+k+"]", rows[k], mapPm.getAt(i));
         }

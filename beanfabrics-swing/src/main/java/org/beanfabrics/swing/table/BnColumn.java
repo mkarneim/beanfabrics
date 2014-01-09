@@ -6,6 +6,8 @@
 // methods and fields are documented
 package org.beanfabrics.swing.table;
 
+import java.io.Serializable;
+
 import org.beanfabrics.Path;
 
 /**
@@ -14,7 +16,8 @@ import org.beanfabrics.Path;
  * 
  * @author Michael Karneim
  */
-public class BnColumn {
+@SuppressWarnings("serial")
+public class BnColumn implements Serializable {
     public static final int DEFAULT_WIDTH = 100;
     public static final Integer DEFAULT_ALIGNEMNT = null;
     public static final boolean DEFAULT_WIDTH_FIXED = false;

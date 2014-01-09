@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
@@ -31,8 +32,7 @@ import org.beanfabrics.swing.ErrorIconPainter;
 import org.beanfabrics.swing.KeyBindingProcessor;
 
 /**
- * The <code>TextPMComboBox</code> is a {@link JComboBox} that is a view on an
- * {@link ITextPM}.
+ * The <code>TextPMComboBox</code> is a {@link JComboBox} that is a view on an {@link ITextPM}.
  * 
  * @author Michael Karneim
  * @author Max Gensthaler
@@ -43,14 +43,18 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor, Vi
     private ITextPM pModel;
     private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
 
-    private transient final PropertyChangeListener propertyListener = new WeakPropertyChangeListener() {
+    private final PropertyChangeListener propertyListener = new MyWeakPropertyChangeListener();
+
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
-            if ("options".equals(evt.getPropertyName()))
-                ((TextEditorComboBoxModel)getModel()).refresh(); // informs the textPM listeners (gui)
+            ((TextEditorComboBoxModel) getModel()).refresh(); // informs the textPM listeners (gui)
         }
-    };
-    private transient final ActionListener clearAction = new ActionListener() {
+    }
+
+    private final ActionListener clearAction = new ClearActionListener();
+
+    private class ClearActionListener implements ActionListener, Serializable {
         public void actionPerformed(ActionEvent e) {
             int items = getItemCount();
             for (int i = 0; i < items; ++i) {
@@ -61,12 +65,13 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor, Vi
                 }
             }
         }
-    };
+    }
 
     public TextPMComboBox() {
         this.setEnabled(false);
         this.setModel(this.createDefaultModel());
-        this.registerKeyboardAction(clearAction, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), JComponent.WHEN_FOCUSED);
+        this.registerKeyboardAction(clearAction, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0),
+                JComponent.WHEN_FOCUSED);
         this.registerKeyboardAction(clearAction, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), JComponent.WHEN_FOCUSED);
     }
 
@@ -96,9 +101,8 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor, Vi
     }
 
     /**
-     * Constructs a new {@link BnComboBoxEditor} for this
-     * <code>BnComboBox</code>. This new <code>BnComboBoxEditor</code> is used
-     * for editing the value of this <code>BnComboBox</code>.
+     * Constructs a new {@link BnComboBoxEditor} for this <code>BnComboBox</code>. This new
+     * <code>BnComboBoxEditor</code> is used for editing the value of this <code>BnComboBox</code>.
      * 
      * @return a new {@link BnComboBoxEditor}
      */
@@ -107,37 +111,33 @@ public class TextPMComboBox extends JComboBox implements KeyBindingProcessor, Vi
     }
 
     /**
-     * Returns whether this component is connected to the target
-     * {@link PresentationModel} to synchronize with. This is a convenience
-     * method.
+     * Returns whether this component is connected to the target {@link PresentationModel} to synchronize with. This is
+     * a convenience method.
      * 
-     * @return <code>true</code> when this component is connected, else
-     *         <code>false</code>
+     * @return <code>true</code> when this component is connected, else <code>false</code>
      */
     public boolean isConnected() {
         return this.pModel != null;
     }
 
     /**
-     * Returns whether this component is connected to a PM that provides
-     * {@link Options}.
+     * Returns whether this component is connected to a PM that provides {@link Options}.
      * 
-     * @return <code>true</code> when this component has access to some
-     *         {@link Options}
+     * @return <code>true</code> when this component has access to some {@link Options}
      */
     protected boolean hasOptions() {
         return isConnected() && pModel.getOptions() != null;
     }
 
     /**
-     * Configures this component depending on the target {@link AbstractPM}s
-     * attributes.
+     * Configures this component depending on the target {@link AbstractPM}s attributes.
      */
     protected void refresh() {
         final ITextPM pModel = this.getPresentationModel();
         if (pModel != null) {
             this.setEnabled(pModel.isEditable());
-            this.setToolTipText(pModel.isValid() == false ? pModel.getValidationState().getMessage() : pModel.getDescription());
+            this.setToolTipText(pModel.isValid() == false ? pModel.getValidationState().getMessage() : pModel
+                    .getDescription());
         } else {
             this.setToolTipText(null);
             this.setEnabled(false);

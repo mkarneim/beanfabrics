@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,10 +18,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.text.JTextComponent;
 
 /**
- * CalendarButton provides a simple mechanism for the user to bind a date
- * chooser popup to a text component. Whenever the button is pressed a popup
- * appears below a specified text component, and displays a CalenderBean
- * control.
+ * CalendarButton provides a simple mechanism for the user to bind a date chooser popup to a text component. Whenever
+ * the button is pressed a popup appears below a specified text component, and displays a CalenderBean control.
  * <P>
  * example:<BR>
  * 
@@ -40,6 +39,7 @@ import javax.swing.text.JTextComponent;
  * 
  * @author Michael Karneim
  */
+@SuppressWarnings("serial")
 public class CalendarButton extends JButton implements ActionListener {
     private JTextComponent textComponent;
     private JPopupMenu popup = null;
@@ -57,8 +57,7 @@ public class CalendarButton extends JButton implements ActionListener {
     }
 
     /**
-     * Implements the ActionListener interface. This method is called whenever
-     * the button is pressed.
+     * Implements the ActionListener interface. This method is called whenever the button is pressed.
      */
     public void actionPerformed(ActionEvent e) {
         if (textComponent == null)
@@ -71,7 +70,7 @@ public class CalendarButton extends JButton implements ActionListener {
                 this.getCalendarBean().setSelectedDate(date);
             } catch (ParseException ex) {
                 this.getCalendarBean().setMonth(new Date());
-                this.getCalendarBean().setSelectedDate((Date)null);
+                this.getCalendarBean().setSelectedDate((Date) null);
             }
             p.show(textComponent, 0, textComponent.getSize().height);
         } else if (e.getSource() == this.getCalendarBean()) {
@@ -87,24 +86,25 @@ public class CalendarButton extends JButton implements ActionListener {
         }
     }
 
-    private transient PropertyChangeListener enableStateListener = new PropertyChangeListener() {
+    private final PropertyChangeListener enableStateListener = new MyPropertyChangeListener();
+
+    private class MyPropertyChangeListener implements PropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             if (!(evt.getSource() == textComponent))
                 return;
-            boolean newValue = ((Boolean)evt.getNewValue()).booleanValue();
+            boolean newValue = ((Boolean) evt.getNewValue()).booleanValue();
             setEnabled(newValue);
         }
     };
 
     /**
-     * Sets the reference to the text component, the calender button should work
-     * with. From this text component the calendar button will get the date
-     * string to put into the date chooser popup on button click. Below this
-     * text component the date chooser popup will be displayed. Into this text
-     * component the selected date will be inserted from the date chooser
-     * component.
+     * Sets the reference to the text component, the calender button should work with. From this text component the
+     * calendar button will get the date string to put into the date chooser popup on button click. Below this text
+     * component the date chooser popup will be displayed. Into this text component the selected date will be inserted
+     * from the date chooser component.
      * 
-     * @param newTextComponent the text component the button will work with
+     * @param newTextComponent
+     *            the text component the button will work with
      */
     public void setTextComponent(javax.swing.text.JTextComponent newTextComponent) {
         javax.swing.text.JTextComponent oldTextComponent = textComponent;
@@ -119,11 +119,9 @@ public class CalendarButton extends JButton implements ActionListener {
     }
 
     /**
-     * Returns the text component that is bound to this button for displaying
-     * the date.
+     * Returns the text component that is bound to this button for displaying the date.
      * 
-     * @return the text component that is bound to this button for displaying
-     *         the date
+     * @return the text component that is bound to this button for displaying the date
      */
     public JTextComponent getTextComponent() {
         return textComponent;
@@ -143,10 +141,11 @@ public class CalendarButton extends JButton implements ActionListener {
     }
 
     /**
-     * Defines the pattern that has to be used to transform a String to a Date
-     * instance and vice versa. The default is "dd.mm.yyyy".
+     * Defines the pattern that has to be used to transform a String to a Date instance and vice versa. The default is
+     * "dd.mm.yyyy".
      * 
-     * @param pattern the format pattern
+     * @param pattern
+     *            the format pattern
      */
     public void setDatePattern(String pattern) {
         String oldPattern = CalendarButton.format.toPattern();
@@ -155,11 +154,9 @@ public class CalendarButton extends JButton implements ActionListener {
     }
 
     /**
-     * Returns the pattern that has to be used to transform a String to a Date
-     * instance and vice versa.
+     * Returns the pattern that has to be used to transform a String to a Date instance and vice versa.
      * 
-     * @return the pattern that has to be used to transform a String to a Date
-     *         instance and vice versa
+     * @return the pattern that has to be used to transform a String to a Date instance and vice versa
      */
     public String getDatePattern() {
         return CalendarButton.format.toPattern();
@@ -169,12 +166,11 @@ public class CalendarButton extends JButton implements ActionListener {
      * Sets the CalendarBean instance that has to be used in the popup.
      * <P>
      * Note:<BR>
-     * This method offers an easy way to customize the look and feel of the date
-     * chooser popup. Be carefull not to use one single calendar bean in more
-     * calendar buttons.
+     * This method offers an easy way to customize the look and feel of the date chooser popup. Be carefull not to use
+     * one single calendar bean in more calendar buttons.
      * 
-     * @param newCalendarBean the CalendarBean instance that has to be used in
-     *            the popup
+     * @param newCalendarBean
+     *            the CalendarBean instance that has to be used in the popup
      */
     public void setCalendarBean(CalendarChooser newCalendarBean) {
         CalendarChooser oldCalendarBean = calendarBean;

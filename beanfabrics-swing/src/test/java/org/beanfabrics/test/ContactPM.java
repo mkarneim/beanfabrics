@@ -24,7 +24,7 @@ public class ContactPM extends AbstractPM {
     final TextPM lastname = new TextPM();
     final DatePM birthday = new DatePM();
     final IntegerPM children = new IntegerPM();
-    final BooleanPM hasWife = new BooleanPM();
+    final BooleanPM isMarried = new BooleanPM();
     final IconPM icon = new IconPM();
     final NotePM notes = new NotePM();
     //	final TextPM row1 = new TextPM();
@@ -46,7 +46,7 @@ public class ContactPM extends AbstractPM {
 
     @Validation(path = "addChild", message = "your are single")
     public boolean validateAddChildren() {
-        return hasWife.isValid() && !hasWife.isEmpty() && hasWife.getBoolean();
+        return isMarried.isValid() && !isMarried.isEmpty() && isMarried.getBoolean();
     }
 
     @Operation

@@ -6,6 +6,8 @@
 // methods and fields are documented
 package org.beanfabrics.swing.list;
 
+import java.io.Serializable;
+
 import javax.swing.AbstractListModel;
 import javax.swing.ListModel;
 
@@ -33,7 +35,8 @@ public class BnListModel extends AbstractListModel {
     private final IListPM list;
     private final CellConfig cellConfig;
 
-    private transient ListListener listener = new WeakListListener() {
+    private final ListListener listener = new MyWeakListListener();
+    private class MyWeakListListener implements WeakListListener, Serializable {
         public void elementsSelected(ElementsSelectedEvent evt) {
             // ignore
         }

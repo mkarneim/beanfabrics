@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
+import java.io.Serializable;
 
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
@@ -32,11 +33,13 @@ import org.beanfabrics.swing.ErrorIconPainter;
 @SuppressWarnings("serial")
 public class BooleanPMCheckBox extends JCheckBox implements View<IBooleanPM> {
     private IBooleanPM pModel;
-    private transient final WeakPropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final WeakPropertyChangeListener listener = new MyWeakPropertyChangeListener();
+    
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }
-    };
+    }
     private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
 
     public BooleanPMCheckBox() {

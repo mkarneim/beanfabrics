@@ -11,6 +11,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
@@ -33,11 +34,13 @@ import org.beanfabrics.swing.ErrorIconPainter;
 public class BooleanPMRadioButton extends JRadioButton implements View<IBooleanPM> {
     private IBooleanPM pModel;
 
-    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final PropertyChangeListener listener = new MyWeakPropertyChangeListener();
+    
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }
-    };
+    }
     private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
 
     public BooleanPMRadioButton() {
