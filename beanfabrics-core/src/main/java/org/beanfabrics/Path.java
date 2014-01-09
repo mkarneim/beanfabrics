@@ -6,6 +6,7 @@
 // methods and fields are documented
 package org.beanfabrics;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -23,7 +24,7 @@ import java.util.StringTokenizer;
 // TODO (mk) make Path allow multiple results like XPath
 // getting all path elements by using sample instances of (null)
 // targets in EditorProperty objects
-public class Path implements Iterable<String> {
+public class Path implements Iterable<String>, Serializable {
     public static final String THIS_PATH_ELEMENT = "this";
     public static final String PATH_SEPARATOR = ".";
     public static final char PATH_SEPARATOR_CHAR = '.';

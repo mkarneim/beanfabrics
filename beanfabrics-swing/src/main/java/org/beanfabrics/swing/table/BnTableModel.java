@@ -6,6 +6,7 @@
 // methods and fields are documented
 package org.beanfabrics.swing.table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,11 +32,10 @@ import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.model.SortKey;
 
 /**
- * The <code>BnTableModel</code> is a {@link TableModel} that decorates a
- * {@link IListPM}.
+ * The <code>BnTableModel</code> is a {@link TableModel} that decorates a {@link IListPM}.
  * <p>
- * To reduce work we decided to extend the {@link AbstractTableModel} in order
- * to get the event listener handling. All other methods are overridden.
+ * To reduce work we decided to extend the {@link AbstractTableModel} in order to get the event listener handling. All
+ * other methods are overridden.
  * </p>
  * 
  * @author Michael Karneim
@@ -47,7 +47,9 @@ public class BnTableModel extends AbstractTableModel {
 
     private List<BnColumn> colDefs = new ArrayList<BnColumn>();
 
-    private transient ListListener listener = new WeakListListener() {
+    private final ListListener listener = new MyWeakListListener();
+
+    private class MyWeakListListener implements WeakListListener, Serializable {
         public void elementsSelected(ElementsSelectedEvent evt) {
             // ignore
         }
@@ -177,9 +179,9 @@ public class BnTableModel extends AbstractTableModel {
         } else {
             final Object value = this.getValueAt(rowIndex, columnIndex);
             if (value instanceof IValuePM) {
-                return ((IValuePM)value).isEditable();
+                return ((IValuePM) value).isEditable();
             } else if (value instanceof IOperationPM) {
-                return ((IOperationPM)value).isEnabled();
+                return ((IOperationPM) value).isEnabled();
             } else {
                 return false;
             }
@@ -196,8 +198,7 @@ public class BnTableModel extends AbstractTableModel {
     }
 
     /**
-     * Returns the {@link SortKey} of the specified column or <code>null</code>
-     * if that column is not sorted.
+     * Returns the {@link SortKey} of the specified column or <code>null</code> if that column is not sorted.
      * 
      * @param col
      * @return the {@link SortKey} of the specified column

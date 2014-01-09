@@ -32,13 +32,14 @@ public class BnListBeanInfo extends ModelSubscriberBeanInfo {
 
     public PropertyDescriptor[] getPropertyDescriptors() {
         try {
+            final PropertyDescriptor pModel = new PropertyDescriptor("presentationModel", this.getBeanClass(), "getPresentationModel", "setPresentationModel");
             final PropertyDescriptor provider = new PropertyDescriptor("modelProvider", BEAN_CLASS, "getModelProvider", "setModelProvider");
             PropertyDescriptor path = new PropertyDescriptor("path", BEAN_CLASS, "getPath", "setPath");
             path.setBound(true);
             final PropertyDescriptor cellConfig = new PropertyDescriptor("cellConfig", BEAN_CLASS, "getCellConfig", "setCellConfig");
             cellConfig.setBound(true);
             cellConfig.setPropertyEditorClass(CellConfigPropertyEditor.class);
-            return new PropertyDescriptor[] { provider, path, cellConfig };
+            return new PropertyDescriptor[] { pModel, provider, path, cellConfig };
         } catch (IntrospectionException ex) {
             ExceptionUtil.getInstance().handleException("", ex);
             return null;

@@ -29,8 +29,8 @@ public class ContactPanel extends JPanel implements View<ContactPM>, ModelSubscr
     private ModelProvider localProvider = null; //@jve:decl-index=0:visual-constraint="376,115"  @wb:location=38,265
     private JLabel notesLabel;
     private BnTextField notesTextField;
-    private BnCheckBox hasWifeCheckBox;
-    private BnTextField hasWifeTextField;
+    private BnCheckBox isMarriedCheckBox;
+    private BnTextField isMarriedTextField;
     private JPanel contentPanel = null;
     private JLabel firstnameLabel = null;
     private JLabel lastnameLabel = null;
@@ -206,22 +206,22 @@ public class ContactPanel extends JPanel implements View<ContactPM>, ModelSubscr
     }
 
     protected BnTextField getHasWifeTextField() {
-        if (hasWifeTextField == null) {
-            hasWifeTextField = new BnTextField();
-            hasWifeTextField.setPath(new org.beanfabrics.Path("this.hasWife"));
-            hasWifeTextField.setModelProvider(getLocalProvider());
+        if (isMarriedTextField == null) {
+            isMarriedTextField = new BnTextField();
+            isMarriedTextField.setPath(new org.beanfabrics.Path("this.isMarried"));
+            isMarriedTextField.setModelProvider(getLocalProvider());
         }
-        return hasWifeTextField;
+        return isMarriedTextField;
     }
 
     protected BnCheckBox getHasWifeCheckBox() {
-        if (hasWifeCheckBox == null) {
-            hasWifeCheckBox = new BnCheckBox();
-            hasWifeCheckBox.setPath(new Path("this.hasWife"));
-            hasWifeCheckBox.setModelProvider(getLocalProvider());
-            hasWifeCheckBox.setText("has wife");
+        if (isMarriedCheckBox == null) {
+            isMarriedCheckBox = new BnCheckBox();
+            isMarriedCheckBox.setPath(new Path("this.isMarried"));
+            isMarriedCheckBox.setModelProvider(getLocalProvider());
+            isMarriedCheckBox.setText("married");
         }
-        return hasWifeCheckBox;
+        return isMarriedCheckBox;
     }
 
     protected BnTextField getNotesTextField() {

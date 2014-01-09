@@ -8,6 +8,10 @@ package org.beanfabrics;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +26,8 @@ import org.beanfabrics.model.PresentationModel;
  * @author Michael Karneim
  * @beaninfo
  */
-public class ModelProvider extends AbstractBean implements IModelProvider {
+@SuppressWarnings("serial")
+public class ModelProvider extends AbstractBean implements IModelProvider, Serializable {
     private List<Subscription> subscriptions = new LinkedList<Subscription>();
     private PresentationModel presentationModel;
     private Class<? extends PresentationModel> presentationModelType;
@@ -34,6 +39,16 @@ public class ModelProvider extends AbstractBean implements IModelProvider {
         //
     }
 
+ // Serialization support.
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        s.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream s)
+        throws IOException, ClassNotFoundException {
+        s.defaultReadObject();
+    }
+    
     /**
      * Constructs an empty <code>ModelProvider</code> for the given
      * presentationModel type.
@@ -124,6 +139,9 @@ public class ModelProvider extends AbstractBean implements IModelProvider {
 
     /** {@inheritDoc} */
     public void addModelProviderListener(Path path, ModelProviderListener l) {
+        if ( this.subscriptions == null) {
+            throw new IllegalStateException();
+        }
         Subscription binding = new Subscription(path, l);
         List<Subscription> newBindings = new LinkedList<Subscription>(this.subscriptions);
         newBindings.add(binding);
@@ -157,7 +175,7 @@ public class ModelProvider extends AbstractBean implements IModelProvider {
      * {@link ModelProviderListener} whenever a reference on a given
      * {@link Path} changes.
      */
-    private class Subscription implements PropertyChangeListener {
+    private class Subscription implements PropertyChangeListener, Serializable {
         final Path path;
         final ModelProviderListener listener;
         private PathObservation observation;

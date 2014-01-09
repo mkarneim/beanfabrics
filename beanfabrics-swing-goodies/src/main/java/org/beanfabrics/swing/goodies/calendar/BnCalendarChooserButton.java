@@ -12,6 +12,7 @@ import org.beanfabrics.Path;
 /**
  * @author Max Gensthaler
  */
+@SuppressWarnings("serial")
 public class BnCalendarChooserButton extends DatePMCalendarChooserButton implements ModelSubscriber {
     private final Link link = new Link(this);
 

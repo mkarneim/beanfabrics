@@ -7,6 +7,7 @@ package org.beanfabrics.swing;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import javax.swing.JLabel;
 
@@ -34,7 +35,8 @@ import org.beanfabrics.model.IValuePM;
 public class BnIconLabel extends JLabel implements View<IIconPM>, ModelSubscriber {
     private final Link link = new Link(this);
 
-    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final PropertyChangeListener listener = new MyWeakPropertyChangeListener();
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }

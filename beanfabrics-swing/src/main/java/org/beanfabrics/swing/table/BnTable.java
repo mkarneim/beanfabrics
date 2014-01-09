@@ -13,6 +13,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
@@ -48,11 +49,9 @@ import org.beanfabrics.swing.table.celleditor.BnTableCellEditor;
 import org.beanfabrics.swing.table.cellrenderer.BnTableCellRenderer;
 
 /**
- * The <code>BnTable</code> is a {@link JTable} that can subscribe to an
- * {@link IListPM}.
+ * The <code>BnTable</code> is a {@link JTable} that can subscribe to an {@link IListPM}.
  * <p>
- * For an example about using BnTable, please see <a
- * href="http://www.beanfabrics.org/index.php/BnTable"
+ * For an example about using BnTable, please see <a href="http://www.beanfabrics.org/index.php/BnTable"
  * target="parent">http://www.beanfabrics.org/index.php/BnTable</a>
  * </p>
  * 
@@ -63,7 +62,9 @@ import org.beanfabrics.swing.table.cellrenderer.BnTableCellRenderer;
 public class BnTable extends JTable implements View<IListPM<? extends PresentationModel>>, ModelSubscriber {
     private final static Logger LOG = LoggerFactory.getLogger(BnTable.class);
 
-    private transient final ListAdapter listListener = new WeakListAdapter() {
+    private final ListAdapter listListener = new MyWeakListAdapter();
+
+    private class MyWeakListAdapter extends WeakListAdapter implements Serializable {
         public void elementsAdded(ElementsAddedEvent evt) {
             cancelCellEditing();
         }
@@ -77,6 +78,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
                 getCellEditor().cancelCellEditing();
         }
     };
+
     private final Link link = new Link(this);
     private IListPM<? extends PresentationModel> presentationModel;
     private List<BnColumn> columns = Collections.emptyList();
@@ -113,7 +115,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         if (isConnected()) {
             TableModel tblModel = getModel();
             if (tblModel instanceof BnTableModel) {
-                ((BnTableModel)tblModel).setCellEditingAllowed(this.cellEditingAllowed);
+                ((BnTableModel) tblModel).setCellEditingAllowed(this.cellEditingAllowed);
             }
         }
         this.firePropertyChange("cellEditingAllowed", oldValue, newValue);
@@ -184,8 +186,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     }
 
     /**
-     * Returns whether or not this component is connected to the target
-     * {@link AbstractPM} to synchronize with.
+     * Returns whether or not this component is connected to the target {@link AbstractPM} to synchronize with.
      * 
      * @return <code>true</code> if this component is connected
      */
@@ -194,30 +195,20 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     }
 
     protected void connect() {
-        // if (this.columns == null || this.listEditor == null) {
-        // return;
-        // }
-        if (this.columns == null) {
+        if (this.columns == null || this.presentationModel == null) {
             return;
         }
-        final IListPM<? extends PresentationModel> currListMdl;
-        if (this.presentationModel == null) {
-            currListMdl = new ListPM<PresentationModel>();
-        } else {
-            currListMdl = this.presentationModel;
-        }
-        if (this.presentationModel != null) {
-            this.presentationModel.addListListener(listListener);
-        }
 
-        this.setModel(new BnTableModel(currListMdl, this.columns, this.cellEditingAllowed));
+        this.presentationModel.addListListener(listListener);
+
+        this.setModel(new BnTableModel(presentationModel, this.columns, this.cellEditingAllowed));
 
         if (isSortable()) {
             installSortingFeature();
         }
         // now install the selection model
         int currentSelectionMode = getSelectionModel().getSelectionMode();
-        BnTableSelectionModel newModel = new BnTableSelectionModel(currListMdl);
+        BnTableSelectionModel newModel = new BnTableSelectionModel(presentationModel);
         newModel.setSelectionMode(currentSelectionMode);
 
         this.setSelectionModel(newModel);
@@ -229,7 +220,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         installRowSorter();
         JTableHeader header = getTableHeader();
         if (header instanceof Java5SortingTableHeader) {
-            Java5SortingTableHeader headerJ5 = (Java5SortingTableHeader)header;
+            Java5SortingTableHeader headerJ5 = (Java5SortingTableHeader) header;
             headerJ5.setSortable(true);
         }
     }
@@ -238,7 +229,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         uninstallRowSorter();
         JTableHeader header = getTableHeader();
         if (header instanceof Java5SortingTableHeader) {
-            Java5SortingTableHeader headerJ5 = (Java5SortingTableHeader)header;
+            Java5SortingTableHeader headerJ5 = (Java5SortingTableHeader) header;
             headerJ5.setSortable(false);
         }
     }
@@ -298,9 +289,8 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     }
 
     /**
-     * Returns the default table header object, which is dependent on the Java
-     * version. In Java 5 a {@link Java5SortingTableHeader} is returned. In Java
-     * 6 and later the standard {@link JTableHeader} is returned.
+     * Returns the default table header object, which is dependent on the Java version. In Java 5 a
+     * {@link Java5SortingTableHeader} is returned. In Java 6 and later the standard {@link JTableHeader} is returned.
      * 
      * @return the default table header object
      * @see JTableHeader
@@ -346,14 +336,14 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         ListSelectionModel selModel = getSelectionModel();
         int currentSelectionMode = selModel.getSelectionMode();
         if (selModel instanceof BnTableSelectionModel) {
-            ((BnTableSelectionModel)selModel).dismiss();
+            ((BnTableSelectionModel) selModel).dismiss();
         }
         setSelectionModel(createDefaultSelectionModel());
         getSelectionModel().setSelectionMode(currentSelectionMode);
         // process table model
         TableModel tblModel = getModel();
         if (tblModel instanceof BnTableModel) {
-            ((BnTableModel)tblModel).dismiss();
+            ((BnTableModel) tblModel).dismiss();
         }
         setModel(createDefaultDataModel());
 
@@ -402,12 +392,11 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     }
 
     /**
-     * Extension that auto-resizes the columns according to the settings of the
-     * columns.
+     * Extension that auto-resizes the columns according to the settings of the columns.
      * 
      * @author Michael Karneim
      */
-    class AutoResizeExtension {
+    class AutoResizeExtension implements Serializable {
         private boolean pending_columnMarginChanged = false;
 
         AutoResizeExtension() {
@@ -435,11 +424,9 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         }
 
         /**
-         * This extension is only enabled if the standard auto resize mode is
-         * off.
+         * This extension is only enabled if the standard auto resize mode is off.
          * 
-         * @return <code>true</code> if this extension is enabled, else
-         *         <code>false</code>
+         * @return <code>true</code> if this extension is enabled, else <code>false</code>
          */
         private boolean isEnabled() {
             return getAutoResizeMode() == JTable.AUTO_RESIZE_OFF && columns != null;
@@ -498,7 +485,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
             int stillSpaceLeft = spaceLeft - additionalSpacePerColumn * (getColumnCount() - getColumnsWithFixedWidth());
 
             // now distribute the space over all columns
-            //			int resizingColumnViewIndex = getResizingColumnViewIndex();
+            // int resizingColumnViewIndex = getResizingColumnViewIndex();
             // TODO (mk) use resizingColumnViewIndex
             for (int viewIndex = 0; viewIndex < getColumnCount(); ++viewIndex) {
                 TableColumn col = getColumnModel().getColumn(viewIndex);
@@ -523,7 +510,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
             if (parent == null || parent instanceof JViewport == false) {
                 return -1;
             }
-            int result = ((JViewport)parent).getSize().width;
+            int result = ((JViewport) parent).getSize().width;
             return result;
         }
 
@@ -571,7 +558,7 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
             if (p instanceof JViewport) {
                 Container gp = p.getParent();
                 if (gp instanceof JScrollPane) {
-                    JScrollPane scrollPane = (JScrollPane)gp;
+                    JScrollPane scrollPane = (JScrollPane) gp;
                     // Make certain we are the viewPort's view and not, for
                     // example, the rowHeaderView of the scrollPane -
                     // an implementor of fixed columns might do this.

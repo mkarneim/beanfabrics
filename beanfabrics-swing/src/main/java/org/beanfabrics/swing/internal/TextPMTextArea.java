@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
@@ -22,8 +23,7 @@ import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.ErrorIconPainter;
 
 /**
- * The <code>TextPMTextArea</code> is a {@link JTextArea} that is a view on an
- * {@link ITextPM}.
+ * The <code>TextPMTextArea</code> is a {@link JTextArea} that is a view on an {@link ITextPM}.
  * 
  * @author Michael Karneim
  */
@@ -32,11 +32,14 @@ public class TextPMTextArea extends JTextArea implements View<ITextPM> {
     private boolean selectAllOnFocusGainedEnabled = false;
     private boolean reformatOnFocusLostEnabled = true;
     private BnPlainDocument document;
-    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final PropertyChangeListener listener = new MyWeakPropertyChangeListener();
+
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }
-    };
+    }
+
     private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
 
     public TextPMTextArea(int rows, int columns) {
@@ -109,7 +112,7 @@ public class TextPMTextArea extends JTextArea implements View<ITextPM> {
         if (this.isConnected())
             throw new IllegalStateException("The document was initialized already.");
         if (document instanceof BnPlainDocument)
-            this.document = (BnPlainDocument)document;
+            this.document = (BnPlainDocument) document;
         super.setDocument(document);
     }
 
@@ -135,12 +138,10 @@ public class TextPMTextArea extends JTextArea implements View<ITextPM> {
     }
 
     /**
-     * Returns whether this component is connected to the target
-     * {@link PresentationModel} to synchronize with. This is a convenience
-     * method.
+     * Returns whether this component is connected to the target {@link PresentationModel} to synchronize with. This is
+     * a convenience method.
      * 
-     * @return <code>true</code> when this component is connected, else
-     *         <code>false</code>
+     * @return <code>true</code> when this component is connected, else <code>false</code>
      */
     boolean isConnected() {
         return this.document != null && this.document.getPresentationModel() != null;
@@ -153,7 +154,8 @@ public class TextPMTextArea extends JTextArea implements View<ITextPM> {
         final ITextPM pModel = this.getPresentationModel();
         if (pModel != null) {
             this.setEnabled(true);
-            this.setToolTipText(pModel.isValid() == false ? pModel.getValidationState().getMessage() : pModel.getDescription());
+            this.setToolTipText(pModel.isValid() == false ? pModel.getValidationState().getMessage() : pModel
+                    .getDescription());
             this.setEditable(pModel.isEditable());
         } else {
             this.setEnabled(false);

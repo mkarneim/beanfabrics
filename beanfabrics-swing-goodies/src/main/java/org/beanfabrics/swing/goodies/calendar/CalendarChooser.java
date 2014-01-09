@@ -12,6 +12,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,6 +49,8 @@ import javax.swing.border.EmptyBorder;
  * @version 4.0
  */
 public class CalendarChooser extends JPanel {
+    private static final String FORWARD_ACTION = "forward";
+    private static final String BACK_Action = "back";
     private final static ArrowIcon LEFT_ICON = new ArrowIcon(ArrowIcon.LEFT);
     private final static ArrowIcon RIGHT_ICON = new ArrowIcon(ArrowIcon.RIGHT);
     public static final String SELECTEDDATE_PROPERTYNAME = MonthPanel.SELECTEDDATE_PROPERTYNAME;
@@ -70,38 +73,56 @@ public class CalendarChooser extends JPanel {
     private JButton oneMonthBack = new JButton(LEFT_ICON);
     private JButton oneMonthForward = new JButton(RIGHT_ICON);
 
-    private transient ActionListener rollBackListener = null;
-    private transient ActionListener rollForwardListener = null;
-    private transient final ActionListener monthActionListener;
-    private transient ArrayList<ActionListener> actionListeners;
+    private final ActionListener actionListener = new MyActionListener();
+
+    @SuppressWarnings("serial")
+    private class MyActionListener implements ActionListener, Serializable {
+
+        public void actionPerformed(ActionEvent e) {
+            if (BACK_Action.equals(e.getActionCommand())) {
+                CalendarChooser.this.rollOneMonthBack();
+            } else if (FORWARD_ACTION.equals(e.getActionCommand())) {
+                CalendarChooser.this.rollOneMonthForward();
+            }
+        }
+
+    };
+
+    private final ActionListener monthActionListener = new MonthActionListener();
+
+    @SuppressWarnings("serial")
+    private class MonthActionListener implements ActionListener, Serializable {
+        public void actionPerformed(ActionEvent e) {
+            MonthPanel monthPanel = (MonthPanel) e.getSource();
+            Date selDate = monthPanel.getSelectedDate();
+            setSelectedDate(selDate, false);
+            fireActionPerformed(new ActionEvent(CalendarChooser.this, e.getID(), e.getActionCommand(), e.getWhen(),
+                    e.getModifiers()));
+        }
+    };
+
+    private ArrayList<ActionListener> actionListeners;
 
     /**
-     * Creates a new instance of CalendarBean displaying the current month using
-     * the default locale.
+     * Creates a new instance of CalendarBean displaying the current month using the default locale.
      */
     public CalendarChooser() {
         this(new Date(), Locale.getDefault());
     }
 
     /**
-     * Creates a new instance of CalendarBean displaying the given month and
-     * using the given locale.
+     * Creates a new instance of CalendarBean displaying the given month and using the given locale.
      * 
-     * @param date the date that initially should be selected
-     * @param locale the locale that should be used for the calendar
+     * @param date
+     *            the date that initially should be selected
+     * @param locale
+     *            the locale that should be used for the calendar
      */
     public CalendarChooser(Date date, Locale locale) {
         this.locale = locale;
         this.centerMonthPanel = new MonthPanel(date, locale, this.group);
         this.centerMonthPanel.setConfiguration(this.config);
-        this.monthActionListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                MonthPanel monthPanel = (MonthPanel)e.getSource();
-                Date selDate = monthPanel.getSelectedDate();
-                CalendarChooser.this.setSelectedDate(selDate, false);
-                CalendarChooser.this.fireActionPerformed(new ActionEvent(CalendarChooser.this, e.getID(), e.getActionCommand(), e.getWhen(), e.getModifiers()));
-            }
-        };
+
         this.centerMonthPanel.addActionListener(this.monthActionListener);
 
         this.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -109,38 +130,23 @@ public class CalendarChooser extends JPanel {
         this.gridLayout.setVgap(2);
         this.setLayout(new BorderLayout(1, 1));
 
+        oneMonthBack.setActionCommand(BACK_Action);
+        oneMonthBack.addActionListener(actionListener);
+        oneMonthForward.setActionCommand(FORWARD_ACTION);
+        oneMonthForward.addActionListener(actionListener);
+
         this.initGui();
         this.setDates(date, date);
     }
 
     /**
-     * Builds or Rebuilds the graphical user interface of the calendar. This
-     * method is called by the constructor or whenever properties like font
-     * colors or font sizes are changed.
+     * Builds or Rebuilds the graphical user interface of the calendar. This method is called by the constructor or
+     * whenever properties like font colors or font sizes are changed.
      */
     protected void initGui() {
         // Remove all components from this panel in order to begin creating the
         // gui from scratch.
         this.removeAll();
-
-        // Prepare the action listeners for the
-        // roll forward and backward buttons.
-        if (this.rollBackListener == null) {
-            this.rollBackListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    CalendarChooser.this.rollOneMonthBack();
-                }
-            };
-            oneMonthBack.addActionListener(this.rollBackListener);
-        }
-        if (this.rollForwardListener == null) {
-            this.rollForwardListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    CalendarChooser.this.rollOneMonthForward();
-                }
-            };
-            oneMonthForward.addActionListener(this.rollForwardListener);
-        }
 
         // Create the calandar panel which contains all the toggle buttons
         // for the days of the currently dispayed month, and the header with
@@ -218,8 +224,10 @@ public class CalendarChooser extends JPanel {
     /**
      * Sets the displayed month and the selected date.
      * 
-     * @param month the month to show
-     * @param selectedDate the date to select
+     * @param month
+     *            the month to show
+     * @param selectedDate
+     *            the date to select
      */
     public void setDates(Date month, Date selectedDate) {
         this.setMonth(month);
@@ -229,7 +237,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Selects the given date and displays the month containing that date.
      * 
-     * @param date the date to select
+     * @param date
+     *            the date to select
      */
     public void setSelectedDate(Date date) {
         this.setSelectedDate(date, true);
@@ -238,12 +247,13 @@ public class CalendarChooser extends JPanel {
     /**
      * Selects the given date and displays the month containing that date.
      * 
-     * @param date the date to select
-     * @param rollToMonth boolean if true the panel scrolls to the respective
-     *            month
+     * @param date
+     *            the date to select
+     * @param rollToMonth
+     *            boolean if true the panel scrolls to the respective month
      */
     public void setSelectedDate(Date date, boolean rollToMonth) {
-        Date oldSelectedDate = this.selectedDate == null ? null : (Date)this.selectedDate.clone();
+        Date oldSelectedDate = this.selectedDate == null ? null : (Date) this.selectedDate.clone();
         this.centerMonthPanel.setSelectedDate(date, rollToMonth);
         this.selectedDate = date;
         this.refresh();
@@ -251,8 +261,7 @@ public class CalendarChooser extends JPanel {
     }
 
     /**
-     * Refreshes the pre- and post-MonthPanels according to the month of the
-     * centerMonthPanel.
+     * Refreshes the pre- and post-MonthPanels according to the month of the centerMonthPanel.
      */
     private void refresh() {
         Date month = this.centerMonthPanel.getMonth();
@@ -271,11 +280,12 @@ public class CalendarChooser extends JPanel {
     }
 
     /**
-     * Returns a date that is the result of the summation of the given date and
-     * the given number of months.
+     * Returns a date that is the result of the summation of the given date and the given number of months.
      * 
-     * @param date Date
-     * @param months int
+     * @param date
+     *            Date
+     * @param months
+     *            int
      * @return Date
      */
     private static Date addMonths(Date date, int months) {
@@ -306,7 +316,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Sets the given month to display on the calndar panel.
      * 
-     * @param month Date
+     * @param month
+     *            Date
      */
     public void setMonth(Date month) {
         this.centerMonthPanel.setMonth(month);
@@ -325,14 +336,15 @@ public class CalendarChooser extends JPanel {
     }
 
     /**
-     * Adds the given action listnener to this component. All action listeners
-     * will be informed about changes that are made to the selected date of this
-     * calendar.
+     * Adds the given action listnener to this component. All action listeners will be informed about changes that are
+     * made to the selected date of this calendar.
      * 
-     * @param l the listener to add to this component
+     * @param l
+     *            the listener to add to this component
      */
     public synchronized void addActionListener(ActionListener l) {
-        ArrayList<ActionListener> als = actionListeners == null ? new ArrayList<ActionListener>(2) : new ArrayList<ActionListener>(actionListeners);
+        ArrayList<ActionListener> als = actionListeners == null ? new ArrayList<ActionListener>(2)
+                : new ArrayList<ActionListener>(actionListeners);
         if (!als.contains(l)) {
             als.add(l);
             actionListeners = als;
@@ -340,10 +352,10 @@ public class CalendarChooser extends JPanel {
     }
 
     /**
-     * Fires the given action event to all listeners that are added to this
-     * component.
+     * Fires the given action event to all listeners that are added to this component.
      * 
-     * @param e the event to fire
+     * @param e
+     *            the event to fire
      */
     protected void fireActionPerformed(ActionEvent e) {
         if (actionListeners != null) {
@@ -356,7 +368,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Changes the color of the weekend day font.
      * 
-     * @param weekendColor the new color for the weekend day font
+     * @param weekendColor
+     *            the new color for the weekend day font
      */
     public void setWeekendColor(Color weekendColor) {
         this.config.setWeekendForegroundColor(weekendColor);
@@ -375,7 +388,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Changes the color of the workday font.
      * 
-     * @param workdayColor the new color for the workday font
+     * @param workdayColor
+     *            the new color for the workday font
      */
     public void setWorkdayColor(Color workdayColor) {
         this.config.setWorkdayForegroundColor(workdayColor);
@@ -394,7 +408,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Changes the color of the selected day font.
      * 
-     * @param selectedColor the new color for the selected day font
+     * @param selectedColor
+     *            the new color for the selected day font
      */
     public void setSelectedColor(Color selectedColor) {
         this.config.setSelectedColor(selectedColor);
@@ -413,8 +428,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Changes the color of the selected day background.
      * 
-     * @param selectedBackgroundColor the new color for the selected day
-     *            background
+     * @param selectedBackgroundColor
+     *            the new color for the selected day background
      */
     public void setSelectedBackgroundColor(Color selectedBackgroundColor) {
         this.config.setSelectedBackgroundColor(selectedBackgroundColor);
@@ -433,7 +448,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Changes the color of the background of the days.
      * 
-     * @param dayBackground the new color for the background ofvthe days
+     * @param dayBackground
+     *            the new color for the background ofvthe days
      */
     public void setDayBackground(Color dayBackground) {
         this.config.setBackgroundColor(dayBackground);
@@ -452,7 +468,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Changes the font of the header of the days.
      * 
-     * @param headerFont the font of the header of the days
+     * @param headerFont
+     *            the font of the header of the days
      */
     public void setHeaderFont(Font headerFont) {
         this.config.setHeaderFont(headerFont);
@@ -471,7 +488,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Changes the currently used foreground color of the header.
      * 
-     * @param c the foreground color of the header
+     * @param c
+     *            the foreground color of the header
      */
     public void setHeaderForegroundColor(Color c) {
         this.config.setHeaderForegroundColor(c);
@@ -490,7 +508,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Changes the font of the days displayed on the calendar panel.
      * 
-     * @param dayFont the font of the days displayed on the calendar panel
+     * @param dayFont
+     *            the font of the days displayed on the calendar panel
      */
     public void setDayFont(Font dayFont) {
         this.config.setDayFont(dayFont);
@@ -498,21 +517,20 @@ public class CalendarChooser extends JPanel {
     }
 
     /**
-     * Returns the currently used font of the days displayed on the calendar
-     * panel.
+     * Returns the currently used font of the days displayed on the calendar panel.
      * 
-     * @return the currently used font of the days displayed on the calendar
-     *         panel
+     * @return the currently used font of the days displayed on the calendar panel
      */
     public Font getDayFont() {
         return this.config.getDayFont();
     }
 
     /**
-     * Changes the font of the title of the calendar panel, which displays the
-     * currently displayed month's name and the year.
+     * Changes the font of the title of the calendar panel, which displays the currently displayed month's name and the
+     * year.
      * 
-     * @param dateFont the new font for the title
+     * @param dateFont
+     *            the new font for the title
      */
     public void setDateFont(Font dateFont) {
         this.config.setDateFont(dateFont);
@@ -520,8 +538,8 @@ public class CalendarChooser extends JPanel {
     }
 
     /**
-     * Returns the currently used font of the title of the calendar panel, which
-     * displays the currently displayed month's name and the year.
+     * Returns the currently used font of the title of the calendar panel, which displays the currently displayed
+     * month's name and the year.
      * 
      * @return the currently used font for the title
      */
@@ -532,7 +550,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Changes the margin of each days button.
      * 
-     * @param dayMargin the margin of each days button
+     * @param dayMargin
+     *            the margin of each days button
      */
     public void setDayMargin(Insets dayMargin) {
         this.config.setDayMargin(dayMargin);
@@ -551,7 +570,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Changes the margin of each days button.
      * 
-     * @param dayMargin the margin of each days button
+     * @param dayMargin
+     *            the margin of each days button
      */
     public void setRollButtonSize(Dimension newSize) {
         this.rollButtonSize = newSize;
@@ -570,7 +590,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Sets the number of months that are visible ahead the current month.
      * 
-     * @param number number of previous visible months
+     * @param number
+     *            number of previous visible months
      */
     public void setNumberOfPreviousVisibleMonths(int number) {
         if (number < 0) {
@@ -593,7 +614,8 @@ public class CalendarChooser extends JPanel {
     /**
      * Sets the number of months that are visible behind the current month.
      * 
-     * @param number number of subsequent visible months
+     * @param number
+     *            number of subsequent visible months
      */
     public void setNumberOfSubsequentVisibleMonths(int number) {
         if (number < 0) {

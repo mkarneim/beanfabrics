@@ -6,6 +6,7 @@ package org.beanfabrics.swing.goodies.calendar;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Link;
@@ -18,12 +19,10 @@ import org.beanfabrics.model.IDatePM;
 /**
  * @author Michael Karneim
  */
-// TODO UNIT TEST
-// TODO this class is NOT working correctly right now
-// TODO add a listener to superclass and sync selected date into {@link DatePM}
 @SuppressWarnings("serial")
 public class BnCalendarChooser extends CalendarChooser implements View<IDatePM>, ModelSubscriber {
-    private transient PropertyChangeListener pcl = new WeakPropertyChangeListener() {
+    private PropertyChangeListener pcl = new MyWeakPropertyChangeListener();
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }

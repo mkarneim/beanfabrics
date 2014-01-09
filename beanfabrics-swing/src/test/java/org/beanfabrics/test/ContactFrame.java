@@ -5,6 +5,7 @@
 package org.beanfabrics.test;
 
 import java.awt.BorderLayout;
+import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.JFrame;
@@ -36,7 +37,8 @@ public class ContactFrame extends JFrame implements View<ContactPM>, ModelSubscr
         ContactPM pModel = new ContactPM();
         pModel.firstname.setText("Charly");
         pModel.lastname.setText("Chaplin");
-        pModel.birthday.setText("16.4.1889");
+        pModel.isMarried.setBoolean(true);
+        pModel.birthday.setText("Apr 16, 1889");
         pModel.address.country.setText("USA");
 
         ModelProvider provider = new ModelProvider();

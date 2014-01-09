@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.io.Serializable;
 
 import javax.swing.Icon;
 
@@ -19,7 +20,7 @@ import javax.swing.Icon;
  * 
  * @author Michael Karneim
  */
-class ArrowIcon implements Icon {
+class ArrowIcon implements Icon, Serializable {
     public static final int UP = 1;
     public static final int LEFT = 2;
     public static final int DOWN = 3;

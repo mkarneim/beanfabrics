@@ -10,6 +10,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import javax.swing.JToggleButton;
 
@@ -31,11 +32,13 @@ public class BooleanPMToggleButton extends JToggleButton implements View<IBoolea
     private IBooleanPM pModel;
     private boolean textSetManually = false;
 
-    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final PropertyChangeListener listener = new MyWeakPropertyChangeListener();
+    
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }
-    };
+    }
 
     public BooleanPMToggleButton() {
         this.setEnabled(false);

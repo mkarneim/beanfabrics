@@ -7,6 +7,7 @@
 package org.beanfabrics.swing.internal;
 
 import java.awt.event.ActionEvent;
+import java.io.Serializable;
 
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
@@ -19,8 +20,7 @@ import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.util.ExceptionUtil;
 
 /**
- * The <code>OperationPMMenuItem</code> is a {@link JMenuItem} that is a view on
- * an {@link IOperationPM}.
+ * The <code>OperationPMMenuItem</code> is a {@link JMenuItem} that is a view on an {@link IOperationPM}.
  * 
  * @author Max Gensthaler
  */
@@ -33,11 +33,13 @@ public class OperationPMMenuItem extends JMenuItem implements View<IOperationPM>
     private boolean iconSetManually = false;
     private boolean textSetManually = false;
 
-    private transient final WeakPropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final WeakPropertyChangeListener listener = new MyWeakPropertyChangeListener();
+
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             refresh();
         }
-    };
+    }
 
     public OperationPMMenuItem() {
         super();
@@ -73,12 +75,10 @@ public class OperationPMMenuItem extends JMenuItem implements View<IOperationPM>
     }
 
     /**
-     * Returns whether this component is connected to the target
-     * {@link PresentationModel} to synchronize with. This is a convenience
-     * method.
+     * Returns whether this component is connected to the target {@link PresentationModel} to synchronize with. This is
+     * a convenience method.
      * 
-     * @return <code>true</code> when this component is connected, else
-     *         <code>false</code>
+     * @return <code>true</code> when this component is connected, else <code>false</code>
      */
     boolean isConnected() {
         return this.pModel != null;
@@ -88,9 +88,9 @@ public class OperationPMMenuItem extends JMenuItem implements View<IOperationPM>
     protected void fireActionPerformed(ActionEvent evt) {
         if (this.isConnected() && this.isAutoExecute()) {
             try {
-            	boolean doContinue = this.execute();
-                if ( doContinue) {
-                	super.fireActionPerformed(evt);
+                boolean doContinue = this.execute();
+                if (doContinue) {
+                    super.fireActionPerformed(evt);
                 }
             } catch (Throwable t) {
                 ExceptionUtil.getInstance().handleException("Error during invocation of operation", t);
@@ -100,14 +100,12 @@ public class OperationPMMenuItem extends JMenuItem implements View<IOperationPM>
         }
     }
 
-    protected boolean execute()
-        throws Throwable {
+    protected boolean execute() throws Throwable {
         return this.pModel.execute();
     }
 
     /**
-     * Configures this component depending on the target {@link AbstractPM}s
-     * attributes.
+     * Configures this component depending on the target {@link AbstractPM}s attributes.
      */
     protected void refresh() {
         if (this.isConnected()) {
