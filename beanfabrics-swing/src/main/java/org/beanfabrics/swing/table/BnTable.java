@@ -26,6 +26,7 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -195,7 +196,16 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     }
 
     protected void connect() {
-        if (this.columns == null || this.presentationModel == null) {
+        if (this.columns == null ) {
+            return;
+        }
+        if ( this.presentationModel == null) {
+            // set dummy model, in order to show column headers even if PM is not bound.
+            DefaultTableModel dummyModel = new DefaultTableModel();
+            for( BnColumn col: columns) {
+                dummyModel.addColumn( col.getColumnName());
+            }
+            setModel( dummyModel);
             return;
         }
 
