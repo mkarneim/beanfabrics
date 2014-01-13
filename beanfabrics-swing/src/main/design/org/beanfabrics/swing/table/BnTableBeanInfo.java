@@ -32,6 +32,7 @@ public class BnTableBeanInfo extends ModelSubscriberBeanInfo {
             final PropertyDescriptor pModel = new PropertyDescriptor("presentationModel", this.getBeanClass(), "getPresentationModel", "setPresentationModel");
 
             final PropertyDescriptor provider = new PropertyDescriptor("modelProvider", beanClass, "getModelProvider", "setModelProvider");
+            provider.setPreferred(true);
             final PropertyDescriptor path = new PropertyDescriptor("path", beanClass, "getPath", "setPath");
             final PropertyDescriptor columns = new PropertyDescriptor("columns", beanClass, "getColumns", "setColumns");
             columns.setBound(true);
