@@ -62,7 +62,7 @@ public class ValidationTest {
             }
 
             private void printEvent(String prefix, EventObject evt) {
-                System.out.println(prefix + evt);
+                //System.out.println(prefix + evt);
                 if (evt instanceof BnPropertyChangeEvent) {
                     printEvent(prefix + "  ", ((BnPropertyChangeEvent)evt).getCause());
                 }

@@ -7,6 +7,7 @@
 package org.beanfabrics.swing.internal;
 
 import java.awt.event.ActionEvent;
+import java.io.Serializable;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -41,11 +42,13 @@ public class OperationPMButton extends JButton implements View<IOperationPM> {
         setPresentationModel(pModel);
     }
 
-    private transient WeakPropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final WeakPropertyChangeListener listener = new MyWeakPropertyChangeListener();
+    
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             refresh();
         }
-    };
+    }
 
     private void init() {
         setEnabled(false);

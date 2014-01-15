@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Date;
 
@@ -34,7 +35,9 @@ public class DatePMCalendarChooserButton extends JButton implements View<IDatePM
     private static final URL ICON_URL = DatePMCalendarChooserButton.class.getResource("bn_calendarchooser_obj16.png");
     private static final ImageIcon ICON = new ImageIcon(ICON_URL);
 
-    private transient final WeakPropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final WeakPropertyChangeListener listener = new MyWeakPropertyChangeListener();
+
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             refresh();
         }
@@ -44,13 +47,29 @@ public class DatePMCalendarChooserButton extends JButton implements View<IDatePM
     private CalendarChooser calendarChooser;
     private JPopupMenu popup;
     private boolean dateSelected;
-    private transient final PropertyChangeListener calendarChooserListener = new PropertyChangeListener() {
+    private final ActionListener myActionListener = new MyActionListener();
+
+    private class MyActionListener implements ActionListener, Serializable {
+        public void actionPerformed(ActionEvent e) {
+
+            JPopupMenu popup = createPopup();
+            int x = DatePMCalendarChooserButton.this.getWidth() - popup.getPreferredSize().width;
+            int y = DatePMCalendarChooserButton.this.getHeight();
+            
+            dateSelected = false;
+            popup.show(DatePMCalendarChooserButton.this, x, y);
+        }
+    }
+
+    private final PropertyChangeListener calendarChooserListener = new MyPropertyChangeListener();
+
+    private class MyPropertyChangeListener implements PropertyChangeListener, Serializable {
         /**
-         * Listens for a "date" property change or a "selectedDate" property
-         * change event from the CalendarChooser. Updates the {@link DatePM} and
-         * closes the popup.
+         * Listens for a "date" property change or a "selectedDate" property change event from the CalendarChooser.
+         * Updates the {@link DatePM} and closes the popup.
          * 
-         * @param evt the event
+         * @param evt
+         *            the event
          */
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(CalendarChooser.SELECTEDDATE_PROPERTYNAME)) {
@@ -74,27 +93,7 @@ public class DatePMCalendarChooserButton extends JButton implements View<IDatePM
         super(ICON);
         this.setMargin(new Insets(0, 0, 0, 0));
         this.setContentAreaFilled(false);
-        this.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                JPopupMenu popup = createPopup();
-                int x = DatePMCalendarChooserButton.this.getWidth() - popup.getPreferredSize().width;
-                int y = DatePMCalendarChooserButton.this.getHeight();
-                try {
-                    Date date = getPresentationModel().getDate();
-                    getCalendarChooser().setSelectedDate(date);
-                    dateSelected = false;
-                    popup.show(DatePMCalendarChooserButton.this, x, y);
-                } catch (ConversionException ce) {
-                    // the date is invalid
-                    // -> open the calendar chooser with the default date
-                    getCalendarChooser().setSelectedDate(null);
-                    dateSelected = false;
-                    popup.show(DatePMCalendarChooserButton.this, x, y);
-                }
-
-            }
-        });
+        this.addActionListener(myActionListener);
         CalendarChooser cc = getCalendarChooser();
         cc.setNumberOfPreviousVisibleMonths(prevVisMonths);
         cc.setNumberOfSubsequentVisibleMonths(subsVisMonths);
@@ -121,12 +120,10 @@ public class DatePMCalendarChooserButton extends JButton implements View<IDatePM
     }
 
     /**
-     * Returns whether this component is connected to the target
-     * {@link PresentationModel} to synchronize with. This is a convenience
-     * method.
+     * Returns whether this component is connected to the target {@link PresentationModel} to synchronize with. This is
+     * a convenience method.
      * 
-     * @return <code>true</code> when this component is connected, else
-     *         <code>false</code>
+     * @return <code>true</code> when this component is connected, else <code>false</code>
      */
     boolean isConnected() {
         return this.pModel != null;
@@ -134,8 +131,15 @@ public class DatePMCalendarChooserButton extends JButton implements View<IDatePM
 
     private void refresh() {
         if (isConnected()) {
-            // no date to set because CalendarChooser get the date from pModel
-            // when the popup is opened
+            try {
+                Date date = getPresentationModel().getDate();
+                calendarChooser.setSelectedDate(date);
+            } catch (ConversionException ce) {
+                // the date is invalid
+                // -> clear the selected date from the calendar chooser component
+                calendarChooser.setSelectedDate(null);
+            }
+            
             final String tooltip;
             if (pModel.isValid()) {
                 tooltip = pModel.getDescription();
@@ -156,7 +160,8 @@ public class DatePMCalendarChooserButton extends JButton implements View<IDatePM
     /**
      * Set date to the model.
      * 
-     * @param date date to set
+     * @param date
+     *            date to set
      */
     private void setDate(Date date) {
         if (pModel != null) {
@@ -169,7 +174,7 @@ public class DatePMCalendarChooserButton extends JButton implements View<IDatePM
             this.popup = new JPopupMenu() {
                 @Override
                 public void setVisible(boolean b) {
-                    Boolean isCanceled = (Boolean)getClientProperty("JPopupMenu.firePopupMenuCanceled");
+                    Boolean isCanceled = (Boolean) getClientProperty("JPopupMenu.firePopupMenuCanceled");
                     if (b || (!b && dateSelected) || ((isCanceled != null) && !b && isCanceled.booleanValue())) {
                         super.setVisible(b);
                     }
@@ -197,11 +202,13 @@ public class DatePMCalendarChooserButton extends JButton implements View<IDatePM
 
     public void setCalendarChooser(CalendarChooser aCalendarChooser) {
         if (this.calendarChooser != null) {
-            this.calendarChooser.removePropertyChangeListener(CalendarChooser.SELECTEDDATE_PROPERTYNAME, this.calendarChooserListener);
+            this.calendarChooser.removePropertyChangeListener(CalendarChooser.SELECTEDDATE_PROPERTYNAME,
+                    this.calendarChooserListener);
         }
         this.calendarChooser = aCalendarChooser;
         if (this.calendarChooser != null) {
-            this.calendarChooser.addPropertyChangeListener(CalendarChooser.SELECTEDDATE_PROPERTYNAME, this.calendarChooserListener);
+            this.calendarChooser.addPropertyChangeListener(CalendarChooser.SELECTEDDATE_PROPERTYNAME,
+                    this.calendarChooserListener);
         }
     }
 

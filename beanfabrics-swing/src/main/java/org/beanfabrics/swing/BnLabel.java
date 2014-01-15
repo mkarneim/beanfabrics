@@ -7,6 +7,7 @@ package org.beanfabrics.swing;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -24,8 +25,7 @@ import org.beanfabrics.model.ITextPM;
 import org.beanfabrics.model.IValuePM;
 
 /**
- * The <code>BnLabel</code> is a {@link JLabel} that can subscribe to an
- * {@link ITextPM}.
+ * The <code>BnLabel</code> is a {@link JLabel} that can subscribe to an {@link ITextPM}.
  * 
  * @author Michael Karneim
  * @author Marcel Eyke
@@ -35,11 +35,14 @@ import org.beanfabrics.model.IValuePM;
 public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
     private final Link link = new Link(this);
 
-    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final PropertyChangeListener listener = new MyWeakPropertyChangeListener();
+
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }
     };
+
     private ITextPM pModel;
     private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
 
@@ -52,7 +55,8 @@ public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
     /**
      * Constructs a <code>BnLabel</code> and binds it to the specified model.
      * 
-     * @param pModel the model
+     * @param pModel
+     *            the model
      */
     public BnLabel(ITextPM pModel) {
         this();
@@ -60,8 +64,8 @@ public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
     }
 
     /**
-     * Constructs a <code>BnLabel</code> and subscribes it for the model at the
-     * specified Path provided by the given provider.
+     * Constructs a <code>BnLabel</code> and subscribes it for the model at the specified Path provided by the given
+     * provider.
      * 
      * @param provider
      * @param path
@@ -72,8 +76,8 @@ public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
     }
 
     /**
-     * Constructs a <code>BnLabel</code> and subscribes it for the model at the
-     * root level provided by the given provider.
+     * Constructs a <code>BnLabel</code> and subscribes it for the model at the root level provided by the given
+     * provider.
      * 
      * @param provider
      */
@@ -83,19 +87,16 @@ public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
     }
 
     /**
-     * Returns whether this component is connected to the target
-     * {@link AbstractPM} to synchronize with.
+     * Returns whether this component is connected to the target {@link AbstractPM} to synchronize with.
      * 
-     * @return <code>true</code> when this component is connected, else
-     *         <code>false</code>
+     * @return <code>true</code> when this component is connected, else <code>false</code>
      */
     boolean isConnected() {
         return this.pModel != null;
     }
 
     /**
-     * Configures this component depending on the target {@link AbstractPM} s
-     * attributes.
+     * Configures this component depending on the target {@link AbstractPM} s attributes.
      */
     private void refresh() {
         refreshText();
@@ -104,24 +105,23 @@ public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
     }
 
     /**
-     * Configures the tool tip of this component on the depending on the target
-     * {@link IValuePM}s attributes.
+     * Configures the tool tip of this component on the depending on the target {@link IValuePM}s attributes.
      */
     private void refreshToolTip() {
         if (this.pModel == null) {
             this.setToolTipText(null);
         } else {
-            this.setToolTipText(pModel.isValid() == false ? pModel.getValidationState().getMessage() : pModel.getDescription());
+            this.setToolTipText(pModel.isValid() == false ? pModel.getValidationState().getMessage() : pModel
+                    .getDescription());
         }
     }
 
     /**
-     * Configures the tool tip of this component on the depending on the target
-     * {@link IIconPM}s attributes.
+     * Configures the tool tip of this component on the depending on the target {@link IIconPM}s attributes.
      */
     private void refreshIcon() {
         if (this.pModel instanceof IIconPM) {
-            IIconPM iconEditor = (IIconPM)this.pModel;
+            IIconPM iconEditor = (IIconPM) this.pModel;
             this.setIcon(iconEditor.getIcon());
         } else {
             this.setIcon(null);
@@ -129,8 +129,7 @@ public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
     }
 
     /**
-     * Configures the text of this component on the depending on the target
-     * {@link ITextPM}s attributes.
+     * Configures the text of this component on the depending on the target {@link ITextPM}s attributes.
      */
     private void refreshText() {
         if (this.pModel == null) {
@@ -184,16 +183,16 @@ public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {
 
     private int invertHorizontalAlignment(int alignment) {
         switch (alignment) {
-            case SwingConstants.LEFT:
-                return SwingConstants.RIGHT;
-            case SwingConstants.RIGHT:
-                return SwingConstants.LEFT;
-            case SwingConstants.LEADING:
-                return SwingConstants.TRAILING;
-            case SwingConstants.TRAILING:
-                return SwingConstants.LEADING;
-            default:
-                return alignment;
+        case SwingConstants.LEFT:
+            return SwingConstants.RIGHT;
+        case SwingConstants.RIGHT:
+            return SwingConstants.LEFT;
+        case SwingConstants.LEADING:
+            return SwingConstants.TRAILING;
+        case SwingConstants.TRAILING:
+            return SwingConstants.LEADING;
+        default:
+            return alignment;
         }
     }
 

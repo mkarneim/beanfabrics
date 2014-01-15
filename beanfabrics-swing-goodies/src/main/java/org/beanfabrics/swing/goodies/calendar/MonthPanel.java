@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -67,44 +68,73 @@ public class MonthPanel extends JPanel {
     private JPanel controlPanel;
     private ButtonGroup group;
     private JLabel dateLabel = new JLabel("September 2000");
-    private ItemListener itemListener = null;
-    private ActionListener dayActionListener = null;
-    private transient Vector<ActionListener> actionListeners;
+    private final ItemListener itemListener = new MyItemListener();
+
+    private class MyItemListener implements ItemListener, Serializable {
+        public void itemStateChanged(ItemEvent e) {
+            if (pendingShowMonth) {
+                return;
+            } else {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String day = ((JToggleButton) e.getSource()).getText();
+                    try {
+                        int d = Integer.parseInt(day);
+                        MonthPanel.this.setSelectedDay(d);
+                    } catch (NumberFormatException ex) {
+                        // ignore
+                    }
+                } else {
+                    setSelectedDate((Date) null, false);
+                }
+            }
+        }
+    };
+
+    private final ActionListener dayActionListener = new MyActionListener();
+
+    private class MyActionListener implements ActionListener, Serializable {
+        public void actionPerformed(ActionEvent evt) {
+            fireActionPerformed(new ActionEvent(MonthPanel.this, ActionEvent.ACTION_PERFORMED, null));
+        }
+    };
+
+    private Vector<ActionListener> actionListeners;
 
     /**
-     * Creates a new instance of MonthPanel displaying the current month using
-     * the default locale.
+     * Creates a new instance of MonthPanel displaying the current month using the default locale.
      */
     public MonthPanel() {
         this(new Date(), Locale.getDefault(), new ButtonGroup());
     }
 
     /**
-     * Creates a new instance of MonthPanel displaying the given month and using
-     * the given locale.
+     * Creates a new instance of MonthPanel displaying the given month and using the given locale.
      * 
-     * @param date the date that initially should be selected
-     * @param locale the locale that should be used for the calendar
+     * @param date
+     *            the date that initially should be selected
+     * @param locale
+     *            the locale that should be used for the calendar
      */
     public MonthPanel(Date date, Locale locale) {
         this(date, locale, new ButtonGroup());
     }
 
     /**
-     * Creates a new instance of MonthPanel displaying the current month using
-     * the default locale.
+     * Creates a new instance of MonthPanel displaying the current month using the default locale.
      */
     public MonthPanel(ButtonGroup buttonGroup) {
         this(new Date(), Locale.getDefault(), buttonGroup);
     }
 
     /**
-     * Creates a new instance of MonthPanel displaying the given month and using
-     * the given locale.
+     * Creates a new instance of MonthPanel displaying the given month and using the given locale.
      * 
-     * @param date the date that initially should be selected
-     * @param locale the locale that should be used for the calendar
-     * @param buttonGroup ButtonGroup
+     * @param date
+     *            the date that initially should be selected
+     * @param locale
+     *            the locale that should be used for the calendar
+     * @param buttonGroup
+     *            ButtonGroup
      */
     public MonthPanel(Date date, Locale locale, ButtonGroup buttonGroup) {
         this.locale = locale;
@@ -132,7 +162,8 @@ public class MonthPanel extends JPanel {
     /**
      * Adds all 'day' buttons to the given button group.
      * 
-     * @param group ButtonGroup
+     * @param group
+     *            ButtonGroup
      */
     public void setButtonGroup(ButtonGroup group) {
         if (this.group != null) {
@@ -160,7 +191,8 @@ public class MonthPanel extends JPanel {
     /**
      * Sets the graphical configuration of this panel
      * 
-     * @param config Configuration
+     * @param config
+     *            Configuration
      */
     public void setConfiguration(Configuration config) {
         this.config = config;
@@ -170,7 +202,8 @@ public class MonthPanel extends JPanel {
     /**
      * Sets the component to be displayed in the left upper corner of this panel
      * 
-     * @param comp JComponent
+     * @param comp
+     *            JComponent
      */
     public void setLeftUpperCornerComponent(JComponent comp) {
         if (this.controlPanel != null && this.leftUpperCornerComponent != null) {
@@ -183,10 +216,10 @@ public class MonthPanel extends JPanel {
     }
 
     /**
-     * Sets the component to be displayed in the right upper corner of this
-     * panel
+     * Sets the component to be displayed in the right upper corner of this panel
      * 
-     * @param comp JComponent
+     * @param comp
+     *            JComponent
      */
     public void setRightUpperCornerComponent(JComponent comp) {
         if (this.controlPanel != null && this.rightUpperCornerComponent != null) {
@@ -199,46 +232,14 @@ public class MonthPanel extends JPanel {
     }
 
     /**
-     * Builds or Rebuilds the graphical user interface of the calendar. This
-     * method is called by the constructor or whenever properties like font
-     * colors or font sizes are changed.
+     * Builds or Rebuilds the graphical user interface of the calendar. This method is called by the constructor or
+     * whenever properties like font colors or font sizes are changed.
      */
     public void initGui() {
         // Remove all components from this panel in order to begin creating the
         // gui
         // from scratch.
         this.removeAll();
-
-        // Prepare the ItemListener for the toggle buttons, that
-        // will select the day which is represented by the button.
-        if (this.itemListener == null) {
-            this.itemListener = new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    if (pendingShowMonth) {
-                        return;
-                    } else {
-                        if (e.getStateChange() == ItemEvent.SELECTED) {
-                            String day = ((JToggleButton)e.getSource()).getText();
-                            try {
-                                int d = Integer.parseInt(day);
-                                MonthPanel.this.setSelectedDay(d);
-                            } catch (NumberFormatException ex) {
-                                // ignore
-                            }
-                        } else {
-                            MonthPanel.this.setSelectedDate((Date)null, false);
-                        }
-                    }
-                }
-            };
-        }
-        if (this.dayActionListener == null) {
-            this.dayActionListener = new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    MonthPanel.this.fireActionPerformed(new ActionEvent(MonthPanel.this, ActionEvent.ACTION_PERFORMED, null));
-                }
-            };
-        }
 
         // Create all toggle buttons
         for (int y = 1; y < ROWS; y++) {
@@ -352,10 +353,11 @@ public class MonthPanel extends JPanel {
     /**
      * Sets the selected day of the visible month.
      * 
-     * @param dayInMonth int
+     * @param dayInMonth
+     *            int
      */
     public void setSelectedDay(int dayInMonth) {
-        Calendar cal = (Calendar)this.month.clone();
+        Calendar cal = (Calendar) this.month.clone();
         cal.set(Calendar.DATE, dayInMonth);
         this.setSelectedDate(cal.getTime());
     }
@@ -363,7 +365,8 @@ public class MonthPanel extends JPanel {
     /**
      * Selects the given date and displays the month containing that date.
      * 
-     * @param date the date to select
+     * @param date
+     *            the date to select
      */
     public void setSelectedDate(Date date) {
         this.setSelectedDate(date, true);
@@ -372,8 +375,10 @@ public class MonthPanel extends JPanel {
     /**
      * Sets the displayed month and the selected date.
      * 
-     * @param month the month to show
-     * @param selectedDate the date to select
+     * @param month
+     *            the month to show
+     * @param selectedDate
+     *            the date to select
      */
     public void setDates(Date month, Date selectedDate) {
         this.setMonth(month);
@@ -383,9 +388,10 @@ public class MonthPanel extends JPanel {
     /**
      * Selects the given date and displays the month containing that date.
      * 
-     * @param date the date to select
-     * @param rollToMonth boolean if true the panel scrolls to the respective
-     *            month
+     * @param date
+     *            the date to select
+     * @param rollToMonth
+     *            boolean if true the panel scrolls to the respective month
      */
     public void setSelectedDate(Date date, boolean rollToMonth) {
         if (date == null) {
@@ -396,7 +402,7 @@ public class MonthPanel extends JPanel {
             }
         } else {
             if (this.selectedDate == null) {
-                this.selectedDate = (Calendar)this.month.clone();
+                this.selectedDate = (Calendar) this.month.clone();
             }
             this.selectedDate.setTime(date);
             if (rollToMonth) {
@@ -430,7 +436,8 @@ public class MonthPanel extends JPanel {
     /**
      * Sets the given month to display on the panel.
      * 
-     * @param month Date
+     * @param month
+     *            Date
      */
     public void setMonth(Date month) {
         if (month == null)
@@ -442,13 +449,14 @@ public class MonthPanel extends JPanel {
     /**
      * Sets the given month to display on the panel.
      * 
-     * @param month the month to display
+     * @param month
+     *            the month to display
      */
     public void setMonth(Calendar month) {
         if (month == null)
             throw new NullPointerException("Illeagal null argument for month.");
-        this.month = (Calendar)month.clone();
-        this.format.setCalendar((Calendar)this.month.clone());
+        this.month = (Calendar) month.clone();
+        this.format.setCalendar((Calendar) this.month.clone());
         this.refresh();
     }
 
@@ -464,7 +472,8 @@ public class MonthPanel extends JPanel {
         this.pendingShowMonth = true;
         try {
             int selectedDay = -1; // NONE selected
-            if (selectedDate != null && (this.selectedDate.get(Calendar.YEAR) == this.month.get(Calendar.YEAR)) && (this.selectedDate.get(Calendar.MONTH) == this.month.get(Calendar.MONTH))) {
+            if (selectedDate != null && (this.selectedDate.get(Calendar.YEAR) == this.month.get(Calendar.YEAR))
+                    && (this.selectedDate.get(Calendar.MONTH) == this.month.get(Calendar.MONTH))) {
                 selectedDay = this.selectedDate.get(Calendar.DATE);
             }
             if (group != null) {
@@ -473,7 +482,8 @@ public class MonthPanel extends JPanel {
 
             int todayDate = -1;
             Calendar today = Calendar.getInstance();
-            if ((today.get(Calendar.YEAR) == this.month.get(Calendar.YEAR)) && (today.get(Calendar.MONTH) == this.month.get(Calendar.MONTH))) {
+            if ((today.get(Calendar.YEAR) == this.month.get(Calendar.YEAR))
+                    && (today.get(Calendar.MONTH) == this.month.get(Calendar.MONTH))) {
                 todayDate = today.get(Calendar.DATE);
             }
 
@@ -522,10 +532,14 @@ public class MonthPanel extends JPanel {
     /**
      * Configures the given button.
      * 
-     * @param btn JToggleButton
-     * @param dayOfMonth int
-     * @param selectedDay int
-     * @param todayDate int
+     * @param btn
+     *            JToggleButton
+     * @param dayOfMonth
+     *            int
+     * @param selectedDay
+     *            int
+     * @param todayDate
+     *            int
      */
     private void configure(JToggleButton btn, int dayOfMonth, int selectedDay, int todayDate) {
         if (dayOfMonth == selectedDay) {
@@ -546,11 +560,9 @@ public class MonthPanel extends JPanel {
     }
 
     /**
-     * Returns the human readable shortages for the week days beginning with the
-     * weeks first day at index 0.
+     * Returns the human readable shortages for the week days beginning with the weeks first day at index 0.
      * 
-     * @return an array of String containing the short names of the days of the
-     *         week
+     * @return an array of String containing the short names of the days of the week
      */
     protected String[] getDayNames() {
         // return this.dateSymbols.getShortWeekdays();
@@ -559,29 +571,29 @@ public class MonthPanel extends JPanel {
             int firstDayOfWeek = this.month.getFirstDayOfWeek();
             int delta;
             switch (firstDayOfWeek) {
-                case Calendar.SUNDAY:
-                    delta = 0;
-                    break;
-                case Calendar.MONDAY:
-                    delta = 1;
-                    break;
-                case Calendar.TUESDAY:
-                    delta = 2;
-                    break;
-                case Calendar.WEDNESDAY:
-                    delta = 3;
-                    break;
-                case Calendar.THURSDAY:
-                    delta = 4;
-                    break;
-                case Calendar.FRIDAY:
-                    delta = 5;
-                    break;
-                case Calendar.SATURDAY:
-                    delta = 6;
-                    break;
-                default:
-                    throw new Error("Unexpected Error. First day of month is non of Sun, Mon, Tue, Wed, Thu, Fri, Sat");
+            case Calendar.SUNDAY:
+                delta = 0;
+                break;
+            case Calendar.MONDAY:
+                delta = 1;
+                break;
+            case Calendar.TUESDAY:
+                delta = 2;
+                break;
+            case Calendar.WEDNESDAY:
+                delta = 3;
+                break;
+            case Calendar.THURSDAY:
+                delta = 4;
+                break;
+            case Calendar.FRIDAY:
+                delta = 5;
+                break;
+            case Calendar.SATURDAY:
+                delta = 6;
+                break;
+            default:
+                throw new Error("Unexpected Error. First day of month is non of Sun, Mon, Tue, Wed, Thu, Fri, Sat");
             }
 
             this.dayName = new String[7];
@@ -594,7 +606,7 @@ public class MonthPanel extends JPanel {
     }
 
     protected boolean isWeekend(int dayOfMonth) {
-        Calendar temp = (Calendar)this.month.clone();
+        Calendar temp = (Calendar) this.month.clone();
         temp.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         int dayName = temp.get(Calendar.DAY_OF_WEEK);
         if (dayName == Calendar.SATURDAY || dayName == Calendar.SUNDAY)
@@ -616,11 +628,11 @@ public class MonthPanel extends JPanel {
     private Calendar tempCal = null;
 
     /**
-     * Returns an two dimensional array of int, each containing the date of the
-     * given months day as they will appear on the toggle buttons on the
-     * calendar panel.
+     * Returns an two dimensional array of int, each containing the date of the given months day as they will appear on
+     * the toggle buttons on the calendar panel.
      * 
-     * @param month the month the array should be calculated for
+     * @param month
+     *            the month the array should be calculated for
      * @return an array of the dates of the days of the given month
      */
     protected/* static */int[][] getDatesForButtons(Calendar month) {
@@ -628,13 +640,13 @@ public class MonthPanel extends JPanel {
 
         this.tempDate.setTime(month.getTime().getTime());
         if (this.tempCal == null)
-            this.tempCal = (Calendar)month.clone();
+            this.tempCal = (Calendar) month.clone();
         this.tempCal.setTime(tempDate);
         Calendar day = tempCal;
 
         // Calendar day = (Calendar) month.clone();
         day.set(Calendar.DAY_OF_MONTH, 1);
-        //		int firstWeekDayOfMonth = day.get(Calendar.DAY_OF_WEEK);
+        // int firstWeekDayOfMonth = day.get(Calendar.DAY_OF_WEEK);
 
         // find the first day of the month in the first week
         int x = 0;
@@ -642,7 +654,7 @@ public class MonthPanel extends JPanel {
             day.roll(Calendar.DAY_OF_WEEK, false);
             x = x + 1;
         }
-        day = (Calendar)month.clone();
+        day = (Calendar) month.clone();
         day.set(Calendar.DAY_OF_MONTH, 1);
 
         for (int y = 0; y < 6; y++) {
@@ -658,12 +670,11 @@ public class MonthPanel extends JPanel {
     }
 
     /**
-     * Returns the formatted string of the given date, using the internal
-     * DateFormat as it was passed to the constructor of this class. This method
-     * is called by the routine that displays the title of the currently
-     * displayed month.
+     * Returns the formatted string of the given date, using the internal DateFormat as it was passed to the constructor
+     * of this class. This method is called by the routine that displays the title of the currently displayed month.
      * 
-     * @param date the dat to format
+     * @param date
+     *            the dat to format
      * @return the fromatted string
      */
     protected String formatDate(Date date) {
@@ -675,21 +686,22 @@ public class MonthPanel extends JPanel {
      */
     public synchronized void removeActionListener(ActionListener l) {
         if (actionListeners != null && actionListeners.contains(l)) {
-            Vector<ActionListener> v = (Vector<ActionListener>)actionListeners.clone();
+            Vector<ActionListener> v = (Vector<ActionListener>) actionListeners.clone();
             v.removeElement(l);
             actionListeners = v;
         }
     }
 
     /**
-     * Adds the given action listnener to this component. All action listeners
-     * will be informed about changes that are made to the selected date of this
-     * calendar.
+     * Adds the given action listnener to this component. All action listeners will be informed about changes that are
+     * made to the selected date of this calendar.
      * 
-     * @param l the listener to add to this component
+     * @param l
+     *            the listener to add to this component
      */
     public synchronized void addActionListener(ActionListener l) {
-        Vector<ActionListener> v = (actionListeners == null ? new Vector<ActionListener>(2) : (Vector<ActionListener>)actionListeners.clone());
+        Vector<ActionListener> v = (actionListeners == null ? new Vector<ActionListener>(2)
+                : (Vector<ActionListener>) actionListeners.clone());
         if (!v.contains(l)) {
             v.addElement(l);
             actionListeners = v;
@@ -697,10 +709,10 @@ public class MonthPanel extends JPanel {
     }
 
     /**
-     * Fires the given action event to all listeners that are added to this
-     * component.
+     * Fires the given action event to all listeners that are added to this component.
      * 
-     * @param e the event to fire
+     * @param e
+     *            the event to fire
      */
     protected void fireActionPerformed(ActionEvent e) {
         if (actionListeners != null) {

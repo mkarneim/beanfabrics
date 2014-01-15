@@ -14,6 +14,7 @@ import javax.swing.UIManager;
 /**
  * @author Michael Karneim
  */
+@SuppressWarnings("serial")
 public class MonthPanelUISettingsDefaults extends MonthPanelUISettings {
     private Font baseFont;
     private Color selectionForeground;

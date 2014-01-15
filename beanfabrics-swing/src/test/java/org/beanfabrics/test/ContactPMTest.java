@@ -49,10 +49,10 @@ public class ContactPMTest {
         contact.firstname.setText("Michael");
         contact.lastname.setText("Karneim");
         contact.birthday.setText("14.01.1971");
-        contact.hasWife.setBoolean(false);
+        contact.isMarried.setBoolean(false);
         assertEquals("contact.addChild.isEnabled()", false, contact.addChild.isEnabled());
 
-        contact.hasWife.setBoolean(true);
+        contact.isMarried.setBoolean(true);
         assertEquals("contact.addChild.isEnabled()", true, contact.addChild.isEnabled());
 
         contact.addChild.execute();

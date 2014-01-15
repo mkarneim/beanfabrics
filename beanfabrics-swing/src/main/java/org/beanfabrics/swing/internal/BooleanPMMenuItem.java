@@ -7,6 +7,7 @@
 package org.beanfabrics.swing.internal;
 
 import java.awt.event.ActionEvent;
+import java.io.Serializable;
 
 import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
@@ -32,11 +33,13 @@ public class BooleanPMMenuItem extends JCheckBoxMenuItem implements View<IBoolea
     private boolean iconSetManually = false;
     private boolean textSetManually = false;
 
-    private transient final WeakPropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final WeakPropertyChangeListener listener = new MyWeakPropertyChangeListener();
+    
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             refresh();
         }
-    };
+    }
 
     public BooleanPMMenuItem() {
         super();

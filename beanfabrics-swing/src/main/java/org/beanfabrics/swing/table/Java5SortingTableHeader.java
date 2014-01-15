@@ -9,6 +9,7 @@ package org.beanfabrics.swing.table;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.Serializable;
 import java.util.Collection;
 
 import javax.swing.table.JTableHeader;
@@ -22,13 +23,11 @@ import org.beanfabrics.model.IListPM;
 import org.beanfabrics.model.SortKey;
 
 /**
- * The <code>Java5SortingTableHeader</code> is a {@link JTableHeader} that adds
- * a basic sorting ability to the java5 table header. When the user clicks on a
- * column header the underlying {@link IListPM} is sorted by the associated
+ * The <code>Java5SortingTableHeader</code> is a {@link JTableHeader} that adds a basic sorting ability to the java5
+ * table header. When the user clicks on a column header the underlying {@link IListPM} is sorted by the associated
  * property's comparator. <pM> Please note:
  * <ul>
- * <li>that this header does not change the look of the table header - no
- * sorting arrow is added to the header.</li>
+ * <li>that this header does not change the look of the table header - no sorting arrow is added to the header.</li>
  * <li>the sorting feature works only for tables with a {@link BnTableModel}.</li>
  * </ul>
  * 
@@ -37,11 +36,14 @@ import org.beanfabrics.model.SortKey;
 @SuppressWarnings("serial")
 public class Java5SortingTableHeader extends JTableHeader {
     private final static Logger LOG = LoggerFactory.getLogger(Java5SortingTableHeader.class);
-    private transient final MouseListener mouseListener = new MouseAdapter() {
+    private final MouseListener mouseListener = new MyMouseAdapter();
+
+    private class MyMouseAdapter extends MouseAdapter implements Serializable {
         public void mouseClicked(MouseEvent e) {
             onClick(e);
         }
     };
+
     private boolean sortable;
 
     public Java5SortingTableHeader() {
@@ -83,7 +85,7 @@ public class Java5SortingTableHeader extends JTableHeader {
         }
         TableModel tblModel = getTable().getModel();
         if (tblModel instanceof BnTableModel) {
-            BnTableModel model = (BnTableModel)tblModel;
+            BnTableModel model = (BnTableModel) tblModel;
             IListPM listPM = model.getPresentationModel();
             Path path = model.getColumnPath(modelColIndex);
             SortKey newSortKey = getNewSortKey(listPM, path);
@@ -104,7 +106,7 @@ public class Java5SortingTableHeader extends JTableHeader {
             }
         }
         // else sort ascending
-        return new SortKey( /*ascending=*/true, path);
+        return new SortKey( /* ascending= */true, path);
     }
 
 }

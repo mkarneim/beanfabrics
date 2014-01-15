@@ -6,6 +6,7 @@
 // methods and fields are documented
 package org.beanfabrics.swing.table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,23 +32,25 @@ import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.model.SortKey;
 
 /**
- * The <code>BnTableModel</code> is a {@link TableModel} that decorates a
- * {@link IListPM}.
+ * The <code>BnTableModel</code> is a {@link TableModel} that decorates a {@link IListPM}.
  * <p>
- * To reduce work we decided to extend the {@link AbstractTableModel} in order
- * to get the event listener handling. All other methods are overridden.
+ * To reduce work we decided to extend the {@link AbstractTableModel} in order to get the event listener handling. All
+ * other methods are overridden.
  * </p>
  * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
 public class BnTableModel extends AbstractTableModel {
+    @SuppressWarnings("rawtypes")
     private IListPM list;
     private boolean cellEditingAllowed;
 
     private List<BnColumn> colDefs = new ArrayList<BnColumn>();
 
-    private transient ListListener listener = new WeakListListener() {
+    private final ListListener listener = new MyWeakListListener();
+
+    private class MyWeakListListener implements WeakListListener, Serializable {
         public void elementsSelected(ElementsSelectedEvent evt) {
             // ignore
         }
@@ -73,7 +76,7 @@ public class BnTableModel extends AbstractTableModel {
         }
     };
 
-    public BnTableModel(IListPM aListModel, List<BnColumn> colDefs, boolean editingAllowed) {
+    public BnTableModel(@SuppressWarnings("rawtypes") IListPM aListModel, List<BnColumn> colDefs, boolean editingAllowed) {
         if (aListModel == null) {
             throw new IllegalArgumentException("aListModel must not be null");
         }
@@ -177,9 +180,9 @@ public class BnTableModel extends AbstractTableModel {
         } else {
             final Object value = this.getValueAt(rowIndex, columnIndex);
             if (value instanceof IValuePM) {
-                return ((IValuePM)value).isEditable();
+                return ((IValuePM) value).isEditable();
             } else if (value instanceof IOperationPM) {
-                return ((IOperationPM)value).isEnabled();
+                return ((IOperationPM) value).isEnabled();
             } else {
                 return false;
             }
@@ -191,13 +194,13 @@ public class BnTableModel extends AbstractTableModel {
      * 
      * @return the underlying presentation model
      */
+    @SuppressWarnings("rawtypes")
     public IListPM getPresentationModel() {
         return this.list;
     }
 
     /**
-     * Returns the {@link SortKey} of the specified column or <code>null</code>
-     * if that column is not sorted.
+     * Returns the {@link SortKey} of the specified column or <code>null</code> if that column is not sorted.
      * 
      * @param col
      * @return the {@link SortKey} of the specified column
@@ -207,13 +210,25 @@ public class BnTableModel extends AbstractTableModel {
         if (colPath == null) {
             return null;
         }
-        Collection<SortKey> sortKeys = list.getSortKeys();
+        Collection<SortKey> sortKeys = getSortKeys();
         for (SortKey sortKey : sortKeys) {
             if (colPath.equals(sortKey.getSortPath())) {
                 return sortKey;
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the {@link SortKey}s for this table. The order of these keys reflects the order of sorting precedence.
+     * The entry at the top of the collection has the highest precedence when sorting.
+     * 
+     * @return Returns the {@link SortKey}s for this table
+     */
+    public Collection<SortKey> getSortKeys() {
+        @SuppressWarnings("unchecked")
+        Collection<SortKey> sortKeys = list.getSortKeys();
+        return sortKeys;
     }
 
 }

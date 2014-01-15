@@ -1,5 +1,5 @@
 Beanfabrics - Creating a Presentation Model Component Framework for Java Desktop Applications
-Copyright (C) 2008-2013 by Michael Karneim, beanfabrics.org
+Copyright (C) 2008-2014 by Michael Karneim, beanfabrics.org
 
 This projects source code was formerly hosted at http://beanfabrics.googlecode.com.
 Since December 2013 it is hosted at https://github.com/mkarneim/beanfabrics.

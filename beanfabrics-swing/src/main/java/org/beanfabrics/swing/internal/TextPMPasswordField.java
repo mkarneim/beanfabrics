@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
@@ -31,11 +32,14 @@ public class TextPMPasswordField extends JPasswordField implements View<ITextPM>
     private boolean selectAllOnFocusGainedEnabled = true;
     private boolean reformatOnFocusLostEnabled = true;
     private BnPlainDocument document;
-    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final PropertyChangeListener listener = new MyWeakPropertyChangeListener();
+
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }
-    };
+    }
+
     private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
 
     /**
@@ -103,7 +107,7 @@ public class TextPMPasswordField extends JPasswordField implements View<ITextPM>
         if (this.isConnected())
             throw new IllegalStateException("The document was initialized already.");
         if (document instanceof BnPlainDocument)
-            this.document = (BnPlainDocument)document;
+            this.document = (BnPlainDocument) document;
         super.setDocument(document);
     }
 
@@ -129,12 +133,10 @@ public class TextPMPasswordField extends JPasswordField implements View<ITextPM>
     }
 
     /**
-     * Returns whether this component is connected to the target
-     * {@link PresentationModel} to synchronize with. This is a convenience
-     * method.
+     * Returns whether this component is connected to the target {@link PresentationModel} to synchronize with. This is
+     * a convenience method.
      * 
-     * @return <code>true</code> when this component is connected, else
-     *         <code>false</code>
+     * @return <code>true</code> when this component is connected, else <code>false</code>
      */
     boolean isConnected() {
         return this.document != null && this.document.getPresentationModel() != null;
@@ -147,7 +149,8 @@ public class TextPMPasswordField extends JPasswordField implements View<ITextPM>
         final ITextPM pModel = this.getPresentationModel();
         if (pModel != null) {
             this.setEnabled(true);
-            this.setToolTipText(pModel.isValid() == false ? pModel.getValidationState().getMessage() : pModel.getDescription());
+            this.setToolTipText(pModel.isValid() == false ? pModel.getValidationState().getMessage() : pModel
+                    .getDescription());
             this.setEditable(pModel.isEditable());
         } else {
             this.setEnabled(false);
@@ -199,16 +202,16 @@ public class TextPMPasswordField extends JPasswordField implements View<ITextPM>
 
     private int invertHorizontalAlignment(int alignment) {
         switch (alignment) {
-            case SwingConstants.LEFT:
-                return SwingConstants.RIGHT;
-            case SwingConstants.RIGHT:
-                return SwingConstants.LEFT;
-            case SwingConstants.LEADING:
-                return SwingConstants.TRAILING;
-            case SwingConstants.TRAILING:
-                return SwingConstants.LEADING;
-            default:
-                return alignment;
+        case SwingConstants.LEFT:
+            return SwingConstants.RIGHT;
+        case SwingConstants.RIGHT:
+            return SwingConstants.LEFT;
+        case SwingConstants.LEADING:
+            return SwingConstants.TRAILING;
+        case SwingConstants.TRAILING:
+            return SwingConstants.LEADING;
+        default:
+            return alignment;
         }
     }
 }

@@ -4,6 +4,12 @@
  */
 package org.beanfabrics;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.EventListener;
+
 import org.beanfabrics.event.ModelProviderEvent;
 import org.beanfabrics.event.ModelProviderListener;
 import org.beanfabrics.log.Logger;
@@ -17,28 +23,15 @@ import org.beanfabrics.model.PresentationModel;
  * 
  * @author Michael Karneim
  */
-public class Link implements ModelSubscriber {
+public class Link implements ModelSubscriber, Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(Link.class);
 
-    private final ModelProviderListener providerListener = new ModelProviderListener() {
-        public void modelGained(ModelProviderEvent evt) {
-            PathEvaluation eval = new PathEvaluation(provider.getPresentationModel(), path);
-            assert (eval.isCompletelyResolved());
-            PresentationModel pModel = eval.getResult().getValue();
-            setPresentationModel(pModel);
-        }
-
-        public void modelLost(ModelProviderEvent evt) {
-            setPresentationModel(null);
-        }
-    };
-
     private final View view;
-
     private final ViewClassDecorator viewClassDecorator;
     private IModelProvider provider;
     private Path path;
 
+    private ModelProviderListener providerListener;
     /**
      * Creates a Link for the given view.
      * 
@@ -50,6 +43,7 @@ public class Link implements ModelSubscriber {
         }
         this.view = view;
         this.viewClassDecorator = new ViewClassDecorator(view.getClass());
+        installProviderListener();
         link();
     }
 
@@ -94,6 +88,23 @@ public class Link implements ModelSubscriber {
         return this.view;
     }
 
+    private void installProviderListener() {
+        providerListener = new MyModelProviderListener();
+    }
+    
+    private class MyModelProviderListener implements ModelProviderListener, Serializable {
+        public void modelGained(ModelProviderEvent evt) {
+            PathEvaluation eval = new PathEvaluation(provider.getPresentationModel(), path);
+            assert (eval.isCompletelyResolved());
+            PresentationModel pModel = eval.getResult().getValue();
+            setPresentationModel(pModel);
+        }
+
+        public void modelLost(ModelProviderEvent evt) {
+            setPresentationModel(null);
+        }
+    }
+    
     private void link() {
         if (provider != null && path != null) {
             provider.addModelProviderListener(path, providerListener);
@@ -130,5 +141,15 @@ public class Link implements ModelSubscriber {
 
     private Class getExpectedModelType() {
         return this.viewClassDecorator.getExpectedModelType();
+    }
+    
+    // Serialization support.
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        s.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream s)
+        throws IOException, ClassNotFoundException {
+        s.defaultReadObject();
     }
 }

@@ -4,6 +4,7 @@
  */
 package org.beanfabrics;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 
 import org.beanfabrics.model.PresentationModel;
@@ -16,7 +17,7 @@ import org.beanfabrics.util.GenericType;
  * 
  * @author Michael Karneim
  */
-public class ViewClassDecorator {
+public class ViewClassDecorator implements Serializable {
     private final Class<? extends View> viewClass;
     private Type expectedModelType;
 

@@ -4,8 +4,10 @@
  */
 package org.beanfabrics.model;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.beans.PropertyChangeEvent;
@@ -18,42 +20,37 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import junit.framework.JUnit4TestAdapter;
-
 import org.beanfabrics.Path;
 import org.beanfabrics.validation.ValidationRule;
 import org.beanfabrics.validation.ValidationState;
-import org.junit.AfterClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @author Michael Karneim
+ * @author Michael Karneim TODO rewrite tests to match the given-when-then structure.
  */
 public class DatePMTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DatePMTest.class);
-    }
 
-    public DatePMTest() {
-    }
-
-    static Locale oldLocale;
-    static DatePM.DateFormatProvider oldDateFormatProvider;
+    private static Locale localeBackup;
+    private static DatePM.DateFormatProvider dateFormatProviderBackup;
 
     @BeforeClass
-    public static void setUpClass()
-        throws Exception {
-        oldLocale = Locale.getDefault();
-        Locale.setDefault(Locale.GERMANY);
-        oldDateFormatProvider = DatePM.getDefaultDateFormatProvider();
+    public static void backupLocale() throws Exception {
+        localeBackup = Locale.getDefault();
+        dateFormatProviderBackup = DatePM.getDefaultDateFormatProvider();
     }
 
-    @AfterClass
-    public static void tearDownClass()
-        throws Exception {
-        Locale.setDefault(oldLocale);
-        DatePM.setDefaultDateFormatProvider(oldDateFormatProvider);
+    @Before
+    public void setup() {
+        Locale.setDefault(Locale.GERMANY);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        Locale.setDefault(localeBackup);
+        DatePM.setDefaultDateFormatProvider(dateFormatProviderBackup);
     }
 
     @Test
@@ -62,7 +59,7 @@ public class DatePMTest {
     }
 
     @Test
-    public void validate() {
+    public void testValidate() {
         DatePM model = new DatePM();
         model.setText("14.01.1971");
         assertEquals("pM.isValid()", true, model.isValid());
@@ -119,6 +116,34 @@ public class DatePMTest {
     }
 
     @Test
+    public void testGetFormatShouldReturnLocaleSpecificDefaultDateFormat_ForUS() {
+        // Given:
+        Locale.setDefault(Locale.US);
+        DateFormat format = DateFormat.getDateInstance();
+        Date time = new Date();
+        String expected = format.format(time);
+        // When:
+        DatePM pm = new DatePM();
+        DateFormat act = pm.getFormat();
+        // Then:
+        assertThat(act.format(time), is(expected));
+    }
+
+    @Test
+    public void testGetFormatShouldReturnLocaleSpecificDefaultDateFormat_DorGermany() {
+        // Given:
+        Locale.setDefault(Locale.GERMANY);
+        DateFormat format = DateFormat.getDateInstance();
+        Date time = new Date();
+        String expected = format.format(time);
+        // When:
+        DatePM pm = new DatePM();
+        DateFormat act = pm.getFormat();
+        // Then:
+        assertThat(act.format(time), is(expected));
+    }
+
+    @Test
     public void setUSFormat() {
         Locale.setDefault(Locale.US);
         DatePM pm = new DatePM();
@@ -126,10 +151,13 @@ public class DatePMTest {
         cal.set(2011, 0, 14);
         pm.setDate(cal.getTime());
         assertEquals("pm.isValid()", true, pm.isValid());
-        assertEquals("pm.getText()", "Jan 14, 2011", pm.getText());
-        Locale.setDefault(Locale.GERMAN);
         DateFormat format = DateFormat.getDateInstance();
-        pm.setFormat(format);
+        format.setLenient(false);
+        String expected = format.format(cal.getTime());
+        assertEquals("pm.getText()", expected, pm.getText());
+        Locale.setDefault(Locale.GERMAN);
+        DateFormat format2 = DateFormat.getDateInstance();
+        pm.setFormat(format2);
 
         assertEquals("14.01.2011", pm.getText());
     }
@@ -307,8 +335,8 @@ public class DatePMTest {
         long now = System.currentTimeMillis();
         for (int i = 0; i < 10; ++i) {
             list.add(new DatePM());
-            list.getAt(i).setDate(new Date(now + (long)(Math.random() * 10000000000.0)));
-            //System.out.println(list.getAt(i).getText());
+            list.getAt(i).setDate(new Date(now + (long) (Math.random() * 10000000000.0)));
+            // System.out.println(list.getAt(i).getText());
         }
         list.sortBy(true, new Path("this"));
         long lastTime = -1;

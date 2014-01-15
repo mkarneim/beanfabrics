@@ -11,6 +11,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -35,11 +36,13 @@ public class TextPMTextField extends JTextField implements KeyBindingProcessor, 
     private boolean selectAllOnFocusGainedEnabled = true;
     private boolean reformatOnFocusLostEnabled = true;
     private BnPlainDocument document;
-    private transient final PropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private final PropertyChangeListener listener = new MyWeakPropertyChangeListener();
+    
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(PropertyChangeEvent evt) {
             refresh();
         }
-    };
+    }
     private ErrorIconPainter errorIconPainter = createDefaultErrorIconPainter();
 
     public TextPMTextField() {

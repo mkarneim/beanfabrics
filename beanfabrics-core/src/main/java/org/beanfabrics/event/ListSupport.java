@@ -26,7 +26,7 @@ import org.beanfabrics.util.Interval;
 public class ListSupport {
     private final IListPM<?> source;
     private List<ListListener> listeners = new LinkedList<ListListener>();
-    private transient WeakHashMap<ListListener, WeakWrapper> weakWrapperMap = new WeakHashMap<ListListener, WeakWrapper>();
+    private final WeakHashMap<ListListener, WeakWrapper> weakWrapperMap = new WeakHashMap<ListListener, WeakWrapper>();
 
     /**
      * Constructs a {@link ListSupport} for the given source.

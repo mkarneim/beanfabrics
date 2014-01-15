@@ -6,12 +6,16 @@
 // methods and fields are documented
 package org.beanfabrics.swing.list;
 
+import java.io.Serializable;
+
 import org.beanfabrics.Path;
 
 /**
  * @author Michael Karneim
  */
-public class CellConfig {
+@SuppressWarnings("serial")
+public class CellConfig implements Serializable {
+
     private final Path path;
 
     public CellConfig() {
@@ -21,7 +25,8 @@ public class CellConfig {
     /**
      * Constructs a <code>CellConfig</code> with the given path.
      * 
-     * @param path the path of the configured pM
+     * @param path
+     *            the path of the configured pM
      */
     public CellConfig(Path path) {
         super();

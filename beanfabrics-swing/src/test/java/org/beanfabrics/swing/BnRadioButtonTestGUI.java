@@ -23,16 +23,17 @@ import org.beanfabrics.model.PMManager;
 /**
  * @author Michael Karneim
  */
+@SuppressWarnings("serial")
 public class BnRadioButtonTestGUI extends JFrame {
     private BnLabel bnLabel_2;
     private BnLabel bnLabel_1;
     private BnLabel bnLabel;
     private JButton toggleEdgreenButton;
-    private MyModel myModel;
+
     private ModelProvider provider;
 
-    public static class MyModel extends AbstractPM {
-        private transient WeakPropertyChangeListener listener = new WeakPropertyChangeListener() {
+    private static class SamplePM extends AbstractPM {
+        private WeakPropertyChangeListener listener = new WeakPropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 System.out.println("red=" + red.getText());
                 System.out.println("green=" + green.getText());
@@ -44,8 +45,8 @@ public class BnRadioButtonTestGUI extends JFrame {
         private BooleanPM green = new BooleanPM();
         private BooleanPM blue = new BooleanPM();
 
-        public MyModel() {
-            //red.setEditable(false);
+        public SamplePM() {
+            // red.setEditable(false);
             PMManager.setup(this);
             red.setBoolean(true);
             this.addPropertyChangeListener(listener);
@@ -65,6 +66,8 @@ public class BnRadioButtonTestGUI extends JFrame {
     public static void main(String args[]) {
         try {
             BnRadioButtonTestGUI frame = new BnRadioButtonTestGUI();
+            SamplePM myModel = new SamplePM();
+            frame.getLocalProvider().setPresentationModel(myModel);
             frame.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,11 +134,9 @@ public class BnRadioButtonTestGUI extends JFrame {
 
     protected BnRadioButton getRedBnRadioButton() {
         if (redBnRadioButton == null) {
-            provider = new ModelProvider(); // @wb:location=162,400
-            provider.setPresentationModel(getMyModel());
             redBnRadioButton = new BnRadioButton();
             redBnRadioButton.setPath(new org.beanfabrics.Path("this.red"));
-            redBnRadioButton.setModelProvider(provider);
+            redBnRadioButton.setModelProvider(getLocalProvider());
             buttonGroup.add(redBnRadioButton);
             redBnRadioButton.setText("Red");
         }
@@ -164,17 +165,16 @@ public class BnRadioButtonTestGUI extends JFrame {
         return blueBnRadioButton;
     }
 
+    /**
+     * @wbp.nonvisual location=10,430
+     * @return
+     */
     protected ModelProvider getLocalProvider() {
         if (provider == null) {
+            provider = new ModelProvider(); // @wb:location=162,400
+            provider.setPresentationModelType(SamplePM.class);
         }
         return provider;
-    }
-
-    protected MyModel getMyModel() {
-        if (myModel == null) {
-            myModel = new MyModel(); // @wb:location=214,403
-        }
-        return myModel;
     }
 
     protected JButton getToggleEdgreenButton() {
@@ -182,8 +182,9 @@ public class BnRadioButtonTestGUI extends JFrame {
             toggleEdgreenButton = new JButton();
             toggleEdgreenButton.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
-                    boolean sel = myModel.green.getBoolean();
-                    myModel.green.setBoolean(!sel);
+                    SamplePM pm = getLocalProvider().getPresentationModel();
+                    boolean sel = pm.green.getBoolean();
+                    pm.green.setBoolean(!sel);
                 }
             });
             toggleEdgreenButton.setText("toggle model.green");

@@ -112,22 +112,13 @@ public class BnList extends JList implements View<IListPM>, ModelSubscriber {
     }
 
     protected void connect() {
-        final IListPM currListMdl;
-        if (this.presentationModel == null) {
-            currListMdl = new ListPM();
-        } else {
-            currListMdl = this.presentationModel;
+        if (this.presentationModel == null || cellConfig == null) {
+            return;
         }
-        CellConfig currCellConfig;
-        if (this.cellConfig == null) {
-            currCellConfig = new CellConfig(new Path("this"));
-        } else {
-            currCellConfig = this.cellConfig;
-        }
-        this.setModel(new BnListModel(currListMdl, currCellConfig));
+        this.setModel(new BnListModel(presentationModel, cellConfig));
 
         int currentSelectionMode = getSelectionModel().getSelectionMode();
-        BnListSelectionModel newModel = new BnListSelectionModel(currListMdl);
+        BnListSelectionModel newModel = new BnListSelectionModel(presentationModel);
         newModel.setSelectionMode(currentSelectionMode);
 
         this.setSelectionModel(newModel);

@@ -30,7 +30,7 @@ public class AddressPanel extends JPanel implements View<AddressPM>, ModelSubscr
     private JLabel jLabel3 = null;
     private BnTextField bnTextField = null;
     private BnTextField bnTextField1 = null;
-    private BnTextField bnTextField2 = null;
+    private BnTextField tfCity = null;
     private BnTextField bnTextField3 = null;
     private JLabel jLabel4 = null;
     private BnTextField bnTextField4 = null;
@@ -187,7 +187,7 @@ public class AddressPanel extends JPanel implements View<AddressPM>, ModelSubscr
             contentPanel.add(jLabel3, gridBagConstraints3);
             contentPanel.add(getBnTextField(), gridBagConstraints4);
             contentPanel.add(getBnTextField1(), gridBagConstraints5);
-            contentPanel.add(getBnTextField2(), gridBagConstraints6);
+            contentPanel.add(getTfCity(), gridBagConstraints6);
             contentPanel.add(getBnTextField3(), gridBagConstraints7);
             contentPanel.add(jLabel4, gridBagConstraints8);
             contentPanel.add(getBnTextField4(), gridBagConstraints9);
@@ -228,13 +228,13 @@ public class AddressPanel extends JPanel implements View<AddressPM>, ModelSubscr
      * 
      * @return org.beanfabrics.gui.swing.BnTextField
      */
-    private BnTextField getBnTextField2() {
-        if (bnTextField2 == null) {
-            bnTextField2 = new BnTextField();
-            bnTextField2.setPath(new Path("this.city"));
-            bnTextField2.setModelProvider(getMyDataSource());
+    public BnTextField getTfCity() {
+        if (tfCity == null) {
+            tfCity = new BnTextField();
+            tfCity.setPath(new Path("this.city"));
+            tfCity.setModelProvider(getMyDataSource());
         }
-        return bnTextField2;
+        return tfCity;
     }
 
     /**

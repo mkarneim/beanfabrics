@@ -6,6 +6,8 @@
 // methods and fields are documented
 package org.beanfabrics.swing.internal;
 
+import java.io.Serializable;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -40,7 +42,9 @@ public class BnPlainDocument extends PlainDocument implements View<ITextPM> {
 
     protected ITextPM pModel;
 
-    private final transient WeakPropertyChangeListener propertyListener = new WeakPropertyChangeListener() {
+    private final WeakPropertyChangeListener propertyListener = new MyWeakPropertyChangeListener();
+    
+    private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             if (pending_modelChange == false) { // avoid event cycle
                 try {
@@ -51,7 +55,7 @@ public class BnPlainDocument extends PlainDocument implements View<ITextPM> {
                 }
             }
         }
-    };
+    }
 
     public BnPlainDocument() {
         super();

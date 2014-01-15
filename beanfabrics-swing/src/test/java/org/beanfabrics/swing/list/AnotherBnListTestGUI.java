@@ -81,7 +81,7 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
 
     public AnotherBnListTestGUI() {
         super();
-        setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout());
         getContentPane().add(getPanel(), BorderLayout.CENTER);
         setTitle("File System");
 
@@ -119,7 +119,10 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
     public void setPath(Path path) {
         this.link.setPath(path);
     }
-
+    /**
+     * @wbp.nonvisual location=11,442
+     * @return
+     */
     protected ModelProvider getLocalProvider() {
         if (localProvider == null) {
             localProvider = new ModelProvider(); // @wb:location=11,442
@@ -150,6 +153,7 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
     private BnList getBnList() {
         if (bnList == null) {
             bnList = new BnList();
+            bnList.setModelProvider(getLocalProvider());
             bnList.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(final MouseEvent e) {
                     if (e.getClickCount() == 2) {
@@ -158,7 +162,6 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
                 }
             });
             bnList.setPath(new org.beanfabrics.Path("this.elements"));
-            bnList.setModelProvider(getLocalProvider());
             //bnList.setCellConfig(new CellConfig(new Path("name")));
 
             bnList.setLayoutOrientation(JList.VERTICAL_WRAP);

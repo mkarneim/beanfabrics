@@ -7,11 +7,13 @@ package org.beanfabrics.swing.goodies.calendar;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
+import java.io.Serializable;
 
 /**
  * @author Michael Karneim
  */
-public class MonthPanelUISettings {
+@SuppressWarnings("serial")
+public class MonthPanelUISettings implements Serializable {
     private MonthPanelUISettings delegate = null;
 
     private Color weekendForegroundColor = null;
