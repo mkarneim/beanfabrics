@@ -8,6 +8,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +33,7 @@ public class BnTableRowSorter extends RowSorter<BnTableModel> {
     }
 
     public static void uninstall(BnTable table) {
+        @SuppressWarnings("rawtypes")
         RowSorter rowSorter = table.getRowSorter();
         if (rowSorter instanceof BnTableRowSorter) {
             ((BnTableRowSorter)rowSorter).dismiss();
@@ -50,59 +52,70 @@ public class BnTableRowSorter extends RowSorter<BnTableModel> {
 
     private class SortKeys {
         private RowSorter.SortKey[] sortKeyByColumn;
-        private List<RowSorter.SortKey> sortKeyList;
+        private RowSorter.SortKey[] sortKeyByPrecedence;
+        private List<RowSorter.SortKey> cachedSortKeyListByPrecedence;
 
         public SortKeys(int columns) {
             sortKeyByColumn = new RowSorter.SortKey[columns];
+            sortKeyByPrecedence = new RowSorter.SortKey[columns];
         }
 
         public int size() {
-            return asList().size();
+            return asListByPrecedence().size();
         }
 
         public RowSorter.SortKey getSortKey(int col) {
             return sortKeyByColumn[col];
         }
 
-        public void setSortKey(RowSorter.SortKey sortKey) {
-            sortKeyByColumn[sortKey.getColumn()] = sortKey;
-            this.sortKeyList = null;
-        }
-
         public void clear() {
             Arrays.fill(this.sortKeyByColumn, null);
-            this.sortKeyList = null;
+            Arrays.fill(this.sortKeyByPrecedence, null);
+            this.cachedSortKeyListByPrecedence = null;
         }
 
-        public List<RowSorter.SortKey> asList() {
-            if (sortKeyList == null) {
+        public List<RowSorter.SortKey> asListByPrecedence() {
+            if (cachedSortKeyListByPrecedence == null) {
                 ArrayList<RowSorter.SortKey> newSortKeyList = new ArrayList<RowSorter.SortKey>();
-                for (int i = 0; i < sortKeyByColumn.length; ++i) {
-                    if (sortKeyByColumn[i] != null) {
-                        newSortKeyList.add(sortKeyByColumn[i]);
+                for( RowSorter.SortKey sortKey: sortKeyByPrecedence) {
+                    if ( sortKey != null) {
+                        newSortKeyList.add(sortKey);
                     }
-                }
-                this.sortKeyList = Collections.unmodifiableList(newSortKeyList);
+                }                
+                this.cachedSortKeyListByPrecedence = Collections.unmodifiableList(newSortKeyList);
             }
-            return this.sortKeyList;
+            return this.cachedSortKeyListByPrecedence;
         }
 
         public void refresh() {
             clear();
-            for (int col = 0; col < sortKeyByColumn.length; ++col) {
-                org.beanfabrics.model.SortKey modelSortKey = model.getSortKey(col);
-                if (modelSortKey == null) {
-                    sortKeyByColumn[col] = null;
-                } else {
-                    SortOrder sortOrder = modelSortKey.isAscending() ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    RowSorter.SortKey viewSortKey = new RowSorter.SortKey(col, sortOrder);
-                    sortKeyByColumn[col] = viewSortKey;
+            Collection<org.beanfabrics.model.SortKey> modelSortKeysByPrecedence = model.getSortKeys();
+            int pos = 0;
+            for( org.beanfabrics.model.SortKey modelSortKey: modelSortKeysByPrecedence) {
+                int col = getFirstColumnIndexOf(modelSortKey.getSortPath());
+                SortOrder sortOrder = modelSortKey.isAscending() ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                RowSorter.SortKey viewSortKey = new RowSorter.SortKey(col, sortOrder);
+                sortKeyByPrecedence[pos] = viewSortKey;
+                sortKeyByColumn[col] = viewSortKey;
+                pos++;
+            }            
+        }
+
+        private int getFirstColumnIndexOf(Path path) {
+            List<BnColumn> colDefs = model.getColDefs();
+            int index = 0;
+            for( BnColumn colDef: colDefs) {
+                if ( path.equals(colDef.getPath())) {
+                    return index;
                 }
+                index++;
             }
+            return -1;
         }
     }
 
     private final SortKeys sortKeys;
+    @SuppressWarnings("rawtypes")
     private final IListPM list;
 
     public BnTableRowSorter(BnTableModel model) {
@@ -141,7 +154,7 @@ public class BnTableRowSorter extends RowSorter<BnTableModel> {
 
     @Override
     public List<? extends RowSorter.SortKey> getSortKeys() {
-        return this.sortKeys.asList();
+        return this.sortKeys.asListByPrecedence();
     }
 
     @Override
@@ -151,12 +164,8 @@ public class BnTableRowSorter extends RowSorter<BnTableModel> {
 
     @Override
     public void setSortKeys(List<? extends RowSorter.SortKey> keys) {
-        this.sortKeys.clear();
-        for (SortKey sortKey : keys) {
-            this.sortKeys.setSortKey(sortKey);
-        }
         org.beanfabrics.model.SortKey[] modelSortKeys = new org.beanfabrics.model.SortKey[this.sortKeys.size()];
-        Iterator<? extends RowSorter.SortKey> it = this.sortKeys.asList().iterator();
+        Iterator<? extends RowSorter.SortKey> it = this.sortKeys.asListByPrecedence().iterator();
 
         for (int i = 0; i < modelSortKeys.length; ++i) {
             RowSorter.SortKey key = it.next();
@@ -179,15 +188,8 @@ public class BnTableRowSorter extends RowSorter<BnTableModel> {
             ascending = sk.getSortOrder() != SortOrder.ASCENDING;
         }
 
-        this.sortKeys.clear();
-
-        RowSorter.SortKey newKey = new RowSorter.SortKey(column, ascending ? SortOrder.ASCENDING : SortOrder.DESCENDING);
-        this.sortKeys.setSortKey(newKey);
-
         Path path = model.getColumnPath(column);
         list.sortBy(ascending, path);
-
-        fireRowSorterChanged(null);
     }
 
     /// Callback methods that we don't use in Beanfabrics:

@@ -42,6 +42,7 @@ import org.beanfabrics.model.SortKey;
  */
 @SuppressWarnings("serial")
 public class BnTableModel extends AbstractTableModel {
+    @SuppressWarnings("rawtypes")
     private IListPM list;
     private boolean cellEditingAllowed;
 
@@ -75,7 +76,7 @@ public class BnTableModel extends AbstractTableModel {
         }
     };
 
-    public BnTableModel(IListPM aListModel, List<BnColumn> colDefs, boolean editingAllowed) {
+    public BnTableModel(@SuppressWarnings("rawtypes") IListPM aListModel, List<BnColumn> colDefs, boolean editingAllowed) {
         if (aListModel == null) {
             throw new IllegalArgumentException("aListModel must not be null");
         }
@@ -193,6 +194,7 @@ public class BnTableModel extends AbstractTableModel {
      * 
      * @return the underlying presentation model
      */
+    @SuppressWarnings("rawtypes")
     public IListPM getPresentationModel() {
         return this.list;
     }
@@ -208,13 +210,25 @@ public class BnTableModel extends AbstractTableModel {
         if (colPath == null) {
             return null;
         }
-        Collection<SortKey> sortKeys = list.getSortKeys();
+        Collection<SortKey> sortKeys = getSortKeys();
         for (SortKey sortKey : sortKeys) {
             if (colPath.equals(sortKey.getSortPath())) {
                 return sortKey;
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the {@link SortKey}s for this table. The order of these keys reflects the order of sorting precedence.
+     * The entry at the top of the collection has the highest precedence when sorting.
+     * 
+     * @return Returns the {@link SortKey}s for this table
+     */
+    public Collection<SortKey> getSortKeys() {
+        @SuppressWarnings("unchecked")
+        Collection<SortKey> sortKeys = list.getSortKeys();
+        return sortKeys;
     }
 
 }
