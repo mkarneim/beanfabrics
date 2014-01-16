@@ -33,7 +33,7 @@ public class CustomizerBasePanel<T extends PresentationModel> extends JPanel {
         this.pModel.getContext().addService(RootWindowLocator.class, CustomizerUtil.get().getRootWindowLocator(this));
     }
 
-    protected void showMessage(String message) {
+    public void showMessage(String message) {
         removeAll();
         JTextArea ta = new JTextArea(message);
         ta.setForeground(Color.red);
@@ -43,11 +43,17 @@ public class CustomizerBasePanel<T extends PresentationModel> extends JPanel {
         add(scroll, BorderLayout.CENTER);
     }
 
-    protected void showException(Throwable t) {
+    public void showException(Throwable t) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         pw.println("Caught " + t.getClass().getName() + ": '" + t.getMessage() + "'");
         t.printStackTrace(pw);
         showMessage(sw.toString());
     }
+
+    @Override
+    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {    
+        super.firePropertyChange(propertyName, oldValue, newValue);
+    }
+    
 }

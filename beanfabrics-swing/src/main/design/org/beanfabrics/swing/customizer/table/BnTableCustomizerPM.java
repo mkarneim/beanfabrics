@@ -6,6 +6,8 @@ package org.beanfabrics.swing.customizer.table;
 
 import java.lang.reflect.Type;
 
+import javax.swing.text.DefaultEditorKit.CutAction;
+
 import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Path;
 import org.beanfabrics.ViewClassDecorator;
@@ -26,8 +28,7 @@ import org.beanfabrics.swing.table.BnTable;
 import org.beanfabrics.util.GenericType;
 
 /**
- * The <code>BnTableCustomizerPM</code> is the presentation model for the
- * {@link BnTableCustomizer}.
+ * The <code>BnTableCustomizerPM</code> is the presentation model for the {@link BnTableCustomizer}.
  * 
  * @author Michael Karneim
  */
@@ -42,17 +43,19 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
         void setBnColumns(BnColumn[] cols);
     }
 
-    private Functions functions;
     private BnTable bnTable;
     private Class<? extends PresentationModel> rootModelType;
     private Class<? extends PresentationModel> requiredModelType;
+
+    private CustomizerBase customizer;
 
     public BnTableCustomizerPM() {
         PMManager.setup(this);
     }
 
-    public void setFunctions(Functions functions) {
-        this.functions = functions;
+    public void setCustomizer(CustomizerBase customizer) {
+        this.customizer = customizer;
+        setBnTable((BnTable) customizer.getObject());
     }
 
     public void setBnTable(BnTable bnTable) {
@@ -92,7 +95,8 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
         if (elementModelType == null) {
             columnListContext = new ColumnListContext(null, bnTable.getColumns());
         } else {
-            PathElementInfo rootPathElementInfo = PMManager.getInstance().getMetadata().getPathElementInfo(elementModelType);
+            PathElementInfo rootPathElementInfo = PMManager.getInstance().getMetadata()
+                    .getPathElementInfo(elementModelType);
             columnListContext = new ColumnListContext(rootPathElementInfo, bnTable.getColumns());
         }
 
@@ -103,7 +107,9 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
             }
 
             public void apply(BnColumn[] cols) {
-                functions.setBnColumns(cols);
+                BnColumn[] oldValue = (bnTable == null ? null : bnTable.getColumns());
+                bnTable.setColumns(cols);
+                customizer.firePropertyChange("columns", oldValue, cols);
             }
         });
         pm.getContext().addParent(this.getContext());
@@ -121,7 +127,7 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
             GenericType typeParam = gt.getTypeParameter(IListPM.class.getTypeParameters()[0]);
             Type tArg = typeParam.narrow(typeParam.getType(), PresentationModel.class);
             if (tArg instanceof Class) {
-                return (Class)tArg;
+                return (Class) tArg;
             } else {
                 throw new IllegalStateException("Unexpected type: " + tArg.getClass().getName());
             }
@@ -150,14 +156,20 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
     }
 
     private PathContext getPathContext() {
-        PathContext result = new PathContext(PMManager.getInstance().getMetadata().getPathElementInfo(this.rootModelType), PMManager.getInstance().getMetadata().getTypeInfo(this.requiredModelType), this.bnTable.getPath());
+        PathContext result = new PathContext(PMManager.getInstance().getMetadata()
+                .getPathElementInfo(this.rootModelType), PMManager.getInstance().getMetadata()
+                .getTypeInfo(this.requiredModelType), this.bnTable.getPath());
         return result;
     }
 
     @OnChange(path = "path")
     void applyPath() {
-        if (functions != null && path.isValid()) {
-            functions.setPath(path.getPath());
+        if (path.isValid() && bnTable != null && customizer != null) {
+            Path oldValue = bnTable.getPath();
+            Path newValue = path.getPath();
+            bnTable.setPath(newValue);
+            customizer.firePropertyChange("path", oldValue, newValue);
         }
     }
+
 }

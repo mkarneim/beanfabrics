@@ -11,10 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import org.beanfabrics.ModelProvider;
-import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
 import org.beanfabrics.swing.customizer.util.CustomizerBasePanel;
-import org.beanfabrics.swing.table.BnColumn;
 import org.beanfabrics.swing.table.BnTable;
 
 /**
@@ -23,49 +21,38 @@ import org.beanfabrics.swing.table.BnTable;
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
-public class BnTableCustomizer extends CustomizerBasePanel<BnTableCustomizerPM> implements Customizer {
+public class BnTableCustomizer extends CustomizerBasePanel<BnTableCustomizerPM> implements CustomizerBase {
     private JPanel centerPanel;
     private ModelProvider localProvider;
     private BnTableCustomizerPM bnTableCustomizerPM;
     private BnTableCustomizerPanel bnTableCustomizerPanel;
 
-    public BnTableCustomizer() {
-        setPresentationModel(getBnTableCustomizerPM());
+    private Object bean;
+
+    protected BnTableCustomizer(BnTableCustomizerPM pm) {
+        setPresentationModel(pm);
+        this.bnTableCustomizerPM = pm;
         setLayout(new BorderLayout());
         add(getCenterPanel(), BorderLayout.CENTER);
     }
 
+    public BnTableCustomizer() {
+        this(new BnTableCustomizerPM());
+    }
+
     @Override
-    public void setObject(Object bean) {
-        if (bean == null || bean instanceof BnTable) {
-            try {
-                setBnTable((BnTable) bean);
-            } catch (Throwable t) {
-                showException(t);
-            }
-        } else {
-            showMessage("Can't customize this instance of " + bean.getClass().getName() + ". Expected instance of "
-                    + ModelSubscriber.class.getName());
+    public void setObject(Object aBean) {
+        this.bean = aBean;
+        try {
+            getBnTableCustomizerPM().setCustomizer(this);
+        } catch (Throwable t) {
+            showException(t);
         }
     }
 
-    public void setBnTable(final BnTable bnTable) {
-        getBnTableCustomizerPM().setFunctions(new BnTableCustomizerPM.Functions() {
-            @Override
-            public void setPath(Path newValue) {
-                Path oldValue = (bnTable == null ? null : bnTable.getPath());
-                bnTable.setPath(newValue);
-                BnTableCustomizer.this.firePropertyChange("path", oldValue, newValue);
-            }
-
-            @Override
-            public void setBnColumns(BnColumn[] newValue) {
-                BnColumn[] oldValue = (bnTable == null ? null : bnTable.getColumns());
-                bnTable.setColumns(newValue);
-                BnTableCustomizer.this.firePropertyChange("columns", oldValue, newValue);
-            }
-        });
-        getBnTableCustomizerPM().setBnTable(bnTable);
+    @Override
+    public Object getObject() {
+        return this.bean;
     }
 
     /**
@@ -97,9 +84,6 @@ public class BnTableCustomizer extends CustomizerBasePanel<BnTableCustomizerPM> 
      * @wbp.nonvisual location=16,411
      */
     private BnTableCustomizerPM getBnTableCustomizerPM() {
-        if (bnTableCustomizerPM == null) {
-            bnTableCustomizerPM = new BnTableCustomizerPM();
-        }
         return bnTableCustomizerPM;
     }
 
