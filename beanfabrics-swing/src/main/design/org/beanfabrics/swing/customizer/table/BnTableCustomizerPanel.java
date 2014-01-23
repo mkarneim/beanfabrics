@@ -47,7 +47,6 @@ public class BnTableCustomizerPanel extends JPanel implements View<BnTableCustom
         add(getTitlePanel(), BorderLayout.NORTH);
         setBackground(getDefaultBackground());
         //
-        CustomizerUtil.get().setupGUI(this);
     }
 
     @Override
@@ -153,7 +152,7 @@ public class BnTableCustomizerPanel extends JPanel implements View<BnTableCustom
     }
 
     private Color getDefaultBackground() {
-        if (CustomizerUtil.get().isAquaLookAndFeel()) {
+        if (CustomizerUtil.isAquaLookAndFeel()) {
             return new Color(232, 232, 232);
         } else {
             return getBackground();

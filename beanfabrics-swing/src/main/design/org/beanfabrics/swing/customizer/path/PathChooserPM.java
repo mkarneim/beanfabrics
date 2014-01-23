@@ -10,6 +10,7 @@ import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.Validation;
+import org.beanfabrics.validation.ValidationState;
 
 /**
  * The <code>PathChooserPM</code> is the presentation model of the
@@ -18,11 +19,11 @@ import org.beanfabrics.support.Validation;
  * @author Michael Karneim
  */
 public class PathChooserPM extends AbstractPM {
-    public interface Functions {
-        void apply(Path path);
+    public interface OnApplyHandler {
+        void apply();
     }
 
-    private Functions functions;
+    private OnApplyHandler onApplyHandler;
 
     protected final PathBrowserPM pathBrowser = new PathBrowserPM();
     protected final OperationPM apply = new OperationPM();
@@ -31,21 +32,32 @@ public class PathChooserPM extends AbstractPM {
         PMManager.setup(this);
     }
 
-    public void setFunctions(Functions functions) {
-        this.functions = functions;
+    public void onApply(OnApplyHandler handler) {
+        this.onApplyHandler = handler;
+        revalidateProperties();
     }
 
     public void setPathContext(PathContext pathContext) {
         this.pathBrowser.setPathContext(pathContext);
     }
 
+    public Path getData() {
+        return pathBrowser.getCurrentPath();
+    }
+    
     @Operation
     public void apply() {
-        this.functions.apply(pathBrowser.getCurrentPath());
+        this.onApplyHandler.apply();
     }
 
-    @Validation(path = "apply")
+    @Validation(path = "apply",message="Missing callback functions")
     boolean isApplicable() {
-        return functions != null && pathBrowser.isValid();
+        return onApplyHandler != null;
     }
+    
+    @Validation(path = "apply")
+    ValidationState getPathBrowserValidationState() {
+        return pathBrowser.getValidationState();
+    }
+
 }

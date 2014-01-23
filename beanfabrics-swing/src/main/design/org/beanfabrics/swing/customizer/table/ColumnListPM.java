@@ -13,6 +13,7 @@ import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.Validation;
+import org.beanfabrics.swing.customizer.path.PathChooserController;
 import org.beanfabrics.swing.customizer.path.PathChooserPM;
 import org.beanfabrics.swing.customizer.path.PathContext;
 import org.beanfabrics.swing.customizer.util.CustomizerUtil;
@@ -21,9 +22,8 @@ import org.beanfabrics.util.ResourceBundleFactory;
 import org.beanfabrics.validation.ValidationState;
 
 /**
- * The <code>ColumnListPM</code> is a {@link ListPM} for {@link ColumnPM}
- * elements.
- *
+ * The <code>ColumnListPM</code> is a {@link ListPM} for {@link ColumnPM} elements.
+ * 
  * @author Michael Karneim
  */
 public class ColumnListPM extends ListPM<ColumnPM> {
@@ -38,23 +38,24 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     protected final OperationPM moveUp = new OperationPM();
     protected final OperationPM moveDown = new OperationPM();
 
-    private PathElementInfo rootPathElementInfo;
+    private PathElementInfo rootPathInfo;
 
     public ColumnListPM() {
         super();
         PMManager.setup(this);
     }
 
-    public void setColumnListContext(ColumnListContext clContext) {
-        rootPathElementInfo = clContext.rootPathElementInfo;
+    public void setRootPathInfo(PathElementInfo rootPathInfo) {
+        this.rootPathInfo = rootPathInfo;
+        revalidateProperties();
+    }
+
+    public void setData(BnColumn[] columns) {
         clear();
-        if (clContext.initialColumns != null) {
-            for (BnColumn col : clContext.initialColumns) {
-                ColumnPM cell = new ColumnPM();
-                ColumnContext colContext = new ColumnContext(rootPathElementInfo, col);
-                cell.setColumnContext(colContext);
-                this.add(cell);
-            }
+        for (BnColumn col : columns) {
+            ColumnPM cell = new ColumnPM(rootPathInfo);
+            cell.setData(col);
+            this.add(cell);
         }
         revalidateProperties();
     }
@@ -63,7 +64,7 @@ public class ColumnListPM extends ListPM<ColumnPM> {
         BnColumn[] result = new BnColumn[size()];
         int i = 0;
         for (ColumnPM cell : this) {
-            result[i] = cell.getBnColumn();
+            result[i] = cell.getData();
             i++;
         }
         return result;
@@ -71,33 +72,28 @@ public class ColumnListPM extends ListPM<ColumnPM> {
 
     @Operation
     public void addColumn() {
-        PathChooserPM chooserMdl = new PathChooserPM();
-        chooserMdl.setFunctions(new PathChooserPM.Functions() {
+        final PathChooserController ctrl = CustomizerUtil.createPathChooser(getContext(), new PathContext(rootPathInfo, null, new Path()));
+        ctrl.getPresentationModel().onApply( new PathChooserPM.OnApplyHandler() {
             @Override
-			public void apply(Path path) {
-                addColumun(path);
+            public void apply() {
+                addColumun(ctrl.getPresentationModel().getData());
             }
         });
-        chooserMdl.setPathContext(new PathContext(rootPathElementInfo, null, new Path()));
-        chooserMdl.getContext().addParent(getContext());
-        CustomizerUtil.get().openPathChooserDialog(chooserMdl);
-
+        ctrl.getView().setVisible(true);
     }
 
     @Validation(path = "addColumn", message = "Unknown element type")
     boolean canAddColumn() {
-        return rootPathElementInfo != null;
+        return rootPathInfo != null;
     }
 
     private void addColumun(Path path) {
-        ColumnPM newCell = new ColumnPM();
-        String header = createHeader(path);
-        ColumnContext colContext = new ColumnContext(rootPathElementInfo, new BnColumn(path, header));
-        newCell.setColumnContext(colContext);
+        ColumnPM newCell = new ColumnPM(rootPathInfo);
+        newCell.setData(new BnColumn(path, createDefaultHeader(path)));
         this.add(newCell);
     }
 
-    private String createHeader(Path path) {
+    private String createDefaultHeader(Path path) {
         if (path == null) {
             return "new header";
         }

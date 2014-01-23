@@ -8,11 +8,10 @@ import java.awt.BorderLayout;
 import java.beans.Customizer;
 
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.Path;
-import org.beanfabrics.swing.customizer.util.CustomizerBasePanel;
+import org.beanfabrics.swing.customizer.CustomizerBasePanel;
 import org.beanfabrics.swing.table.BnTable;
 
 /**
@@ -21,38 +20,20 @@ import org.beanfabrics.swing.table.BnTable;
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
-public class BnTableCustomizer extends CustomizerBasePanel<BnTableCustomizerPM> implements CustomizerBase {
-    private JPanel centerPanel;
+public class BnTableCustomizer<PM extends BnTableCustomizerPM> extends CustomizerBasePanel<PM> {
     private ModelProvider localProvider;
-    private BnTableCustomizerPM bnTableCustomizerPM;
+    private JPanel centerPanel;
     private BnTableCustomizerPanel bnTableCustomizerPanel;
 
-    private Object bean;
-
-    protected BnTableCustomizer(BnTableCustomizerPM pm) {
-        setPresentationModel(pm);
-        this.bnTableCustomizerPM = pm;
+    protected BnTableCustomizer(PM pm) {
+        super(pm);
+        getLocalProvider().setPresentationModel(pm);
         setLayout(new BorderLayout());
         add(getCenterPanel(), BorderLayout.CENTER);
     }
 
     public BnTableCustomizer() {
-        this(new BnTableCustomizerPM());
-    }
-
-    @Override
-    public void setObject(Object aBean) {
-        this.bean = aBean;
-        try {
-            getBnTableCustomizerPM().setCustomizer(this);
-        } catch (Throwable t) {
-            showException(t);
-        }
-    }
-
-    @Override
-    public Object getObject() {
-        return this.bean;
+        this((PM) new BnTableCustomizerPM());
     }
 
     /**
@@ -61,11 +42,9 @@ public class BnTableCustomizer extends CustomizerBasePanel<BnTableCustomizerPM> 
      * @wbp.nonvisual location=16,357
      * @return the local <code>ModelProvider</code>
      */
-    protected ModelProvider getLocalProvider() {
+    private ModelProvider getLocalProvider() {
         if (localProvider == null) {
             localProvider = new ModelProvider(); // @wb:location=16,577
-            localProvider.setPresentationModel(getBnTableCustomizerPM());
-            localProvider.setPresentationModelType(BnTableCustomizerPM.class);
         }
         return localProvider;
     }
@@ -73,21 +52,14 @@ public class BnTableCustomizer extends CustomizerBasePanel<BnTableCustomizerPM> 
     public JPanel getCenterPanel() {
         if (centerPanel == null) {
             centerPanel = new JPanel();
-            centerPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+            centerPanel.setBorder(null);
             centerPanel.setLayout(new BorderLayout(0, 0));
             centerPanel.add(getBnTableCustomizerPanel(), BorderLayout.CENTER);
         }
         return centerPanel;
     }
 
-    /**
-     * @wbp.nonvisual location=16,411
-     */
-    private BnTableCustomizerPM getBnTableCustomizerPM() {
-        return bnTableCustomizerPM;
-    }
-
-    protected BnTableCustomizerPanel getBnTableCustomizerPanel() {
+    public BnTableCustomizerPanel getBnTableCustomizerPanel() {
         if (bnTableCustomizerPanel == null) {
             bnTableCustomizerPanel = new BnTableCustomizerPanel();
             bnTableCustomizerPanel.setPath(new Path("this"));

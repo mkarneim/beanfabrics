@@ -1,4 +1,4 @@
-package org.beanfabrics.swing.customizer.table;
+package org.beanfabrics.swing.customizer;
 
 import java.beans.Customizer;
 

@@ -106,9 +106,11 @@ public class BnList extends JList implements View<IListPM>, ModelSubscriber {
     }
 
     public void setCellConfig(CellConfig cellConfig) {
+        CellConfig old = this.cellConfig;
         disconnect();
         this.cellConfig = cellConfig;
         connect();
+        super.firePropertyChange("cellConfig", old, cellConfig);
     }
 
     protected void connect() {

@@ -187,7 +187,7 @@ public class PathChooserDialog extends JDialog implements View<PathChooserPM>, M
     }
 
     private Color getDefaultBackground() {
-        if (CustomizerUtil.get().isAquaLookAndFeel()) {
+        if (CustomizerUtil.isAquaLookAndFeel()) {
             return new Color(232, 232, 232);
         } else {
             return getBackground();

@@ -4,6 +4,7 @@
  */
 package org.beanfabrics.swing.customizer.table;
 
+import org.beanfabrics.meta.PathElementInfo;
 import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.BooleanPM;
@@ -29,9 +30,10 @@ public class ColumnPM extends AbstractPM {
     protected final PathPM operationPath = new PathPM();
     protected final HorizontalAlignmentPM alignment = new HorizontalAlignmentPM();
 
-    private ColumnContext columnContext;
+    public PathElementInfo rootPathElementInfo; 
 
-    public ColumnPM() {
+    public ColumnPM(PathElementInfo rootPathElementInfo) {
+        this.rootPathElementInfo = rootPathElementInfo;
         PMManager.setup(this);
         path.setMandatory(true);
         columnName.setMandatory(true);
@@ -41,19 +43,17 @@ public class ColumnPM extends AbstractPM {
         alignment.setMandatory(false);
     }
 
-    public void setColumnContext(ColumnContext columnContext) {
-        this.columnContext = columnContext;
-        BnColumn col = columnContext.initialColumn;
-        this.path.setPathContext(new PathContext(columnContext.rootPathElementInfo, null, col.getPath()));
+    public void setData(BnColumn col) {
+        this.path.setPathContext(new PathContext(rootPathElementInfo, null, col.getPath()));
         this.columnName.setText(col.getColumnName());
         this.width.setInteger(col.getWidth());
         this.fixedWidth.setBoolean(col.isWidthFixed());
         TypeInfo opModelTypeInfo = PMManager.getInstance().getMetadata().getTypeInfo(IOperationPM.class);
-        this.operationPath.setPathContext(new PathContext(columnContext.rootPathElementInfo, opModelTypeInfo, col.getOperationPath()));
+        this.operationPath.setPathContext(new PathContext(rootPathElementInfo, opModelTypeInfo, col.getOperationPath()));
         this.alignment.setText(this.alignment.getOptions().get(col.getAlignment()));
     }
 
-    public BnColumn getBnColumn() {
+    public BnColumn getData() {
         BnColumn result = new BnColumn(this.path.getPath(), this.columnName.getText(), this.width.getInteger(), this.fixedWidth.getBoolean(), this.operationPath.getPath(), (Integer)this.alignment.getOptions().getKey(this.alignment.getText()));
         return result;
     }

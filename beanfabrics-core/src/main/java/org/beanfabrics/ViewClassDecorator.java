@@ -11,21 +11,21 @@ import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.util.GenericType;
 
 /**
- * Temporary class that will be deleted soon. Decorates a view class and
- * contains the logic to find out the generic type argument of a given
- * {@link View} class.
+ * Temporary class that will be deleted soon. Decorates a view class and contains the logic to find out the generic type
+ * argument of a given {@link View} class.
  * 
  * @author Michael Karneim
  */
+@SuppressWarnings("serial")
 public class ViewClassDecorator implements Serializable {
     private final Class<? extends View> viewClass;
-    private Type expectedModelType;
+    private Class<? extends PresentationModel> expectedModelType;
 
     public ViewClassDecorator(Class<? extends View> viewClass) {
         this.viewClass = viewClass;
     }
 
-    public Class getExpectedModelType() {
+    public Class<? extends PresentationModel> getExpectedModelType() {
         if (this.expectedModelType == null) {
 
             GenericType gt = new GenericType(viewClass);
@@ -33,16 +33,14 @@ public class ViewClassDecorator implements Serializable {
             Type narrowedType = typeParam.narrow(typeParam.getType(), PresentationModel.class);
 
             if (narrowedType instanceof Class) {
-                this.expectedModelType = (Class)narrowedType;
+                @SuppressWarnings("unchecked")
+                Class<? extends PresentationModel> casted = (Class<? extends PresentationModel>) narrowedType;
+                this.expectedModelType = casted;
             } else {
                 // Can't resolve model type
                 this.expectedModelType = PresentationModel.class;
             }
         }
-        if (this.expectedModelType instanceof Class) {
-            return (Class)this.expectedModelType;
-        } else {
-            return null;
-        }
+        return this.expectedModelType;
     }
 }

@@ -1,7 +1,7 @@
-package org.beanfabrics.swing.customizer.table;
+package org.beanfabrics.swing.customizer;
 
 import org.beanfabrics.model.PresentationModel;
-// FIXME apply on AbstractCustomizerPM
+
 public interface CustomizerPM extends PresentationModel {
     void setCustomizer(CustomizerBase customizer);
 }

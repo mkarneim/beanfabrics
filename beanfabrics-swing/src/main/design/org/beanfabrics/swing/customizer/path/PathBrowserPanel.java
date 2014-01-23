@@ -407,7 +407,7 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
     }
 
     private BnButton createFolderUpButton() {
-        if (CustomizerUtil.get().isWindows()) {
+        if (CustomizerUtil.isWindows()) {
             BnButton result = new ToolbarButton();
             result.setBorderPainted(false);
             return result;
@@ -419,9 +419,9 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
     }
 
     private URL getFolderUpIconURL() {
-        if (CustomizerUtil.get().isWindows()) {
+        if (CustomizerUtil.isWindows()) {
             return getClass().getResource("upFolder-win.png");
-        } else if (CustomizerUtil.get().isAquaLookAndFeel()) {
+        } else if (CustomizerUtil.isAquaLookAndFeel()) {
             return getClass().getResource("symbolArrowUp.png");
         } else {
             return getClass().getResource("upFolder-win.png");

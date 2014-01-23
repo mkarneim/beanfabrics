@@ -19,7 +19,7 @@ import org.beanfabrics.util.ExceptionUtil;
  * @author Michael Karneim
  */
 public class BnTableBeanInfo extends ModelSubscriberBeanInfo {
-    private final static Class beanClass = BnTable.class;
+    private final static Class<?> beanClass = BnTable.class;
 
     public BeanDescriptor getBeanDescriptor() {
         final BeanDescriptor result = new BeanDescriptor(beanClass, BnTableCustomizer.class);
@@ -41,7 +41,7 @@ public class BnTableBeanInfo extends ModelSubscriberBeanInfo {
             return new PropertyDescriptor[] { pModel, provider, path, columns };
         } catch (IntrospectionException ex) {
             ExceptionUtil.getInstance().handleException("", ex);
-            return null;
+            return new PropertyDescriptor[0];
         }
     }
 
@@ -55,7 +55,7 @@ public class BnTableBeanInfo extends ModelSubscriberBeanInfo {
     }
 
     public BeanInfo[] getAdditionalBeanInfo() {
-        final Class superclass = beanClass.getSuperclass();
+        final Class<?> superclass = beanClass.getSuperclass();
         try {
             final BeanInfo superBeanInfo = Introspector.getBeanInfo(superclass);
             return new BeanInfo[] { superBeanInfo };
@@ -66,8 +66,7 @@ public class BnTableBeanInfo extends ModelSubscriberBeanInfo {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    protected Class getBeanClass() {
+    protected Class<?> getBeanClass() {
         return beanClass;
     }
 

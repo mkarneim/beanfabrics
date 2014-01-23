@@ -21,7 +21,7 @@ import org.beanfabrics.util.ExceptionUtil;
  * @author Michael Karneim
  */
 public class BnListBeanInfo extends ModelSubscriberBeanInfo {
-    private static final Class BEAN_CLASS = BnList.class;
+    private static final Class<?> BEAN_CLASS = BnList.class;
 
     public BeanDescriptor getBeanDescriptor() {
         BeanDescriptor result = new BeanDescriptor(BEAN_CLASS, BnListCustomizer.class);
@@ -32,11 +32,14 @@ public class BnListBeanInfo extends ModelSubscriberBeanInfo {
 
     public PropertyDescriptor[] getPropertyDescriptors() {
         try {
-            final PropertyDescriptor pModel = new PropertyDescriptor("presentationModel", this.getBeanClass(), "getPresentationModel", "setPresentationModel");
-            final PropertyDescriptor provider = new PropertyDescriptor("modelProvider", BEAN_CLASS, "getModelProvider", "setModelProvider");
+            final PropertyDescriptor pModel = new PropertyDescriptor("presentationModel", this.getBeanClass(),
+                    "getPresentationModel", "setPresentationModel");
+            final PropertyDescriptor provider = new PropertyDescriptor("modelProvider", BEAN_CLASS, "getModelProvider",
+                    "setModelProvider");
             PropertyDescriptor path = new PropertyDescriptor("path", BEAN_CLASS, "getPath", "setPath");
             path.setBound(true);
-            final PropertyDescriptor cellConfig = new PropertyDescriptor("cellConfig", BEAN_CLASS, "getCellConfig", "setCellConfig");
+            final PropertyDescriptor cellConfig = new PropertyDescriptor("cellConfig", BEAN_CLASS, "getCellConfig",
+                    "setCellConfig");
             cellConfig.setBound(true);
             cellConfig.setPropertyEditorClass(CellConfigPropertyEditor.class);
             return new PropertyDescriptor[] { pModel, provider, path, cellConfig };
@@ -48,15 +51,15 @@ public class BnListBeanInfo extends ModelSubscriberBeanInfo {
 
     public Image getIcon(int iconKind) {
         switch (iconKind) {
-            case BeanInfo.ICON_COLOR_16x16:
-                return loadImage("bn_list_obj16.gif");
-            default:
-                return null;
+        case BeanInfo.ICON_COLOR_16x16:
+            return loadImage("bn_list_obj16.gif");
+        default:
+            return null;
         }
     }
 
     public BeanInfo[] getAdditionalBeanInfo() {
-        final Class superclass = BEAN_CLASS.getSuperclass();
+        final Class<?> superclass = BEAN_CLASS.getSuperclass();
         try {
             BeanInfo superBeanInfo = Introspector.getBeanInfo(superclass);
             return new BeanInfo[] { superBeanInfo };
@@ -66,9 +69,8 @@ public class BnListBeanInfo extends ModelSubscriberBeanInfo {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected Class getBeanClass() {
+    protected Class<?> getBeanClass() {
         return BEAN_CLASS;
     }
 

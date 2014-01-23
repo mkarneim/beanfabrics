@@ -16,8 +16,7 @@ import org.beanfabrics.support.Validation;
 import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 
 /**
- * The <code>PathPM</code> is a presentation model presenting a {@link Path}
- * object.
+ * The <code>PathPM</code> is a presentation model presenting a {@link Path} object.
  * 
  * @author Michael Karneim
  */
@@ -42,21 +41,20 @@ public class PathPM extends TextPM {
         return Path.parse(this.getText());
     }
 
-    private void setPath(Path path) {
+    public void setPath(Path path) {
         this.setText(Path.getPathString(path));
     }
 
     @Operation
     void choosePath() {
-        PathChooserPM chooserMdl = new PathChooserPM();
-        chooserMdl.setFunctions(new PathChooserPM.Functions() {
-            public void apply(Path path) {
-                setPath(path);
+        final PathChooserController ctrl = CustomizerUtil.createPathChooser(getContext(), this.getPathContext());
+        ctrl.getPresentationModel().onApply(new PathChooserPM.OnApplyHandler() {
+            @Override
+            public void apply() {
+                setPath(ctrl.getPresentationModel().getData());
             }
         });
-        chooserMdl.setPathContext(this.getPathContext());
-        chooserMdl.getContext().addParent(this.getContext());
-        CustomizerUtil.get().openPathChooserDialog(chooserMdl);
+        ctrl.getView().setVisible(true);
     }
 
     @Validation(path = "choosePath")
@@ -91,7 +89,8 @@ public class PathPM extends TextPM {
     @SortOrder(3)
     boolean isCorrect() {
         Path path = new Path(this.getText());
-        return rootElementInfo == null || requiredModelTypeInfo == null || requiredModelTypeInfo.isAssignableFrom(this.rootElementInfo.getPathInfo(path).getTypeInfo());
+        return rootElementInfo == null || requiredModelTypeInfo == null
+                || requiredModelTypeInfo.isAssignableFrom(this.rootElementInfo.getPathInfo(path).getTypeInfo());
     }
 
 }
