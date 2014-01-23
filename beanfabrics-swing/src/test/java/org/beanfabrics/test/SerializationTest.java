@@ -48,370 +48,384 @@ import org.hamcrest.Matcher;
 import org.junit.Test;
 
 public class SerializationTest {
+	private static final String OS_NAME = System.getProperty("os.name")
+			.toLowerCase();
 
-    @Test
-    public void testBnProgressBar() throws Exception {
-        // Given:
-        BnProgressBar gui = new BnProgressBar();
-        IntegerPM pm = new IntegerPM();
-        byte[] buf = serialize(gui);
+	public static boolean isMacOSX() {
+		return OS_NAME.startsWith("mac os");
+	}
 
-        // When:
-        BnProgressBar act = deserialize(buf);
-        act.setPresentationModel(pm);
-        pm.setInteger(10);
+	@Test
+	public void testBnProgressBar() throws Exception {
+		// Given:
+		BnProgressBar gui = new BnProgressBar();
+		IntegerPM pm = new IntegerPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(act.getValue(), is(10));
-    }
+		// When:
+		BnProgressBar act = deserialize(buf);
+		act.setPresentationModel(pm);
+		pm.setInteger(10);
 
-    @Test
-    public void testBnLabel() throws Exception {
-        // Given:
-        BnLabel gui = new BnLabel();
-        TextPM pm = new TextPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		// show(act);
+		assertThat(act.getValue(), is(10));
+	}
 
-        // When:
-        BnLabel act = deserialize(buf);
-        act.setPresentationModel(pm);
-        pm.setText("hello");
+	@Test
+	public void testBnLabel() throws Exception {
+		// Given:
+		BnLabel gui = new BnLabel();
+		TextPM pm = new TextPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(act.getText(), is("hello"));
-    }
+		// When:
+		BnLabel act = deserialize(buf);
+		act.setPresentationModel(pm);
+		pm.setText("hello");
 
-    @Test
-    public void testBnIconLabel() throws Exception {
-        // Given:
-        BnIconLabel gui = new BnIconLabel();
-        IconPM pm = new IconPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		// show(act);
+		assertThat(act.getText(), is("hello"));
+	}
 
-        // When:
-        BnIconLabel act = deserialize(buf);
-        act.setPresentationModel(pm);
-        pm.setIconUrl(BnLabelTest.class.getResource("sample.gif"));
+	@Test
+	public void testBnIconLabel() throws Exception {
+		// Given:
+		BnIconLabel gui = new BnIconLabel();
+		IconPM pm = new IconPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(act.getIcon(), is(pm.getIcon()));
-    }
+		// When:
+		BnIconLabel act = deserialize(buf);
+		act.setPresentationModel(pm);
+		pm.setIconUrl(BnLabelTest.class.getResource("sample.gif"));
 
-    @Test
-    public void testBnTable() throws Exception {
-        // Given:
-        BnTable gui = new BnTable();
-        gui.setColumns(new BnColumnBuilder().addColumn().withName("Color").withPath("this").build());
-        ListPM<TextPM> pm = new ListPM<TextPM>();
-        populate(pm, "green", "blue", "yellow", "black");
+		// Then:
+		// show(act);
+		assertThat(act.getIcon(), is(pm.getIcon()));
+	}
 
-        byte[] buf = serialize(gui);
+	@Test
+	public void testBnTable() throws Exception {
+		// Given:
+		BnTable gui = new BnTable();
+		gui.setColumns(new BnColumnBuilder().addColumn().withName("Color")
+				.withPath("this").build());
+		ListPM<TextPM> pm = new ListPM<TextPM>();
+		populate(pm, "green", "blue", "yellow", "black");
 
-        // When:
-        BnTable act = deserialize(buf);
-        act.setPresentationModel(pm);
-        pm.getSelection().add(pm.getAt(2));
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(act.getSelectedRow(), is(2));
-    }
+		// When:
+		BnTable act = deserialize(buf);
+		act.setPresentationModel(pm);
+		pm.getSelection().add(pm.getAt(2));
 
-    @Test
-    public void testBnList() throws Exception {
-        // Given:
-        BnList gui = new BnList();
-        gui.setCellConfig(new CellConfig(new Path("this")));
-        ListPM<TextPM> pm = new ListPM<TextPM>();
-        populate(pm, "green", "blue", "yellow", "black");
+		// Then:
+		// show(act);
+		assertThat(act.getSelectedRow(), is(2));
+	}
 
-        byte[] buf = serialize(gui);
+	@Test
+	public void testBnList() throws Exception {
+		// Given:
+		BnList gui = new BnList();
+		gui.setCellConfig(new CellConfig(new Path("this")));
+		ListPM<TextPM> pm = new ListPM<TextPM>();
+		populate(pm, "green", "blue", "yellow", "black");
 
-        // When:
-        BnList act = deserialize(buf);
-        act.setPresentationModel(pm);
-        pm.getSelection().add(pm.getAt(2));
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(((TextPM) act.getSelectedValue()).getText(), is("yellow"));
-    }
+		// When:
+		BnList act = deserialize(buf);
+		act.setPresentationModel(pm);
+		pm.getSelection().add(pm.getAt(2));
 
-    @Test
-    public void testBnTextArea() throws Exception {
-        // Given:
-        BnTextArea gui = new BnTextArea();
-        TextPM pm = new TextPM();
+		// Then:
+		// show(act);
+		assertThat(((TextPM) act.getSelectedValue()).getText(), is("yellow"));
+	}
 
-        byte[] buf = serialize(gui);
+	@Test
+	public void testBnTextArea() throws Exception {
+		// Given:
+		BnTextArea gui = new BnTextArea();
+		TextPM pm = new TextPM();
 
-        // When:
-        BnTextArea act = deserialize(buf);
-        act.setPresentationModel(pm);
-        pm.setText("dummy");
+		byte[] buf = serialize(gui);
 
-        // Then:
-        assertThat(act.getText(), is("dummy"));
-    }
+		// When:
+		BnTextArea act = deserialize(buf);
+		act.setPresentationModel(pm);
+		pm.setText("dummy");
 
-    @Test
-    public void testBnComboBox() throws Exception {
-        // Given:
-        BnComboBox gui = new BnComboBox();
-        TextPM pm = new TextPM();
-        pm.setOptions(Options.create("green", "yellow", "blue"));
-        byte[] buf = serialize(gui);
+		// Then:
+		assertThat(act.getText(), is("dummy"));
+	}
 
-        // When:
-        BnComboBox act = deserialize(buf);
-        act.setPresentationModel(pm);
-        pm.setText("yellow");
+	@Test
+	public void testBnComboBox() throws Exception {
+		if (isMacOSX()) {
+			// skip, because of java.io.NotSerializableException:
+			// com.apple.laf.AquaComboBoxUI
+			return;
+		}
+		// Given:
+		BnComboBox gui = new BnComboBox();
+		TextPM pm = new TextPM();
+		pm.setOptions(Options.create("green", "yellow", "blue"));
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat((String) act.getSelectedItem(), is("yellow"));
-    }
+		// When:
+		BnComboBox act = deserialize(buf);
+		act.setPresentationModel(pm);
+		pm.setText("yellow");
 
-    @Test
-    public void testBnAction() throws Exception {
-        // Given:
-        BnAction gui = new BnAction();
-        FileMenuPM pm = new FileMenuPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		// show(act);
+		assertThat((String) act.getSelectedItem(), is("yellow"));
+	}
 
-        // When:
-        BnAction act = deserialize(buf);
-        act.setPresentationModel(pm.newFile);
-        pm.newFile.setTitle("New File");
-        act.actionPerformed(new ActionEvent(this, 0, "dummy"));
+	@Test
+	public void testBnAction() throws Exception {
+		// Given:
+		BnAction gui = new BnAction();
+		FileMenuPM pm = new FileMenuPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        assertThat((String) act.getValue(Action.NAME), is("New File"));
-        assertThat(pm.getCalledOperationNames(), containsExactly("newFile"));
-    }
+		// When:
+		BnAction act = deserialize(buf);
+		act.setPresentationModel(pm.newFile);
+		pm.newFile.setTitle("New File");
+		act.actionPerformed(new ActionEvent(this, 0, "dummy"));
 
-    @Test
-    public void testBnMenuItem() throws Exception {
-        // Given:
-        BnMenuItem gui = new BnMenuItem();
-        FileMenuPM pm = new FileMenuPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		assertThat((String) act.getValue(Action.NAME), is("New File"));
+		assertThat(pm.getCalledOperationNames(), containsExactly("newFile"));
+	}
 
-        // When:
-        BnMenuItem act = deserialize(buf);
-        act.setPresentationModel(pm.newFile);
-        pm.newFile.setTitle("New File");
-        act.doClick();
+	@Test
+	public void testBnMenuItem() throws Exception {
+		// Given:
+		BnMenuItem gui = new BnMenuItem();
+		FileMenuPM pm = new FileMenuPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(pm.getCalledOperationNames(), containsExactly("newFile"));
-    }
+		// When:
+		BnMenuItem act = deserialize(buf);
+		act.setPresentationModel(pm.newFile);
+		pm.newFile.setTitle("New File");
+		act.doClick();
 
-    @Test
-    public void testBnButton() throws Exception {
-        // Given:
-        BnButton gui = new BnButton();
-        FileMenuPM pm = new FileMenuPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		// show(act);
+		assertThat(pm.getCalledOperationNames(), containsExactly("newFile"));
+	}
 
-        // When:
-        BnButton act = deserialize(buf);
-        act.setPresentationModel(pm.newFile);
-        pm.newFile.setTitle("New File");
-        act.doClick();
+	@Test
+	public void testBnButton() throws Exception {
+		// Given:
+		BnButton gui = new BnButton();
+		FileMenuPM pm = new FileMenuPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(act.getText(), is("New File"));
-        assertThat(pm.getCalledOperationNames(), containsExactly("newFile"));
-    }
+		// When:
+		BnButton act = deserialize(buf);
+		act.setPresentationModel(pm.newFile);
+		pm.newFile.setTitle("New File");
+		act.doClick();
 
-    @Test
-    public void testBnCheckBoxMenuItem() throws Exception {
-        // Given:
-        BnCheckBoxMenuItem gui = new BnCheckBoxMenuItem();
-        FileMenuPM pm = new FileMenuPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		// show(act);
+		assertThat(act.getText(), is("New File"));
+		assertThat(pm.getCalledOperationNames(), containsExactly("newFile"));
+	}
 
-        // When:
-        BnCheckBoxMenuItem act = deserialize(buf);
-        act.setPresentationModel(pm.autoSaveOnQuit);
-        act.doClick();
+	@Test
+	public void testBnCheckBoxMenuItem() throws Exception {
+		// Given:
+		BnCheckBoxMenuItem gui = new BnCheckBoxMenuItem();
+		FileMenuPM pm = new FileMenuPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(pm.autoSaveOnQuit.getBoolean(), is(true));
-    }
+		// When:
+		BnCheckBoxMenuItem act = deserialize(buf);
+		act.setPresentationModel(pm.autoSaveOnQuit);
+		act.doClick();
 
-    @Test
-    public void testBnRadioButton() throws Exception {
-        // Given:
-        BnRadioButton gui = new BnRadioButton();
-        ContactPM pm = new ContactPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		// show(act);
+		assertThat(pm.autoSaveOnQuit.getBoolean(), is(true));
+	}
 
-        // When:
-        BnRadioButton act = deserialize(buf);
-        act.setPresentationModel(pm.isMarried);
-        pm.isMarried.setBoolean(true);
+	@Test
+	public void testBnRadioButton() throws Exception {
+		// Given:
+		BnRadioButton gui = new BnRadioButton();
+		ContactPM pm = new ContactPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(act.isSelected(), is(true));
-    }
+		// When:
+		BnRadioButton act = deserialize(buf);
+		act.setPresentationModel(pm.isMarried);
+		pm.isMarried.setBoolean(true);
 
-    @Test
-    public void testBnCheckBox() throws Exception {
-        // Given:
-        BnCheckBox gui = new BnCheckBox();
-        ContactPM pm = new ContactPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		// show(act);
+		assertThat(act.isSelected(), is(true));
+	}
 
-        // When:
-        BnCheckBox act = deserialize(buf);
-        act.setPresentationModel(pm.isMarried);
-        pm.isMarried.setBoolean(true);
+	@Test
+	public void testBnCheckBox() throws Exception {
+		// Given:
+		BnCheckBox gui = new BnCheckBox();
+		ContactPM pm = new ContactPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(act.isSelected(), is(true));
-    }
+		// When:
+		BnCheckBox act = deserialize(buf);
+		act.setPresentationModel(pm.isMarried);
+		pm.isMarried.setBoolean(true);
 
-    @Test
-    public void testBnToggleButton() throws Exception {
-        // Given:
-        BnToggleButton gui = new BnToggleButton();
-        ContactPM pm = new ContactPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		// show(act);
+		assertThat(act.isSelected(), is(true));
+	}
 
-        // When:
-        BnToggleButton act = deserialize(buf);
-        act.setPresentationModel(pm.isMarried);
-        pm.isMarried.setBoolean(true);
+	@Test
+	public void testBnToggleButton() throws Exception {
+		// Given:
+		BnToggleButton gui = new BnToggleButton();
+		ContactPM pm = new ContactPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat("act.isSelected()", act.isSelected(), is(true));
-    }
+		// When:
+		BnToggleButton act = deserialize(buf);
+		act.setPresentationModel(pm.isMarried);
+		pm.isMarried.setBoolean(true);
 
-    @Test
-    public void testBnTextField() throws Exception {
-        // Given:
-        BnTextField gui = new BnTextField();
-        CalculatorPM pm = new CalculatorPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		// show(act);
+		assertThat("act.isSelected()", act.isSelected(), is(true));
+	}
 
-        // When:
-        BnTextField act = deserialize(buf);
-        act.setPresentationModel(pm.input);
-        pm.input.setInteger(123);
+	@Test
+	public void testBnTextField() throws Exception {
+		// Given:
+		BnTextField gui = new BnTextField();
+		CalculatorPM pm = new CalculatorPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat(act.getText(), is("123"));
-    }
+		// When:
+		BnTextField act = deserialize(buf);
+		act.setPresentationModel(pm.input);
+		pm.input.setInteger(123);
 
-    @Test
-    public void testBnPasswordField() throws Exception {
-        // Given:
-        BnPasswordField gui = new BnPasswordField();
-        TextPM pm = new TextPM();
-        byte[] buf = serialize(gui);
+		// Then:
+		// show(act);
+		assertThat(act.getText(), is("123"));
+	}
 
-        // When:
-        BnPasswordField act = deserialize(buf);
-        act.setPresentationModel(pm);
-        pm.setText("very secret");
+	@Test
+	public void testBnPasswordField() throws Exception {
+		// Given:
+		BnPasswordField gui = new BnPasswordField();
+		TextPM pm = new TextPM();
+		byte[] buf = serialize(gui);
 
-        // Then:
-        // show(act);
-        assertThat("act.getText()", act.getPassword(), is("very secret".toCharArray()));
-    }
+		// When:
+		BnPasswordField act = deserialize(buf);
+		act.setPresentationModel(pm);
+		pm.setText("very secret");
 
-    @Test
-    public void testBnTextFieldInsidePanel() throws Exception {
-        // Given:
-        AddressPanel panel = new AddressPanel();
-        AddressPM pm = new AddressPM();
-        byte[] buf = serialize(panel);
+		// Then:
+		// show(act);
+		assertThat("act.getText()", act.getPassword(),
+				is("very secret".toCharArray()));
+	}
 
-        // When:
-        AddressPanel act = deserialize(buf);
-        act.setPresentationModel(pm);
-        pm.city.setText("Boston");
+	@Test
+	public void testBnTextFieldInsidePanel() throws Exception {
+		// Given:
+		AddressPanel panel = new AddressPanel();
+		AddressPM pm = new AddressPM();
+		byte[] buf = serialize(panel);
 
-        // Then:
-        // show(act);
-        assertThat(act.getTfCity().getText(), is("Boston"));
-    }
+		// When:
+		AddressPanel act = deserialize(buf);
+		act.setPresentationModel(pm);
+		pm.city.setText("Boston");
 
-    // /
+		// Then:
+		// show(act);
+		assertThat(act.getTfCity().getText(), is("Boston"));
+	}
 
-    private void show(final JComponent comp) {
-        System.out.println("Showing component");
-        JDialog dlg = new JDialog();
-        dlg.setModal(true);
-        dlg.getContentPane().add(comp, BorderLayout.CENTER);
-        dlg.pack();
-        dlg.setLocationRelativeTo(null);
-        dlg.setVisible(true);
-    }
+	// /
 
-    private void populate(ListPM<TextPM> pm, String... strings) {
-        for (String string : strings) {
-            pm.add(new TextPM(string));
-        }
-    }
+	private void show(final JComponent comp) {
+		System.out.println("Showing component");
+		JDialog dlg = new JDialog();
+		dlg.setModal(true);
+		dlg.getContentPane().add(comp, BorderLayout.CENTER);
+		dlg.pack();
+		dlg.setLocationRelativeTo(null);
+		dlg.setVisible(true);
+	}
 
-    private <T> byte[] serialize(T p) throws IOException {
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(bout);
-        try {
-            out.writeObject(p);
-            out.close();
-            bout.close();
-            return bout.toByteArray();
-        } finally {
-            bout.close();
-            out.close();
-        }
-    }
+	private void populate(ListPM<TextPM> pm, String... strings) {
+		for (String string : strings) {
+			pm.add(new TextPM(string));
+		}
+	}
 
-    private <T> T deserialize(byte[] buff) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream bin = new ByteArrayInputStream(buff);
-        ObjectInputStream in = new ObjectInputStream(bin);
-        try {
-            @SuppressWarnings("unchecked")
-            T result = (T) in.readObject();
-            return result;
-        } finally {
-            bin.close();
-            in.close();
-        }
-    }
+	private <T> byte[] serialize(T p) throws IOException {
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		ObjectOutputStream out = new ObjectOutputStream(bout);
+		try {
+			out.writeObject(p);
+			out.close();
+			bout.close();
+			return bout.toByteArray();
+		} finally {
+			bout.close();
+			out.close();
+		}
+	}
 
-    private <T> Matcher<List<T>> containsExactly(final T... expected) {
-        Matcher<List<T>> result = new BaseMatcher<List<T>>() {
-            protected T[] theExpected = expected;
+	private <T> T deserialize(byte[] buff) throws IOException,
+			ClassNotFoundException {
+		ByteArrayInputStream bin = new ByteArrayInputStream(buff);
+		ObjectInputStream in = new ObjectInputStream(bin);
+		try {
+			@SuppressWarnings("unchecked")
+			T result = (T) in.readObject();
+			return result;
+		} finally {
+			bin.close();
+			in.close();
+		}
+	}
 
-            @Override
-            public boolean matches(Object actual) {
-                List<T> list = (List<T>) actual;
-                if (list.size() != theExpected.length) {
-                    return false;
-                }
-                return list.containsAll(Arrays.asList(theExpected));
-            }
+	private <T> Matcher<List<T>> containsExactly(final T... expected) {
+		Matcher<List<T>> result = new BaseMatcher<List<T>>() {
+			protected T[] theExpected = expected;
 
-            @Override
-            public void describeTo(Description desc) {
-                desc.appendText(Arrays.toString(theExpected));
-            }
-        };
-        return result;
-    }
+			@Override
+			public boolean matches(Object actual) {
+				List<T> list = (List<T>) actual;
+				if (list.size() != theExpected.length) {
+					return false;
+				}
+				return list.containsAll(Arrays.asList(theExpected));
+			}
+
+			@Override
+			public void describeTo(Description desc) {
+				desc.appendText(Arrays.toString(theExpected));
+			}
+		};
+		return result;
+	}
 }
