@@ -25,12 +25,7 @@ import org.beanfabrics.model.IListPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.customizer.path.PathChooserController;
-import org.beanfabrics.swing.customizer.path.PathChooserDialog;
-import org.beanfabrics.swing.customizer.path.PathChooserPM;
 import org.beanfabrics.swing.customizer.path.PathContext;
-import org.beanfabrics.swing.customizer.table.ColumnListConfigurationDialog;
-import org.beanfabrics.swing.customizer.table.ColumnListConfigurationPM;
-import org.beanfabrics.swing.table.BnTable;
 import org.beanfabrics.util.GenericType;
 
 /**
@@ -111,27 +106,11 @@ public class CustomizerUtil {
         return result;
     }
 
-    public static PathElementInfo getPathInfoFromView(View<? extends PresentationModel> view) {
-        PresentationModel pm = view.getPresentationModel();
-        if (pm != null) {
-            return PMManager.getInstance().getMetadata().getPathElementInfo(pm.getClass());
+    public static TypeInfo getTypeInfo(Class<? extends PresentationModel> pmClass) {
+        if (pmClass == null) {
+            return null;
         }
-        return null;
-    }
-
-    public static PathElementInfo getPathInfoFromSubscriber(ModelSubscriber subscriber) {
-        IModelProvider provider = subscriber.getModelProvider();
-        if (provider != null) {
-            Class<? extends PresentationModel> pmClass = provider.getPresentationModelType();
-            if (pmClass != null) {
-                Path path = subscriber.getPath();
-                if (path != null) {
-                    PathElementInfo root = PMManager.getInstance().getMetadata().getPathElementInfo(pmClass);
-                    return root.getPathInfo(path);
-                }
-            }
-        }
-        return null;
+        return PMManager.getInstance().getMetadata().getTypeInfo(pmClass);
     }
 
     public static PathElementInfo getPathInfo(Class<? extends PresentationModel> pmClass) {
@@ -140,50 +119,9 @@ public class CustomizerUtil {
         }
         return PMManager.getInstance().getMetadata().getPathElementInfo(pmClass);
     }
-
-    public static TypeInfo getTypeInfo(Class<? extends PresentationModel> pmClass) {
-        if (pmClass == null) {
-            return null;
-        }
-        return PMManager.getInstance().getMetadata().getTypeInfo(pmClass);
-    }
-
-    public static <C extends View<?> & ModelSubscriber> PathElementInfo getPathInfoFromBnComponent(C component) {
-        PathElementInfo result = CustomizerUtil.getPathInfoFromSubscriber(component);
-        if (result == null) {
-            result = CustomizerUtil.getPathInfoFromView(component);
-        }
-        return result;
-    }
-
-    public static <C extends View<?> & ModelSubscriber> PathContext getPathContextFromBnComponent(C component) {
-        Class<? extends PresentationModel> rootModelType = CustomizerUtil
-                .extractBoundRootModelTypeFromComponent(component);
-        @SuppressWarnings("unchecked")
-        Class<? extends PresentationModel> requiredModelType = CustomizerUtil
-                .getExpectedModelTypeFromViewClass((Class<? extends View<?>>) component.getClass());
-        PathContext result = new PathContext(PMManager.getInstance().getMetadata().getPathElementInfo(rootModelType),
-                PMManager.getInstance().getMetadata().getTypeInfo(requiredModelType), component.getPath());
-        PathContext pathContext = result;
-        return pathContext;
-    }
-
-    public static <C extends View<?> & ModelSubscriber> PathContext getPathContextFromSubscriber(
-            ModelSubscriber aSubscriber) {
-        if (aSubscriber instanceof View) {
-            return getPathContextFromBnComponent((C) aSubscriber);
-        }
-        TypeInfo requiredModelTypeInfo = getTypeInfo(PresentationModel.class);
-        IModelProvider provider = aSubscriber.getModelProvider();
-        if (provider == null) {
-            return null;
-        }
-        return new PathContext(getPathInfo(provider.getPresentationModelType()), requiredModelTypeInfo, aSubscriber.getPath());
-    }
-
-    public static <L extends IListPM<?>, C extends View<L> & ModelSubscriber> Class<? extends PresentationModel> getRowPmType(
-            C component) {
-        PathElementInfo listPmMetaData = CustomizerUtil.getPathInfoFromBnComponent(component);
+    
+    public static Class<? extends PresentationModel> getRowPmType(ModelSubscriber component) {
+        PathElementInfo listPmMetaData = getPathInfoOfTarget(component);
         if (listPmMetaData == null) {
             return null;
         } else {
@@ -200,15 +138,60 @@ public class CustomizerUtil {
         }
     }
 
-    private static <C extends View<?> & ModelSubscriber> Class<? extends PresentationModel> extractBoundRootModelTypeFromComponent(
-            C component) {
-        View<?> view = component;
-        ModelSubscriber subscriber = component;
+    public static PathElementInfo getPathInfoOfTarget(ModelSubscriber subscriber) {
+        Path path = subscriber.getPath();
+        IModelProvider provider = subscriber.getModelProvider();
+        if (path != null && provider != null ) {
+            Class<? extends PresentationModel> pmClass = provider.getPresentationModelType();
+            if (pmClass != null) {
+                return getPathInfo(pmClass).getPathInfo(path);                
+            }
+            PresentationModel pm = provider.getPresentationModel();
+            if ( pm != null) {
+                return getPathInfo(pm.getClass());
+            }
+        }
+        if (subscriber instanceof View<?>) {
+            View<?> view = (View<?>) subscriber;
+            PresentationModel pm = view.getPresentationModel();
+            if (pm != null) {
+                return getPathInfo(pm.getClass());                
+            }
+        }
+        return null;
+    }
 
-        IModelProvider ds = subscriber.getModelProvider();
-        if (ds != null) {
-            return ds.getPresentationModelType();
-        } else {
+    public static PathContext getPathContextFromSubscriber(ModelSubscriber aSubscriber) {
+        if (aSubscriber instanceof View) {
+            return getPathContextFromBnComponent(aSubscriber);
+        }
+        // fallback
+        IModelProvider provider = aSubscriber.getModelProvider();
+        if (provider == null) {
+            return null;
+        }
+        // we know the root pm type but we don't know what is required by the view (because there is no view)
+        return new PathContext(getPathInfo(provider.getPresentationModelType()), getTypeInfo(PresentationModel.class),
+                aSubscriber.getPath());
+    }
+
+    public static PathContext getPathContextFromBnComponent(ModelSubscriber component) {
+        Class<? extends PresentationModel> rootModelType = extractBoundRootModelTypeFromComponent(component);
+        @SuppressWarnings("unchecked")
+        Class<? extends PresentationModel> requiredModelType = getExpectedModelTypeFromViewClass((Class<? extends View<?>>) component
+                .getClass());
+        PathContext result = new PathContext(PMManager.getInstance().getMetadata().getPathElementInfo(rootModelType),
+                PMManager.getInstance().getMetadata().getTypeInfo(requiredModelType), component.getPath());
+        PathContext pathContext = result;
+        return pathContext;
+    }
+
+    private static Class<? extends PresentationModel> extractBoundRootModelTypeFromComponent(ModelSubscriber component) {
+        IModelProvider provider = component.getModelProvider();
+        if (provider != null) {
+            return provider.getPresentationModelType();
+        } else if (component instanceof View<?>) {
+            View<?> view = (View<?>) component;
             PresentationModel pm = view.getPresentationModel();
             if (pm != null) {
                 return pm.getClass();
