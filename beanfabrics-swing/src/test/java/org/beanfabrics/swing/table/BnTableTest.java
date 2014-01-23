@@ -112,7 +112,7 @@ public class BnTableTest {
         this.table.setColumns(this.def);
         this.provider.setPresentationModel(this.groupModel);
         assertEquals("table.getRowCount()", 0, table.getRowCount());
-        assertEquals("table.getColumnCount()", 0, table.getColumnCount());
+        assertEquals("table.getColumnCount()", 2, table.getColumnCount());
         this.table.setPath(new Path("this.persons"));
         assertEquals("table.getRowCount()", this.groupModel.persons.size(), table.getRowCount());
         assertEquals("table.getColumnCount()", this.def.length, table.getColumnCount());
@@ -175,7 +175,7 @@ public class BnTableTest {
         assertEquals("table.getColumnCount()", this.def.length, table.getColumnCount());
         this.table.setPresentationModel(null);
         assertEquals("table.getRowCount()", 0, table.getRowCount());
-        assertEquals("table.getColumnCount()", 0, table.getColumnCount());
+        assertEquals("table.getColumnCount()", 2, table.getColumnCount());
     }
 
     @Test
