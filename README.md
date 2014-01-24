@@ -11,7 +11,7 @@ Beanfabrics is open source, and it is distributed under the terms of the [LGPL l
 For more information please read the [license] file.
 
 ### Download
-* The [releases page] contains links to all stable releases with a change log and the download link.
+* The [releases page] contains links to all stable releases with a change log and the download links.
 * There is a [Beanfabrics Eclipse plugin] for creating custom view classes.
 
 
@@ -25,7 +25,7 @@ The documentation is currently spread over multiple places.
 
 ### Source
 
-This projects source code was formerly hosted at http://beanfabrics.googlecode.com.
+This project's source code was formerly hosted at http://beanfabrics.googlecode.com.
 Since December 2013 it is hosted at https://github.com/mkarneim/beanfabrics.
 
 You can build the Beanfabrics libraries yourself using ANT or MAVEN.
