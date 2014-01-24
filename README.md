@@ -16,7 +16,7 @@ For more information please read the [license] file.
 
 
 ### Documentation
-The documentation is spread over multiple places. 
+The documentation is spread over multiple places:
 
 * At Google Code there is a brief [introduction].
 * The [Beanfabrics homepage] contains an [overview], a [tutorial], some [code examples] and [demo applications].
