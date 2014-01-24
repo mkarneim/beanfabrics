@@ -14,6 +14,14 @@ For more information please read the [license] file.
 * The [releases page] contains links to all stable releases with a change log and the download links.
 * There is also a [Beanfabrics Eclipse plugin] for creating custom view classes.
 
+Dependencies
+------------
+Beanfabrics has only minimal dependencies.
+
+* [Java] 6 
+* [slf4j] 1.7.1
+* [junit] 4.10 (test scope)
+* [logback-classic] 1.0.7 (test scope)
 
 ### Documentation
 The documentation is spread over multiple places:
@@ -44,6 +52,10 @@ You can build the Beanfabrics libraries yourself using ANT or MAVEN.
 [license]: license.txt
 [releases page]: https://github.com/mkarneim/beanfabrics/releases
 [Beanfabrics Eclipse plugin]: http://www.beanfabrics.org/index.php?title=Eclipse_Plugin
+[Java]: http://www.oracle.com/technetwork/java/
+[slf4j]: http://www.slf4j.org/
+[junit]: http://junit.org/
+[logback-classic]: http://logback.qos.ch/
 [introduction]: https://code.google.com/p/beanfabrics/wiki/Introduction
 [Beanfabrics homepage]: http://www.beanfabrics.org
 [overview]: http://www.beanfabrics.org/index.php?title=Overview
