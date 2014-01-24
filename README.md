@@ -7,14 +7,16 @@ Project Homepage: http://www.beanfabrics.org
 
 
 ### Download
-The [releases page] contains links to all stable releases with a change log and the download link.
+* The [releases page] contains links to all stable releases with a change log and the download link.
+* There is a [Beanfabrics Eclipse plugin] for creating custom view classes.
+
 
 ### Documentation
 The documentation is currently spread over multiple places. 
 
-The Beanfabrics homepage contains an [overview], a [tutorial], some [code examples] and [demo applications].
-At GitHub there is the [JavaDoc API documentation].
-
+* At Google Code there is a brief [introduction].
+* The [Beanfabrics homepage] contains an [overview], a [tutorial], some [code examples] and [demo applications].
+* At GitHub there is the [JavaDoc API documentation]. 
 
 ### Source
 
@@ -34,6 +36,9 @@ You can build the Beanfabrics libraries yourself using ANT or MAVEN.
 ```mvn install```
 
 [releases page]: https://github.com/mkarneim/beanfabrics/releases
+[Beanfabrics Eclipse plugin]: http://www.beanfabrics.org/index.php?title=Eclipse_Plugin
+[introduction]: https://code.google.com/p/beanfabrics/wiki/Introduction
+[Beanfabrics homepage]: http://www.beanfabrics.org
 [overview]: http://www.beanfabrics.org/index.php?title=Overview
 [tutorial]: http://www.beanfabrics.org/index.php?title=Tutorial
 [code examples]: http://www.beanfabrics.org/index.php?title=Examples
