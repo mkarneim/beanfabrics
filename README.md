@@ -14,8 +14,7 @@ For more information please read the [license] file.
 * The [releases page] contains links to all stable releases with a change log and the download links.
 * There is also a [Beanfabrics Eclipse plugin] for creating custom view classes.
 
-Dependencies
-------------
+### Dependencies
 Beanfabrics has only minimal dependencies.
 
 * [Java] 6 
