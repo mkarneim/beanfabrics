@@ -12,7 +12,7 @@ For more information please read the [license] file.
 
 ### Download
 * The [releases page] contains links to all stable releases with a change log and the download links.
-* There is a [Beanfabrics Eclipse plugin] for creating custom view classes.
+* There is also a [Beanfabrics Eclipse plugin] for creating custom view classes.
 
 
 ### Documentation
