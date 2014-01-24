@@ -21,6 +21,7 @@ The documentation is currently spread over multiple places.
 * At Google Code there is a brief [introduction].
 * The [Beanfabrics homepage] contains an [overview], a [tutorial], some [code examples] and [demo applications].
 * At GitHub there is the [JavaDoc API documentation]. 
+* If you understand German you might want to watch a [presentation video] I have given at the TNG headquaters near Munich. Here is a link to the [slides].
 
 ### Source
 
@@ -50,3 +51,6 @@ You can build the Beanfabrics libraries yourself using ANT or MAVEN.
 [code examples]: http://www.beanfabrics.org/index.php?title=Examples
 [demo applications]: http://www.beanfabrics.org/index.php?title=Demo_applications
 [JavaDoc API documentation]: https://github.com/mkarneim/beanfabrics/wiki/Documentation
+[presentation video]: http://youtu.be/fwEQ-JBu_bI
+[slides]: https://docs.google.com/file/d/0Bzq_i9FFoaRUc0dxbDNPU0lydGs/edit?usp=sharing
+
