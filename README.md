@@ -5,6 +5,22 @@ Author: Michael Karneim
 
 Project Homepage: http://www.beanfabrics.org
 
+### About
+Beanfabrics is a *presentation model component framework* for building rich clients and desktop applications with Java Swing or SWT (still experimental). The Beanfabrics framework is free and open source software. 
+
+The term *presentation model* (PM) is the name of a pattern that was [introduced by Martin Fowler] in 2004. According to Fowler the PM 
+> "represents the state and behavior of the presentation independently of the GUI controls used in the interface". 
+
+### Features
+Beanfabrics provides
+* a set of ready-to-use PM components.
+* a set of ready-to-use visual presentation view components.
+
+Beanfabrics
+* has a mechanism for binding visual components dynamically to specific nodes of the PM.
+* is compliant with the JavaBeans specification and supports [bean customization] within GUI builders like [WindowBuilder].
+* is a framework to create custom PM and view components.
+
 ### License
 Beanfabrics is open source, and it is distributed under the terms of the [LGPL license]. 
 
@@ -47,8 +63,11 @@ You can build the Beanfabrics libraries yourself using ANT or MAVEN.
 * To install beanfabrics to your local repository run
 ```mvn install```
 
+[introduced by Martin Fowler]: http://martinfowler.com/eaaDev/PresentationModel.html
+[WindowBuilder]: http://www.eclipse.org/windowbuilder
 [LGPL license]: lgpl.txt
 [license]: license.txt
+[bean customization]: http://docs.oracle.com/javase/tutorial/javabeans/advanced/customization.html
 [releases page]: https://github.com/mkarneim/beanfabrics/releases
 [Beanfabrics Eclipse plugin]: http://www.beanfabrics.org/index.php?title=Eclipse_Plugin
 [Java]: http://www.oracle.com/technetwork/java/
