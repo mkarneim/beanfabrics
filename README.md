@@ -5,6 +5,10 @@ Author: Michael Karneim
 
 Project Homepage: http://www.beanfabrics.org
 
+### License
+Beanfabrics is open source, and it is distributed under the terms of the [LGPL license]. 
+
+For more information please read the [license]: license.txt file.
 
 ### Download
 * The [releases page] contains links to all stable releases with a change log and the download link.
@@ -35,6 +39,8 @@ You can build the Beanfabrics libraries yourself using ANT or MAVEN.
 * To install beanfabrics to your local repository run
 ```mvn install```
 
+[LGPL license]: lgpl.txt
+[license]: license.txt
 [releases page]: https://github.com/mkarneim/beanfabrics/releases
 [Beanfabrics Eclipse plugin]: http://www.beanfabrics.org/index.php?title=Eclipse_Plugin
 [introduction]: https://code.google.com/p/beanfabrics/wiki/Introduction
