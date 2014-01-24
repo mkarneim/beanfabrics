@@ -6,7 +6,7 @@ Since December 2013 it is hosted at https://github.com/mkarneim/beanfabrics.
 
 Visit http://www.beanfabrics.org for more information.
 
-Browse JavaDoc at http://mkarneim.github.io/beanfabrics-javadocs/.
+Browse JavaDoc at https://github.com/mkarneim/beanfabrics/wiki/Documentation.
 
 You have two options for building the Beanfabrics libraries: ANT or MAVEN.
 
