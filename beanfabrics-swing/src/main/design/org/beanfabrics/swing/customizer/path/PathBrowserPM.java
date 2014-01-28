@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathTree;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.IconTextPM;
@@ -24,7 +24,7 @@ import org.beanfabrics.util.ResourceBundleFactory;
 import org.beanfabrics.validation.ValidationState;
 
 /**
- * The <code>PathBrowserPM</code> is the presentation model of the {@link PathBrowserPanel}.
+ * The {@link PathBrowserPM} is the presentation model of the {@link PathBrowserPanel}.
  * 
  * @author Michael Karneim
  */
@@ -38,14 +38,14 @@ public class PathBrowserPM extends AbstractPM {
 
     TextPM currentSelectedPath = new TextPM();
     TextPM currentSelectedType = new TextPM();
-    MapPM<PathTree, PathInfoPM> children = new MapPM<PathTree, PathInfoPM>();
+    MapPM<PathNode, PathNodePM> children = new MapPM<PathNode, PathNodePM>();
     OperationPM gotoSelectedChild = new OperationPM();
     OperationPM gotoCurrentPath = new OperationPM();
     OperationPM gotoParent = new OperationPM();
     IconTextPM status = new IconTextPM();
 
-    private PathTree rootElement;
-    private PathTree currentElement;
+    private PathNode rootElement;
+    private PathNode currentElement;
 
     private TypeInfo requiredModelTypeInfo;
 
@@ -68,7 +68,7 @@ public class PathBrowserPM extends AbstractPM {
 
     private void setCurrentPath(Path path) {
         currentSelectedPath.setText(Path.getPathString(path));
-        PathTree pathElementInfo = rootElement == null ? null : rootElement.getPathInfo(path);
+        PathNode pathElementInfo = rootElement == null ? null : rootElement.getNode(path);
         if (pathElementInfo == null) {
             loadChildren(null);
         } else {
@@ -86,24 +86,24 @@ public class PathBrowserPM extends AbstractPM {
         }
     }
 
-    private void loadChildren(PathTree aElement) {
+    private void loadChildren(PathNode aElement) {
         currentElement = aElement;
         Path currentPath = getCurrentPath();
         children.clear();
         if (aElement == null) {
             gotoParent.setDescription("");
             // no owner -> so we load the root object
-            PathInfoPM rootCell = new PathInfoPM();
-            rootCell.setPathTree(rootElement);
+            PathNodePM rootCell = new PathNodePM();
+            rootCell.setData(rootElement);
             children.put(rootElement, rootCell);
             if (rootElement.getPath().equals(currentPath)) {
                 children.getSelectedKeys().add(rootElement);
             }
         } else {
             gotoParent.setDescription("Up to "+currentElement.getTypeInfo().getJavaType().getSimpleName());
-            for (PathTree child : aElement.getChildren()) {
-                PathInfoPM cell = new PathInfoPM();
-                cell.setPathTree(child);
+            for (PathNode child : aElement.getChildren()) {
+                PathNodePM cell = new PathNodePM();
+                cell.setData(child);
                 children.put(child, cell);
                 if (child.getPath().equals(currentPath)) {
                     children.getSelectedKeys().add(child);
@@ -115,7 +115,7 @@ public class PathBrowserPM extends AbstractPM {
     public TypeInfo getCurrentModelTypeInfo() {
         Path path = getCurrentPath();
         if (path != null && rootElement != null) {
-            PathTree element = rootElement.getPathInfo(path);
+            PathNode element = rootElement.getNode(path);
             if (element != null) {
                 return element.getTypeInfo();
             }
@@ -126,9 +126,9 @@ public class PathBrowserPM extends AbstractPM {
     @OnChange(path = "children")
     void updateCurrentPath() {
         if (children.getSelection().isEmpty() == false) {
-            PathInfoPM first = children.getSelection().getFirst();
+            PathNodePM first = children.getSelection().getFirst();
             if (first != null) {
-                String pathStr = Path.getPathString(first.getPathTree().getPath());
+                String pathStr = Path.getPathString(first.getData().getPath());
                 currentSelectedPath.setText(pathStr);
             }
         }
@@ -168,7 +168,7 @@ public class PathBrowserPM extends AbstractPM {
     @SortOrder(1)
     boolean canPathBeResolved() {
         Path path = Path.parse(currentSelectedPath.getText());
-        return (rootElement != null && rootElement.getPathInfo(path) != null);
+        return (rootElement != null && rootElement.getNode(path) != null);
     }
 
     @Validation(path = "currentSelectedPath")
@@ -194,10 +194,10 @@ public class PathBrowserPM extends AbstractPM {
 
     @Validation(path = "gotoSelectedChild", message = "the selected model has no children")
     public boolean canGotoSelectedChild() {
-        PathInfoPM first = children.getSelection().getFirst();
+        PathNodePM first = children.getSelection().getFirst();
         if (first != null) {
-            PathTree nextPathTree = first.getPathTree();
-            if (nextPathTree.hasChildren() == true) {
+            PathNode nextPathNode = first.getData();
+            if (nextPathNode.hasChildren() == true) {
                 return true;
             }
         }
@@ -206,9 +206,9 @@ public class PathBrowserPM extends AbstractPM {
 
     @Operation
     public void gotoSelectedChild() {
-        PathInfoPM cell = children.getSelection().getFirst();
+        PathNodePM cell = children.getSelection().getFirst();
         if (cell != null) {
-            PathTree nextElement = cell.getPathTree();
+            PathNode nextElement = cell.getData();
             if (nextElement.hasChildren() == true) {
                 loadChildren(nextElement);
             }
@@ -225,13 +225,13 @@ public class PathBrowserPM extends AbstractPM {
         if (currentElement == null) {
             return;
         }
-        PathTree nextSelectedChild = currentElement;
-        PathTree nextElement = currentElement.getParent();
+        PathNode nextSelectedChild = currentElement;
+        PathNode nextElement = currentElement.getParent();
         loadChildren(nextElement);
         selectChild(nextSelectedChild);
     }
 
-    private void selectChild(PathTree child) {
+    private void selectChild(PathNode child) {
         if (children.containsKey(child)) {
             children.getSelectedKeys().clear();
             children.getSelectedKeys().add(child);
@@ -243,7 +243,7 @@ public class PathBrowserPM extends AbstractPM {
         if (rootElement != null) {
             Path pathToChild = getCurrentPath();
 
-            PathTree childPathInfo = rootElement.getPathInfo(pathToChild);
+            PathNode childPathInfo = rootElement.getNode(pathToChild);
             if (childPathInfo != null) {
                 setCurrentPath(childPathInfo.getPath());
             } else {

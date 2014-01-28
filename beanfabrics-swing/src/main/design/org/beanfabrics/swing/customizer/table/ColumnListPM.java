@@ -7,7 +7,7 @@ package org.beanfabrics.swing.customizer.table;
 import java.util.ResourceBundle;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathTree;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.model.ListPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
@@ -38,14 +38,14 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     protected final OperationPM moveUp = new OperationPM();
     protected final OperationPM moveDown = new OperationPM();
 
-    private PathTree rootPathInfo;
+    private PathNode rootPathInfo;
 
     public ColumnListPM() {
         super();
         PMManager.setup(this);
     }
 
-    public void setRootPathInfo(PathTree rootPathInfo) {
+    public void setRootPathInfo(PathNode rootPathInfo) {
         this.rootPathInfo = rootPathInfo;
         revalidateProperties();
     }

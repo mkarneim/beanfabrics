@@ -4,7 +4,7 @@
  */
 package org.beanfabrics.swing.customizer.table;
 
-import org.beanfabrics.meta.PathTree;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.BooleanPM;
@@ -30,10 +30,10 @@ public class ColumnPM extends AbstractPM {
     protected final PathPM operationPath = new PathPM();
     protected final HorizontalAlignmentPM alignment = new HorizontalAlignmentPM();
 
-    public PathTree rootPathTree; 
+    public PathNode rootPathNode; 
 
-    public ColumnPM(PathTree rootPathTree) {
-        this.rootPathTree = rootPathTree;
+    public ColumnPM(PathNode rootPathNode) {
+        this.rootPathNode = rootPathNode;
         PMManager.setup(this);
         path.setMandatory(true);
         columnName.setMandatory(true);
@@ -44,12 +44,12 @@ public class ColumnPM extends AbstractPM {
     }
 
     public void setData(BnColumn col) {
-        this.path.setPathContext(new PathContext(rootPathTree, null, col.getPath()));
+        this.path.setPathContext(new PathContext(rootPathNode, null, col.getPath()));
         this.columnName.setText(col.getColumnName());
         this.width.setInteger(col.getWidth());
         this.fixedWidth.setBoolean(col.isWidthFixed());
         TypeInfo opModelTypeInfo = PMManager.getInstance().getMetadata().getTypeInfo(IOperationPM.class);
-        this.operationPath.setPathContext(new PathContext(rootPathTree, opModelTypeInfo, col.getOperationPath()));
+        this.operationPath.setPathContext(new PathContext(rootPathNode, opModelTypeInfo, col.getOperationPath()));
         this.alignment.setText(this.alignment.getOptions().get(col.getAlignment()));
     }
 

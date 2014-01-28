@@ -4,10 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.Path;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.model.PresentationModel;
 import org.junit.Test;
 
-public class CustomizerUtil_GetRowPmType_Test {
+public class CustomizerUtil_GetSubscribedNode_Test {
 
     @Test
     public void testViewIsUnbound() {
@@ -15,10 +16,10 @@ public class CustomizerUtil_GetRowPmType_Test {
         SampleListPanel comp = new SampleListPanel();
 
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(SampleRowPM.class, actual);
+        assertEquals(null, actual);
     }
 
     @Test
@@ -27,13 +28,14 @@ public class CustomizerUtil_GetRowPmType_Test {
         SampleListPanel comp = new SampleListPanel();
         SampleListPM<SampleRowPM> pm = new SampleListPM<SampleRowPM>();
         comp.setPresentationModel(pm);
+
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(SampleRowPM.class, actual);
+        assertEquals(null, actual);
     }
-    
+
     @Test
     public void testViewIsBoundToExtendedPM() {
         // Given:
@@ -41,10 +43,10 @@ public class CustomizerUtil_GetRowPmType_Test {
         ExtendedSampleListPM<ExtendedSampleRowPM> pm = new ExtendedSampleListPM<ExtendedSampleRowPM>();
         comp.setPresentationModel(pm);
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(ExtendedSampleRowPM.class, actual);
+        assertEquals(null, actual);
     }
 
     @Test
@@ -57,10 +59,10 @@ public class CustomizerUtil_GetRowPmType_Test {
         comp.setPath(new Path("this"));
 
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(ExtendedSampleRowPM.class, actual);
+        assertEquals(ExtendedSampleListPM.class, actual.getTypeInfo().getJavaType());
     }
 
     @Test
@@ -72,12 +74,12 @@ public class CustomizerUtil_GetRowPmType_Test {
         comp.setPath(new Path("this"));
 
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(SampleRowPM.class, actual);
+        assertEquals(PresentationModel.class, actual.getTypeInfo().getJavaType());
     }
-    
+
     @Test
     public void testViewIsBoundToProviderHavingConfiguredPM() {
         // Given:
@@ -89,12 +91,12 @@ public class CustomizerUtil_GetRowPmType_Test {
         comp.setPath(new Path("this"));
 
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(SampleRowPM.class, actual);
+        assertEquals(SampleListPM.class, actual.getTypeInfo().getJavaType());
     }
-    
+
     @Test
     public void testViewIsBoundToProviderHavingConfiguredExtendedPM() {
         // Given:
@@ -106,10 +108,10 @@ public class CustomizerUtil_GetRowPmType_Test {
         comp.setPath(new Path("this"));
 
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(ExtendedSampleRowPM.class, actual);
+        assertEquals(ExtendedSampleListPM.class, actual.getTypeInfo().getJavaType());
     }
 
     @Test
@@ -122,12 +124,12 @@ public class CustomizerUtil_GetRowPmType_Test {
         comp.setPath(new Path("this.list"));
 
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(SampleRowPM.class, actual);
+        assertEquals(SampleListPM.class, actual.getTypeInfo().getJavaType());
     }
-    
+
     @Test
     public void testViewIsBoundToProviderHavingConfiguredOwnerPM() {
         // Given:
@@ -139,12 +141,12 @@ public class CustomizerUtil_GetRowPmType_Test {
         comp.setPath(new Path("this.list"));
 
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(SampleRowPM.class, actual);
+        assertEquals(SampleListPM.class, actual.getTypeInfo().getJavaType());
     }
-    
+
     @Test
     public void testViewIsBoundToProviderHavingConfiguredBadPath() {
         // Given:
@@ -156,10 +158,10 @@ public class CustomizerUtil_GetRowPmType_Test {
         comp.setPath(new Path("this.xxx"));
 
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(SampleRowPM.class, actual);  
+        assertEquals(null, actual); // TODO: we could expect SampleListPM here
     }
 
     @Test
@@ -172,9 +174,10 @@ public class CustomizerUtil_GetRowPmType_Test {
         comp.setPath(new Path("this.xxx"));
 
         // When:
-        Class<? extends PresentationModel> actual = CustomizerUtil.getRowPmType(comp);
+        PathNode actual = CustomizerUtil.getSubscribedNode(comp);
 
         // Then:
-        assertEquals(SampleRowPM.class, actual);  
+        assertEquals(null, actual); // TODO: we could expect SampleListPM here
     }
+
 }

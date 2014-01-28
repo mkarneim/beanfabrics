@@ -6,16 +6,16 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 import org.beanfabrics.context.Context;
-import org.beanfabrics.meta.PathTree;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 
 public class ColumnListConfigurationConstroller {
     private ColumnListConfigurationPM presentationModel;
     private ColumnListConfigurationDialog view;
     private Context context;
-    private PathTree rootPathInfo;
+    private PathNode rootPathInfo;
 
-    public ColumnListConfigurationConstroller(Context context, PathTree rootPathInfo) {
+    public ColumnListConfigurationConstroller(Context context, PathNode rootPathInfo) {
         this.context = context;
         this.rootPathInfo = rootPathInfo;
     }

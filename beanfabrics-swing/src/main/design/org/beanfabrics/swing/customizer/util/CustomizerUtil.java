@@ -19,7 +19,7 @@ import org.beanfabrics.Path;
 import org.beanfabrics.View;
 import org.beanfabrics.ViewClassDecorator;
 import org.beanfabrics.context.Context;
-import org.beanfabrics.meta.PathTree;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.IListPM;
 import org.beanfabrics.model.PMManager;
@@ -106,100 +106,109 @@ public class CustomizerUtil {
         return result;
     }
 
-    public static TypeInfo toTypeInfo(Class<? extends PresentationModel> pmClass) {
+    public static TypeInfo getTypeInfo(Class<? extends PresentationModel> pmClass) {
         if (pmClass == null) {
             return null;
         }
         return PMManager.getInstance().getMetadata().getTypeInfo(pmClass);
     }
 
-    public static PathTree toRootPathTree(Class<? extends PresentationModel> pmClass) {
+    public static PathNode asRootNode(Class<? extends PresentationModel> pmClass) {
         if (pmClass == null) {
             return null;
         }
-        return PMManager.getInstance().getMetadata().getPathTree(pmClass);
+        return PMManager.getInstance().getMetadata().getPathNode(pmClass);
     }
 
-    static Class<? extends PresentationModel> getExpectedPmTypeFromView(ModelSubscriber aSubscriber) {
+    static Class<? extends PresentationModel> getDeclaredPmTypeFromView(ModelSubscriber aSubscriber) {
         if (aSubscriber instanceof View<?>) {
             View<?> view = (View<?>) aSubscriber;
-            return getExpectedPmTypeFromView(view);
+            return getDeclaredPmTypeFromView(view);
         }
         return PresentationModel.class;
     }
 
-    public static Class<? extends PresentationModel> getExpectedPmTypeFromView(View<?> view) {
+    public static Class<? extends PresentationModel> getDeclaredPmTypeFromView(View<?> view) {
         @SuppressWarnings("unchecked")
         Class<? extends View<?>> viewClass = (Class<? extends View<?>>) view.getClass();
-        return getExpectedPmTypeFromViewClass(viewClass);
+        return getDeclaredPmTypeFromView(viewClass);
     }
 
-    public static Class<? extends PresentationModel> getExpectedPmTypeFromViewClass(
-            Class<? extends View<?>> viewClass) {
+    public static Class<? extends PresentationModel> getDeclaredPmTypeFromView(Class<? extends View<?>> viewClass) {
         ViewClassDecorator viewDeco = new ViewClassDecorator(viewClass);
         return viewDeco.getExpectedModelType();
     }
 
-    public static Class<? extends PresentationModel> getRowPmType(ModelSubscriber subscriber) {
-        PathTree listPmMetaData = getRootPathTreeFromSubscriber(subscriber);
-        if (listPmMetaData == null && subscriber instanceof View<?>) {
-            listPmMetaData = getPathTreeFromView((View<?>) subscriber);
+    public static Class<? extends PresentationModel> getElementTypeOfSubscribedOrActualIListPM(ModelSubscriber subscriber) {
+        PathNode pmNode = getSubscribedNode(subscriber);
+        if (pmNode == null && subscriber instanceof View<?>) {
+            pmNode = getRootNodeOfActualOrDeclaredPMFromView((View<?>) subscriber);
         }
-        if (listPmMetaData == null) {
-            return null;
-        } else {
-            GenericType gt = listPmMetaData.getGenericType();
-            GenericType typeParam = gt.getTypeParameter(IListPM.class.getTypeParameters()[0]);
-            Type tArg = typeParam.narrow(typeParam.getType(), PresentationModel.class);
-            if (tArg instanceof Class) {
-                @SuppressWarnings("unchecked")
-                Class<? extends PresentationModel> result = (Class<? extends PresentationModel>) tArg;
-                return result;
-            } else {
-                throw new IllegalStateException("Unexpected type: " + tArg.getClass().getName());
-            }
-        }
-    }
-
-    public static PathTree getRootPathTreeFromSubscriber(ModelSubscriber subscriber) {
-        Path path = subscriber.getPath();
-        IModelProvider provider = subscriber.getModelProvider();
-        if (path != null && provider != null) {
-            Class<? extends PresentationModel> pmClass = provider.getPresentationModelType();
-            if (pmClass != null && PresentationModel.class.equals(pmClass) == false) {
-                return toRootPathTree(pmClass).getPathInfo(path);
-            }
-            PresentationModel pm = provider.getPresentationModel();
-            if (pm != null) {
-                return toRootPathTree(pm.getClass());
-            }
+        if (isIListPM(pmNode)) {
+            return getElementTypeOfIListPM(pmNode);
         }
         return null;
     }
 
-    static PathTree getPathTreeFromView(View<?> view) {
-        PresentationModel pm = view.getPresentationModel();
-        if (pm != null) {
-            return toRootPathTree(pm.getClass());
+    private static Class<? extends PresentationModel> getElementTypeOfIListPM(PathNode pmNode) {
+        if ( !isIListPM(pmNode)) {
+            throw new IllegalArgumentException(String.format("pmNode must represent %s, but was %s!", IListPM.class.getSimpleName(), pmNode.getTypeInfo()));
         }
-        @SuppressWarnings("unchecked")
-        Class<? extends View<?>> viewClass = (Class<? extends View<?>>) view.getClass();
-        Class<? extends PresentationModel> pmClass = getExpectedPmTypeFromViewClass(viewClass);
-        return toRootPathTree(pmClass);
+        GenericType gt = pmNode.getGenericType();
+        GenericType typeParam = gt.getTypeParameter(IListPM.class.getTypeParameters()[0]);
+        Type tArg = typeParam.narrow(typeParam.getType(), PresentationModel.class);
+        if (tArg instanceof Class) {
+            @SuppressWarnings("unchecked")
+            Class<? extends PresentationModel> result = (Class<? extends PresentationModel>) tArg;
+            return result;
+        } else {
+            throw new IllegalStateException("Unexpected type: " + tArg.getClass().getName());
+        }
+    }
+
+    private static boolean isIListPM(PathNode pmNode) {
+        return pmNode != null && IListPM.class.isAssignableFrom(pmNode.getTypeInfo().getJavaType());
+    }
+
+    public static PathNode getSubscribedNode(ModelSubscriber subscriber) {
+        IModelProvider provider = subscriber.getModelProvider();
+        Path path = subscriber.getPath();
+
+        if (path != null && provider != null) {
+            return asRootNode(provider.getPresentationModelType()).getNode(path);
+        }
+        return null;
+    }
+    
+    public static PathNode getProvidedRootNode(ModelSubscriber subscriber) {
+        IModelProvider provider = subscriber.getModelProvider();
+        if (provider != null) {
+            return asRootNode(provider.getPresentationModelType());
+        }
+        return null;
+    }
+
+    public static PathNode getRootNodeOfActualOrDeclaredPMFromView(View<?> view) {
+        PresentationModel actualPM = view.getPresentationModel();
+        if (actualPM != null) {
+            return asRootNode(actualPM.getClass());
+        }
+        return asRootNode(getDeclaredPmTypeFromView(view));
     }
 
     public static PathContext getPathContextToCustomizeModelSubscriber(ModelSubscriber theSubscriber) {
-        return getPathContextToCustomizeModelSubscriber(theSubscriber,
-                getExpectedPmTypeFromView(theSubscriber));
+        return getPathContextToCustomizeModelSubscriber(theSubscriber, getDeclaredPmTypeFromView(theSubscriber));
     }
 
     public static PathContext getPathContextToCustomizeModelSubscriber(ModelSubscriber theSubscriber,
             Class<? extends PresentationModel> expectedModelType) {
-        PathTree rootInfo = getRootPathTreeFromSubscriber(theSubscriber);
+        PathNode rootInfo = getProvidedRootNode(theSubscriber);
         if (rootInfo == null) {
             return null;
         }
-        return new PathContext(rootInfo, toTypeInfo(expectedModelType), theSubscriber.getPath());
+        return new PathContext(rootInfo, getTypeInfo(expectedModelType), theSubscriber.getPath());
     }
+
+    
 
 }

@@ -7,7 +7,7 @@ package org.beanfabrics.swing.customizer.table;
 import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getPathContextToCustomizeModelSubscriber;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathTree;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.support.OnChange;
@@ -47,31 +47,6 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
         revalidateProperties();
     }
 
-    @Validation(path = "configureColumns")
-    public boolean canConfigureColumns() {
-        return !path.isEmpty() && path.isValid();
-    }
-
-    @Operation
-    public void configureColumns() {
-        configureColumns.check();
-        PathTree rowPMRootPathInfo = CustomizerUtil.toRootPathTree(CustomizerUtil.getRowPmType(bnTable));
-        final ColumnListConfigurationConstroller ctrl = new ColumnListConfigurationConstroller(getContext(),
-                rowPMRootPathInfo);
-
-        ctrl.getPresentationModel().setData(bnTable.getColumns());
-        ctrl.getPresentationModel().onApply(new ColumnListConfigurationPM.OnApplyHandler() {
-            public void apply() {
-                BnColumn[] oldValue = bnTable.getColumns();
-                BnColumn[] newValue = ctrl.getPresentationModel().getData();
-                bnTable.setColumns(newValue);
-                getCustomizer().firePropertyChange("columns", oldValue, newValue);
-            }
-        });
-        ctrl.getView().setModal(true);
-        ctrl.getView().setVisible(true);
-    }
-
     @OnChange(path = "path")
     void applyPath() {
         if (path.isValid() && bnTable != null && getCustomizer() != null) {
@@ -80,6 +55,38 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
             bnTable.setPath(newValue);
             getCustomizer().firePropertyChange("path", oldValue, newValue);
         }
+    }
+
+    @Validation(path = "configureColumns")
+    public boolean canConfigureColumns() {
+        return !path.isEmpty() && path.isValid();
+    }
+
+    @Operation
+    public void configureColumns() {
+        configureColumns.check();
+        PathNode rowPMNode = resolveRowPmNode();
+        final ColumnListConfigurationConstroller ctrl = new ColumnListConfigurationConstroller(getContext(), rowPMNode);
+
+        ctrl.getPresentationModel().setData(bnTable.getColumns());
+        ctrl.getPresentationModel().onApply(new ColumnListConfigurationPM.OnApplyHandler() {
+            public void apply() {
+                applyColumns(ctrl.getPresentationModel().getData());
+            }
+        });
+        ctrl.getView().setModal(true);
+        ctrl.getView().setVisible(true);
+    }
+
+    protected PathNode resolveRowPmNode() {
+        return CustomizerUtil.asRootNode(CustomizerUtil
+                .getElementTypeOfSubscribedOrActualIListPM(bnTable));
+    }
+
+    protected void applyColumns(BnColumn[] newValue) {
+        BnColumn[] oldValue = bnTable.getColumns();
+        bnTable.setColumns(newValue);
+        getCustomizer().firePropertyChange("columns", oldValue, newValue);
     }
 
 }

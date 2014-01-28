@@ -14,21 +14,27 @@ import org.beanfabrics.Path;
 import org.beanfabrics.util.GenericType;
 
 /**
- * The {@link PathTree} represents the meta data for all available {@link Path}s relative to a concrete root
- * {@link TypeInfo}. With a {@link PathTree} you can navigate from a specific node upwards until it's root node and
- * downwards until is't leaf nodes.
+ * The {@link PathNode} represents the meta data for a specific node inside a PM's tree-like structure, reachable by a
+ * given {@link Path} relative to a arbitratily defined root node.
+ * <p>
+ * With a {@link PathNode} you can navigate from a specific node upwards until it's defined root node and downwards
+ * until it's leaf nodes.
+ * <p>
+ * Note: There is <i>no natural root node</i> for any given PM, because there is no top-level PM class. PM classes can
+ * always be combined into greater structures. In this sense any node inside a PMs structure can be arbitrarily choosen
+ * to be a root node.
  * 
  * @author Michael Karneim
  */
-public class PathTree {
-    private final PathTree parent;
+public class PathNode {
+    private final PathNode parent;
     private final TypeInfo modelType;
     private final String name;
     private final Path path;
     private final GenericType genericType;
 
     /**
-     * Constructs a {@link PathTree} with the given attributes.
+     * Constructs a {@link PathNode} with the given attributes.
      * 
      * @param elementName
      *            the path element name
@@ -39,7 +45,7 @@ public class PathTree {
      * @param elementGenericType
      *            the generic type represented by this element
      */
-    PathTree(String elementName, TypeInfo elementTypeInfo, PathTree parent, GenericType elementGenericType) {
+    PathNode(String elementName, TypeInfo elementTypeInfo, PathNode parent, GenericType elementGenericType) {
         super();
         this.name = elementName;
         this.parent = parent;
@@ -49,11 +55,11 @@ public class PathTree {
     }
 
     /**
-     * Constructs a {@link PathTree} with the given type info as root element.
+     * Constructs a {@link PathNode} with the given type info as root element.
      * 
      * @param aTypeInfo
      */
-    PathTree(TypeInfo aTypeInfo) {
+    PathNode(TypeInfo aTypeInfo) {
         this(Path.THIS_PATH_ELEMENT, aTypeInfo, null, new GenericType(aTypeInfo.getJavaType()));
     }
 
@@ -62,7 +68,7 @@ public class PathTree {
      * 
      * @return the path element info of this element's parent
      */
-    public PathTree getParent() {
+    public PathNode getParent() {
         return parent;
     }
 
@@ -98,12 +104,12 @@ public class PathTree {
      * 
      * @return the path element infos for for all children
      */
-    public Collection<PathTree> getChildren() {
+    public Collection<PathNode> getChildren() {
         Collection<PropertyInfo> props = this.modelType.getProperties();
-        List<PathTree> result = new ArrayList<PathTree>();
+        List<PathNode> result = new ArrayList<PathNode>();
         for (PropertyInfo prop : props) {
             GenericType childGT = getGenericTypeOfChild(prop);
-            PathTree child = new PathTree(prop.getName(), prop.getTypeInfo(), this, childGT);
+            PathNode child = new PathNode(prop.getName(), prop.getTypeInfo(), this, childGT);
             result.add(child);
         }
         return result;
@@ -116,19 +122,24 @@ public class PathTree {
      *            the property name of the child
      * @return the path element info for the child with he given name
      */
-    public PathTree getChild(String name) {
+    public PathNode getChild(String name) {
         PropertyInfo prop = this.modelType.getProperty(name);
         if (prop == null) {
             return null;
         } else {
             GenericType childGT = getGenericTypeOfChild(prop);
-            PathTree child = new PathTree(prop.getName(), prop.getTypeInfo(), this, childGT);
+            PathNode child = new PathNode(prop.getName(), prop.getTypeInfo(), this, childGT);
             return child;
         }
     }
 
-    public PathTree asRoot() {
-        return new PathTree("this", getTypeInfo(), null, getGenericType());
+    /**
+     * Returns a new {@link PathNode} with this node defined as the new root node.
+     * 
+     * @return a new {@link PathNode} with this node defined as the new root node
+     */
+    public PathNode asRoot() {
+        return new PathNode("this", getTypeInfo(), null, getGenericType());
     }
 
     /**
@@ -137,20 +148,20 @@ public class PathTree {
      * @param pathToNode
      * @return the path element info for the node at the end of the given path
      */
-    public PathTree getPathInfo(Path pathToNode) {
+    public PathNode getNode(Path pathToNode) {
         if (pathToNode == null) {
             return null;
         } else if (this.path.equals(pathToNode)) {
             return this;
         } else {
             String nextChildName = pathToNode.getElement(0);
-            PathTree nodeDesc = this.getChild(nextChildName);
+            PathNode nodeDesc = this.getChild(nextChildName);
             if (nodeDesc == null) {
                 return null;
             } else if (pathToNode.length() == 1) {
                 return nodeDesc;
             } else {
-                return nodeDesc.getPathInfo(pathToNode.getSubPath(1));
+                return nodeDesc.getNode(pathToNode.getSubPath(1));
             }
         }
     }
@@ -178,7 +189,7 @@ public class PathTree {
      * 
      * @return the root element
      */
-    public PathTree getRoot() {
+    public PathNode getRoot() {
         if (this.parent == null) {
             return this;
         } else {
@@ -223,7 +234,7 @@ public class PathTree {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        PathTree other = (PathTree) obj;
+        PathNode other = (PathNode) obj;
         if (path == null) {
             if (other.path != null)
                 return false;

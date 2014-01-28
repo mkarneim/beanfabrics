@@ -5,7 +5,7 @@
 package org.beanfabrics.swing.customizer.path;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathTree;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
@@ -23,7 +23,7 @@ import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 public class PathPM extends TextPM {
     OperationPM choosePath = new OperationPM();
 
-    private PathTree rootElementInfo;
+    private PathNode rootElementInfo;
     private TypeInfo requiredModelTypeInfo;
 
     public PathPM() {
@@ -82,7 +82,7 @@ public class PathPM extends TextPM {
     @SortOrder(2)
     boolean isComplete() {
         Path path = new Path(this.getText());
-        return (this.rootElementInfo == null || this.rootElementInfo.getPathInfo(path) != null);
+        return (this.rootElementInfo == null || this.rootElementInfo.getNode(path) != null);
     }
 
     @Validation(message = "The object at the end of this path does not match the required type")
@@ -90,7 +90,7 @@ public class PathPM extends TextPM {
     boolean isCorrect() {
         Path path = new Path(this.getText());
         return rootElementInfo == null || requiredModelTypeInfo == null
-                || requiredModelTypeInfo.isAssignableFrom(this.rootElementInfo.getPathInfo(path).getTypeInfo());
+                || requiredModelTypeInfo.isAssignableFrom(this.rootElementInfo.getNode(path).getTypeInfo());
     }
 
 }

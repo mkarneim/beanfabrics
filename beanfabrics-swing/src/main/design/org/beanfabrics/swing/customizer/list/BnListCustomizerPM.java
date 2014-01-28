@@ -4,7 +4,7 @@
  */
 package org.beanfabrics.swing.customizer.list;
 
-import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getExpectedPmTypeFromView;
+import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getDeclaredPmTypeFromView;
 import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getPathContextToCustomizeModelSubscriber;
 
 import org.beanfabrics.Path;
@@ -43,8 +43,7 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
 
     public void setBnList(BnList bnList) {
         this.bnList = bnList;
-        this.pathToList.setPathContext(getPathContextToCustomizeModelSubscriber(bnList,
-                getExpectedPmTypeFromView(bnList)));
+        this.pathToList.setPathContext(getPathContextToCustomizeModelSubscriber(bnList));
 
         revalidateProperties();
         configurePathToRowCell();
@@ -79,8 +78,8 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
     private void configurePathToRowCell() {
         if (bnList != null) {
             Path initialPath = getCellConfigPath(this.bnList.getCellConfig());
-            this.pathToRowCell.setPathContext(new PathContext(CustomizerUtil.toRootPathTree(CustomizerUtil
-                    .getRowPmType(bnList)), null, initialPath));
+            this.pathToRowCell.setPathContext(new PathContext(CustomizerUtil.asRootNode(CustomizerUtil
+                    .getElementTypeOfSubscribedOrActualIListPM(bnList)), null, initialPath));
         } else {
             this.pathToRowCell.setData(null);
         }
