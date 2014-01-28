@@ -88,7 +88,11 @@ public class BnTableRowSorter extends RowSorter<BnTableModel> {
         }
 
         public void refresh() {
+            if ( sortKeyByColumn.length==0) {
+                return;
+            }
             clear();
+            
             Collection<org.beanfabrics.model.SortKey> modelSortKeysByPrecedence = model.getSortKeys();
             int pos = 0;
             for( org.beanfabrics.model.SortKey modelSortKey: modelSortKeysByPrecedence) {

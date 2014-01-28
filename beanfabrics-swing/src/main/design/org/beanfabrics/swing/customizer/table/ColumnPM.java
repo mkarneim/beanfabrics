@@ -4,7 +4,7 @@
  */
 package org.beanfabrics.swing.customizer.table;
 
-import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.PathTree;
 import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.BooleanPM;
@@ -30,10 +30,10 @@ public class ColumnPM extends AbstractPM {
     protected final PathPM operationPath = new PathPM();
     protected final HorizontalAlignmentPM alignment = new HorizontalAlignmentPM();
 
-    public PathElementInfo rootPathElementInfo; 
+    public PathTree rootPathTree; 
 
-    public ColumnPM(PathElementInfo rootPathElementInfo) {
-        this.rootPathElementInfo = rootPathElementInfo;
+    public ColumnPM(PathTree rootPathTree) {
+        this.rootPathTree = rootPathTree;
         PMManager.setup(this);
         path.setMandatory(true);
         columnName.setMandatory(true);
@@ -44,17 +44,17 @@ public class ColumnPM extends AbstractPM {
     }
 
     public void setData(BnColumn col) {
-        this.path.setPathContext(new PathContext(rootPathElementInfo, null, col.getPath()));
+        this.path.setPathContext(new PathContext(rootPathTree, null, col.getPath()));
         this.columnName.setText(col.getColumnName());
         this.width.setInteger(col.getWidth());
         this.fixedWidth.setBoolean(col.isWidthFixed());
         TypeInfo opModelTypeInfo = PMManager.getInstance().getMetadata().getTypeInfo(IOperationPM.class);
-        this.operationPath.setPathContext(new PathContext(rootPathElementInfo, opModelTypeInfo, col.getOperationPath()));
+        this.operationPath.setPathContext(new PathContext(rootPathTree, opModelTypeInfo, col.getOperationPath()));
         this.alignment.setText(this.alignment.getOptions().get(col.getAlignment()));
     }
 
     public BnColumn getData() {
-        BnColumn result = new BnColumn(this.path.getPath(), this.columnName.getText(), this.width.getInteger(), this.fixedWidth.getBoolean(), this.operationPath.getPath(), (Integer)this.alignment.getOptions().getKey(this.alignment.getText()));
+        BnColumn result = new BnColumn(this.path.getData(), this.columnName.getText(), this.width.getInteger(), this.fixedWidth.getBoolean(), this.operationPath.getData(), (Integer)this.alignment.getOptions().getKey(this.alignment.getText()));
         return result;
     }
 

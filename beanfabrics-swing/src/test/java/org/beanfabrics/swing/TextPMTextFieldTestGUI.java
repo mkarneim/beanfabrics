@@ -20,7 +20,7 @@ import org.beanfabrics.validation.ValidationState;
  */
 public class TextPMTextFieldTestGUI {
     public static void main(String[] args) {
-        PersonModel model = new PersonModel();
+        PersonPM model = new PersonPM();
 
         TextPMTextField textfield1 = new TextPMTextField();
         textfield1.setPresentationModel(model.name);
@@ -38,10 +38,10 @@ public class TextPMTextFieldTestGUI {
         f.setVisible(true);
     }
 
-    static class PersonModel extends AbstractPM {
+    static class PersonPM extends AbstractPM {
         protected final TextPM name = new TextPM();
 
-        public PersonModel() {
+        public PersonPM() {
             PMManager.setup(this);
             name.getValidator().add(new ValidationRule() {
                 public ValidationState validate() {

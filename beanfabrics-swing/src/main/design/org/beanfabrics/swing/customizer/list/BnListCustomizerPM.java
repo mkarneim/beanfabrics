@@ -4,6 +4,9 @@
  */
 package org.beanfabrics.swing.customizer.list;
 
+import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getExpectedPmTypeFromView;
+import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getPathContextToCustomizeModelSubscriber;
+
 import org.beanfabrics.Path;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.support.OnChange;
@@ -40,7 +43,8 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
 
     public void setBnList(BnList bnList) {
         this.bnList = bnList;
-        this.pathToList.setPathContext(CustomizerUtil.getPathContextFromBnComponent(bnList));
+        this.pathToList.setPathContext(getPathContextToCustomizeModelSubscriber(bnList,
+                getExpectedPmTypeFromView(bnList)));
 
         revalidateProperties();
         configurePathToRowCell();
@@ -50,7 +54,7 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
     void applyPathToList() {
         if (pathToList.isValid() && bnList != null && customizer != null) {
             Path oldValue = bnList.getPath();
-            Path newValue = pathToList.getPath();
+            Path newValue = pathToList.getData();
             bnList.setPath(newValue);
             customizer.firePropertyChange("path", oldValue, newValue);
         }
@@ -63,7 +67,7 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
             CellConfig oldValue = bnList.getCellConfig();
             CellConfig newValue;
             if (!pathToRowCell.isEmpty()) {
-                newValue = new CellConfig(pathToRowCell.getPath());
+                newValue = new CellConfig(pathToRowCell.getData());
             } else {
                 newValue = null;
             }
@@ -75,10 +79,10 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
     private void configurePathToRowCell() {
         if (bnList != null) {
             Path initialPath = getCellConfigPath(this.bnList.getCellConfig());
-            this.pathToRowCell.setPathContext(new PathContext(CustomizerUtil.getPathInfo(CustomizerUtil
+            this.pathToRowCell.setPathContext(new PathContext(CustomizerUtil.toRootPathTree(CustomizerUtil
                     .getRowPmType(bnList)), null, initialPath));
         } else {
-            this.pathToRowCell.setPath(null);
+            this.pathToRowCell.setData(null);
         }
     }
 

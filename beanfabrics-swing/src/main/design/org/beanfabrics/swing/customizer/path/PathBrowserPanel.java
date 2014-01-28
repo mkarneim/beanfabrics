@@ -132,10 +132,13 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
         if (centerPanel == null) {
             centerPanel = new JPanel();
             final GridBagLayout gridBagLayout = new GridBagLayout();
-            gridBagLayout.rowHeights = new int[] { 7, 7 };
+            gridBagLayout.columnWeights = new double[] { 0.0, 1.0 };
+            gridBagLayout.columnWidths = new int[] { 40, 0 };
+            gridBagLayout.rowHeights = new int[] { 7, 34 };
             centerPanel.setLayout(gridBagLayout);
             final GridBagConstraints gridBagConstraints = new GridBagConstraints();
-            gridBagConstraints.insets = new Insets(4, 4, 4, 4);
+            gridBagConstraints.gridwidth = 2;
+            gridBagConstraints.insets = new Insets(4, 4, 4, 0);
             gridBagConstraints.fill = GridBagConstraints.BOTH;
             gridBagConstraints.weighty = 1;
             gridBagConstraints.weightx = 1;
@@ -144,14 +147,15 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
             gridBagConstraints.ipadx = 256;
             gridBagConstraints.ipady = 21;
             final GridBagConstraints gridBagConstraints_2 = new GridBagConstraints();
-            gridBagConstraints_2.insets = new Insets(4, 4, 4, 4);
+            gridBagConstraints_2.insets = new Insets(4, 4, 5, 5);
             gridBagConstraints_2.anchor = GridBagConstraints.WEST;
             gridBagConstraints_2.gridy = 1;
             gridBagConstraints_2.gridx = 0;
             centerPanel.add(getFolderUpButton(), gridBagConstraints_2);
             centerPanel.add(getChooserPanel(), gridBagConstraints);
             final GridBagConstraints gridBagConstraints_1 = new GridBagConstraints();
-            gridBagConstraints_1.insets = new Insets(4, 8, 4, 4);
+            gridBagConstraints_1.gridwidth = 2;
+            gridBagConstraints_1.insets = new Insets(4, 8, 5, 0);
             gridBagConstraints_1.weightx = 1;
             gridBagConstraints_1.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints_1.gridx = 0;
@@ -183,17 +187,21 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
                 }
             });
             bnTable.setPath(new org.beanfabrics.Path("this.children"));
-            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("this.name").withName("Name").withWidth(140).withWidthFixed(true).addColumn().withPath("this.type").withName("Type").withWidth(200).build());
+            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("this.name").withName("Name").withWidth(140)
+                    .withWidthFixed(true).addColumn().withPath("this.type").withName("Type").withWidth(200).build());
             bnTable.setModelProvider(getLocalProvider());
             bnTable.setGridColor(bnTable.getBackground());
             bnTable.setIntercellSpacing(new Dimension(0, 0));
             bnTable.setRowHeight(bnTable.getRowHeight() + 2);
             bnTable.getActionMap().put("gotoSelectedChild", getGotoSelectedChildAction());
-            bnTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "gotoSelectedChild");
+            bnTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+                    KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "gotoSelectedChild");
             bnTable.getActionMap().put("transferFocus", getTransferFocusToTfPath());
-            bnTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "transferFocus");
+            bnTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+                    KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "transferFocus");
             bnTable.getActionMap().put("gotoParent", getGotoParentAction());
-            bnTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "gotoParent");
+            bnTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+                    KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "gotoParent");
         }
         return bnTable;
     }
@@ -255,13 +263,15 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
     private BnTextField getTfPath() {
         if (tfPath == null) {
             tfPath = new BnTextField();
-            tfPath.setPath(new org.beanfabrics.Path("this.currentPath"));
+            tfPath.setPath(new org.beanfabrics.Path("this.currentSelectedPath"));
             tfPath.setModelProvider(getLocalProvider());
             tfPath.setColumns(10);
             tfPath.getActionMap().put("gotoCurrentPath", getGotoCurrentPathAction());
-            tfPath.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "gotoCurrentPath");
+            tfPath.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+                    KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "gotoCurrentPath");
             tfPath.getActionMap().put("transferFocus", getTransferFocusToBnTable());
-            tfPath.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "transferFocus");
+            tfPath.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+                    KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "transferFocus");
 
         }
         return tfPath;
@@ -313,7 +323,7 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
             tfType = new BnTextField();
             tfType.setOpaque(false);
             tfType.setFocusable(false);
-            tfType.setPath(new org.beanfabrics.Path("this.currentType"));
+            tfType.setPath(new org.beanfabrics.Path("this.currentSelectedType"));
             tfType.setModelProvider(getLocalProvider());
             tfType.setColumns(15);
         }
@@ -406,7 +416,7 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
         return gotoParentAction;
     }
 
-    private BnButton createFolderUpButton() {
+    private static BnButton createFolderUpButton() {
         if (CustomizerUtil.isWindows()) {
             BnButton result = new ToolbarButton();
             result.setBorderPainted(false);

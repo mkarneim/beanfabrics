@@ -30,7 +30,7 @@ import org.beanfabrics.model.PresentationModel;
 public class ModelProvider extends AbstractBean implements IModelProvider, Serializable {
     private List<Subscription> subscriptions = new LinkedList<Subscription>();
     private PresentationModel presentationModel;
-    private Class<? extends PresentationModel> presentationModelType;
+    private Class<? extends PresentationModel> presentationModelType = PresentationModel.class;
 
     /**
      * Constructs an empty <code>ModelProvider</code>.
@@ -39,19 +39,17 @@ public class ModelProvider extends AbstractBean implements IModelProvider, Seria
         //
     }
 
- // Serialization support.
+    // Serialization support.
     private void writeObject(ObjectOutputStream s) throws IOException {
         s.defaultWriteObject();
     }
 
-    private void readObject(ObjectInputStream s)
-        throws IOException, ClassNotFoundException {
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
         s.defaultReadObject();
     }
-    
+
     /**
-     * Constructs an empty <code>ModelProvider</code> for the given
-     * presentationModel type.
+     * Constructs an empty <code>ModelProvider</code> for the given presentationModel type.
      */
     public ModelProvider(Class<? extends PresentationModel> presentationModelType) {
         if (presentationModelType == null) {
@@ -64,23 +62,23 @@ public class ModelProvider extends AbstractBean implements IModelProvider, Seria
      * Constructs a <code>ModelProvider</code> with the given presentationModel.
      */
     public ModelProvider(PresentationModel presentationModel) {
-        if (presentationModel == null) {
-            throw new IllegalArgumentException("presentationModel must not be null");
-        }
-        this.setPresentationModelType(presentationModel.getClass());
+        if (presentationModel != null) {
+            this.setPresentationModelType(presentationModel.getClass());            
+        }        
         this.setPresentationModel(presentationModel);
     }
 
     @SuppressWarnings("unchecked")
     public <T extends PresentationModel> T getPresentationModel() {
-        return (T)this.presentationModel;
+        return (T) this.presentationModel;
     }
 
     /** {@inheritDoc} */
     public void setPresentationModel(PresentationModel newPresentationModel) {
-        if (this.presentationModelType != null && newPresentationModel != null) {
+        if (newPresentationModel != null) {
             if (this.presentationModelType.isInstance(newPresentationModel) == false) {
-                throw new IllegalArgumentException("the new presentationModel must be instance of " + presentationModelType.getName() + " but was " + newPresentationModel.getClass().getName());
+                throw new IllegalArgumentException("the new presentationModel must be instance of "
+                        + presentationModelType.getName() + " but was " + newPresentationModel.getClass().getName());
             }
         }
         PresentationModel old = this.presentationModel;
@@ -106,7 +104,7 @@ public class ModelProvider extends AbstractBean implements IModelProvider, Seria
     public <T extends PresentationModel> T getPresentationModel(Path path) {
         PathEvaluation eval = new PathEvaluation(this.presentationModel, path);
         if (eval.isCompletelyResolved()) {
-            return (T)eval.getResult().getValue();
+            return (T) eval.getResult().getValue();
         } else {
             return null;
         }
@@ -114,24 +112,25 @@ public class ModelProvider extends AbstractBean implements IModelProvider, Seria
 
     /** {@inheritDoc} */
     public Class<? extends PresentationModel> getPresentationModelType() {
-        if (this.presentationModelType == null) {
-            if (this.presentationModel == null) {
-                return PresentationModel.class;
-            } else {
-                return this.presentationModel.getClass();
-            }
+        if (presentationModel != null) {
+            return presentationModel.getClass();
         }
-        return this.presentationModelType;
+        return presentationModelType;
     }
 
     /** {@inheritDoc} */
     public void setPresentationModelType(Class<? extends PresentationModel> newType) {
+        if (newType == null) {
+            throw new IllegalArgumentException("presentationModelType must not be null");
+        }
         Class<? extends PresentationModel> old = this.presentationModelType;
         if (newType.equals(old)) {
             return;
         }
         if (presentationModel != null && !newType.isInstance(presentationModel)) {
-            throw new IllegalArgumentException("the presentationModel is already set; a new presentationModel type must be superclass of " + this.presentationModel.getClass().getName());
+            throw new IllegalArgumentException(
+                    "the presentationModel is already set; a new presentationModel type must be superclass of "
+                            + this.presentationModel.getClass().getName());
         }
         this.presentationModelType = newType;
         this.getPropertyChangeSupport().firePropertyChange("presentationModelType", old, newType);
@@ -139,7 +138,7 @@ public class ModelProvider extends AbstractBean implements IModelProvider, Seria
 
     /** {@inheritDoc} */
     public void addModelProviderListener(Path path, ModelProviderListener l) {
-        if ( this.subscriptions == null) {
+        if (this.subscriptions == null) {
             throw new IllegalStateException();
         }
         Subscription binding = new Subscription(path, l);
@@ -171,8 +170,7 @@ public class ModelProvider extends AbstractBean implements IModelProvider, Seria
     }
 
     /**
-     * A subscription is responsible for notifying a
-     * {@link ModelProviderListener} whenever a reference on a given
+     * A subscription is responsible for notifying a {@link ModelProviderListener} whenever a reference on a given
      * {@link Path} changes.
      */
     private class Subscription implements PropertyChangeListener, Serializable {
@@ -199,7 +197,8 @@ public class ModelProvider extends AbstractBean implements IModelProvider, Seria
             this.observation = new PathObservation(presentationModel, this.path);
             this.observation.addPropertyChangeListener("target", this);
             if (this.observation.getTarget() != null) {
-                listener.modelGained(new ModelProviderEvent(ModelProvider.this, ModelProvider.this.presentationModel, path));
+                listener.modelGained(new ModelProviderEvent(ModelProvider.this, ModelProvider.this.presentationModel,
+                        path));
             }
         }
 
@@ -210,7 +209,8 @@ public class ModelProvider extends AbstractBean implements IModelProvider, Seria
             if (this.observation != null) {
                 this.observation.removePropertyChangeListener("target", this);
                 if (this.observation.getTarget() != null) {
-                    listener.modelLost(new ModelProviderEvent(ModelProvider.this, ModelProvider.this.presentationModel, path));
+                    listener.modelLost(new ModelProviderEvent(ModelProvider.this, ModelProvider.this.presentationModel,
+                            path));
                 }
                 this.observation.stop();
                 this.observation = null;
@@ -222,9 +222,11 @@ public class ModelProvider extends AbstractBean implements IModelProvider, Seria
             assert ("target".equals(evt.getPropertyName()));
             PresentationModel pModel = observation.getTarget();
             if (pModel == null) {
-                listener.modelLost(new ModelProviderEvent(ModelProvider.this, ModelProvider.this.presentationModel, path));
+                listener.modelLost(new ModelProviderEvent(ModelProvider.this, ModelProvider.this.presentationModel,
+                        path));
             } else {
-                listener.modelGained(new ModelProviderEvent(ModelProvider.this, ModelProvider.this.presentationModel, path));
+                listener.modelGained(new ModelProviderEvent(ModelProvider.this, ModelProvider.this.presentationModel,
+                        path));
             }
         }
     }

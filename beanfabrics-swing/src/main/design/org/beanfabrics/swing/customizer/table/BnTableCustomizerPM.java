@@ -4,8 +4,10 @@
  */
 package org.beanfabrics.swing.customizer.table;
 
+import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getPathContextToCustomizeModelSubscriber;
+
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.PathTree;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.support.OnChange;
@@ -25,7 +27,7 @@ import org.beanfabrics.swing.table.BnTable;
  */
 public class BnTableCustomizerPM extends AbstractCustomizerPM {
     private BnTable bnTable;
-    
+
     protected final PathPM path = new PathPM();
     protected final OperationPM configureColumns = new OperationPM();
 
@@ -41,7 +43,7 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
 
     private void setBnTable(BnTable bnTable) {
         this.bnTable = bnTable;
-        this.path.setPathContext(CustomizerUtil.getPathContextFromBnComponent(bnTable));
+        this.path.setPathContext(getPathContextToCustomizeModelSubscriber(bnTable));
         revalidateProperties();
     }
 
@@ -53,9 +55,10 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
     @Operation
     public void configureColumns() {
         configureColumns.check();
-        PathElementInfo rowPMRootPathInfo = CustomizerUtil.getPathInfo(CustomizerUtil.getRowPmType(bnTable));
-        final ColumnListConfigurationConstroller ctrl = new ColumnListConfigurationConstroller( getContext(), rowPMRootPathInfo);
-        
+        PathTree rowPMRootPathInfo = CustomizerUtil.toRootPathTree(CustomizerUtil.getRowPmType(bnTable));
+        final ColumnListConfigurationConstroller ctrl = new ColumnListConfigurationConstroller(getContext(),
+                rowPMRootPathInfo);
+
         ctrl.getPresentationModel().setData(bnTable.getColumns());
         ctrl.getPresentationModel().onApply(new ColumnListConfigurationPM.OnApplyHandler() {
             public void apply() {
@@ -73,7 +76,7 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
     void applyPath() {
         if (path.isValid() && bnTable != null && getCustomizer() != null) {
             Path oldValue = bnTable.getPath();
-            Path newValue = path.getPath();
+            Path newValue = path.getData();
             bnTable.setPath(newValue);
             getCustomizer().firePropertyChange("path", oldValue, newValue);
         }

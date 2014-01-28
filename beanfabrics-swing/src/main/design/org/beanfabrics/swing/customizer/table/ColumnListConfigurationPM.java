@@ -1,6 +1,6 @@
 package org.beanfabrics.swing.customizer.table;
 
-import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.PathTree;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
@@ -35,7 +35,7 @@ public class ColumnListConfigurationPM extends AbstractPM {
         return list.getData();
     }
 
-    public void setRootPathInfo(PathElementInfo rootPathInfo) {
+    public void setRootPathInfo(PathTree rootPathInfo) {
         list.setRootPathInfo(rootPathInfo);
     }
 
