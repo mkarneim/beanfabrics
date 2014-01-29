@@ -14,6 +14,7 @@ import java.awt.Insets;
 import javax.swing.AbstractButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 
 import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Link;
@@ -22,6 +23,7 @@ import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
 import org.beanfabrics.View;
 import org.beanfabrics.swing.BnButton;
+import org.beanfabrics.swing.customizer.util.RowNumberTable;
 import org.beanfabrics.swing.table.BnColumnBuilder;
 import org.beanfabrics.swing.table.BnTable;
 
@@ -37,7 +39,7 @@ public class ColumnListPanel extends JPanel implements View<ColumnListPM>, Model
     private BnButton removeButton;
     private BnButton addButton;
     private JPanel buttonPanel;
-    private BnTable bnTable;
+    protected BnTable bnTable;
     private JScrollPane scrollPane;
     private JPanel panel;
     private final Link link = new Link(this);
@@ -113,6 +115,14 @@ public class ColumnListPanel extends JPanel implements View<ColumnListPM>, Model
             scrollPane = new JScrollPane();
             scrollPane.setViewportView(getBnTable());
             scrollPane.getViewport().setBackground(getBnTable().getBackground());
+            
+            RowNumberTable rowTable = new RowNumberTable(getBnTable());
+            rowTable.setPreferredRowHeaderWidth(30);
+            scrollPane.setRowHeaderView(rowTable);
+            scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowTable.getTableHeader());
+            JPanel corner = new JPanel();
+            corner.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+            scrollPane.setCorner(JScrollPane.LOWER_LEFT_CORNER, corner);
         }
         return scrollPane;
     }
@@ -120,9 +130,7 @@ public class ColumnListPanel extends JPanel implements View<ColumnListPM>, Model
     private BnTable getBnTable() {
         if (bnTable == null) {
             bnTable = new BnTable();
-            bnTable.setColumns(new BnColumnBuilder().addColumn().withPath("this.path").withName("path").withWidth(120).withOperationPath("this.path.choosePath").addColumn().withPath("this.columnName").withName("columnName").withWidthFixed(true)
-                    .addColumn().withPath("this.width").withName("width").withWidth(55).withWidthFixed(true).addColumn().withPath("this.fixedWidth").withName("fixedWidth").withWidth(45).withWidthFixed(true).addColumn().withPath("this.alignment")
-                    .withName("alignment").withWidth(45).withWidthFixed(true).addColumn().withPath("this.operationPath").withName("operationPath").withWidth(80).withWidthFixed(true).withOperationPath("this.operationPath.choosePath").build());
+            defineTableColumns();
             bnTable.setPath(new org.beanfabrics.Path("this"));
             bnTable.setModelProvider(getLocalProvider());
             // Customize rendering
@@ -131,6 +139,17 @@ public class ColumnListPanel extends JPanel implements View<ColumnListPM>, Model
             bnTable.setIntercellSpacing(new Dimension(0, 0));
         }
         return bnTable;
+    }
+
+    protected void defineTableColumns() {
+        bnTable.setColumns(new BnColumnBuilder()
+                  .addColumn().withPath("this.path").withName("path").withWidth(120).withOperationPath("this.path.choosePath")
+                  .addColumn().withPath("this.columnName").withName("columnName").withWidthFixed(true)
+                  .addColumn().withPath("this.width").withName("width").withWidth(55).withWidthFixed(true)
+                  .addColumn().withPath("this.fixedWidth").withName("fixedWidth").withWidth(45).withWidthFixed(true)
+                  .addColumn().withPath("this.alignment").withName("alignment").withWidth(45).withWidthFixed(true)
+                  .addColumn().withPath("this.operationPath").withName("operationPath").withWidth(120).withWidthFixed(true).withOperationPath("this.operationPath.choosePath")
+                  .build());
     }
 
     private JPanel getButtonPanel() {

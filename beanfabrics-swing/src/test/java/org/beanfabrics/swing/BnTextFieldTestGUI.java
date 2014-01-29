@@ -16,10 +16,11 @@ import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.TextPM;
 import org.beanfabrics.support.OnChange;
 import org.beanfabrics.support.Property;
+import org.beanfabrics.Path;
 
 public class BnTextFieldTestGUI extends JFrame {
-    private BnTextField bnTextField_1;
-    private BnTextField bnTextField;
+    private BnTextField tfColumns;
+    private BnTextField tfText;
     private JPanel panel;
     private ModelProvider provider;
 
@@ -30,7 +31,7 @@ public class BnTextFieldTestGUI extends JFrame {
      */
     public static void main(String args[]) {
         try {
-            SampleModel pModel = new SampleModel();
+            SamplePM pModel = new SamplePM();
 
             BnTextFieldTestGUI frame = new BnTextFieldTestGUI();
             frame.provider.setPresentationModel(pModel);
@@ -51,11 +52,14 @@ public class BnTextFieldTestGUI extends JFrame {
         getContentPane().add(getPanel(), BorderLayout.CENTER);
         //
     }
-
+    /**
+     * @wbp.nonvisual location=51,437
+     * @return
+     */
     private ModelProvider getLocalProvider() {
         if (provider == null) {
             provider = new ModelProvider(); // @wb:location=51,437
-            provider.setPresentationModelType(SampleModel.class);
+            provider.setPresentationModelType(SamplePM.class);
         }
         return provider;
     }
@@ -63,29 +67,29 @@ public class BnTextFieldTestGUI extends JFrame {
     private JPanel getPanel() {
         if (panel == null) {
             panel = new JPanel();
-            panel.add(getBnTextField());
-            panel.add(getBnTextField_1());
+            panel.add(getTfText());
+            panel.add(getTfColumns());
         }
         return panel;
     }
 
-    private BnTextField getBnTextField() {
-        if (bnTextField == null) {
-            bnTextField = new BnTextField();
-            bnTextField.setPath(new org.beanfabrics.Path("this.text"));
-            bnTextField.setModelProvider(getLocalProvider());
-            bnTextField.setColumns(10);
+    private BnTextField getTfText() {
+        if (tfText == null) {
+            tfText = new BnTextField();
+            tfText.setPath(new org.beanfabrics.Path("this.text"));
+            tfText.setModelProvider(getLocalProvider());
+            tfText.setColumns(10);
         }
-        return bnTextField;
+        return tfText;
     }
 
-    public static class SampleModel extends AbstractPM {
+    public static class SamplePM extends AbstractPM {
         @Property
         TextPM text = new TextPM();
         @Property
         IntegerPM columns = new IntegerPM();
 
-        public SampleModel() {
+        public SamplePM() {
             PMManager.setup(this);
         }
 
@@ -95,13 +99,13 @@ public class BnTextFieldTestGUI extends JFrame {
         }
     }
 
-    private BnTextField getBnTextField_1() {
-        if (bnTextField_1 == null) {
-            bnTextField_1 = new BnTextField();
-            bnTextField_1.setPath(new org.beanfabrics.Path("this.columns"));
-            bnTextField_1.setModelProvider(getLocalProvider());
-            bnTextField_1.setColumns(4);
+    private BnTextField getTfColumns() {
+        if (tfColumns == null) {
+            tfColumns = new BnTextField();
+            tfColumns.setPath(new Path("this.columns"));
+            tfColumns.setModelProvider(getLocalProvider());
+            tfColumns.setColumns(4);
         }
-        return bnTextField_1;
+        return tfColumns;
     }
 }

@@ -5,7 +5,7 @@
 package org.beanfabrics.swing.customizer.path;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.meta.TypeInfo;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
@@ -23,7 +23,7 @@ import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 public class PathPM extends TextPM {
     OperationPM choosePath = new OperationPM();
 
-    private PathElementInfo rootElementInfo;
+    private PathNode rootElementInfo;
     private TypeInfo requiredModelTypeInfo;
 
     public PathPM() {
@@ -33,25 +33,24 @@ public class PathPM extends TextPM {
     public void setPathContext(PathContext pathContext) {
         this.rootElementInfo = pathContext.root;
         this.requiredModelTypeInfo = pathContext.requiredModelTypeInfo;
-        this.setText(Path.getPathString(pathContext.initialPath));
         this.revalidateProperties();
     }
 
-    public Path getPath() {
+    public Path getData() {
         return Path.parse(this.getText());
     }
 
-    public void setPath(Path path) {
+    public void setData(Path path) {
         this.setText(Path.getPathString(path));
     }
 
     @Operation
     void choosePath() {
-        final PathChooserController ctrl = CustomizerUtil.createPathChooser(getContext(), this.getPathContext());
+        final PathChooserController ctrl = CustomizerUtil.createPathChooser(getContext(), new PathContext(rootElementInfo, requiredModelTypeInfo), getData());
         ctrl.getPresentationModel().onApply(new PathChooserPM.OnApplyHandler() {
             @Override
             public void apply() {
-                setPath(ctrl.getPresentationModel().getData());
+                setData(ctrl.getPresentationModel().getData());
             }
         });
         ctrl.getView().setVisible(true);
@@ -60,11 +59,6 @@ public class PathPM extends TextPM {
     @Validation(path = "choosePath")
     boolean canChoosePath() {
         return this.rootElementInfo != null;
-    }
-
-    private PathContext getPathContext() {
-        PathContext result = new PathContext(rootElementInfo, requiredModelTypeInfo, getPath());
-        return result;
     }
 
     @Validation
@@ -82,7 +76,7 @@ public class PathPM extends TextPM {
     @SortOrder(2)
     boolean isComplete() {
         Path path = new Path(this.getText());
-        return (this.rootElementInfo == null || this.rootElementInfo.getPathInfo(path) != null);
+        return (this.rootElementInfo == null || this.rootElementInfo.getNode(path) != null);
     }
 
     @Validation(message = "The object at the end of this path does not match the required type")
@@ -90,7 +84,7 @@ public class PathPM extends TextPM {
     boolean isCorrect() {
         Path path = new Path(this.getText());
         return rootElementInfo == null || requiredModelTypeInfo == null
-                || requiredModelTypeInfo.isAssignableFrom(this.rootElementInfo.getPathInfo(path).getTypeInfo());
+                || requiredModelTypeInfo.isAssignableFrom(this.rootElementInfo.getNode(path).getTypeInfo());
     }
 
 }

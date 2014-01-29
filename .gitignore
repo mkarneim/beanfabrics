@@ -1,6 +1,7 @@
 .project
 .classpath
 .settings/
+.settings/org.eclipse.core.resources.prefs
 target/
 build.local.properties
 build.credentials

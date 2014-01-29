@@ -4,6 +4,8 @@
  */
 package org.beanfabrics.swing.customizer.list;
 
+import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getPathContextToCustomizeModelSubscriber;
+
 import org.beanfabrics.Path;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.support.OnChange;
@@ -26,7 +28,7 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
     private BnList bnList;
 
     protected final PathPM pathToList = new PathPM();
-    protected final PathPM pathToRowCell = new PathPM();
+    protected final PathPM cellConfigPath = new PathPM();
 
     public BnListCustomizerPM() {
         // this.title.setText("This is the Beanfabrics customizer for the "+BnList.class.getName()+" component.");
@@ -40,30 +42,32 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
 
     public void setBnList(BnList bnList) {
         this.bnList = bnList;
-        this.pathToList.setPathContext(CustomizerUtil.getPathContextFromBnComponent(bnList));
+        // Attention: order is relevant
+        this.pathToList.setData(bnList.getPath()); // 1
+        this.pathToList.setPathContext(getPathContextToCustomizeModelSubscriber(bnList)); // 2
 
         revalidateProperties();
-        configurePathToRowCell();
+        configureCellConfigPath();
     }
 
     @OnChange(path = "pathToList")
     void applyPathToList() {
         if (pathToList.isValid() && bnList != null && customizer != null) {
             Path oldValue = bnList.getPath();
-            Path newValue = pathToList.getPath();
+            Path newValue = pathToList.getData();
             bnList.setPath(newValue);
             customizer.firePropertyChange("path", oldValue, newValue);
         }
-        configurePathToRowCell();
+        configureCellConfigPath();
     }
 
-    @OnChange(path = "pathToRowCell")
-    void applyCellConfig() {
-        if (pathToRowCell.isValid() && bnList != null && customizer != null) {
+    @OnChange(path = "cellConfigPath")
+    void applyPathToRowPm() {
+        if (cellConfigPath.isValid() && bnList != null && customizer != null) {
             CellConfig oldValue = bnList.getCellConfig();
             CellConfig newValue;
-            if (!pathToRowCell.isEmpty()) {
-                newValue = new CellConfig(pathToRowCell.getPath());
+            if (!cellConfigPath.isEmpty()) {
+                newValue = new CellConfig(cellConfigPath.getData());
             } else {
                 newValue = null;
             }
@@ -72,13 +76,15 @@ public class BnListCustomizerPM extends AbstractCustomizerPM {
         }
     }
 
-    private void configurePathToRowCell() {
+    private void configureCellConfigPath() {
         if (bnList != null) {
+            // Attention: order is relevant
             Path initialPath = getCellConfigPath(this.bnList.getCellConfig());
-            this.pathToRowCell.setPathContext(new PathContext(CustomizerUtil.getPathInfo(CustomizerUtil
-                    .getRowPmType(bnList)), null, initialPath));
+            this.cellConfigPath.setData(initialPath); // 1
+            this.cellConfigPath.setPathContext(new PathContext(CustomizerUtil.asRootNode(CustomizerUtil
+                    .getElementTypeOfSubscribedOrActualIListPM(bnList)), null)); // 2
         } else {
-            this.pathToRowCell.setPath(null);
+            this.cellConfigPath.setData(null);
         }
     }
 

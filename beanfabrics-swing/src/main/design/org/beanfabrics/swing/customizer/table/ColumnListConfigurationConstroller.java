@@ -6,16 +6,16 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 import org.beanfabrics.context.Context;
-import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 
 public class ColumnListConfigurationConstroller {
     private ColumnListConfigurationPM presentationModel;
     private ColumnListConfigurationDialog view;
     private Context context;
-    private PathElementInfo rootPathInfo;
+    private PathNode rootPathInfo;
 
-    public ColumnListConfigurationConstroller(Context context, PathElementInfo rootPathInfo) {
+    public ColumnListConfigurationConstroller(Context context, PathNode rootPathInfo) {
         this.context = context;
         this.rootPathInfo = rootPathInfo;
     }
@@ -33,7 +33,7 @@ public class ColumnListConfigurationConstroller {
         if (view == null) {
             view = ColumnListConfigurationDialog.create(getRootWindow());
             view.setPresentationModel(getPresentationModel());
-            view.setSize(600, 400);
+            view.setSize(700, 400);
             view.setLocationRelativeTo(view.getParent());
             view.setIconImage(getBeanfabricsIcon());
         }

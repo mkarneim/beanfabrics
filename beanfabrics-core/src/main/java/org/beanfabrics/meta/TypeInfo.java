@@ -12,22 +12,21 @@ import java.util.Collections;
 import org.beanfabrics.model.PresentationModel;
 
 /**
- * The {@link TypeInfo} represents the structural meta data of a specific
- * {@link PresentationModel} class.
+ * The {@link TypeInfo} represents the structural meta data of a specific {@link PresentationModel} class.
  * 
  * @author Michael Karneim
  */
 public class TypeInfo {
 
     private final Collection<PropertyInfo> propertyInfos = new ArrayList<PropertyInfo>();
-    private final Collection<PropertyInfo> unmodifiablePropertyInfos = Collections.unmodifiableCollection(propertyInfos);
+    private final Collection<PropertyInfo> unmodifiablePropertyInfos = Collections
+            .unmodifiableCollection(propertyInfos);
     private final String name;
     private final Class<? extends PresentationModel> javaType;
 
     /**
      * Constructs an empty {@link TypeInfo} for the given model class. Use
-     * {@link #addProperty(String, Member, TypeInfo)} to add meta data for each
-     * property of the model class.
+     * {@link #addProperty(String, Member, TypeInfo)} to add meta data for each property of the model class.
      * 
      * @param aModelClass
      */
@@ -42,10 +41,12 @@ public class TypeInfo {
     /**
      * Adds a new {@link PropertyInfo} with the given attributes.
      * 
-     * @param name the name of that property
-     * @param member the java member that defined that property (either a field
-     *            or (getter)-method)
-     * @param type the type description of that property
+     * @param name
+     *            the name of that property
+     * @param member
+     *            the java member that defined that property (either a field or (getter)-method)
+     * @param type
+     *            the type description of that property
      */
     void addProperty(String name, Member member, TypeInfo type) {
         propertyInfos.add(new PropertyInfo(this, name, member, type));
@@ -70,8 +71,7 @@ public class TypeInfo {
     }
 
     /**
-     * Returns an unmodifiable collection of all properties belonging to in this
-     * type info.
+     * Returns an unmodifiable collection of all properties belonging to in this type info.
      * 
      * @return an unmodifiable collection of all properties
      */
@@ -82,8 +82,7 @@ public class TypeInfo {
     /**
      * Returns whether this type info contains any properties.
      * 
-     * @return <code>true</code> if this type info contains any properties,
-     *         otherwise <code>false</code>.
+     * @return <code>true</code> if this type info contains any properties, otherwise <code>false</code>.
      */
     public boolean hasProperties() {
         return propertyInfos != null && !propertyInfos.isEmpty();
@@ -92,10 +91,10 @@ public class TypeInfo {
     /**
      * Returns the {@link PropertyInfo} for the property with the given name.
      * 
-     * @param name the name of the property
-     * @return the {@link PropertyInfo} for the property with the given name, or
-     *         <code>null</code> if this type info contains no property with
-     *         that name.
+     * @param name
+     *            the name of the property
+     * @return the {@link PropertyInfo} for the property with the given name, or <code>null</code> if this type info
+     *         contains no property with that name.
      */
     public PropertyInfo getProperty(String name) {
         for (PropertyInfo pDesc : propertyInfos) {
@@ -107,15 +106,13 @@ public class TypeInfo {
     }
 
     /**
-     * Returns whether the Java type of this type info is assignable from the
-     * Java type of the given other type info.
+     * Returns whether the Java type of this type info is assignable from the Java type of the given other type info.
      * <p>
      * The result of this method is <code>true</code> only if
      * <code>this.getJavaType().isAssignableFrom(otherModelType.getJavaType())</code>.
      * 
      * @param otherTypeInfo
-     * @return whether the Java type of this type info is assignable from the
-     *         Java type of the given other type info
+     * @return whether the Java type of this type info is assignable from the Java type of the given other type info
      */
     public boolean isAssignableFrom(TypeInfo otherTypeInfo) {
         return this.getJavaType().isAssignableFrom(otherTypeInfo.getJavaType());
@@ -137,13 +134,18 @@ public class TypeInfo {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        TypeInfo other = (TypeInfo)obj;
+        TypeInfo other = (TypeInfo) obj;
         if (javaType == null) {
             if (other.javaType != null)
                 return false;
         } else if (javaType != other.javaType)
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
 }

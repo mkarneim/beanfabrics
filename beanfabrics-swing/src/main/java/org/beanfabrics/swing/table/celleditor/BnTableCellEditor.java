@@ -34,20 +34,18 @@ import org.beanfabrics.swing.table.BnColumn;
 import org.beanfabrics.swing.table.BnTable;
 
 /**
- * The <code>BnTableCellEditor</code> is a {@link TableCellEditor} for a
- * {@link PresentationModel} object inside a cell of a {@link BnTable}.
+ * The <code>BnTableCellEditor</code> is a {@link TableCellEditor} for a {@link PresentationModel} object inside a cell
+ * of a {@link BnTable}.
  * <p>
- * Currently supported presentation models are: {@link ITextPM},
- * {@link IBooleanPM}
+ * Currently supported presentation models are: {@link ITextPM}, {@link IBooleanPM}
  * </p>
  * 
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
 public class BnTableCellEditor implements TableCellEditor {
-
+    private final EmptyCellEditor FALLBACK_EDITOR = new EmptyCellEditor();
     private int clickCountToStart = 1;
-    private EmptyPanel emptyPanel;
 
     private JComponent currentComponent;
     private TableCellEditor currentCellEditor;
@@ -76,17 +74,17 @@ public class BnTableCellEditor implements TableCellEditor {
         for (TableCellEditor aEd : installedEditors) {
             Component aComp = aEd.getTableCellEditorComponent(table, value, isSelected, row, column);
             if (aComp != null && aComp instanceof JComponent) {
-                result = (JComponent)aComp;
+                result = (JComponent) aComp;
                 editor = aEd;
                 break;
             }
         }
-        if (result == null) {
-            result = getEmptyPanel();
+        if ( editor == null) {
+            editor = FALLBACK_EDITOR;
+            result = (JComponent)FALLBACK_EDITOR.getTableCellEditorComponent(table, value, isSelected, row, column);
         }
 
         BnColumn bnCol = getBnColumn(table, column);
-
         if (bnCol.getOperationPath() != null) {
             result = createButtonDecorator(table, row, result, bnCol);
         }
@@ -103,13 +101,13 @@ public class BnTableCellEditor implements TableCellEditor {
     }
 
     protected PresentationModel getRowModel(JTable table, int row) {
-        BnTable bnTable = (BnTable)table;
+        BnTable bnTable = (BnTable) table;
         PresentationModel result = bnTable.getPresentationModel().getAt(row);
         return result;
     }
 
     private BnColumn getBnColumn(JTable table, int column) {
-        BnTable bnTable = (BnTable)table;
+        BnTable bnTable = (BnTable) table;
         BnColumn result = bnTable.getColumns()[column];
         return result;
     }
@@ -130,13 +128,6 @@ public class BnTableCellEditor implements TableCellEditor {
         this.currentCellEditor = currentCellEditor;
     }
 
-    private EmptyPanel getEmptyPanel() {
-        if (this.emptyPanel == null) {
-            this.emptyPanel = new EmptyPanel();
-        }
-        return this.emptyPanel;
-    }
-
     /** {@inheritDoc} */
     public Object getCellEditorValue() {
         return null; // we don't support getting the value with this method
@@ -145,7 +136,7 @@ public class BnTableCellEditor implements TableCellEditor {
     /** {@inheritDoc} */
     public boolean isCellEditable(EventObject anEvent) {
         if (anEvent instanceof MouseEvent) {
-            return ((MouseEvent)anEvent).getClickCount() >= clickCountToStart;
+            return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
         }
         return true;
     }
@@ -164,6 +155,9 @@ public class BnTableCellEditor implements TableCellEditor {
 
     /** {@inheritDoc} */
     public boolean stopCellEditing() {
+        if (currentCellEditor == null) {
+            return true;
+        }
         boolean result = currentCellEditor.stopCellEditing();
         this.setCurrentComponent(null);
         this.setCurrentCellEditor(null);
@@ -180,9 +174,6 @@ public class BnTableCellEditor implements TableCellEditor {
         currentCellEditor.removeCellEditorListener(l);
     }
 
-    private static class EmptyPanel extends JPanel {
-    }
-
     private static class ButtonDecorator extends JPanel {
         private ModelProvider modelProvider = new ModelProvider();
         private JComponent leftComponent;
@@ -197,7 +188,9 @@ public class BnTableCellEditor implements TableCellEditor {
             this.button.setPreferredSize(new Dimension(20, 0));
             this.button.setModelProvider(modelProvider);
             this.button.setPath(operationPath);
-            this.add(leftComponent, BorderLayout.CENTER);
+            if (leftComponent != null) {
+                this.add(leftComponent, BorderLayout.CENTER);
+            }
             this.add(button, BorderLayout.EAST);
             this.setOpaque(false);
             this.modelProvider.setPresentationModel(rootModel);
@@ -216,15 +209,16 @@ public class BnTableCellEditor implements TableCellEditor {
             boolean result = super.processKeyBinding(ks, e, condition, pressed);
             if (result == false) {
                 if (leftComponent instanceof KeyBindingProcessor) {
-                    ((KeyBindingProcessor)leftComponent).processKeyBinding(ks, e, condition, pressed);
+                    ((KeyBindingProcessor) leftComponent).processKeyBinding(ks, e, condition, pressed);
                 }
 
-                //                final KeyEvent newEvt = new KeyEvent(leftComponent, e.getID(), e.getWhen(), e.getModifiers(), e.getKeyCode(), e.getKeyChar(), e.getKeyLocation());
-                //                EventQueue.invokeLater( new Runnable() {
-                //                    public void run() {
-                //                        leftComponent.dispatchEvent( newEvt);         
-                //                    }                    
-                //                });                       
+                // final KeyEvent newEvt = new KeyEvent(leftComponent, e.getID(), e.getWhen(), e.getModifiers(),
+                // e.getKeyCode(), e.getKeyChar(), e.getKeyLocation());
+                // EventQueue.invokeLater( new Runnable() {
+                // public void run() {
+                // leftComponent.dispatchEvent( newEvt);
+                // }
+                // });
             }
             return result;
         }

@@ -4,12 +4,13 @@
  */
 package org.beanfabrics.swing.customizer;
 
+import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getPathContextToCustomizeModelSubscriber;
+
 import org.beanfabrics.ModelSubscriber;
 import org.beanfabrics.Path;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.support.OnChange;
 import org.beanfabrics.swing.customizer.path.PathPM;
-import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 
 /**
  * The <code>ModelSubscriberCustomizerPM</code> is the presentation model for the {@link ModelSubscriberCustomizer}.
@@ -33,14 +34,16 @@ public class ModelSubscriberCustomizerPM extends AbstractCustomizerPM {
 
     public void setModelSubscriber(ModelSubscriber aSubscriber) {
         this.subscriber = aSubscriber;
-        this.path.setPathContext(CustomizerUtil.getPathContextFromSubscriber(subscriber));
+        // Attention: order is relevant
+        this.path.setData(aSubscriber.getPath()); // 1
+        this.path.setPathContext(getPathContextToCustomizeModelSubscriber(subscriber)); // 2
     }
 
     @OnChange(path = "path")
     void applyPath() {
         if (path.isValid() && customizer != null) {
             Path oldValue = subscriber.getPath();
-            Path newValue = path.getPath();
+            Path newValue = path.getData();
             subscriber.setPath(newValue);
             customizer.firePropertyChange("path", oldValue, newValue);
         }

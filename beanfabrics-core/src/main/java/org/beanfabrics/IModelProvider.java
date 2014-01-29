@@ -18,47 +18,49 @@ import org.beanfabrics.model.PresentationModel;
  */
 public interface IModelProvider {
     /**
-     * Returns the type of the presentation model object.
+     * Returns the type of the PM, that is declared to be held at the root node of this provider.
+     * Never returns <code>null</code>.
      * 
-     * @return the type of the presentation model object
+     * @return the type of the PM, that is declared to be held at the root node of this provider
      */
     public Class<? extends PresentationModel> getPresentationModelType();
 
     /**
-     * Sets the type of presentation model object.
+     * Declares the type of the PM, that should be held at the root node of this provider.
      * 
-     * @param newType the type of the presentation model to set
+     * @param newType the type of the PM
      */
     public void setPresentationModelType(Class<? extends PresentationModel> newType);
 
     /**
-     * Returns the presentation model hold by this container.
+     * Returns the PM instance hold by this container.
+     * TODO: remove this unsafe type cast, or declare the type parameter at class level.
      * 
-     * @param <T> the provided presentation model type
-     * @return the presentation model hold by this container
+     * @param <T> the provided PM type
+     * @return the PM instance hold by this container
      */
     public <T extends PresentationModel> T getPresentationModel();
 
     /**
-     * Sets the presentation model root object.
+     * Sets the given PM instance as root node into this provider.
      * 
-     * @param pModel the root presentation model to set
+     * @param pm the PM
      */
-    public void setPresentationModel(PresentationModel pModel);
+    public void setPresentationModel(PresentationModel pm);
 
     /**
-     * Returns the presentation model found at the end of the specified path or
+     * Returns the PM found at the end of the specified path or
      * <code>null</code> if nothing is found.
      * 
-     * @param <T> the provided presentation model type
-     * @param path the path which references the presentation model
-     * @return the presentation model found at the end of the specified path or
+     * @param <T> the provided PM type
+     * @param path the path to the target PM relative to the root node held by this provider
+     * @return the PM found at the end of the specified path or
      *         <code>null</code> if nothing was found
      */
     public <T extends PresentationModel> T getPresentationModel(Path path);
 
     /**
-     * Adds a ModelProviderListener to the listener list. The listener is
+     * Adds a {@link ModelProviderListener} to the listener list. The listener is
      * registered for all structural changes along the given path and will be
      * informed whenever the model reference at the end of the path changes.
      * 
@@ -68,7 +70,7 @@ public interface IModelProvider {
     public void addModelProviderListener(Path path, ModelProviderListener l);
 
     /**
-     * Removes a ModelProviderListener from the listener list that was
+     * Removes a {@link ModelProviderListener} from the listener list that was
      * registered for a specific path.
      * 
      * @param path the path which references the presentation model

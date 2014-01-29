@@ -81,7 +81,7 @@ public class GroupModel extends AbstractPM {
     public static class PersonModel extends AbstractPM {
         protected final TextPM name = new TextPM();
         protected final DatePM birthday = new DatePM();
-        protected final AddressModel address = new AddressModel();
+        protected final AddressPM address = new AddressPM();
         protected final BooleanPM active = new BooleanPM();
 
         public PersonModel() {
@@ -98,12 +98,12 @@ public class GroupModel extends AbstractPM {
         }
     }
 
-    public static class AddressModel extends AbstractPM {
+    public static class AddressPM extends AbstractPM {
         protected final TextPM street = new TextPM();
         protected final TextPM city = new TextPM();
         protected final TextPM country = new TextPM();
 
-        public AddressModel() {
+        public AddressPM() {
             PMManager.setup(this);
             final Options<String> countries = new Options<String>();
             countries.put("Austria", "Austria");

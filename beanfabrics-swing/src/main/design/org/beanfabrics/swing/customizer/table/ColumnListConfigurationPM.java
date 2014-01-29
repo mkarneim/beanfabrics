@@ -1,6 +1,6 @@
 package org.beanfabrics.swing.customizer.table;
 
-import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
@@ -14,14 +14,14 @@ public class ColumnListConfigurationPM extends AbstractPM {
         public void apply();
     }
 
-    ColumnListPM list = new ColumnListPM();
-    OperationPM apply = new OperationPM();
-    OnApplyHandler onApplyHandler;
+    protected ColumnListPM list = new ColumnListPM();
+    protected OperationPM apply = new OperationPM();
+    protected OnApplyHandler onApplyHandler;
 
     public ColumnListConfigurationPM() {
         PMManager.setup(this);
     }
-
+    
     public void onApply(OnApplyHandler handler) {
         onApplyHandler = handler;
         revalidateProperties();
@@ -35,8 +35,8 @@ public class ColumnListConfigurationPM extends AbstractPM {
         return list.getData();
     }
 
-    public void setRootPathInfo(PathElementInfo rootPathInfo) {
-        list.setRootPathInfo(rootPathInfo);
+    public void setRootPathInfo(PathNode rootPathInfo) {
+        list.setRowPmRootNode(rootPathInfo);
     }
 
     @Operation
