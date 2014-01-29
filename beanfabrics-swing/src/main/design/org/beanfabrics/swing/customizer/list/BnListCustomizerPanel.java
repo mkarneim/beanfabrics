@@ -141,7 +141,7 @@ public class BnListCustomizerPanel extends JPanel implements View<BnListCustomiz
     private PathPanel getPathPanel_1() {
         if (pathPanel_1 == null) {
             pathPanel_1 = new PathPanel();
-            pathPanel_1.setPath(new org.beanfabrics.Path("this.pathToRowCell"));
+            pathPanel_1.setPath(new org.beanfabrics.Path("this.cellConfigPath"));
             pathPanel_1.setModelProvider(getLocalModelProvider());
         }
         return pathPanel_1;

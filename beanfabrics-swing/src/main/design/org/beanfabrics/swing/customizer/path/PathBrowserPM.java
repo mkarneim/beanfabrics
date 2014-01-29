@@ -61,12 +61,10 @@ public class PathBrowserPM extends AbstractPM {
             throw new IllegalArgumentException("pathContext==null");
         }
         rootElement = pathContext.root;
-        currentSelectedPath.setText(Path.getPathString(pathContext.initialPath));
         requiredModelTypeInfo = pathContext.requiredModelTypeInfo;
-        setCurrentPath(pathContext.initialPath);
     }
 
-    private void setCurrentPath(Path path) {
+    public void setCurrentPath(Path path) {
         currentSelectedPath.setText(Path.getPathString(path));
         PathNode pathElementInfo = rootElement == null ? null : rootElement.getNode(path);
         if (pathElementInfo == null) {

@@ -45,6 +45,10 @@ public class PathChooserPM extends AbstractPM {
         return pathBrowser.getCurrentPath();
     }
     
+    public void setData(Path data) {
+        pathBrowser.setCurrentPath(data);
+    }
+    
     @Operation
     public void apply() {
         this.onApplyHandler.apply();
@@ -59,5 +63,7 @@ public class PathChooserPM extends AbstractPM {
     ValidationState getPathBrowserValidationState() {
         return pathBrowser.getValidationState();
     }
+
+   
 
 }

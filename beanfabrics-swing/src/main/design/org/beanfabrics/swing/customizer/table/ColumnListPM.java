@@ -26,7 +26,7 @@ import org.beanfabrics.validation.ValidationState;
  * 
  * @author Michael Karneim
  */
-public class ColumnListPM extends ListPM<ColumnPM> {
+public class ColumnListPM<PM extends ColumnPM> extends ListPM<PM> {
     protected static final String KEY_MESSAGE_SELECT_TO_MOVE_UP = "message.selectToMoveUp";
     protected static final String KEY_MESSAGE_SELECT_TO_MOVE_DOWN = "message.selectToMoveDown";
     protected static final String KEY_MESSAGE_ALREADY_AT_TOP = "message.alreadyAtTop";
@@ -38,33 +38,42 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     protected final OperationPM moveUp = new OperationPM();
     protected final OperationPM moveDown = new OperationPM();
 
-    private PathNode rootPathInfo;
+    private PathNode rowPmRootNode;
 
     public ColumnListPM() {
         super();
         PMManager.setup(this);
     }
 
-    public void setRootPathInfo(PathNode rootPathInfo) {
-        this.rootPathInfo = rootPathInfo;
+    public void setRowPmRootNode(PathNode rowPmRootNode) {
+        this.rowPmRootNode = rowPmRootNode;
         revalidateProperties();
+    }
+    
+    public PathNode getRowPmRootNode() {
+        return rowPmRootNode;
     }
 
     public void setData(BnColumn[] columns) {
         clear();
         for (BnColumn col : columns) {
-            ColumnPM cell = new ColumnPM(rootPathInfo);
-            cell.setData(col);
-            this.add(cell);
+            PM row = createRowPM();
+            row.setData(col);
+            this.add(row);
         }
         revalidateProperties();
+    }
+
+    protected PM createRowPM() {
+        ColumnPM result = new ColumnPM(rowPmRootNode);
+        return (PM)result;
     }
 
     public BnColumn[] getData() {
         BnColumn[] result = new BnColumn[size()];
         int i = 0;
-        for (ColumnPM cell : this) {
-            result[i] = cell.getData();
+        for (ColumnPM row : this) {
+            result[i] = row.getData();
             i++;
         }
         return result;
@@ -72,7 +81,7 @@ public class ColumnListPM extends ListPM<ColumnPM> {
 
     @Operation
     public void addColumn() {
-        final PathChooserController ctrl = CustomizerUtil.createPathChooser(getContext(), new PathContext(rootPathInfo, null, new Path()));
+        final PathChooserController ctrl = CustomizerUtil.createPathChooser(getContext(), new PathContext(rowPmRootNode, null), new Path());
         ctrl.getPresentationModel().onApply( new PathChooserPM.OnApplyHandler() {
             @Override
             public void apply() {
@@ -84,13 +93,13 @@ public class ColumnListPM extends ListPM<ColumnPM> {
 
     @Validation(path = "addColumn", message = "Unknown element type")
     boolean canAddColumn() {
-        return rootPathInfo != null;
+        return rowPmRootNode != null;
     }
 
     private void addColumun(Path path) {
-        ColumnPM newCell = new ColumnPM(rootPathInfo);
-        newCell.setData(new BnColumn(path, createDefaultHeader(path)));
-        this.add(newCell);
+        ColumnPM newRow = createRowPM();
+        newRow.setData(new BnColumn(path, createDefaultHeader(path)));
+        this.add((PM)newRow);
     }
 
     private String createDefaultHeader(Path path) {

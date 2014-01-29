@@ -4,7 +4,6 @@
  */
 package org.beanfabrics.swing.customizer.path;
 
-import org.beanfabrics.Path;
 import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.meta.TypeInfo;
 
@@ -14,11 +13,9 @@ import org.beanfabrics.meta.TypeInfo;
 public class PathContext {
     public final PathNode root;
     public final TypeInfo requiredModelTypeInfo;
-    public final Path initialPath;
 
-    public PathContext(PathNode rootPathNode, TypeInfo requiredModelTypeInfo, Path initialPath) {
+    public PathContext(PathNode rootPathNode, TypeInfo requiredModelTypeInfo) {
         super();
-        this.initialPath = initialPath;
         this.requiredModelTypeInfo = requiredModelTypeInfo;
         this.root = rootPathNode;
     }

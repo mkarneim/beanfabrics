@@ -33,7 +33,6 @@ public class PathPM extends TextPM {
     public void setPathContext(PathContext pathContext) {
         this.rootElementInfo = pathContext.root;
         this.requiredModelTypeInfo = pathContext.requiredModelTypeInfo;
-        this.setData(pathContext.initialPath);
         this.revalidateProperties();
     }
 
@@ -47,7 +46,7 @@ public class PathPM extends TextPM {
 
     @Operation
     void choosePath() {
-        final PathChooserController ctrl = CustomizerUtil.createPathChooser(getContext(), this.getPathContext());
+        final PathChooserController ctrl = CustomizerUtil.createPathChooser(getContext(), new PathContext(rootElementInfo, requiredModelTypeInfo), getData());
         ctrl.getPresentationModel().onApply(new PathChooserPM.OnApplyHandler() {
             @Override
             public void apply() {
@@ -60,11 +59,6 @@ public class PathPM extends TextPM {
     @Validation(path = "choosePath")
     boolean canChoosePath() {
         return this.rootElementInfo != null;
-    }
-
-    private PathContext getPathContext() {
-        PathContext result = new PathContext(rootElementInfo, requiredModelTypeInfo, getData());
-        return result;
     }
 
     @Validation

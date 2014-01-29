@@ -33,7 +33,7 @@ public class ColumnListConfigurationConstroller {
         if (view == null) {
             view = ColumnListConfigurationDialog.create(getRootWindow());
             view.setPresentationModel(getPresentationModel());
-            view.setSize(600, 400);
+            view.setSize(700, 400);
             view.setLocationRelativeTo(view.getParent());
             view.setIconImage(getBeanfabricsIcon());
         }

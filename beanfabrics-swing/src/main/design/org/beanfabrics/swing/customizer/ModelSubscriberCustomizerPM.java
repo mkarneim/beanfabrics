@@ -34,7 +34,9 @@ public class ModelSubscriberCustomizerPM extends AbstractCustomizerPM {
 
     public void setModelSubscriber(ModelSubscriber aSubscriber) {
         this.subscriber = aSubscriber;
-        this.path.setPathContext(getPathContextToCustomizeModelSubscriber(subscriber));
+        // Attention: order is relevant
+        this.path.setData(aSubscriber.getPath()); // 1
+        this.path.setPathContext(getPathContextToCustomizeModelSubscriber(subscriber)); // 2
     }
 
     @OnChange(path = "path")

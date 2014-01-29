@@ -26,7 +26,7 @@ public class PathBrowserPanelTestGUI {
         PathNode pathElementInfo = PMManager.getInstance().getMetadata().getPathNode(ProjectModel.class);
 
         final PathBrowserPM model = new PathBrowserPM();
-        model.setPathContext(new PathContext(pathElementInfo, PMManager.getInstance().getMetadata().getTypeInfo(ITextPM.class), null));
+        model.setPathContext(new PathContext(pathElementInfo, PMManager.getInstance().getMetadata().getTypeInfo(ITextPM.class)));
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {

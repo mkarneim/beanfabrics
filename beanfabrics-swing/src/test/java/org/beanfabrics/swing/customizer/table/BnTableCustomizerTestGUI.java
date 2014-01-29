@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -28,7 +29,7 @@ import org.beanfabrics.swing.table.BnTable;
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
-public class BnTableCustomizerTestGUI extends JFrame {
+public class BnTableCustomizerTestGUI extends JDialog {
     private static class FilePM extends AbstractPM {
         TextPM name = new TextPM();
         IntegerPM size = new IntegerPM();
@@ -70,7 +71,7 @@ public class BnTableCustomizerTestGUI extends JFrame {
     private BnTableCustomizer bnTableCustomizer;
 
     public BnTableCustomizerTestGUI() {
-        super();
+        super((JDialog)null, true);
         getContentPane().add(getBnTableCustomizer(), BorderLayout.CENTER);
         getContentPane().add(getPanel(), BorderLayout.SOUTH);
     }
@@ -119,10 +120,11 @@ public class BnTableCustomizerTestGUI extends JFrame {
                 f.bnTableCustomizer.setObject(bean);
 
                 // finally show the frame
-                f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 f.pack();
                 f.setLocationRelativeTo(null);
                 f.setVisible(true);
+                
             }
         });
     }

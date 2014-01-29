@@ -6,6 +6,8 @@ package org.beanfabrics.swing.customizer.table;
 
 import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getPathContextToCustomizeModelSubscriber;
 
+import javax.swing.JOptionPane;
+
 import org.beanfabrics.Path;
 import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.model.OperationPM;
@@ -43,7 +45,11 @@ public class BnTableCustomizerPM extends AbstractCustomizerPM {
 
     private void setBnTable(BnTable bnTable) {
         this.bnTable = bnTable;
-        this.path.setPathContext(getPathContextToCustomizeModelSubscriber(bnTable));
+        
+        // Attention: order is relevant
+        this.path.setData(bnTable.getPath()); // 1 
+        this.path.setPathContext(getPathContextToCustomizeModelSubscriber(bnTable)); // 2
+        
         revalidateProperties();
     }
 

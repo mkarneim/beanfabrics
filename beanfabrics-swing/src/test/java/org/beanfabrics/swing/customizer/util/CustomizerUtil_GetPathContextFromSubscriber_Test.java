@@ -62,7 +62,6 @@ public class CustomizerUtil_GetPathContextFromSubscriber_Test {
         PathContext actual = CustomizerUtil.getPathContextToCustomizeModelSubscriber(comp);
 
         // Then:
-        assertEquals(new Path("this"), actual.initialPath);
         assertEquals(SampleListPM.class, actual.requiredModelTypeInfo.getJavaType());
         assertEquals(ExtendedSampleListPM.class, actual.root.getTypeInfo().getJavaType());
     }
@@ -79,7 +78,6 @@ public class CustomizerUtil_GetPathContextFromSubscriber_Test {
         PathContext actual = CustomizerUtil.getPathContextToCustomizeModelSubscriber(comp);
 
         // Then:
-        assertEquals(new Path("this"), actual.initialPath);
         assertEquals(SampleListPM.class, actual.requiredModelTypeInfo.getJavaType());
         assertEquals(PresentationModel.class, actual.root.getTypeInfo().getJavaType());
     }
@@ -98,7 +96,6 @@ public class CustomizerUtil_GetPathContextFromSubscriber_Test {
         PathContext actual = CustomizerUtil.getPathContextToCustomizeModelSubscriber(comp);
 
         // Then:
-        assertEquals(new Path("this"), actual.initialPath);
         assertEquals(SampleListPM.class, actual.requiredModelTypeInfo.getJavaType());
         assertEquals(SampleListPM.class, actual.root.getTypeInfo().getJavaType());
     }
@@ -117,7 +114,6 @@ public class CustomizerUtil_GetPathContextFromSubscriber_Test {
         PathContext actual = CustomizerUtil.getPathContextToCustomizeModelSubscriber(comp);
 
         // Then:
-        assertEquals(new Path("this"), actual.initialPath);
         assertEquals(SampleListPM.class, actual.requiredModelTypeInfo.getJavaType());
         assertEquals(ExtendedSampleListPM.class, actual.root.getTypeInfo().getJavaType());
     }
@@ -135,7 +131,6 @@ public class CustomizerUtil_GetPathContextFromSubscriber_Test {
         PathContext actual = CustomizerUtil.getPathContextToCustomizeModelSubscriber(comp);
 
         // Then:
-        assertEquals(new Path("this.list"), actual.initialPath);
         assertEquals(SampleListPM.class, actual.requiredModelTypeInfo.getJavaType());
         assertEquals(OwnerPM.class, actual.root.getTypeInfo().getJavaType());
     }
@@ -154,7 +149,6 @@ public class CustomizerUtil_GetPathContextFromSubscriber_Test {
         PathContext actual = CustomizerUtil.getPathContextToCustomizeModelSubscriber(comp);
 
         // Then:
-        assertEquals(new Path("this.list"), actual.initialPath);
         assertEquals(SampleListPM.class, actual.requiredModelTypeInfo.getJavaType());
         assertEquals(OwnerPM.class, actual.root.getTypeInfo().getJavaType());
     }
@@ -173,7 +167,6 @@ public class CustomizerUtil_GetPathContextFromSubscriber_Test {
         PathContext actual = CustomizerUtil.getPathContextToCustomizeModelSubscriber(comp);
 
         // Then:
-        assertEquals(new Path("this.xxx"), actual.initialPath);
         assertEquals(SampleListPM.class, actual.requiredModelTypeInfo.getJavaType());
         assertEquals(OwnerPM.class, actual.root.getTypeInfo().getJavaType());
     }
@@ -191,7 +184,6 @@ public class CustomizerUtil_GetPathContextFromSubscriber_Test {
         PathContext actual = CustomizerUtil.getPathContextToCustomizeModelSubscriber(comp);
 
         // Then:
-        assertEquals(new Path("this.xxx"), actual.initialPath);
         assertEquals(SampleListPM.class, actual.requiredModelTypeInfo.getJavaType());
         assertEquals(OwnerPM.class, actual.root.getTypeInfo().getJavaType());
     }

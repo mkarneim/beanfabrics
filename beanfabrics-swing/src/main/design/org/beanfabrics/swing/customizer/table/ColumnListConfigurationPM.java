@@ -14,14 +14,14 @@ public class ColumnListConfigurationPM extends AbstractPM {
         public void apply();
     }
 
-    ColumnListPM list = new ColumnListPM();
-    OperationPM apply = new OperationPM();
-    OnApplyHandler onApplyHandler;
+    protected ColumnListPM list = new ColumnListPM();
+    protected OperationPM apply = new OperationPM();
+    protected OnApplyHandler onApplyHandler;
 
     public ColumnListConfigurationPM() {
         PMManager.setup(this);
     }
-
+    
     public void onApply(OnApplyHandler handler) {
         onApplyHandler = handler;
         revalidateProperties();
@@ -36,7 +36,7 @@ public class ColumnListConfigurationPM extends AbstractPM {
     }
 
     public void setRootPathInfo(PathNode rootPathInfo) {
-        list.setRootPathInfo(rootPathInfo);
+        list.setRowPmRootNode(rootPathInfo);
     }
 
     @Operation

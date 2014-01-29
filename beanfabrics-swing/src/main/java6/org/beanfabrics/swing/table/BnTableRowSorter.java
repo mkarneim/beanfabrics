@@ -97,6 +97,11 @@ public class BnTableRowSorter extends RowSorter<BnTableModel> {
             int pos = 0;
             for( org.beanfabrics.model.SortKey modelSortKey: modelSortKeysByPrecedence) {
                 int col = getFirstColumnIndexOf(modelSortKey.getSortPath());
+                if ( col == -1) {
+                    // no column with that path was found.
+                    // -> safely ignore this. 
+                    continue; 
+                }
                 SortOrder sortOrder = modelSortKey.isAscending() ? SortOrder.ASCENDING : SortOrder.DESCENDING;
                 RowSorter.SortKey viewSortKey = new RowSorter.SortKey(col, sortOrder);
                 sortKeyByPrecedence[pos] = viewSortKey;

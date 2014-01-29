@@ -73,8 +73,9 @@ public class CustomizerUtil {
         return UIManager.getLookAndFeel().getID().equals("Aqua");
     }
 
-    public static PathChooserController createPathChooser(Context context, PathContext pathContext) {
+    public static PathChooserController createPathChooser(Context context, PathContext pathContext, Path initialPath) {
         PathChooserController ctrl = new PathChooserController(context, pathContext);
+        ctrl.getPresentationModel().setData( initialPath);
         ctrl.getView().setModal(true);
         return ctrl;
     }
@@ -206,7 +207,7 @@ public class CustomizerUtil {
         if (rootInfo == null) {
             return null;
         }
-        return new PathContext(rootInfo, getTypeInfo(expectedModelType), theSubscriber.getPath());
+        return new PathContext(rootInfo, getTypeInfo(expectedModelType));
     }
 
     
