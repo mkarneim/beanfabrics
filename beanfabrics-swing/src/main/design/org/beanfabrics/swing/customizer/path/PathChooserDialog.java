@@ -53,7 +53,9 @@ public class PathChooserDialog extends JDialog implements View<PathChooserPM>, M
     private JPanel centerPanel;
     private final Link link = new Link(this);
     private ModelProvider localProvider;
-
+    /**
+     * @wbp.parser.constructor
+     */
     private PathChooserDialog(Dialog dialog) {
         super(dialog);
         init();
@@ -187,7 +189,7 @@ public class PathChooserDialog extends JDialog implements View<PathChooserPM>, M
     }
 
     private Color getDefaultBackground() {
-        if (CustomizerUtil.get().isAquaLookAndFeel()) {
+        if (CustomizerUtil.isAquaLookAndFeel()) {
             return new Color(232, 232, 232);
         } else {
             return getBackground();

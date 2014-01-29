@@ -16,19 +16,19 @@ import org.junit.Test;
 /**
  * @author Michael Karneim
  */
-public class BnColumnBuilderFormatTest {
+public class BnColumnBuilderJavaFormatTest {
     public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(BnColumnBuilderFormatTest.class);
+        return new JUnit4TestAdapter(BnColumnBuilderJavaFormatTest.class);
     }
 
     private static final String BUILDER_CLASSNAME = BnColumnBuilder.class.getName();
     private static final String BUILDER_CONSTRUCTOR = "new " + BnColumnBuilder.class.getName() + "()";
 
-    private BnColumnBuilderFormat format;
+    private BnColumnBuilderJavaFormat format;
 
     @Before
     public void createBnColumnBuilderFormat() {
-        this.format = new BnColumnBuilderFormat();
+        this.format = new BnColumnBuilderJavaFormat();
         this.format.setColumnDelimiter("");
     }
 

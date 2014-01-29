@@ -9,7 +9,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.BooleanPM;
 import org.beanfabrics.model.DatePM;
@@ -23,10 +23,10 @@ import org.beanfabrics.model.TextPM;
  */
 public class PathBrowserPanelTestGUI {
     public static void main(String[] args) {
-        PathElementInfo pathElementInfo = PMManager.getInstance().getMetadata().getPathElementInfo(ProjectModel.class);
+        PathNode pathElementInfo = PMManager.getInstance().getMetadata().getPathNode(ProjectModel.class);
 
         final PathBrowserPM model = new PathBrowserPM();
-        model.setPathContext(new PathContext(pathElementInfo, PMManager.getInstance().getMetadata().getTypeInfo(ITextPM.class), null));
+        model.setPathContext(new PathContext(pathElementInfo, PMManager.getInstance().getMetadata().getTypeInfo(ITextPM.class)));
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {

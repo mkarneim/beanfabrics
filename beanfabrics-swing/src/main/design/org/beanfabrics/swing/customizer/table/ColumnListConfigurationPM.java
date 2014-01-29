@@ -1,42 +1,57 @@
 package org.beanfabrics.swing.customizer.table;
 
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.Validation;
 import org.beanfabrics.swing.table.BnColumn;
+import org.beanfabrics.validation.ValidationState;
 
 public class ColumnListConfigurationPM extends AbstractPM {
-    public interface Model {
-        ColumnListContext getColumnListContext();
-
-        void apply(BnColumn[] cols);
+    public interface OnApplyHandler {
+        public void apply();
     }
 
-    private Model model;
+    protected ColumnListPM list = new ColumnListPM();
+    protected OperationPM apply = new OperationPM();
+    protected OnApplyHandler onApplyHandler;
 
-    ColumnListPM list = new ColumnListPM();
-    OperationPM apply = new OperationPM();
-
-    public ColumnListConfigurationPM(Model aModel) {
+    public ColumnListConfigurationPM() {
         PMManager.setup(this);
-        setModel(aModel);
+    }
+    
+    public void onApply(OnApplyHandler handler) {
+        onApplyHandler = handler;
+        revalidateProperties();
     }
 
-    public void setModel(Model aModel) {
-        this.model = aModel;
-        list.setColumnListContext(aModel.getColumnListContext());
+    public void setData(BnColumn[] columns) {
+        list.setData(columns);
+    }
+
+    public BnColumn[] getData() {
+        return list.getData();
+    }
+
+    public void setRootPathInfo(PathNode rootPathInfo) {
+        list.setRowPmRootNode(rootPathInfo);
     }
 
     @Operation
     public void apply() {
-        model.apply(list.getData());
+        onApplyHandler.apply();
     }
-
+    
+    @Validation(path = "apply",message="Missing callback functions")
+    boolean isApplicable() {
+        return onApplyHandler != null;
+    }
+    
     @Validation(path = "apply")
-    public boolean canApply() {
-        return list.isValid();
+    ValidationState getPathBrowserValidationState() {
+        return list.getValidationState();
     }
 
 }

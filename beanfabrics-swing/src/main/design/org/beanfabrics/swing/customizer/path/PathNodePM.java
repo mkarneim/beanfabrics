@@ -11,48 +11,48 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.IconTextPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.model.TextPM;
 
 /**
- * The <code>PathInfoPM</code> is a presentation model presenting a
- * {@link PathElementInfo}.
+ * The {@link PathNodePM} is a presentation model presenting a
+ * {@link PathNode}.
  * 
  * @author Michael Karneim
  */
-public class PathInfoPM extends AbstractPM {
-    private static URL LEAF_ICON_URL = PathInfoPM.class.getResource("/org/beanfabrics/model/model16x16.gif");
+public class PathNodePM extends AbstractPM {
+    private static URL LEAF_ICON_URL = PathNodePM.class.getResource("/org/beanfabrics/model/model16x16.gif");
     IconTextPM name = new IconTextPM();
     TextPM pathString = new TextPM();
     TextPM type = new TextPM();
 
-    private PathElementInfo pathElementInfo;
+    private PathNode pathNode;
     private Path pathObj;
 
-    public PathInfoPM() {
+    public PathNodePM() {
         PMManager.setup(this);
         name.setEditable(false);
         pathString.setEditable(false);
         type.setEditable(false);
     }
 
-    public PathElementInfo getPathElementInfo() {
-        return pathElementInfo;
+    public PathNode getData() {
+        return pathNode;
     }
 
-    public void setPathElementInfo(PathElementInfo aPathElementInfo) {
-        this.pathElementInfo = aPathElementInfo;
-        this.pathObj = this.pathElementInfo.getPath();
-        name.setText(aPathElementInfo.getName());
+    public void setData(PathNode aPathNode) {
+        this.pathNode = aPathNode;
+        this.pathObj = this.pathNode.getPath();
+        name.setText(aPathNode.getName());
         pathString.setText(Path.getPathString(pathObj));
         name.setDescription(pathString.getText());
-        String classname = this.pathElementInfo.getTypeInfo().getName();
+        String classname = this.pathNode.getTypeInfo().getName();
         type.setText(getBasename(classname));
         type.setDescription(classname);
-        if (aPathElementInfo.hasChildren()) {
+        if (aPathNode.hasChildren()) {
             this.name.setIcon(UIManager.getIcon("Tree.closedIcon"));
         } else {
             this.name.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(LEAF_ICON_URL)));

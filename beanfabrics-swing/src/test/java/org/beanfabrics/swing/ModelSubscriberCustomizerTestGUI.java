@@ -13,30 +13,27 @@ import javax.swing.JLabel;
 
 import org.beanfabrics.ModelProvider;
 import org.beanfabrics.Path;
-import org.beanfabrics.swing.GroupModel.AddressModel;
+import org.beanfabrics.swing.GroupModel.AddressPM;
 
 /**
  * @author Michael Karneim
  */
+@SuppressWarnings("serial")
 public class ModelSubscriberCustomizerTestGUI extends JFrame {
-    private ModelProvider provider;
-    private AddressModel addressModel;
-
     public static void main(String[] args) {
         // TODO Auto-generated method stub
 
     }
 
+    private ModelProvider provider;
+    private AddressPM addressModel;
+
     public ModelSubscriberCustomizerTestGUI() {
         super();
 
-        addressModel = new AddressModel(); // @wb:location=107,395
-
-        provider = new ModelProvider(); // @wb:location=206,386
-        provider.setPresentationModel(addressModel);
         final JLabel customizeLabel;
-        final BnTextField bnTextField;
-        final GridBagConstraints gridBagConstraints;
+        final BnTextField tfStreet;
+        final GridBagConstraints gbc_tfStreet;
         final GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 0, 7 };
         getContentPane().setLayout(gridBagLayout);
@@ -45,15 +42,39 @@ public class ModelSubscriberCustomizerTestGUI extends JFrame {
         customizeLabel.setText("Customize");
         getContentPane().add(customizeLabel, new GridBagConstraints());
 
-        bnTextField = new BnTextField();
-        bnTextField.setPath(new Path("this.street"));
-        bnTextField.setModelProvider(provider);
-        gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.weightx = 1;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new Insets(4, 4, 4, 4);
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridx = 1;
-        getContentPane().add(bnTextField, gridBagConstraints);
+        tfStreet = new BnTextField();
+        tfStreet.setPath(new Path("this.street"));
+        tfStreet.setModelProvider(getProvider());
+        gbc_tfStreet = new GridBagConstraints();
+        gbc_tfStreet.weightx = 1;
+        gbc_tfStreet.fill = GridBagConstraints.HORIZONTAL;
+        gbc_tfStreet.insets = new Insets(4, 4, 4, 4);
+        gbc_tfStreet.gridy = 0;
+        gbc_tfStreet.gridx = 1;
+        getContentPane().add(tfStreet, gbc_tfStreet);
     }
+
+    /**
+     * @wbp.nonvisual location=206,386
+     * @return
+     */
+    public ModelProvider getProvider() {
+        if (provider == null) {
+            provider = new ModelProvider(); // @wb:location=206,386
+            provider.setPresentationModel(getAddressPM());
+        }
+        return provider;
+    }
+
+    /**
+     * @wbp.nonvisual location=107,395
+     * @return
+     */
+    public AddressPM getAddressPM() {
+        if (addressModel == null) {
+            addressModel = new AddressPM(); // @wb:location=107,395
+        }
+        return addressModel;
+    }
+
 }

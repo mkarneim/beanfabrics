@@ -7,12 +7,13 @@ package org.beanfabrics.swing.customizer.table;
 import java.util.ResourceBundle;
 
 import org.beanfabrics.Path;
-import org.beanfabrics.meta.PathElementInfo;
+import org.beanfabrics.meta.PathNode;
 import org.beanfabrics.model.ListPM;
 import org.beanfabrics.model.OperationPM;
 import org.beanfabrics.model.PMManager;
 import org.beanfabrics.support.Operation;
 import org.beanfabrics.support.Validation;
+import org.beanfabrics.swing.customizer.path.PathChooserController;
 import org.beanfabrics.swing.customizer.path.PathChooserPM;
 import org.beanfabrics.swing.customizer.path.PathContext;
 import org.beanfabrics.swing.customizer.util.CustomizerUtil;
@@ -21,12 +22,11 @@ import org.beanfabrics.util.ResourceBundleFactory;
 import org.beanfabrics.validation.ValidationState;
 
 /**
- * The <code>ColumnListPM</code> is a {@link ListPM} for {@link ColumnPM}
- * elements.
- *
+ * The <code>ColumnListPM</code> is a {@link ListPM} for {@link ColumnPM} elements.
+ * 
  * @author Michael Karneim
  */
-public class ColumnListPM extends ListPM<ColumnPM> {
+public class ColumnListPM<PM extends ColumnPM> extends ListPM<PM> {
     protected static final String KEY_MESSAGE_SELECT_TO_MOVE_UP = "message.selectToMoveUp";
     protected static final String KEY_MESSAGE_SELECT_TO_MOVE_DOWN = "message.selectToMoveDown";
     protected static final String KEY_MESSAGE_ALREADY_AT_TOP = "message.alreadyAtTop";
@@ -38,32 +38,42 @@ public class ColumnListPM extends ListPM<ColumnPM> {
     protected final OperationPM moveUp = new OperationPM();
     protected final OperationPM moveDown = new OperationPM();
 
-    private PathElementInfo rootPathElementInfo;
+    private PathNode rowPmRootNode;
 
     public ColumnListPM() {
         super();
         PMManager.setup(this);
     }
 
-    public void setColumnListContext(ColumnListContext clContext) {
-        rootPathElementInfo = clContext.rootPathElementInfo;
+    public void setRowPmRootNode(PathNode rowPmRootNode) {
+        this.rowPmRootNode = rowPmRootNode;
+        revalidateProperties();
+    }
+    
+    public PathNode getRowPmRootNode() {
+        return rowPmRootNode;
+    }
+
+    public void setData(BnColumn[] columns) {
         clear();
-        if (clContext.initialColumns != null) {
-            for (BnColumn col : clContext.initialColumns) {
-                ColumnPM cell = new ColumnPM();
-                ColumnContext colContext = new ColumnContext(rootPathElementInfo, col);
-                cell.setColumnContext(colContext);
-                this.add(cell);
-            }
+        for (BnColumn col : columns) {
+            PM row = createRowPM();
+            row.setData(col);
+            this.add(row);
         }
         revalidateProperties();
+    }
+
+    protected PM createRowPM() {
+        ColumnPM result = new ColumnPM(rowPmRootNode);
+        return (PM)result;
     }
 
     public BnColumn[] getData() {
         BnColumn[] result = new BnColumn[size()];
         int i = 0;
-        for (ColumnPM cell : this) {
-            result[i] = cell.getBnColumn();
+        for (ColumnPM row : this) {
+            result[i] = row.getData();
             i++;
         }
         return result;
@@ -71,33 +81,28 @@ public class ColumnListPM extends ListPM<ColumnPM> {
 
     @Operation
     public void addColumn() {
-        PathChooserPM chooserMdl = new PathChooserPM();
-        chooserMdl.setFunctions(new PathChooserPM.Functions() {
+        final PathChooserController ctrl = CustomizerUtil.createPathChooser(getContext(), new PathContext(rowPmRootNode, null), new Path());
+        ctrl.getPresentationModel().onApply( new PathChooserPM.OnApplyHandler() {
             @Override
-			public void apply(Path path) {
-                addColumun(path);
+            public void apply() {
+                addColumun(ctrl.getPresentationModel().getData());
             }
         });
-        chooserMdl.setPathContext(new PathContext(rootPathElementInfo, null, new Path()));
-        chooserMdl.getContext().addParent(getContext());
-        CustomizerUtil.get().openPathChooserDialog(chooserMdl);
-
+        ctrl.getView().setVisible(true);
     }
 
     @Validation(path = "addColumn", message = "Unknown element type")
     boolean canAddColumn() {
-        return rootPathElementInfo != null;
+        return rowPmRootNode != null;
     }
 
     private void addColumun(Path path) {
-        ColumnPM newCell = new ColumnPM();
-        String header = createHeader(path);
-        ColumnContext colContext = new ColumnContext(rootPathElementInfo, new BnColumn(path, header));
-        newCell.setColumnContext(colContext);
-        this.add(newCell);
+        ColumnPM newRow = createRowPM();
+        newRow.setData(new BnColumn(path, createDefaultHeader(path)));
+        this.add((PM)newRow);
     }
 
-    private String createHeader(Path path) {
+    private String createDefaultHeader(Path path) {
         if (path == null) {
             return "new header";
         }

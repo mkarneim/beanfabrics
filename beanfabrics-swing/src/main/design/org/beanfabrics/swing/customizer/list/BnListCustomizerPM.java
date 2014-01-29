@@ -4,137 +4,96 @@
  */
 package org.beanfabrics.swing.customizer.list;
 
-import java.lang.reflect.Type;
+import static org.beanfabrics.swing.customizer.util.CustomizerUtil.getPathContextToCustomizeModelSubscriber;
 
-import org.beanfabrics.IModelProvider;
 import org.beanfabrics.Path;
-import org.beanfabrics.ViewClassDecorator;
-import org.beanfabrics.meta.PathElementInfo;
-import org.beanfabrics.model.IListPM;
 import org.beanfabrics.model.PMManager;
-import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.support.OnChange;
+import org.beanfabrics.swing.customizer.AbstractCustomizerPM;
+import org.beanfabrics.swing.customizer.CustomizerBase;
 import org.beanfabrics.swing.customizer.path.PathContext;
 import org.beanfabrics.swing.customizer.path.PathPM;
-import org.beanfabrics.swing.customizer.util.AbstractCustomizerPM;
+import org.beanfabrics.swing.customizer.util.CustomizerUtil;
 import org.beanfabrics.swing.list.BnList;
 import org.beanfabrics.swing.list.CellConfig;
-import org.beanfabrics.util.GenericType;
 
 /**
- * The <code>BnListCustomizerPM</code> is the presentation model for the
- * {@link BnListCustomizer}.
+ * The <code>BnListCustomizerPM</code> is the presentation model for the {@link BnListCustomizer}.
  * 
  * @author Michael Karneim
  */
 public class BnListCustomizerPM extends AbstractCustomizerPM {
-    protected final PathPM pathToList = new PathPM();
-    protected final PathPM pathToRowCell = new PathPM();
 
-    public interface Functions {
-        void setPathToList(Path path);
-
-        void setCellConfig(CellConfig cellConfig);
-    }
-
-    private Functions functions;
+    private CustomizerBase customizer;
     private BnList bnList;
-    private Class<? extends PresentationModel> rootModelType;
-    private Class<? extends PresentationModel> requiredListModelType;
+
+    protected final PathPM pathToList = new PathPM();
+    protected final PathPM cellConfigPath = new PathPM();
 
     public BnListCustomizerPM() {
-        //this.title.setText("This is the Beanfabrics customizer for the "+BnList.class.getName()+" component.");
+        // this.title.setText("This is the Beanfabrics customizer for the "+BnList.class.getName()+" component.");
         PMManager.setup(this);
     }
 
-    public void setFunctions(Functions functions) {
-        this.functions = functions;
+    public void setCustomizer(CustomizerBase customizer) {
+        this.customizer = customizer;
+        setBnList((BnList) customizer.getObject());
     }
 
     public void setBnList(BnList bnList) {
         this.bnList = bnList;
-        IModelProvider ds = this.bnList.getModelProvider();
-        this.rootModelType = ds.getPresentationModelType();
+        // Attention: order is relevant
+        this.pathToList.setData(bnList.getPath()); // 1
+        this.pathToList.setPathContext(getPathContextToCustomizeModelSubscriber(bnList)); // 2
 
-        ViewClassDecorator viewDeco = new ViewClassDecorator(bnList.getClass());
-        this.requiredListModelType = viewDeco.getExpectedModelType();
-
-        configurePathToList();
-        configurePathToRowCell();
-    }
-
-    private void configurePathToList() {
-        PathContext ctx = new PathContext(PMManager.getInstance().getMetadata().getPathElementInfo(this.rootModelType), PMManager.getInstance().getMetadata().getTypeInfo(this.requiredListModelType), this.bnList.getPath());
-
-        this.pathToList.setPathContext(ctx);
+        revalidateProperties();
+        configureCellConfigPath();
     }
 
     @OnChange(path = "pathToList")
     void applyPathToList() {
-        if (functions != null && pathToList.isValid()) {
-            functions.setPathToList(pathToList.getPath());
+        if (pathToList.isValid() && bnList != null && customizer != null) {
+            Path oldValue = bnList.getPath();
+            Path newValue = pathToList.getData();
+            bnList.setPath(newValue);
+            customizer.firePropertyChange("path", oldValue, newValue);
         }
-        configurePathToRowCell();
+        configureCellConfigPath();
     }
 
-    @OnChange(path = "pathToRowCell")
-    void applyCellConfig() {
-        if (functions != null && pathToRowCell.isValid()) {
-            if (pathToRowCell.getPath() == null) {
-                functions.setCellConfig(null);
+    @OnChange(path = "cellConfigPath")
+    void applyPathToRowPm() {
+        if (cellConfigPath.isValid() && bnList != null && customizer != null) {
+            CellConfig oldValue = bnList.getCellConfig();
+            CellConfig newValue;
+            if (!cellConfigPath.isEmpty()) {
+                newValue = new CellConfig(cellConfigPath.getData());
             } else {
-                CellConfig cfg = new CellConfig(pathToRowCell.getPath());
-                functions.setCellConfig(cfg);
+                newValue = null;
             }
+            bnList.setCellConfig(newValue);
+            customizer.firePropertyChange("cellConfig", oldValue, newValue);
         }
     }
 
-    private void configurePathToRowCell() {
-        CellConfig cellConfig = this.bnList == null ? null : this.bnList.getCellConfig();
-        Path initialPath = cellConfig == null ? null : cellConfig.getPath();
-        Class elementJavaType = getElementJavaType();
-        PathElementInfo rootPathElementInfo = elementJavaType == null ? null : PMManager.getInstance().getMetadata().getPathElementInfo(elementJavaType);
-        PathContext ctx = new PathContext(rootPathElementInfo, null, initialPath);
-        this.pathToRowCell.setPathContext(ctx);
+    private void configureCellConfigPath() {
+        if (bnList != null) {
+            // Attention: order is relevant
+            Path initialPath = getCellConfigPath(this.bnList.getCellConfig());
+            this.cellConfigPath.setData(initialPath); // 1
+            this.cellConfigPath.setPathContext(new PathContext(CustomizerUtil.asRootNode(CustomizerUtil
+                    .getElementTypeOfSubscribedOrActualIListPM(bnList)), null)); // 2
+        } else {
+            this.cellConfigPath.setData(null);
+        }
     }
 
-    private Class getElementJavaType() {
-        PathElementInfo pathElementInfo = getPathElementInfoOfList();
-        if (pathElementInfo == null) {
+    private Path getCellConfigPath(CellConfig cellConfig) {
+        if (cellConfig == null) {
             return null;
         } else {
-            GenericType gt = pathElementInfo.getGenericType();
-            GenericType typeParam = gt.getTypeParameter(IListPM.class.getTypeParameters()[0]);
-            Type tArg = typeParam.narrow(typeParam.getType(), PresentationModel.class);
-            if (tArg instanceof Class) {
-                return (Class)tArg;
-            } else {
-                throw new IllegalStateException("Unexpected type: " + tArg.getClass().getName());
-            }
+            return cellConfig.getPath();
         }
     }
 
-    private PathElementInfo getPathElementInfoOfList() {
-        if (this.bnList == null) {
-            return null;
-        }
-        IModelProvider ds = this.bnList.getModelProvider();
-        if (ds != null) {
-            Path path = this.bnList.getPath();
-            if (path != null) {
-                Class cls = ds.getPresentationModelType();
-                if (cls != null) {
-                    PathElementInfo root = PMManager.getInstance().getMetadata().getPathElementInfo(cls);
-                    return root.getPathInfo(path);
-                }
-            }
-        }
-        IListPM listPM = this.bnList.getPresentationModel();
-        if (listPM != null) {
-            PathElementInfo info = PMManager.getInstance().getMetadata().getPathElementInfo(listPM.getClass());
-            return info;
-        } else {
-            return null;
-        }
-    }
 }

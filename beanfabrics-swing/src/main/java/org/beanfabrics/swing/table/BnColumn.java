@@ -30,7 +30,7 @@ public class BnColumn implements Serializable {
     private final Integer alignment;
 
     public BnColumn() {
-        this(new Path(), "empty column");
+        this(new Path(), " ");
     }
 
     public BnColumn(Path path, String columnName) {

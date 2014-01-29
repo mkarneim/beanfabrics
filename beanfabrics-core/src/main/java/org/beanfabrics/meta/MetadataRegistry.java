@@ -43,30 +43,30 @@ public class MetadataRegistry {
     }
 
     /**
-     * Returns the path element information for the given model class.
+     * Returns the path tree with the given model class as root node.
      * 
      * @param modelClass
-     * @return the path element information for the given model class
+     * @return the path tree with the given model class as root node
      */
-    public PathElementInfo getPathElementInfo(Class<? extends PresentationModel> modelClass) {
+    public PathNode getPathNode(Class<? extends PresentationModel> modelClass) {
         if (modelClass == null) {
             throw new IllegalArgumentException("modelClass==null");
         }
         TypeInfo typeDesc = getTypeInfo(modelClass);
-        return new PathElementInfo(typeDesc);
+        return new PathNode(typeDesc);
     }
 
     /**
-     * Returns the path element information for the given type info.
+     * Returns the path tree with the given type info as root element.
      * 
      * @param typeInfo
-     * @return the path element information for the given type info
+     * @return the path tree with the given type info as root element
      */
-    public PathElementInfo getPathElementInfo(TypeInfo typeInfo) {
+    public PathNode getPathNode(TypeInfo typeInfo) {
         if (typeInfo == null) {
             throw new IllegalArgumentException("modelType==null");
         }
-        return new PathElementInfo(typeInfo);
+        return new PathNode(typeInfo);
     }
 
     /**

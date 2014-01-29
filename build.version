@@ -1,6 +1,6 @@
 # Version-Number
 version.major=1
-version.minor=2
+version.minor=3
 version.build=0
 
 # Release-Label: one of (Release-Final, Release-Devel)
