@@ -45,7 +45,9 @@ public class RowNumberTable extends JTable implements ChangeListener, PropertyCh
     private TableModelListener mainTableModelListener = new TableModelListener() {
         @Override
         public void tableChanged(TableModelEvent e) {
-            RowNumberTable.this.tableChanged(new TableModelEvent(dataModel, TableModelEvent.ALL_COLUMNS));
+            RowNumberTable.this.tableChanged(new TableModelEvent(dataModel, e.getFirstRow(), e.getLastRow(),
+                    TableModelEvent.ALL_COLUMNS));
+            invalidate();
         }
     };
 
@@ -160,7 +162,6 @@ public class RowNumberTable extends JTable implements ChangeListener, PropertyCh
         if ("model".equals(e.getPropertyName())) {
             setMainTableModel(main.getModel());
         }
-        tableChanged(new TableModelEvent(dataModel, TableModelEvent.ALL_COLUMNS));
     }
 
     private void setMainTableModel(TableModel newModel) {
