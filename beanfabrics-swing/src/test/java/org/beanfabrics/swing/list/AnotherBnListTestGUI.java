@@ -45,7 +45,7 @@ import org.beanfabrics.swing.BnButton;
  * @author Michael Karneim
  */
 @SuppressWarnings("serial")
-public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTestGUI.DirectoryBrowserModel>, ModelSubscriber {
+public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTestGUI.DirectoryBrowserPM>, ModelSubscriber {
     private static JFileChooser FILE_CHOOSER;
     private final Link link = new Link(this);
 
@@ -69,10 +69,10 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
                 f.setSize(400, 400);
                 f.setLocationRelativeTo(null);
 
-                DirectoryBrowserModel dirMdl = new DirectoryBrowserModel();
-                dirMdl.setDirectory(new File(System.getProperty("user.home")));
+                DirectoryBrowserPM pm = new DirectoryBrowserPM();
+                pm.setDirectory(new File(System.getProperty("user.home")));
 
-                Binder.bind(f, dirMdl);
+                f.setPresentationModel(pm);
 
                 f.setVisible(true);
             }
@@ -91,12 +91,12 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
     }
 
     /** {@inheritDoc} */
-    public DirectoryBrowserModel getPresentationModel() {
+    public DirectoryBrowserPM getPresentationModel() {
         return getLocalProvider().getPresentationModel();
     }
 
     /** {@inheritDoc} */
-    public void setPresentationModel(DirectoryBrowserModel pModel) {
+    public void setPresentationModel(DirectoryBrowserPM pModel) {
         getLocalProvider().setPresentationModel(pModel);
     }
 
@@ -126,7 +126,7 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
     protected ModelProvider getLocalProvider() {
         if (localProvider == null) {
             localProvider = new ModelProvider(); // @wb:location=11,442
-            localProvider.setPresentationModelType(DirectoryBrowserModel.class);
+            localProvider.setPresentationModelType(DirectoryBrowserPM.class);
         }
         return localProvider;
     }
@@ -162,7 +162,7 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
                 }
             });
             bnList.setPath(new org.beanfabrics.Path("this.elements"));
-            //bnList.setCellConfig(new CellConfig(new Path("name")));
+            bnList.setCellConfig(new CellConfig(new Path("name")));
 
             bnList.setLayoutOrientation(JList.VERTICAL_WRAP);
             bnList.setVisibleRowCount(-1);
@@ -225,11 +225,11 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
     /**
      * PresentationModel for a file entry.
      */
-    private static class FileModel extends AbstractPM {
+    private static class FilePM extends AbstractPM {
         private File file;
         protected final IconTextPM name = new IconTextPM();
 
-        public FileModel() {
+        public FilePM() {
             PMManager.setup(this);
             name.setEditable(false);
         }
@@ -249,14 +249,14 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
     /**
      * PresentationModel for the directory browser.
      */
-    static class DirectoryBrowserModel extends AbstractPM {
+    static class DirectoryBrowserPM extends AbstractPM {
         private File dir;
-        protected final MapPM<File, FileModel> elements = new MapPM<File, FileModel>();
+        protected final MapPM<File, FilePM> elements = new MapPM<File, FilePM>();
         protected final TextPM title = new TextPM();
         protected final OperationPM changeDir = new OperationPM();
         protected final OperationPM changeToParentDir = new OperationPM();
 
-        public DirectoryBrowserModel() {
+        public DirectoryBrowserPM() {
             PMManager.setup(this);
         }
 
@@ -266,7 +266,7 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
             this.title.setText(dir.getAbsolutePath());
             File[] files = dir.listFiles();
             for (File f : files) {
-                FileModel pModel = new FileModel();
+                FilePM pModel = new FilePM();
                 pModel.setFile(f);
                 elements.put(f, pModel);
             }
