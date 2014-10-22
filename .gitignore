@@ -6,3 +6,10 @@ target/
 build.local.properties
 build.credentials
 bin/
+.gradle
+beanfabrics-core/build
+beanfabrics-swing/build
+beanfabrics-swing-goodies/build
+beanfabrics-swing-samples/build
+beanfabrics-swt/build
+beanfabrics-swt-samples/build

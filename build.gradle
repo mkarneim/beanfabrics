@@ -1,0 +1,119 @@
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.0'
+}
+
+def jvm = org.gradle.internal.jvm.Jvm.current()
+def os = System.getProperty("os.name").toLowerCase()
+def arch = System.getProperty("os.arch").toLowerCase()
+def javaHome = System.getProperty("java.home").toLowerCase()
+
+allprojects  {
+  apply plugin: 'maven'
+
+  group = 'org.beanfabrics'
+  version = '1.3.0'
+}
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'eclipse'
+  sourceCompatibility = 1.6
+  targetCompatibility = 1.6
+
+  eclipse {
+    // Workaround for setting a convenient JRE container for eclipse. See https://issues.gradle.org/browse/GRADLE-3100
+    classpath {
+         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6'
+    }
+  }
+
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.1'
+    testCompile group: 'junit', name: 'junit', version:'4.10'
+    testCompile group: 'ch.qos.logback', name: 'logback-classic', version:'1.0.7'
+  }
+
+}
+
+project('beanfabrics-core') {
+  description = 'Beanfabrics Core'
+}
+
+project('beanfabrics-swing') {
+  description = 'Beanfabrics Swing'
+
+  configurations {
+    designCompile.extendsFrom compile
+  }
+
+  sourceSets {
+    main {
+      java {
+        srcDir 'src/main/design'
+      }
+    }
+    // TODO move src/main/java6/... to src/main/java and skip support for java 5
+  }
+
+  dependencies {
+    compile project(':beanfabrics-core')
+  }
+}
+
+project('beanfabrics-swing-goodies') {
+  description = 'Beanfabrics Swing Goodies'
+  dependencies {
+    compile project(':beanfabrics-core')
+    compile project(':beanfabrics-swing')
+  }
+}
+
+project('beanfabrics-swing-samples') {
+  description = 'Beanfabrics Swing Samples'
+  dependencies {
+    compile project(':beanfabrics-core')
+    compile project(':beanfabrics-swing')
+  }
+}
+
+project('beanfabrics-swt') {
+  ext {
+    // this makes the dependency on the SWT library plattform dependent
+    if (os.contains("linux") && arch.contains('amd64')) {
+      swtGroup = 'org.eclipse.swt.gtk.linux'
+      swtName = 'x86_64'
+    } else if (os.contains("linux") && (arch.contains('x86') || arch.contains('i386')) ) {
+      swtGroup = 'org.eclipse.swt.gtk.linux'
+      swtName = 'x86'
+    } else if (os.contains("Mac OS X")) {
+      swtGroup = 'org.eclipse.swt.carbon'
+      swtName = 'macosx'
+    } else if (os.contains("windows") && arch.contains('amd64')) {
+      swtGroup = 'org.eclipse.swt.win32.win32'
+      swtName = 'x86_64'
+    } else if (os.contains("windows") && (arch.contains('x86') || arch.contains('i386')) ) {
+      swtGroup = 'org.eclipse.swt.win32.win32'
+      swtName = 'x86'
+    } else throw new GradleScriptException("Unexpected values for os and arch: os=${os}, arch=${arch}");
+    swtVersion = '3.3.0-v3346'
+  }
+  description = 'Beanfabrics SWT'
+  dependencies {
+    compile project(':beanfabrics-core')
+    compile group: swtGroup, name: swtName, version:swtVersion
+  }
+}
+
+project('beanfabrics-swt-samples') {
+  description = 'Beanfabrics SWT Samples'
+  dependencies {
+    compile project(':beanfabrics-core')
+    compile project(':beanfabrics-swt')
+  }
+}

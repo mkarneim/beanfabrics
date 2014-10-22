@@ -6,10 +6,10 @@ Author: Michael Karneim
 Project Homepage: http://www.beanfabrics.org
 
 ### About
-Beanfabrics is a *presentation model component framework* for building rich clients and desktop applications with Java Swing or SWT (still experimental). The Beanfabrics framework is free and open source software. 
+Beanfabrics is a *presentation model component framework* for building rich clients and desktop applications with Java Swing or SWT (still experimental). The Beanfabrics framework is free and open source software.
 
-The term *presentation model* (PM) is the name of a pattern that was [introduced by Martin Fowler] in 2004. According to Fowler the PM 
-> "represents the state and behavior of the presentation independently of the GUI controls used in the interface". 
+The term *presentation model* (PM) is the name of a pattern that was [introduced by Martin Fowler] in 2004. According to Fowler the PM
+> "represents the state and behavior of the presentation independently of the GUI controls used in the interface".
 
 ### Features
 Beanfabrics provides
@@ -22,7 +22,7 @@ Beanfabrics
 * is a framework to create custom PM and view components.
 
 ### License
-Beanfabrics is open source, and it is distributed under the terms of the [LGPL license]. 
+Beanfabrics is open source, and it is distributed under the terms of the [LGPL license].
 
 For more information please read the [license] file.
 
@@ -33,7 +33,7 @@ For more information please read the [license] file.
 ### Dependencies
 Beanfabrics has only minimal dependencies.
 
-* [Java] 6 
+* [Java] 6
 * [slf4j] 1.7.1
 * [junit] 4.10 (test scope)
 * [logback-classic] 1.0.7 (test scope)
@@ -43,7 +43,7 @@ The documentation is spread over multiple places:
 
 * At Google Code there is a brief [introduction].
 * The [Beanfabrics homepage] contains an [overview], a [tutorial], some [code examples] and [demo applications].
-* At GitHub there is the [JavaDoc API documentation]. 
+* At GitHub there is the [JavaDoc API documentation].
 * If you understand German you might want to watch a [presentation] I have given at the TNG headquaters near Munich. Here is a link to the [slides].
 
 ### Source
@@ -53,13 +53,13 @@ Since December 2013 it is hosted at https://github.com/mkarneim/beanfabrics.
 
 You can build the Beanfabrics libraries yourself using ANT or MAVEN.
 
-### Building Beanfabrics using ANT 
+### Building Beanfabrics using ANT
 * Install Ant 1.7 or later (http://ant.apache.org/)
 * Navigate to the Beanfabrics folder
 * Run ANT on build.xml with the target "create-bin-zip":
 ```ant create-bin-zip```
 
-### Building Beanfabrics using MAVEN 
+### Building Beanfabrics using MAVEN
 * To install beanfabrics to your local repository run
 ```mvn install```
 
@@ -84,3 +84,21 @@ You can build the Beanfabrics libraries yourself using ANT or MAVEN.
 [presentation]: http://youtu.be/fwEQ-JBu_bI
 [slides]: https://docs.google.com/file/d/0Bzq_i9FFoaRUc0dxbDNPU0lydGs/edit?usp=sharing
 
+### Building Beanfabrics using Gradle
+
+First, make sure that gradle is using Jdk 1.6, since Beanfabrics
+can not be compiled with Jdk 1.7 (or later) because of backward compatibility issues.
+
+You can set the Java home in ```gradle.properties```, for example on linux:
+'''
+org.gradle.java.home=/usr/lib/jvm/java-6-oracle/jre
+'''
+
+
+To build Beanfabrics with Gradle, open your terminal app, change into the beanfabrics directory and run:
+
+```./gradlew build``` (on linux / osx)
+
+or
+
+```gradlew .bat build``` (on windows)
