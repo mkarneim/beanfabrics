@@ -56,7 +56,9 @@ Beanfabrics has only minimal dependencies.
 * [logback-classic] 1.0.7 (test scope)
 
 ### Beanfabrics Eclipse Plugin
-There is also a [Beanfabrics Eclipse plugin] for creating custom view classes.
+The eclipse plugin can be downloaded and installed with the Update Manager inside Eclipse. The update site is at
+
+```http://www.beanfabrics.org/pub/updatesite/site.xml```
 
 ### Documentation
 The documentation is spread over multiple places:
