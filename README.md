@@ -6,7 +6,7 @@ Author: Michael Karneim
 Project Homepage: http://www.beanfabrics.org
 
 ### About
-Beanfabrics is a *presentation model component framework* for building rich clients and desktop applications with Java Swing or SWT (still experimental). The Beanfabrics framework is free and open source software.
+Beanfabrics is a *presentation model component framework* for building rich clients and desktop applications with Java Swing or SWT. The Beanfabrics framework is free and open source software.
 
 The term *presentation model* (PM) is the name of a pattern that was [introduced by Martin Fowler] in 2004. According to Fowler the PM
 > "represents the state and behavior of the presentation independently of the GUI controls used in the interface".
