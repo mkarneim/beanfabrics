@@ -14,8 +14,6 @@ import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +42,6 @@ import org.beanfabrics.log.Logger;
 import org.beanfabrics.log.LoggerFactory;
 import org.beanfabrics.model.AbstractPM;
 import org.beanfabrics.model.IListPM;
-import org.beanfabrics.model.ListPM;
 import org.beanfabrics.model.PresentationModel;
 import org.beanfabrics.swing.table.celleditor.BnTableCellEditor;
 import org.beanfabrics.swing.table.cellrenderer.BnTableCellRenderer;
@@ -245,10 +242,6 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
     }
 
     private void installRowSorter() {
-        // TODO (mk) make this configurable (e.g. with a client property)
-        if (isJava5()) {
-            return;
-        }
         // When intalling a row sorter in jre1.6 the selection model is cleared
         // To prevent this to change the presentation model we temporary install a dummy selection model
         ListSelectionModel oldSelModel = getSelectionModel();
@@ -257,74 +250,16 @@ public class BnTable extends JTable implements View<IListPM<? extends Presentati
         setSelectionModel(createDefaultSelectionModel());
         setSelectionMode(oldSelectionMode);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("trying to install BnTableRowSorter");
-        }
-        try {
-            Class rsClass = Class.forName("org.beanfabrics.swing.table.BnTableRowSorter");
-            Method install = rsClass.getMethod("install", new Class[] { BnTable.class });
-            install.invoke(null, new Object[] { this });
-        } catch (ClassNotFoundException ex) {
-            // not found. Ok, we do not install the row sorter
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Can't install BnTableRowSorter", ex);
-            }
-        } catch (Exception ex) {
-            throw new UndeclaredThrowableException(ex);
-        }
+        BnTableRowSorter.install(this);
 
         // reset the temporary selection model
         setSelectionModel(oldSelModel);
     }
 
     private void uninstallRowSorter() {
-        if (isJava5()) {
-            return;
-        }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("uninstalling BnTableRowSorter");
-        }
-        try {
-            Class rsClass = Class.forName("org.beanfabrics.swing.table.BnTableRowSorter");
-            Method uninstall = rsClass.getMethod("uninstall", new Class[] { BnTable.class });
-            uninstall.invoke(null, new Object[] { this });
-        } catch (ClassNotFoundException ex) {
-            // not found. ignore.
-            if (LOG.isErrorEnabled()) {
-                LOG.error("Can't uninstall BnTableRowSorter", ex);
-            }
-        } catch (Exception ex) {
-            throw new UndeclaredThrowableException(ex);
-        }
+        BnTableRowSorter.uninstall(this);
     }
-
-    /**
-     * Returns the default table header object, which is dependent on the Java version. In Java 5 a
-     * {@link Java5SortingTableHeader} is returned. In Java 6 and later the standard {@link JTableHeader} is returned.
-     * 
-     * @return the default table header object
-     * @see JTableHeader
-     */
-    @Override
-    protected JTableHeader createDefaultTableHeader() {
-        if (useJava5SortingTableHeader()) {
-            Java5SortingTableHeader header = new Java5SortingTableHeader();
-            header.setColumnModel(this.getColumnModel());
-            header.setSortable(isSortable());
-            return header;
-        } else {
-            return super.createDefaultTableHeader();
-        }
-    }
-
-    private boolean useJava5SortingTableHeader() {
-        return isJava5();
-    }
-
-    private boolean isJava5() {
-        return System.getProperty("java.version").startsWith("1.5.");
-    }
-
+  
     @Override
     protected void createDefaultRenderers() {
         super.createDefaultRenderers();
