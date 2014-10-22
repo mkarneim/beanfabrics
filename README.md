@@ -53,15 +53,25 @@ Since December 2013 it is hosted at https://github.com/mkarneim/beanfabrics.
 
 You can build the Beanfabrics libraries yourself using ANT or MAVEN.
 
-### Building Beanfabrics using ANT
-* Install Ant 1.7 or later (http://ant.apache.org/)
-* Navigate to the Beanfabrics folder
-* Run ANT on build.xml with the target "create-bin-zip":
-```ant create-bin-zip```
+### Building Beanfabrics with Gradle
 
-### Building Beanfabrics using MAVEN
-* To install beanfabrics to your local repository run
-```mvn install```
+First, make sure that Gradle is using Jdk 1.6, since Beanfabrics can not be compiled with
+Jdk 1.7 (or later) because of backward compatibility issues.
+
+You must set the Java Home property in ```gradle.properties``` to some sensible value.
+
+For example:
+```
+org.gradle.java.home=/usr/lib/jvm/java-6-oracle/jre
+```
+
+To build Beanfabrics with Gradle, open your terminal app, change into the ```beanfabrics``` directory and run:
+
+```./gradlew build``` (on linux / osx)
+
+or
+
+```gradlew .bat build``` (on windows)
 
 [introduced by Martin Fowler]: http://martinfowler.com/eaaDev/PresentationModel.html
 [WindowBuilder]: http://www.eclipse.org/windowbuilder
@@ -83,22 +93,3 @@ You can build the Beanfabrics libraries yourself using ANT or MAVEN.
 [JavaDoc API documentation]: https://github.com/mkarneim/beanfabrics/wiki/Documentation
 [presentation]: http://youtu.be/fwEQ-JBu_bI
 [slides]: https://docs.google.com/file/d/0Bzq_i9FFoaRUc0dxbDNPU0lydGs/edit?usp=sharing
-
-### Building Beanfabrics using Gradle
-
-First, make sure that gradle is using Jdk 1.6, since Beanfabrics
-can not be compiled with Jdk 1.7 (or later) because of backward compatibility issues.
-
-You can set the Java home in ```gradle.properties```, for example on linux:
-'''
-org.gradle.java.home=/usr/lib/jvm/java-6-oracle/jre
-'''
-
-
-To build Beanfabrics with Gradle, open your terminal app, change into the beanfabrics directory and run:
-
-```./gradlew build``` (on linux / osx)
-
-or
-
-```gradlew .bat build``` (on windows)
