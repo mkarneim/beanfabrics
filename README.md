@@ -27,7 +27,8 @@ Beanfabrics is open source, and it is distributed under the terms of the [LGPL l
 For more information please read the [license] file.
 
 ### Download
-* The [releases page] contains links to all stable releases with a change log and the download links.
+* Beanfabrics *binaries* are available for download at [Sonatype OSS Maven Repository] and [Maven Central].
+* The [releases page] contains a list of all stable releases with a change log.
 * There is also a [Beanfabrics Eclipse plugin] for creating custom view classes.
 
 ### Dependencies
@@ -55,17 +56,12 @@ You can build the Beanfabrics libraries yourself using ANT or MAVEN.
 
 ### Building Beanfabrics with Gradle
 
-First, make sure that Gradle is using Jdk 1.6, since Beanfabrics can not be compiled with
-Jdk 1.7 (or later) because of backward compatibility issues.
+Beanfabrics can be built with [Gradle].
 
-You must set the Java Home property in ```gradle.properties``` to some sensible value.
+Please make sure to set the Java Home property in [gradle.properties] to JDK 1.6.,
+since Beanfabrics can not be compiled with JDK 1.7 (or later) because of backward compatibility issues.
 
-For example:
-```
-org.gradle.java.home=/usr/lib/jvm/java-6-oracle/jre
-```
-
-To build Beanfabrics with Gradle, open your terminal app, change into the ```beanfabrics``` directory and run:
+To build Beanfabrics, open your terminal app, change into the ```beanfabrics``` directory and run:
 
 ```./gradlew build``` (on linux / osx)
 
@@ -78,6 +74,8 @@ or
 [LGPL license]: lgpl.txt
 [license]: license.txt
 [bean customization]: http://docs.oracle.com/javase/tutorial/javabeans/advanced/customization.html
+[Sonatype OSS Maven Repository]: https://oss.sonatype.org/content/repositories/releases/org/beanfabrics
+[Maven Central]: http://search.maven.org/#search|ga|1|org.beanfabrics
 [releases page]: https://github.com/mkarneim/beanfabrics/releases
 [Beanfabrics Eclipse plugin]: http://www.beanfabrics.org/index.php?title=Eclipse_Plugin
 [Java]: http://www.oracle.com/technetwork/java/
@@ -93,3 +91,5 @@ or
 [JavaDoc API documentation]: https://github.com/mkarneim/beanfabrics/wiki/Documentation
 [presentation]: http://youtu.be/fwEQ-JBu_bI
 [slides]: https://docs.google.com/file/d/0Bzq_i9FFoaRUc0dxbDNPU0lydGs/edit?usp=sharing
+[Gradle]: http://www.gradle.org/
+[gradle.properties]: http://github.com/mkarneim/beanfabrics/blob/master/gradle.properties
