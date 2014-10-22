@@ -31,6 +31,27 @@ For more information please read the [license] file.
 * The [releases page] contains a list of all stable releases with a change log.
 * There is also a [Beanfabrics Eclipse plugin] for creating custom view classes.
 
+### Maven Coordinates
+Beanfabrics supports Swing and SWT.
+
+#### Swing
+```xml
+<dependency>
+    <groupId>org.beanfabrics</groupId>
+    <artifactId>beanfabrics-swing</artifactId>
+    <version>1.4.0</version>
+</dependency>
+```
+
+#### SWT
+```xml
+<dependency>
+    <groupId>org.beanfabrics</groupId>
+    <artifactId>beanfabrics-swt</artifactId>
+    <version>1.4.0</version>
+</dependency>
+```
+
 ### Dependencies
 Beanfabrics has only minimal dependencies.
 
