@@ -88,7 +88,7 @@ To build Beanfabrics, open your terminal app, change into the ```beanfabrics``` 
 
 or
 
-```gradlew .bat build``` (on windows)
+```gradlew.bat build``` (on windows)
 
 [introduced by Martin Fowler]: http://martinfowler.com/eaaDev/PresentationModel.html
 [WindowBuilder]: http://www.eclipse.org/windowbuilder
