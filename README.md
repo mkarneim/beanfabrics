@@ -56,7 +56,9 @@ Beanfabrics has only minimal dependencies.
 * [logback-classic] 1.0.7 (test scope)
 
 ### Beanfabrics Eclipse Plugin
-The eclipse plugin can be downloaded and installed with the Update Manager inside Eclipse.
+The Eclipse pluing provides a *Bindable Component Wizard* for creating a custom View component for a given PM component.
+
+It can be downloaded and installed with the Update Manager inside Eclipse.
 The update site is at
 http://www.beanfabrics.org/pub/updatesite/site.xml
 
