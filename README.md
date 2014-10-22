@@ -75,7 +75,7 @@ http://www.beanfabrics.org/pub/updatesite/site.xml
 Beanfabrics can be built with [Gradle].
 
 Please make sure to set the Java Home property in [gradle.properties] to JDK 1.6,
-since Beanfabrics can not be compiled with JDK 1.7 (or later) because of backward compatibility issues.
+since Beanfabrics must not be compiled with JDK 1.7 (or later) to ensure backward compatibility to Java 6.
 
 To build Beanfabrics, open your terminal app, change into the ```beanfabrics``` directory and run:
 
