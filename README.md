@@ -72,9 +72,6 @@ http://www.beanfabrics.org/pub/updatesite/site.xml
 
 ### How to Build
 
-This project's source code was formerly hosted at http://beanfabrics.googlecode.com.
-Since December 2013 it is hosted at https://github.com/mkarneim/beanfabrics.
-
 Beanfabrics can be built with [Gradle].
 
 Please make sure to set the Java Home property in [gradle.properties] to JDK 1.6,
