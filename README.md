@@ -26,15 +26,10 @@ Beanfabrics is open source, and it is distributed under the terms of the [LGPL l
 
 For more information please read the [license] file.
 
-### Download
-* Beanfabrics *binaries* are available for download at [Sonatype OSS Maven Repository] and [Maven Central].
-* The [releases page] contains a list of all stable releases with a change log.
-* There is also a [Beanfabrics Eclipse plugin] for creating custom view classes.
-
 ### Maven Coordinates
-Beanfabrics supports Swing and SWT.
+Beanfabrics *binaries* are available at [Sonatype OSS Maven Repository] and [Maven Central]. The [releases page] contains a list of all stable releases with a change log.
 
-#### Swing
+#### Beanfabrics for Swing
 ```xml
 <dependency>
     <groupId>org.beanfabrics</groupId>
@@ -43,7 +38,7 @@ Beanfabrics supports Swing and SWT.
 </dependency>
 ```
 
-#### SWT
+#### Beanfabrics for SWT
 ```xml
 <dependency>
     <groupId>org.beanfabrics</groupId>
@@ -59,6 +54,9 @@ Beanfabrics has only minimal dependencies.
 * [slf4j] 1.7.1
 * [junit] 4.10 (test scope)
 * [logback-classic] 1.0.7 (test scope)
+
+### Beanfabrics Eclipse Plugib
+There is also a [Beanfabrics Eclipse plugin] for creating custom view classes.
 
 ### Documentation
 The documentation is spread over multiple places:
