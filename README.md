@@ -79,7 +79,7 @@ Since December 2013 it is hosted at https://github.com/mkarneim/beanfabrics.
 
 Beanfabrics can be built with [Gradle].
 
-Please make sure to set the Java Home property in [gradle.properties] to JDK 1.6.,
+Please make sure to set the Java Home property in [gradle.properties] to JDK 1.6,
 since Beanfabrics can not be compiled with JDK 1.7 (or later) because of backward compatibility issues.
 
 To build Beanfabrics, open your terminal app, change into the ```beanfabrics``` directory and run:
