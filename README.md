@@ -11,6 +11,14 @@ Beanfabrics is a *presentation model component framework* for building rich clie
 The term *presentation model* (PM) is the name of a pattern that was [introduced by Martin Fowler] in 2004. According to Fowler the PM
 > "represents the state and behavior of the presentation independently of the GUI controls used in the interface".
 
+### Documentation
+The documentation is spread over multiple places:
+
+* At Google Code there is a brief [introduction].
+* The [Beanfabrics homepage] contains an [overview], a [tutorial], some [code examples] and [demo applications].
+* At GitHub there is the [JavaDoc API documentation].
+* If you understand German you might want to watch a [presentation] I have given at the TNG headquaters near Munich. Here is a link to the [slides].
+
 ### Features
 Beanfabrics provides
 * a set of ready-to-use PM components.
@@ -62,20 +70,10 @@ It can be downloaded and installed with the Update Manager inside Eclipse.
 The update site is at
 http://www.beanfabrics.org/pub/updatesite/site.xml
 
-### Documentation
-The documentation is spread over multiple places:
-
-* At Google Code there is a brief [introduction].
-* The [Beanfabrics homepage] contains an [overview], a [tutorial], some [code examples] and [demo applications].
-* At GitHub there is the [JavaDoc API documentation].
-* If you understand German you might want to watch a [presentation] I have given at the TNG headquaters near Munich. Here is a link to the [slides].
-
-### Source
+### How to Build
 
 This project's source code was formerly hosted at http://beanfabrics.googlecode.com.
 Since December 2013 it is hosted at https://github.com/mkarneim/beanfabrics.
-
-### Building Beanfabrics with Gradle
 
 Beanfabrics can be built with [Gradle].
 
