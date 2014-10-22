@@ -75,8 +75,6 @@ The documentation is spread over multiple places:
 This project's source code was formerly hosted at http://beanfabrics.googlecode.com.
 Since December 2013 it is hosted at https://github.com/mkarneim/beanfabrics.
 
-You can build the Beanfabrics libraries yourself using ANT or MAVEN.
-
 ### Building Beanfabrics with Gradle
 
 Beanfabrics can be built with [Gradle].
