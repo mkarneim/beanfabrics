@@ -55,7 +55,7 @@ Beanfabrics has only minimal dependencies.
 * [junit] 4.10 (test scope)
 * [logback-classic] 1.0.7 (test scope)
 
-### Beanfabrics Eclipse Plugib
+### Beanfabrics Eclipse Plugin
 There is also a [Beanfabrics Eclipse plugin] for creating custom view classes.
 
 ### Documentation
