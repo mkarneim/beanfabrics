@@ -57,11 +57,11 @@ public class PMManager {
 
         Class cls = model.getClass();
 
+        List<Class> classes = ReflectionUtil.getAllClasses(cls);
+        processClasses(model, classes);
+        
         List<Member> members = membersPerClass.get(cls);
         if (members == null) {
-            List<Class> classes = ReflectionUtil.getAllClasses(cls);
-            processClasses(model, classes);
-
             members = ReflectionUtil.getAllMembers(cls);
             members = SupportUtil.sortMembers(members);
             membersPerClass.put(cls, members);
