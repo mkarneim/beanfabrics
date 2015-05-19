@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * @author Michael Karneim
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.FIELD})
 public @interface SortOrder {
     int value() default 0;
 }
