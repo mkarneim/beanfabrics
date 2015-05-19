@@ -131,6 +131,7 @@ public class BooleanPMCheckBox extends JCheckBox implements View<IBooleanPM> {
             this.setToolTipText(tooltip);
             this.setEnabled(pModel.isEditable());
         }
+        repaint();
     }
 
     private ErrorIconPainter createDefaultErrorIconPainter() {
