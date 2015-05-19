@@ -30,7 +30,7 @@ subprojects {
   apply plugin: 'signing'
 
   group = 'org.beanfabrics'
-  version = '1.5.0-SNAPSHOT'
+  version = '1.4.2'
   sourceCompatibility = 1.6
   targetCompatibility = 1.6
 
@@ -257,19 +257,19 @@ project('beanfabrics-swt') {
     swtVersion = '3.3.0-v3346'
     if (os.contains('linux') && arch.contains('amd64')) {
       swtGroup = 'org.eclipse.swt.gtk.linux'
-      swtName = 'x86_64'      
+      swtName = 'x86_64'
     } else if (os.contains('linux') && (arch.contains('x86') || arch.contains('i386')) ) {
       swtGroup = 'org.eclipse.swt.gtk.linux'
-      swtName = 'x86'      
+      swtName = 'x86'
     } else if (os.contains('Mac OS X')) {
       swtGroup = 'org.eclipse.swt.carbon'
-      swtName = 'macosx'      
+      swtName = 'macosx'
     } else if (os.contains('windows') && arch.contains('amd64')) {
       // see http://code.google.com/p/piccolo2d/issues/detail?id=203
       throw new GradleException("Unsupported values for os and arch: os=${os}, arch=${arch} since no SWT artifact for version ${swtVersion} is available on Maven Central. Please consider to compile it with a 32bit JDK!");
     } else if (os.contains('windows') && (arch.contains('x86') || arch.contains('i386')) ) {
       swtGroup = 'org.eclipse.swt.win32.win32'
-      swtName = 'x86'      
+      swtName = 'x86'
     } else throw new GradleException("Unexpected values for os and arch: os=${os}, arch=${arch}");
   }
   dependencies {
