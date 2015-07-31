@@ -261,7 +261,7 @@ project('beanfabrics-swt') {
     } else if (os.contains('linux') && (arch.contains('x86') || arch.contains('i386')) ) {
       swtGroup = 'org.eclipse.swt.gtk.linux'
       swtName = 'x86'
-    } else if (os.contains('Mac OS X')) {
+    } else if (os.contains('mac os x')) {
       swtGroup = 'org.eclipse.swt.carbon'
       swtName = 'macosx'
     } else if (os.contains('windows') && arch.contains('amd64')) {
