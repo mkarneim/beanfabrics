@@ -9,6 +9,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import javax.swing.text.BadLocationException;
+import javax.swing.undo.UndoManager;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -93,5 +94,22 @@ public class BnPlainDocumentTest {
 
         this.doc.remove(0, this.doc.getLength());
         assertEquals("doc.getText(0, this.doc.getLength())", "", this.doc.getText(0, this.doc.getLength()));
+    }
+
+
+    @Test
+    public void testUndoManager() throws BadLocationException {
+        UndoManager manager = new UndoManager();
+        doc.addUndoableEditListener(manager);
+
+        final TextPM pM = new TextPM();
+        this.doc.setPresentationModel(pM);
+        this.doc.insertString(0, "Test", null);
+        this.doc.insertString(4, " failed!", null);
+
+        manager.undo();
+
+        assertEquals("doc.getLength()", 4, doc.getLength());
+        assertEquals("pM.getText()", "Test", pM.getText());
     }
 }

@@ -8,9 +8,12 @@ package org.beanfabrics.swing.internal;
 
 import java.io.Serializable;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
+import javax.swing.undo.UndoManager;
 
 import org.beanfabrics.View;
 import org.beanfabrics.event.WeakPropertyChangeListener;
@@ -23,9 +26,10 @@ import org.beanfabrics.util.ExceptionUtil;
 /**
  * The <code>BnPlainDocument</code> is a {@link PlainDocument} which is a
  * {@link View} on a {@link ITextPM}.
- * 
+ *
  * @author Michael Karneim
  * @author Max Gensthaler
+ * @author Adrodoc55
  */
 @SuppressWarnings("serial")
 public class BnPlainDocument extends PlainDocument implements View<ITextPM> {
@@ -43,7 +47,7 @@ public class BnPlainDocument extends PlainDocument implements View<ITextPM> {
     protected ITextPM pModel;
 
     private final WeakPropertyChangeListener propertyListener = new MyWeakPropertyChangeListener();
-    
+
     private class MyWeakPropertyChangeListener implements WeakPropertyChangeListener, Serializable {
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             if (pending_modelChange == false) { // avoid event cycle
@@ -57,8 +61,38 @@ public class BnPlainDocument extends PlainDocument implements View<ITextPM> {
         }
     }
 
+    /**
+     * This {@link DocumentListener} listenes for changes to this document, that are not caused by
+     * this document. For instance changes performed by an {@link UndoManager}.
+     */
+    private final DocumentListener documentListener = new MyDocumentListener();
+
+    private class MyDocumentListener implements DocumentListener, Serializable {
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        if (pending_modelChange == false) {
+          updatePM();
+        }
+      }
+
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        if (pending_modelChange == false) {
+          updatePM();
+        }
+      }
+
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        if (pending_modelChange == false) {
+          updatePM();
+        }
+      }
+    };
+
     public BnPlainDocument() {
         super();
+        addDocumentListener(documentListener);
     }
 
     public BnPlainDocument(ITextPM pModel) {
@@ -73,13 +107,9 @@ public class BnPlainDocument extends PlainDocument implements View<ITextPM> {
 
     /** {@inheritDoc} */
     public void setPresentationModel(ITextPM pModel) {
-        if (this.isConnected()) {
-            this.pModel.removePropertyChangeListener("text", this.propertyListener);
-        }
+        disconnect();
         this.pModel = pModel;
-        if (pModel != null) {
-            pModel.addPropertyChangeListener("text", this.propertyListener);
-        }
+        connect();
         try {
             pending_modelChange = true;
             this.refresh();
@@ -92,7 +122,7 @@ public class BnPlainDocument extends PlainDocument implements View<ITextPM> {
      * Returns whether this component is connected to the target
      * {@link PresentationModel} to synchronize with. This is a convenience
      * method.
-     * 
+     *
      * @return <code>true</code> when this component is connected, else
      *         <code>false</code>
      */
@@ -140,41 +170,50 @@ public class BnPlainDocument extends PlainDocument implements View<ITextPM> {
         }
     }
 
-    public void remove(int offs, int len)
-        throws BadLocationException {
+    public void remove(int offs, int len) throws BadLocationException {
+      try {
         try {
-            String edText = isConnected() ? this.pModel.getText() : "";
-            super.remove(offs, len);
-            String newText = this.getText(0, this.getLength());
-            if (edText.equals(newText) == false) {
-                // the removal to an empty string needs to be synchronized (no
-                // model.insertString follows)
-                if (suppressRemoveEvent == false) {
-                    if (this.isConnected()) {
-                        this.pModel.setText(newText);
-                    }
-                }
-            }
-        } catch (BadLocationException ex) {
-            throw ex;
-        } catch (Throwable t) {
-            ExceptionUtil.getInstance().handleException("Error during editing.", t);
+          pending_modelChange = true;
+          super.remove(offs, len);
+        } finally {
+          pending_modelChange = false;
         }
+        if (suppressRemoveEvent == false) {
+          updatePM();
+        }
+      } catch (BadLocationException ex) {
+        throw ex;
+      } catch (Throwable t) {
+        ExceptionUtil.getInstance().handleException("Error during editing.", t);
+      }
     }
 
-    public void insertString(int offs, String str, AttributeSet a)
-        throws BadLocationException {
-        if (this.isConnected()) {
-            String edText = this.pModel.getText();
-            super.insertString(offs, str, a);
-            String newText = this.getText(0, this.getLength());
-            if (edText.equals(newText) == false) {
-                this.pModel.setText(newText);
-            }
-        }
+    public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+      try {
+        pending_modelChange = true;
+        super.insertString(offs, str, a);
+      } finally {
+        pending_modelChange = false;
+      }
+      updatePM();
     }
 
     public void setSuppressRemoveEvent(boolean suppressRemoveEvent) {
         this.suppressRemoveEvent = suppressRemoveEvent;
+    }
+
+    private void updatePM() {
+      try {
+        if (!isConnected()) {
+          return;
+        }
+        String modelText = this.pModel.getText();
+        String newText = this.getText(0, this.getLength());
+        if (modelText.equals(newText) == false) {
+          this.pModel.setText(newText);
+        }
+      } catch (Throwable t) {
+        ExceptionUtil.getInstance().handleException("Error during editing.", t);
+      }
     }
 }
