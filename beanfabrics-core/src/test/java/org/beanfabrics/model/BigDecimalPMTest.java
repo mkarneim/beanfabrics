@@ -187,5 +187,36 @@ public class BigDecimalPMTest {
         pm.reformat();
         assertEquals("51.23%", pm.getText());
     }
+    
+    @Test
+    public void testReformat_with_percent_sign_as_literal() {
+      // Given:
+      BigDecimalPM pm = new BigDecimalPM();      //
+      pm.setFormat( new BigDecimalPM.Format(new DecimalFormat("#.##' %'")));
+      //pm.setFormat( new BigDecimalPM.Format(new DecimalFormat("#.## %")));
+      
+      // When:
+      pm.setText("1.23");
+      pm.reformat();
+      
+      // Then:
+      assertEquals("pm.getText()", "1.23 %", pm.getText());
+    }
+    
+    @Test
+    public void testReformat_with_colon_as_literal() {
+      // Given:
+      BigDecimalPM pm = new BigDecimalPM();
+      //pm.setFormat( new BigDecimalPM.Format(new DecimalFormat(".0.00")));
+      pm.setFormat( new BigDecimalPM.Format(new DecimalFormat("'.'0.00")));
+      
+      // When:
+      pm.setText("1.23");
+      pm.reformat();
+      
+      // Then:
+      assertEquals("pm.getText()", ".1.23", pm.getText());      
+    }
+
 
 }

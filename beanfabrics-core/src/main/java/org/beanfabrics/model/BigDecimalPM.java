@@ -312,7 +312,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
 
         @Override
         public int hashCode() {
-        	return bd.hashCode();
+          return bd.hashCode();
         }
     }
 
@@ -410,9 +410,8 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
         }
 
         /**
-         * Creates a simplified version of the given format. A format is
-         * 'simplified' if it contains only those formatting symbols that have
-         * to do with the numeric representation. Any literals are removed.
+         * Creates a simplified version of the given format. A format is 'simplified' if it contains only those formatting
+         * symbols that have to do with the numeric representation. Any literals are removed.
          *
          * @param aFormat
          * @return a simplified version of the given format
@@ -421,11 +420,13 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
             // replace all 'bad' characters
             String pattern = aFormat.toPattern();
             StringBuilder builder = new StringBuilder();
-
+  
             boolean escaped = false;
             for (char c : pattern.toCharArray()) {
                 if (escaped) {
-                    escaped = false;
+                    if (c == '\'') {
+                      escaped = false;
+                    }
                     continue;
                 }
                 if (c == '\'') {
@@ -436,13 +437,13 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
                     builder.append(c);
                 }
             }
-
+  
             // This can never happen since DecimalFormat throws an IllegalArgumentException: MalformedPattern
             assert escaped == false : "Apostrophe must not be the last character in pattern: " + pattern;
-
+  
             String simplifiedPattern = builder.toString();
-
-            DecimalFormat simplifiedFormat = (DecimalFormat)aFormat.clone();
+  
+            DecimalFormat simplifiedFormat = (DecimalFormat) aFormat.clone();
             simplifiedFormat.applyPattern(simplifiedPattern);
             return simplifiedFormat;
         }
