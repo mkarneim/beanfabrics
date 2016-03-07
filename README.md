@@ -42,7 +42,7 @@ Beanfabrics *binaries* are available at [Sonatype OSS Maven Repository] and [Mav
 <dependency>
     <groupId>org.beanfabrics</groupId>
     <artifactId>beanfabrics-swing</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.3</version>
 </dependency>
 ```
 
@@ -51,7 +51,7 @@ Beanfabrics *binaries* are available at [Sonatype OSS Maven Repository] and [Mav
 <dependency>
     <groupId>org.beanfabrics</groupId>
     <artifactId>beanfabrics-swt</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.3</version>
 </dependency>
 ```
 
