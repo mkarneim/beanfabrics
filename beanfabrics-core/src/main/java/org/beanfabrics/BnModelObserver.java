@@ -19,7 +19,7 @@ import org.beanfabrics.model.PresentationModel;
  * {@link PropertyChangeEvent} (with property name "presentationModel") whenever
  * the model reference or the model properties change. The method
  * {@link #getPresentationModel()} returns that model.
- * 
+ *
  * @author Michael Karneim
  * @beaninfo
  */
@@ -27,7 +27,7 @@ import org.beanfabrics.model.PresentationModel;
 public class BnModelObserver extends AbstractBean implements View<PresentationModel>, ModelSubscriber {
     private final PropertyChangeListener listener = new WeakPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
-            BnPropertyChangeEvent nextEvent = new BnPropertyChangeEvent(BnModelObserver.this, "presentationModel", null, null, evt);
+            BnPropertyChangeEvent nextEvent = new BnPropertyChangeEvent(BnModelObserver.this, evt.getPropertyName(), null, null, evt);
             getPropertyChangeSupport().firePropertyChange(nextEvent);
         }
     };
@@ -43,7 +43,7 @@ public class BnModelObserver extends AbstractBean implements View<PresentationMo
     /**
      * Returns whether this observer is connected to any
      * {@link PresentationModel}
-     * 
+     *
      * @return <code>true</code> if this component is connected, else
      *         <code>false</code>
      */
