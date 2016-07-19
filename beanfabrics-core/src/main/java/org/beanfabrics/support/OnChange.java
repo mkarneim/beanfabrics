@@ -10,6 +10,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.EventObject;
 
 /**
  * @author Michael Karneim
@@ -19,4 +20,6 @@ import java.lang.annotation.Target;
 @Processor(OnChangeProcessor.class)
 public @interface OnChange {
     String[] path() default "this";
+    Class<? extends EventObject>[]event() default {};
+
 }
