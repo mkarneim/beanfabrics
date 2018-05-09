@@ -100,7 +100,8 @@ or
 [logback-classic]: http://logback.qos.ch/
 [introduction]: https://code.google.com/p/beanfabrics/wiki/Introduction
 [Beanfabrics homepage]: http://www.beanfabrics.org
-[code examples]: http://www.beanfabrics.org/index.php?title=Examples
+[examples]: https://github.com/mkarneim/beanfabrics/wiki/Examples
+[overview]: https://github.com/mkarneim/beanfabrics/wiki/Overview
 [demo applications]: http://www.beanfabrics.org/index.php?title=Demo_applications
 [JavaDoc API documentation]: https://github.com/mkarneim/beanfabrics/wiki/Documentation
 [presentation]: http://youtu.be/fwEQ-JBu_bI
