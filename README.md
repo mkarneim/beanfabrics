@@ -101,7 +101,7 @@ or
 [overview]: https://github.com/mkarneim/beanfabrics/wiki/Home
 [tutorial]: https://github.com/mkarneim/beanfabrics/wiki/Tutorial
 [demo applications]: http://www.beanfabrics.org/index.php?title=Demo_applications
-[JavaDoc API documentation]: https://github.com/mkarneim/beanfabrics/wiki/Documentation
+[JavaDoc API documentation]: https://github.com/mkarneim/beanfabrics/wiki/Javadoc
 [presentation]: http://youtu.be/fwEQ-JBu_bI
 [slides]: https://docs.google.com/file/d/0Bzq_i9FFoaRUc0dxbDNPU0lydGs/edit?usp=sharing
 [Gradle]: http://www.gradle.org/
