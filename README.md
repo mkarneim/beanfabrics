@@ -13,7 +13,7 @@ The term *presentation model* (PM) is the name of a pattern that was [introduced
 
 ### Documentation
 * The Beanfabrics Wiki contains an [overview], a [tutorial], and some [examples].
-* [JavaDoc API documentation].
+* [Javadoc API documentation].
 * If you understand German you might want to watch a [presentation] I have given at the TNG headquaters near Munich. Here is a link to the [slides].
 
 ### Features
@@ -101,7 +101,7 @@ or
 [overview]: https://github.com/mkarneim/beanfabrics/wiki/Home
 [tutorial]: https://github.com/mkarneim/beanfabrics/wiki/Tutorial
 [demo applications]: http://www.beanfabrics.org/index.php?title=Demo_applications
-[JavaDoc API documentation]: https://github.com/mkarneim/beanfabrics/wiki/Javadoc
+[Javadoc API documentation]: https://github.com/mkarneim/beanfabrics/wiki/Javadoc
 [presentation]: http://youtu.be/fwEQ-JBu_bI
 [slides]: https://docs.google.com/file/d/0Bzq_i9FFoaRUc0dxbDNPU0lydGs/edit?usp=sharing
 [Gradle]: http://www.gradle.org/
