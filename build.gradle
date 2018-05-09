@@ -286,3 +286,9 @@ project('beanfabrics-swt-samples') {
   }
   uploadArchives.onlyIf { false }
 }
+
+task javadocDir(type: Javadoc) {
+  source subprojects.collect {project -> project.sourceSets.main.allJava }
+  classpath = files(subprojects.collect {project -> project.sourceSets.main.compileClasspath})
+  destinationDir = file("${project.buildDir}/docs")
+}
