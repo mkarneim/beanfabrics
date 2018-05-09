@@ -15,7 +15,7 @@ The term *presentation model* (PM) is the name of a pattern that was [introduced
 The documentation is spread over multiple places:
 
 * At Google Code there is a brief [introduction].
-* The [Beanfabrics homepage] contains an [overview], a [tutorial], some [code examples] and [demo applications].
+* The Beanfabrics Wiki contains an [[overview]], a [[tutorial]], and some [[examples]].
 * At GitHub there is the [JavaDoc API documentation].
 * If you understand German you might want to watch a [presentation] I have given at the TNG headquaters near Munich. Here is a link to the [slides].
 
