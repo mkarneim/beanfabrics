@@ -12,11 +12,8 @@ The term *presentation model* (PM) is the name of a pattern that was [introduced
 > "represents the state and behavior of the presentation independently of the GUI controls used in the interface".
 
 ### Documentation
-The documentation is spread over multiple places:
-
-* At Google Code there is a brief [introduction].
 * The Beanfabrics Wiki contains an [overview], a [tutorial], and some [examples].
-* At GitHub there is the [JavaDoc API documentation].
+* [JavaDoc API documentation].
 * If you understand German you might want to watch a [presentation] I have given at the TNG headquaters near Munich. Here is a link to the [slides].
 
 ### Features
