@@ -3,7 +3,7 @@
 
 Author: Michael Karneim
 
-Project Homepage: http://www.beanfabrics.org
+Project Homepage: https://github.com/mkarneim/beanfabrics
 
 ### About
 Beanfabrics is a *presentation model component framework* for building rich clients and desktop applications with Java Swing or SWT. The Beanfabrics framework is free and open source software.
