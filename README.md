@@ -98,7 +98,7 @@ or
 [introduction]: https://code.google.com/p/beanfabrics/wiki/Introduction
 [Beanfabrics homepage]: http://www.beanfabrics.org
 [examples]: https://github.com/mkarneim/beanfabrics/wiki/Examples
-[overview]: https://github.com/mkarneim/beanfabrics/wiki/Overview
+[overview]: https://github.com/mkarneim/beanfabrics/wiki/Home
 [tutorial]: https://github.com/mkarneim/beanfabrics/wiki/Tutorial
 [demo applications]: http://www.beanfabrics.org/index.php?title=Demo_applications
 [JavaDoc API documentation]: https://github.com/mkarneim/beanfabrics/wiki/Documentation
