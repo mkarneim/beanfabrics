@@ -65,7 +65,7 @@ The Eclipse pluing provides a *Bindable Component Wizard* for creating a custom 
 
 It can be downloaded and installed with the Update Manager inside Eclipse.
 The update site is at
-http://www.beanfabrics.org/pub/updatesite/site.xml
+https://storage.googleapis.com/beanfabrics-updatesite/site.xml
 
 ### How to Build
 
