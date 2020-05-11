@@ -24,7 +24,7 @@ import java.util.WeakHashMap;
 /**
  * The {@link BnPropertyChangeSupport} is a utility class for handling listeners
  * of bound properties.
- * 
+ *
  * @author Michael Karneim
  */
 public class BnPropertyChangeSupport {
@@ -44,7 +44,7 @@ public class BnPropertyChangeSupport {
 
     /**
      * Constructs a {@link BnPropertyChangeSupport}.
-     * 
+     *
      * @param sourceBean The bean to be given as the source for any events
      */
     public BnPropertyChangeSupport(Object sourceBean) {
@@ -57,7 +57,7 @@ public class BnPropertyChangeSupport {
     /**
      * Adds the given {@link PropertyChangeListener} for any property of the
      * source bean.
-     * 
+     *
      * @param listener the listener add
      */
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -74,7 +74,7 @@ public class BnPropertyChangeSupport {
 
     /**
      * Removes the given {@link PropertyChangeListener}.
-     * 
+     *
      * @param listener the listener to remove
      */
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
@@ -93,7 +93,7 @@ public class BnPropertyChangeSupport {
      * Adds the given {@link PropertyChangeListener} for the specified property
      * of the source bean. The listener will only receive events that are
      * triggered by that property.
-     * 
+     *
      * @param propertyName the name of the property
      * @param listener the listener to add
      */
@@ -115,7 +115,7 @@ public class BnPropertyChangeSupport {
 
     /**
      * Removes the given {@link PropertyChangeListener} for a specific property.
-     * 
+     *
      * @param propertyName the name of the property
      * @param listener the listener to remove
      */
@@ -138,7 +138,7 @@ public class BnPropertyChangeSupport {
     /**
      * Report a bound property update to each registered listener. No event is
      * fired if old and new are equal and non-null.
-     * 
+     *
      * @param propertyName the property name of the property that was changed
      * @param oldValue the old value of the property
      * @param newValue the new value of the property
@@ -150,7 +150,7 @@ public class BnPropertyChangeSupport {
     /**
      * Report a bound property update to each registered listener. No event is
      * fired if old and new are equal and non-null.
-     * 
+     *
      * @param propertyName the property name of the property that was changed
      * @param oldValue the old value of the property
      * @param newValue the new value of the property
@@ -187,10 +187,10 @@ public class BnPropertyChangeSupport {
     }
 
     /**
-     * Fire thw given {@link PropertyChangeEvent} to each registered listener.
+     * Fire the given {@link PropertyChangeEvent} to each registered listener.
      * No event is fired if the given event's old and new values are equal and
      * non-<code>null</code>.
-     * 
+     *
      * @param evt the <code>PropertyChangeEvent</code> object
      */
     public void firePropertyChange(BnPropertyChangeEvent evt) {
@@ -226,7 +226,7 @@ public class BnPropertyChangeSupport {
     /**
      * Returns <code>true</code> if there are any listeners for the property
      * with the specified name.
-     * 
+     *
      * @param propertyName the property name
      * @return <code>true</code> if there are any listeners
      */
@@ -246,7 +246,7 @@ public class BnPropertyChangeSupport {
 
     /**
      * Returns <code>true</code> if there are any listeners registered at all.
-     * 
+     *
      * @return <code>true</code> if there are any listeners for any property
      */
     public boolean hasListeners() {
@@ -255,7 +255,7 @@ public class BnPropertyChangeSupport {
 
     /**
      * Returns the {@link WeakWrapper} for the given listener.
-     * 
+     *
      * @param l
      * @return the WeakWrapper for the given listener
      */
@@ -270,7 +270,7 @@ public class BnPropertyChangeSupport {
 
     /**
      * Removes the given {@link WeakWrapper} from the weakWrapper cache.
-     * 
+     *
      * @param wrapper
      */
     private void removeWeakWrapper(WeakWrapper wrapper) {
@@ -280,7 +280,7 @@ public class BnPropertyChangeSupport {
     /**
      * Removes all unused WeakWrapper instances from the given list of
      * listeners.
-     * 
+     *
      * @param listeners
      */
     private void removeUnusedWeakWrappers(Collection<PropertyChangeListener> listeners) {
@@ -303,7 +303,7 @@ public class BnPropertyChangeSupport {
 
         /**
          * Constructs a {@link WeakWrapper} for the given delegate.
-         * 
+         *
          * @param aDelegate
          */
         WeakWrapper(PropertyChangeListener aDelegate) {
@@ -313,7 +313,7 @@ public class BnPropertyChangeSupport {
         /**
          * Returns <code>true</code>, if the delegate reference has been
          * cleared.
-         * 
+         *
          * @return <code>true</code>, if the delegate reference has been cleared
          */
         boolean isCleared() {
@@ -331,7 +331,7 @@ public class BnPropertyChangeSupport {
 
         /**
          * Returns the delegate.
-         * 
+         *
          * @return the delegate
          */
         PropertyChangeListener getDelegate() {
@@ -343,7 +343,7 @@ public class BnPropertyChangeSupport {
 
         /**
          * Sets the delegate.
-         * 
+         *
          * @param aDelegate
          */
         void setDelegate(PropertyChangeListener aDelegate) {
