@@ -120,10 +120,8 @@ public class CompositeValidationStateTest {
             public void propertyChange(PropertyChangeEvent evt) {
                 //				printEvent("", evt);
 
-                if ("presentationModel".equals(evt.getPropertyName())) {
-                    count[0]++;
-                    isValid[0] = ob.getPresentationModel().isValid();
-                }
+                count[0]++;
+                isValid[0] = ob.getPresentationModel().isValid();
             }
 
             //			private void printEvent(String prefix, EventObject evt) {
