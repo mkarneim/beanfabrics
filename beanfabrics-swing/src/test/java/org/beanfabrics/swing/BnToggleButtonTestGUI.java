@@ -98,7 +98,7 @@ public class BnToggleButtonTestGUI extends JFrame {
     }
 
     /**
-     * @wbp.nonvisual location=201,398
+     * 
      * @return
      */
     protected MyModel getMyModel() {
@@ -109,7 +109,7 @@ public class BnToggleButtonTestGUI extends JFrame {
     }
 
     /**
-     * @wbp.nonvisual location=243,401
+     * 
      * @return
      */
     protected ModelProvider getLocalProvider() {

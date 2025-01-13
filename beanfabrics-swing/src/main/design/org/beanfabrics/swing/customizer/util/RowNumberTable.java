@@ -36,7 +36,7 @@ import javax.swing.table.TableModel;
  * 
  * @author Rob Camick
  * @author KarneimM
- * @see http://tips4java.wordpress.com/2008/11/18/row-number-table/
+ * @see <a href="http://tips4java.wordpress.com/2008/11/18/row-number-table/">tips4java.wordpress.com</a>
  */
 @SuppressWarnings("serial")
 public class RowNumberTable extends JTable implements ChangeListener, PropertyChangeListener {

@@ -62,7 +62,7 @@ public class ProductListFrame extends JFrame {
     }
 
     /**
-     * @wbp.nonvisual location=38,265
+     * 
      * @return
      */
     protected ModelProvider getLocalProvider() {
@@ -74,7 +74,7 @@ public class ProductListFrame extends JFrame {
     }
 
     /**
-     * @wbp.nonvisual location=146,273
+     * 
      * @return
      */
     protected ProductListPM getProductListModel() {

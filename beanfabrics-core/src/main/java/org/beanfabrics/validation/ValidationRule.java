@@ -8,13 +8,13 @@ package org.beanfabrics.validation;
  * A <code>ValidationRule</code> is a rule that evaluates the current execution
  * context in respect of a certain set of constraints. It is responsible for
  * producing a {@link ValidationState} as the result whereas a <code>null</code>
- * result means 'valid' and a not-null result means 'invalid'. <pM> Usually
- * multiple rules are composed into a {@link Validator} which normally are used
- * by {@link Validatable} objects for validating their state.
+ * result means 'valid' and a not-null result means 'invalid'. 
+ * <p> Usually multiple rules are composed into a {@link Validator} which normally
+ * are used by {@link Validatable} objects for validating their state.
  * 
  * @see <a
  *      href="http://www.beanfabrics.org/wiki/index.php/Validation_Tutorial">online
- *      tutorial on the validation framework< /a>
+ *      tutorial on the validation framework</a>
  * @author Michael Karneim
  */
 public interface ValidationRule {

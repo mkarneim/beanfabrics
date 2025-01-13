@@ -24,7 +24,6 @@ import org.beanfabrics.swing.internal.TextPMTextField;
  * </p>
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnTextField extends TextPMTextField implements ModelSubscriber {

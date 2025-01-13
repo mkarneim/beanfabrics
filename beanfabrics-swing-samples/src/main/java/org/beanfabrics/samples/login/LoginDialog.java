@@ -12,7 +12,7 @@ import org.beanfabrics.swing.BnTextField;
 @SuppressWarnings("serial")
 public class LoginDialog extends JDialog implements View<LoginPM> {
     /**
-     * @wbp.nonvisual location=8,202
+     * 
      */
     private ModelProvider localModelProvider = new ModelProvider(); // @wb:location=8,202
 

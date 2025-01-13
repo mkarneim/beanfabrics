@@ -12,14 +12,14 @@ import org.beanfabrics.model.PresentationModel;
  * This interface has to be implemented by {@link ListCellRenderer
  * ListCellRenderers} which should be added to the {@link BnListCellRenderer} to
  * support a certain {@link PresentationModel}.
- * 
+ *
  * @author Max Gensthaler
  */
-public interface PMListCellRenderer extends ListCellRenderer {
+public interface PMListCellRenderer extends ListCellRenderer/* <Object> */ {
     /**
      * Returns if this list cell renderer supports a certain
      * {@link PresentationModel}.
-     * 
+     *
      * @param pModel the {@link PresentationModel} to support
      * @return <code>true</code> if the given {@link PresentationModel} is
      *         supported, else <code>false</code>

@@ -24,7 +24,6 @@ import org.beanfabrics.swing.internal.BooleanPMCheckBox;
  * </p>
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnCheckBox extends BooleanPMCheckBox implements ModelSubscriber {

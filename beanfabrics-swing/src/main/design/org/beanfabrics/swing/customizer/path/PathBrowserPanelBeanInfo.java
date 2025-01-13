@@ -7,7 +7,7 @@ package org.beanfabrics.swing.customizer.path;
 import org.beanfabrics.swing.ModelSubscriberBeanInfo;
 
 /**
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
+ * Created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 public class PathBrowserPanelBeanInfo extends ModelSubscriberBeanInfo {
     @Override

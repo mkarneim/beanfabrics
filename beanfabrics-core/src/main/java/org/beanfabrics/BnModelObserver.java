@@ -21,7 +21,6 @@ import org.beanfabrics.model.PresentationModel;
  * {@link #getPresentationModel()} returns that model.
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 // TODO JUNIT TEST
 public class BnModelObserver extends AbstractBean implements View<PresentationModel>, ModelSubscriber {

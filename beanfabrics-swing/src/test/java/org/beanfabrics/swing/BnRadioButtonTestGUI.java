@@ -166,7 +166,7 @@ public class BnRadioButtonTestGUI extends JFrame {
     }
 
     /**
-     * @wbp.nonvisual location=10,430
+     * 
      * @return
      */
     protected ModelProvider getLocalProvider() {

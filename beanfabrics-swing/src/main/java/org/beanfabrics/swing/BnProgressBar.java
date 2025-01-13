@@ -26,7 +26,6 @@ import org.beanfabrics.model.IIntegerPM;
  * 
  * @author Frederik Leonhardt
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnProgressBar extends JProgressBar implements View<IIntegerPM>, ModelSubscriber {

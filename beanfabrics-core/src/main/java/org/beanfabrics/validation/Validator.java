@@ -15,8 +15,11 @@ import org.beanfabrics.AbstractBean;
 /**
  * The <code>Validator</code> is responsible for creating a
  * {@link ValidationState} by evaluating a list of {@link ValidationRule}
- * instances. <pM> It is a composite of validation rules. Rules can be added and
- * removed via the collection interface. <pM> A call to the {@link #validate()}
+ * instances.
+ * <p> It is a composite of validation rules. Rules can be added and
+ * removed via the collection interface. 
+ * 
+ * <p> A call to the {@link #validate()}
  * method is delegated to each validation rule in the order they have been
  * added, until the first not-<code>null</code> {@link ValidationState} is
  * returned.

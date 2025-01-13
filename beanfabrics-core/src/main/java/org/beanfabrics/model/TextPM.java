@@ -37,7 +37,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
     private boolean restrictedToOptions = true;
 
     /**
-     * Constructs a new <code>TextPM<code>.
+     * Constructs a new <code>TextPM</code>.
      */
     public TextPM(String initialText) {
         this();
@@ -45,7 +45,7 @@ public class TextPM extends AbstractValuePM implements ITextPM {
     }
 
     /**
-     * Constructs a new <code>TextPM<code>.
+     * Constructs a new <code>TextPM</code>.
      */
     public TextPM() {
         getValidator().add(new DefaultOptionsValidationRule());

@@ -134,7 +134,7 @@ public class BnTableTestGUI extends JFrame {
     /**
      * This method initializes the {@link ModelProvider}.
      * 
-     * @wbp.nonvisual location=570,76
+     * 
      */
     private ModelProvider getLocalProvider() {
         if (provider == null) {

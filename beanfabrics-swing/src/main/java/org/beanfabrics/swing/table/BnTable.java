@@ -54,7 +54,6 @@ import org.beanfabrics.swing.table.cellrenderer.BnTableCellRenderer;
  * </p>
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings({ "serial" })
 public class BnTable extends JTable implements View<IListPM<? extends PresentationModel>>, ModelSubscriber {

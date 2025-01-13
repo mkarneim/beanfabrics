@@ -22,7 +22,7 @@ import org.beanfabrics.swing.table.BnColumnBuilder;
 import org.beanfabrics.swing.table.BnTable;
 
 /*
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
+ * Created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 @SuppressWarnings("serial")
 public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, ModelSubscriber {
@@ -120,7 +120,7 @@ public class RegexTesterPanel extends JPanel implements View<RegexTesterPM>, Mod
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
-     * @wbp.nonvisual location=12,498
+     * 
      */
     protected ModelProvider getLocalModelProvider() {
         if (localModelProvider == null) {

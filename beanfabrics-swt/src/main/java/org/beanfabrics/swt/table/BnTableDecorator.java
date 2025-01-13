@@ -151,8 +151,7 @@ public class BnTableDecorator extends AbstractDecorator<Table> implements View<I
     /**
      * Create the BnTable
      * 
-     * @param parent
-     * @param style
+     * @param table
      */
     public BnTableDecorator(Table table) {
         super(table);

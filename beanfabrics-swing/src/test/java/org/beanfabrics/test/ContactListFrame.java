@@ -283,7 +283,7 @@ public class ContactListFrame extends JFrame {
      * This method initializes provider
      * 
      * @return the <code>ModelProvider</code>
-     * @wbp.nonvisual location=63,314
+     * 
      */
     private ModelProvider getLocalProvider() {
         if (provider == null) {

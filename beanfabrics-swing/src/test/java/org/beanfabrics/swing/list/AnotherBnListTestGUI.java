@@ -120,7 +120,7 @@ public class AnotherBnListTestGUI extends JFrame implements View<AnotherBnListTe
         this.link.setPath(path);
     }
     /**
-     * @wbp.nonvisual location=11,442
+     * 
      * @return
      */
     protected ModelProvider getLocalProvider() {

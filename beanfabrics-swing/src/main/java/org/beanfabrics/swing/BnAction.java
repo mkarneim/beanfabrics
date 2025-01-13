@@ -18,7 +18,6 @@ import org.beanfabrics.swing.internal.OperationPMAction;
  * {@link IOperationPM}.
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnAction extends OperationPMAction implements ModelSubscriber {

@@ -21,7 +21,6 @@ import org.beanfabrics.swing.internal.BooleanPMToggleButton;
  * to an {@link IBooleanPM}.
  * 
  * @author Max Gensthaler
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnToggleButton extends BooleanPMToggleButton implements ModelSubscriber {

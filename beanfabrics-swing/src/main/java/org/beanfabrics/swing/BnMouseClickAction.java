@@ -17,7 +17,6 @@ import org.beanfabrics.model.IOperationPM;
  * subscribe to an {@link IOperationPM}.
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnMouseClickAction extends BnAction implements MouseListener {

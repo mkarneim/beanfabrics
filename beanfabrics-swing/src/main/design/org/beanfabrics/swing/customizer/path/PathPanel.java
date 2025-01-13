@@ -24,7 +24,7 @@ import org.beanfabrics.swing.BnTextField;
 /**
  * The <code>PathPanel</code> is a view on a {@link PathPM}.
  * 
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
+ * Created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 @SuppressWarnings("serial")
 public class PathPanel extends JPanel implements View<org.beanfabrics.swing.customizer.path.PathPM>, ModelSubscriber {

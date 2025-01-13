@@ -55,7 +55,7 @@ public class ModelSubscriberCustomizerTestGUI extends JFrame {
     }
 
     /**
-     * @wbp.nonvisual location=206,386
+     * 
      * @return
      */
     public ModelProvider getProvider() {
@@ -67,7 +67,7 @@ public class ModelSubscriberCustomizerTestGUI extends JFrame {
     }
 
     /**
-     * @wbp.nonvisual location=107,395
+     * 
      * @return
      */
     public AddressPM getAddressPM() {

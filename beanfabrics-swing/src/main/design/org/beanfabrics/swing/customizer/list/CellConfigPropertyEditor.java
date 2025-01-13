@@ -37,7 +37,7 @@ public class CellConfigPropertyEditor implements PropertyEditor {
     /**
      * Set (or change) the object that is to be edited.
      * 
-     * @param value The object to be edited.
+     * @param aValue The object to be edited.
      */
     public void setValue(Object aValue) {
         final CellConfig oldValue = this.value;

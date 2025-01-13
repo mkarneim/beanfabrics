@@ -27,7 +27,7 @@ import org.beanfabrics.swing.BnButton;
  * The ColumnListConfigurationDialog is a {@link View} on a
  * {@link ColumnListConfigurationPM}.
  * 
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
+ * Created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 @SuppressWarnings("serial")
 public class ColumnListConfigurationDialog extends JDialog implements View<ColumnListConfigurationPM>, ModelSubscriber {
@@ -80,7 +80,7 @@ public class ColumnListConfigurationDialog extends JDialog implements View<Colum
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
-     * @wbp.nonvisual location=10,430
+     * 
      */
     protected ModelProvider getLocalModelProvider() {
         if (localModelProvider == null) {

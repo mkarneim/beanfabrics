@@ -17,7 +17,7 @@ import org.beanfabrics.swing.table.BnColumnBuilder;
 /**
  * The {@link SampleListPanel} is a {@link View} on a {@link SampleListPM}.
  * 
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
+ * Created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 @SuppressWarnings("serial")
 public class SampleListPanel extends JPanel implements View<SampleListPM>, ModelSubscriber {
@@ -40,7 +40,7 @@ public class SampleListPanel extends JPanel implements View<SampleListPM>, Model
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
-     * @wbp.nonvisual location=10,430
+     * 
      */
     protected ModelProvider getLocalModelProvider() {
         if (localModelProvider == null) {

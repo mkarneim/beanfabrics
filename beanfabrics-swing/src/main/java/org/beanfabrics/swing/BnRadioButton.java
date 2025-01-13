@@ -19,7 +19,6 @@ import org.beanfabrics.swing.internal.BooleanPMRadioButton;
  * to an {@link IBooleanPM}.
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnRadioButton extends BooleanPMRadioButton implements ModelSubscriber {

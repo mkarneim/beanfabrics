@@ -29,7 +29,6 @@ import org.beanfabrics.swing.list.cellrenderer.BnListCellRenderer;
  * 
  * @author Max Gensthaler
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnList extends JList implements View<IListPM>, ModelSubscriber {

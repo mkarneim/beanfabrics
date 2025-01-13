@@ -19,7 +19,6 @@ import org.beanfabrics.swing.internal.TextPMPasswordField;
  * subscribe to an {@link ITextPM}.
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 // TODO (mk) UNIT TEST
 @SuppressWarnings("serial")

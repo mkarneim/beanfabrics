@@ -25,7 +25,8 @@ import org.beanfabrics.model.SortKey;
 /**
  * The <code>Java5SortingTableHeader</code> is a {@link JTableHeader} that adds a basic sorting ability to the java5
  * table header. When the user clicks on a column header the underlying {@link IListPM} is sorted by the associated
- * property's comparator. <pM> Please note:
+ * property's comparator.
+ * <p> Please note:
  * <ul>
  * <li>that this header does not change the look of the table header - no sorting arrow is added to the header.</li>
  * <li>the sorting feature works only for tables with a {@link BnTableModel}.</li>

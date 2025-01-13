@@ -19,7 +19,7 @@ import org.beanfabrics.View;
 import org.beanfabrics.swing.BnTextField;
 
 /*
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
+ * Created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 @SuppressWarnings("serial")
 public class TimeSpanPanel extends JPanel implements View<TimeSpanPM>, ModelSubscriber {
@@ -47,7 +47,7 @@ public class TimeSpanPanel extends JPanel implements View<TimeSpanPM>, ModelSubs
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
-     * @wbp.nonvisual location=10,430
+     * 
      */
     protected ModelProvider getLocalModelProvider() {
         if (localModelProvider == null) {

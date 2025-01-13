@@ -33,7 +33,7 @@ import org.beanfabrics.swing.customizer.util.CustomizerUtil;
  * The <code>PathChooserDialog</code> is a view on a {@link PathChooserPM} and
  * allows choosing a valid Path inside a presentation model.
  * 
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
+ * Created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 @SuppressWarnings("serial")
 public class PathChooserDialog extends JDialog implements View<PathChooserPM>, ModelSubscriber {
@@ -76,7 +76,7 @@ public class PathChooserDialog extends JDialog implements View<PathChooserPM>, M
     /**
      * Returns the local {@link ModelProvider} for this class.
      * 
-     * @wbp.nonvisual location=10,430
+     * 
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {

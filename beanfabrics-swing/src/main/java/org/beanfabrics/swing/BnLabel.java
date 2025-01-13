@@ -29,7 +29,6 @@ import org.beanfabrics.model.IValuePM;
  * 
  * @author Michael Karneim
  * @author Marcel Eyke
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnLabel extends JLabel implements View<ITextPM>, ModelSubscriber {

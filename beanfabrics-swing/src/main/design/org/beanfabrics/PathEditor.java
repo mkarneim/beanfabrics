@@ -92,7 +92,7 @@ public class PathEditor implements PropertyEditor {
     /**
      * Determines whether this property model supports a custom editor.
      * 
-     * @retun <code>true</code> if this property model supports a custom editor,
+     * @return <code>true</code> if this property model supports a custom editor,
      *        otherwise <code>false</code>
      */
     public boolean supportsCustomEditor() {

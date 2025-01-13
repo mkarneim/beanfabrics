@@ -53,7 +53,7 @@ public class BnTextFieldTestGUI extends JFrame {
         //
     }
     /**
-     * @wbp.nonvisual location=51,437
+     * 
      * @return
      */
     private ModelProvider getLocalProvider() {

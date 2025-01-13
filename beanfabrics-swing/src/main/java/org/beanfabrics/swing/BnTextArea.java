@@ -24,7 +24,6 @@ import org.beanfabrics.swing.internal.TextPMTextArea;
  * </p>
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnTextArea extends TextPMTextArea implements ModelSubscriber {

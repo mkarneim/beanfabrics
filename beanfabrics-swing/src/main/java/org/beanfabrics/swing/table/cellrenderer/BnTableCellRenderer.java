@@ -21,7 +21,7 @@ import org.beanfabrics.swing.table.BnTable;
  * for the {@link BnTable}.
  * <p>
  * It delegates calls of
- * {@link #getListCellRendererComponent(JList, Object, int, boolean, boolean)}
+ * {@link #getTableCellRendererComponent(JTable, Object, boolean, boolean, int, int)}
  * to each of it's installed renderers (see {@link #getInstalledRenderers()})
  * until it receives a not-<code>null</code> result.
  * </p>

@@ -31,11 +31,11 @@ public class BnProgressBarTestGUI extends JFrame {
 	
 	private JPanel contentPane;
 	/**
-	 * @wbp.nonvisual location=49,361
+	 * 
 	 */
 	private final ModelProvider localModelProvider = new ModelProvider();
 	/**
-	 * @wbp.nonvisual location=21,431
+	 * 
 	 */
 	private final SimplePM simplePM = new SimplePM();
 

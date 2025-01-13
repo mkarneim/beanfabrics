@@ -30,7 +30,7 @@ import org.beanfabrics.swing.table.BnTable;
 /**
  * The <code>ColumnListPanel</code> is a view on a {@link ColumnListPM}.
  * 
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
+ * Created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 @SuppressWarnings("serial")
 public class ColumnListPanel extends JPanel implements View<ColumnListPM>, ModelSubscriber {
@@ -59,7 +59,7 @@ public class ColumnListPanel extends JPanel implements View<ColumnListPM>, Model
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
-     * @wbp.nonvisual location=10,430
+     * 
      */
     protected ModelProvider getLocalProvider() {
         if (localProvider == null) {

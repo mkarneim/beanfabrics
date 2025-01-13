@@ -39,7 +39,7 @@ public class BnTableCustomizer<PM extends BnTableCustomizerPM> extends Customize
     /**
      * Returns the local {@link ModelProvider} for this class.
      * 
-     * @wbp.nonvisual location=16,357
+     * 
      * @return the local <code>ModelProvider</code>
      */
     private ModelProvider getLocalProvider() {

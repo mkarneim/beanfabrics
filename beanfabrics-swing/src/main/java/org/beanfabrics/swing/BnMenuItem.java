@@ -21,7 +21,6 @@ import org.beanfabrics.swing.internal.OperationPMMenuItem;
  * {@link IOperationPM}.
  * 
  * @author Max Gensthaler
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnMenuItem extends OperationPMMenuItem implements ModelSubscriber {

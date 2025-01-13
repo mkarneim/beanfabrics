@@ -45,7 +45,6 @@ import org.beanfabrics.swing.table.BnTable;
 /**
  * The <code>PathBrowserPanel</code> is the view on a {@link PathBrowserPM}.
  * 
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 @SuppressWarnings("serial")
 public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, ModelSubscriber {
@@ -88,7 +87,6 @@ public class PathBrowserPanel extends JPanel implements View<PathBrowserPM>, Mod
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
-     * @wbp.nonvisual location=16,477
      */
     protected ModelProvider getLocalProvider() {
         if (localProvider == null) {

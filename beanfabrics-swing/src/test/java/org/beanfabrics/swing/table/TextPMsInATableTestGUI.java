@@ -68,7 +68,7 @@ public class TextPMsInATableTestGUI extends JFrame {
     }
 
     /**
-     * @wbp.nonvisual location=28,415
+     * 
      * @return
      */
     private ModelProvider getLocalProvider() {

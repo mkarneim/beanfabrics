@@ -71,7 +71,7 @@ public class AnotherBnTableTestGUI extends JFrame implements View<AnotherBnTable
     }
 
     /**
-     * @wbp.nonvisual location=11,442
+     * 
      * @return
      */
     protected ModelProvider getLocalProvider() {

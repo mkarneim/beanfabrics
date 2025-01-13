@@ -24,7 +24,7 @@ public interface ExecutionMethod {
      * throws an exception if the actions has not been performed successfully and
      * any subsequent operations should be skipped.
      * 
-     * @returns <code>true</code> if the action was successfully performed
+     * @return <code>true</code> if the action was successfully performed
      * @throws Throwable if any exception occurs while performing the action
      */
     public boolean execute()

@@ -44,7 +44,7 @@ public class BigDecimalPM extends TextPM implements IBigDecimalPM {
      * Reformats the text value by first parsing it and the formatting it using
      * this PM's format.
      *
-     * @see #setFormat(DecimalFormat)
+     * @see #setFormat(IFormat)
      */
     @Override
     public void reformat() {

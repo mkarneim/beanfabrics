@@ -24,7 +24,6 @@ import org.beanfabrics.swing.internal.OperationPMButton;
  * </p>
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnButton extends OperationPMButton implements ModelSubscriber {

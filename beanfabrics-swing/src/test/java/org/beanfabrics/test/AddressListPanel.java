@@ -142,7 +142,7 @@ public class AddressListPanel extends JPanel implements View<AddressListPM>, Mod
      * This method initializes <code>myDataSource</code>.
      * 
      * @return the <code>ModelProvider</code>
-     * @wbp.nonvisual location=10,430
+     * 
      */
     private ModelProvider getLocalModelProvider() {
         if (localModelProvider == null) {

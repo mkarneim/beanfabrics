@@ -122,7 +122,7 @@ public class FileBrowserBnTableTestGUI extends JFrame implements
     }
 
     /**
-     * @wbp.nonvisual location=11,442
+     * 
      * @return
      */
     protected ModelProvider getLocalProvider() {

@@ -82,7 +82,7 @@ public class BnTableCustomizerPanel extends JPanel implements View<BnTableCustom
     /**
      * Returns the local {@link ModelProvider} for this class.
      * 
-     * @wbp.nonvisual location=16,357
+     * 
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {

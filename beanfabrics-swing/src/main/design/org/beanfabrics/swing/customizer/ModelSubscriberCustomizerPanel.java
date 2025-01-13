@@ -27,7 +27,7 @@ import org.beanfabrics.swing.customizer.util.TitlePanel;
 /**
  * The {@link ModelSubscriberCustomizerPanel} is a {@link View} on a {@link ModelSubscriberCustomizerPM}.
  * 
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
+ * Created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 @SuppressWarnings("serial")
 public class ModelSubscriberCustomizerPanel extends JPanel implements View<ModelSubscriberCustomizerPM>,
@@ -53,7 +53,7 @@ public class ModelSubscriberCustomizerPanel extends JPanel implements View<Model
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
-     * @wbp.nonvisual location=10,430
+     * 
      */
     protected ModelProvider getLocalModelProvider() {
         if (localModelProvider == null) {
@@ -128,7 +128,7 @@ public class ModelSubscriberCustomizerPanel extends JPanel implements View<Model
     }
 
     /**
-     * @wbp.nonvisual location=-4,481
+     * 
      */
     private ModelSubscriberCustomizerPM getModelSubscriberCustomizerPM() {
         if (modelSubscriberCustomizerPM == null) {

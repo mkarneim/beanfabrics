@@ -19,7 +19,6 @@ import org.beanfabrics.swing.internal.TextPMComboBox;
  * {@link ITextPM}.
  * 
  * @author Michael Karneim
- * @beaninfo
  */
 @SuppressWarnings("serial")
 public class BnComboBox extends TextPMComboBox implements ModelSubscriber {

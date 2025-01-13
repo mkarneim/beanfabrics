@@ -110,8 +110,8 @@ public class Path implements Iterable<String>, Serializable {
     /**
      * Returns a new path that is a subpath of this path. The subpath begins
      * with the element at the specified <code>fromPosition</code> and extends
-     * to the end of this path. <pM>
-     * 
+     * to the end of this path.
+     * <p>     
      * @param fromPosition returned path's first character's position in this
      *            path
      * @return a new path that is a subpath of this path
@@ -132,8 +132,8 @@ public class Path implements Iterable<String>, Serializable {
      *            path
      * @param length returned path's number of characters
      * @return a new path that is a subpath of this path
-     * @throws IllegalArgumentException thrown if <code>length < 0</code> or
-     *             <code>fromPosition + length > length</code>
+     * @throws IllegalArgumentException thrown if <code>length &lt; 0</code> or
+     *             <code>fromPosition + length &gt; length</code>
      */
     public Path getSubPath(int fromPosition, int length)
         throws IllegalArgumentException {

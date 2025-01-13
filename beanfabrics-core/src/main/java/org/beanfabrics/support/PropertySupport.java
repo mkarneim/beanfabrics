@@ -70,7 +70,7 @@ public class PropertySupport implements Support {
             if (oldValue != newValue) {
                 onRemove(oldValue, propertyName);
                 onAdd(newValue, propertyName);
-                onPropertyChange(propertyName);
+                revalidatePropertiesExcept(propertyName);
                 presentationModel.getPropertyChangeSupport().firePropertyChange(propertyName, oldValue, newValue);
             }
         }
@@ -103,7 +103,11 @@ public class PropertySupport implements Support {
         }
     });
 
-    private void onPropertyChange(String propertyName) {
+    public void revalidateProperties() {
+        revalidatePropertiesExcept(null);
+    }
+
+    private void revalidatePropertiesExcept(String propertyName) {
         // revalidate other properties
         List<IOperationPM> ops = new LinkedList<IOperationPM>();
         for (String name : properties.names()) {
@@ -122,13 +126,13 @@ public class PropertySupport implements Support {
 
         }
 
+        // revalidate
+        this.presentationModel.revalidate();
+
         // now revalidate the operations
         for (IOperationPM op : ops) {
             op.revalidate();
         }
-
-        // revalidate
-        this.presentationModel.revalidate();
     }
 
     public PropertySupport(PresentationModel pModel) {
@@ -156,7 +160,7 @@ public class PropertySupport implements Support {
      * Setup this <code>PropertySupport</code> by processing only those
      * {@link Property} annotations that are found in the given {@link Class}
      * and all superclasses of the current {@link PresentationModel}.
-     * 
+     *
      * @param cls
      */
     public void setup(Class cls) {
@@ -225,12 +229,6 @@ public class PropertySupport implements Support {
 
     public String getName(PresentationModel child) {
         return properties.getName(child);
-    }
-
-    public void revalidateProperties() {
-        for (PresentationModel pModel : this.properties.models(true)) {
-            pModel.revalidate();
-        }
     }
 
     public Collection<PresentationModel> getProperties() {
@@ -363,7 +361,7 @@ public class PropertySupport implements Support {
      * Returns a list of all non-conflicting, explicit and inplicit property
      * declarations that can be found in the given class (and its superclasses
      * and interfaces).
-     * 
+     *
      * @param cls
      * @return a list of all non-conflicting, explicit and inplicit property
      *         declarations of the given class
@@ -392,7 +390,7 @@ public class PropertySupport implements Support {
                 // No conflict
                 fieldMap.put(key, currentDecl);
             } else {
-                // Conflict: property is already declared based on a field member                 
+                // Conflict: property is already declared based on a field member
                 // -> We can't solve this conflict
                 throw new IllegalStateException("Illegal property declaration:\nmember " + currentDecl.getMember() + " shadows " + oldDecl.getMember() + "!");
 
@@ -457,14 +455,14 @@ public class PropertySupport implements Support {
             findAllPropertyDeclarations(i, result);
         }
 
-        //// Now process the current class        
+        //// Now process the current class
         // Check for Convention-over-Configuration
         boolean hasPropertyAnnotations = hasPropertyAnnotations(currentClass);
         if (hasPropertyAnnotations) {
             // The current class contains members that are annotated with @Property
             // -> Since we implement Convention-over-Configuration we only process these members
 
-            // Search for methods that are annotated with @Property  
+            // Search for methods that are annotated with @Property
             Method[] allDeclMethods = currentClass.getDeclaredMethods();
             Method[] annoDeclMethods = (Method[])filterAnnotatedMembers(allDeclMethods, Property.class).toArray(new Method[0]);
             List<MethodDecl> methodsWithPropertyDecls = filterPropertyMethods(annoDeclMethods);
@@ -481,7 +479,7 @@ public class PropertySupport implements Support {
             // The current class contains no @Property annotation.
             // -> We will process all members of type PresentationModel
 
-            // Search for methods with return type PresentationModel  
+            // Search for methods with return type PresentationModel
             Method[] allDeclMethods = currentClass.getDeclaredMethods();
             List<MethodDecl> methodsWithPropertyDecls = filterPropertyMethods(allDeclMethods);
             // Add search result
@@ -498,7 +496,7 @@ public class PropertySupport implements Support {
     /**
      * Checks whether the given class has at least one declared member with a
      * Property annotation.
-     * 
+     *
      * @param cls
      * @return <code>true</code> if the given class has at least one declared
      *         member with a Property annotation.
@@ -519,7 +517,7 @@ public class PropertySupport implements Support {
 
     /**
      * Checks whether the given element is annotated with Property.
-     * 
+     *
      * @param element
      * @return <code>true</code> if the given element is annotated with Property
      */
@@ -640,7 +638,7 @@ public class PropertySupport implements Support {
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            onPropertyChange(this.propertyName);
+            revalidatePropertiesExcept(this.propertyName);
             // 'forward' this event to listeners on presentationModel
             // (optimized: do not forward events about the 'modified' property, since that doubles the
             // number of events)

@@ -23,8 +23,7 @@ import org.beanfabrics.model.PresentationModel;
 /**
  * The default implementation of a {@link IModelProvider}.
  * 
- * @author Michael Karneim
- * @beaninfo
+ * @author Michael Karneim 
  */
 @SuppressWarnings("serial")
 public class ModelProvider extends AbstractBean implements IModelProvider, Serializable {

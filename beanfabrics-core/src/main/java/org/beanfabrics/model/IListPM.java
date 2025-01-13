@@ -97,7 +97,7 @@ public interface IListPM<T extends PresentationModel> extends PresentationModel,
      * 
      * @param ascending if true, the resulting order will be ascending,
      *            otherwise descending.
-     * @param paths one or more Path objects that define the sort keys
+     * @param path one or more Path objects that define the sort keys
      */
     public void sortBy(boolean ascending, Path... path);
 
@@ -112,7 +112,7 @@ public interface IListPM<T extends PresentationModel> extends PresentationModel,
     /**
      * Sorts the elements of this list PM by the specified sort keys.
      * 
-     * @param newSortKeys the sort keys used for sorting the elements of this
+     * @param sortKeys the sort keys used for sorting the elements of this
      *            list PM
      */
     public void sortBy(SortKey... sortKeys);

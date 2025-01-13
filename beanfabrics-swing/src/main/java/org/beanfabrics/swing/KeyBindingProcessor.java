@@ -15,7 +15,7 @@ import org.beanfabrics.swing.table.celleditor.BnTableCellEditor;
 /**
  * The KeyBindingProcessor declares the method
  * {@link JComponent#processKeyBinding} as "public" method. It is used by the
- * {@link BnTableCellEditor.ButtonDecorator} to forward activation key events to
+ * {@link BnTableCellEditor} (ButtonDecorator) to forward activation key events to
  * {@link TableCellEditor} components.
  * 
  * @author Michael Karneim

@@ -60,7 +60,7 @@ public class DirectSampleListDialog extends JDialog {
     }
 
     /**
-     * @wbp.nonvisual location=76,371
+     * 
      */
     private SampleListPM getSampleListPM() {
         if (sampleListPM == null) {

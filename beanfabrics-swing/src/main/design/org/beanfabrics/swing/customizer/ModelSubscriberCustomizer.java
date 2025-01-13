@@ -49,7 +49,7 @@ public class ModelSubscriberCustomizer<PM extends ModelSubscriberCustomizerPM> e
     /**
      * Returns the local {@link ModelProvider} for this class.
      * 
-     * @wbp.nonvisual location=10,430
+     * 
      * @return the local <code>ModelProvider</code>
      */
     protected ModelProvider getLocalProvider() {

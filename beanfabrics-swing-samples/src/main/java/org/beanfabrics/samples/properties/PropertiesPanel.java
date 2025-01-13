@@ -18,7 +18,7 @@ import org.beanfabrics.swing.table.BnColumnBuilder;
 import org.beanfabrics.swing.table.BnTable;
 
 /*
- * @created by the Beanfabrics Component Wizard, www.beanfabrics.org
+ * Created by the Beanfabrics Component Wizard, www.beanfabrics.org
  */
 @SuppressWarnings("serial")
 public class PropertiesPanel extends JPanel implements View<PropertiesPM>, ModelSubscriber {
@@ -44,7 +44,7 @@ public class PropertiesPanel extends JPanel implements View<PropertiesPM>, Model
      * Returns the local {@link ModelProvider} for this class.
      * 
      * @return the local <code>ModelProvider</code>
-     * @wbp.nonvisual location=10,430
+     * 
      */
     protected ModelProvider getLocalModelProvider() {
         if (localModelProvider == null) {

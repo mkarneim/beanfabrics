@@ -34,7 +34,7 @@ import org.beanfabrics.validation.ValidationState;
  * referenced model.
  * 
  * @see <a href="http://www.beanfabrics.org/wiki/index.php/Validation_Tutorial">
- *      beanfabrics tutorial on the validation framework< /a>
+ *      beanfabrics tutorial on the validation framework</a>
  * @author Michael Karneim
  */
 public class ValidationSupport implements Support {

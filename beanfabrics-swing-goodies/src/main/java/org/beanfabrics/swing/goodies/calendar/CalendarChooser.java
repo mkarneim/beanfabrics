@@ -568,10 +568,10 @@ public class CalendarChooser extends JPanel {
     }
 
     /**
-     * Changes the margin of each days button.
+     * Changes the size of the roll button.
      * 
-     * @param dayMargin
-     *            the margin of each days button
+     * @param newSize
+     *            the size
      */
     public void setRollButtonSize(Dimension newSize) {
         this.rollButtonSize = newSize;
@@ -579,9 +579,9 @@ public class CalendarChooser extends JPanel {
     }
 
     /**
-     * Returns the currently used margin of each days button.
+     * Returns the currently used size of the roll button.
      * 
-     * @return the currently used margin of each days button
+     * @return the currently used size of the roll button
      */
     public Dimension getRollButtonSize() {
         return this.rollButtonSize;

@@ -26,7 +26,7 @@ public class DecimalPM extends BigDecimalPM {
      * @return the value of this PM as a Double
      * @throws ConversionException if the text value of this PM can't be
      *             converted to a double value using the defined format
-     * @see #setFormat(java.text.DecimalFormat)
+     * @see #setFormat(IFormat)
      * @see #getText()
      */
     public Double getDouble()

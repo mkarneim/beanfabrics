@@ -6,16 +6,11 @@
 *  ./gradlew build
 *
 * To publish a new release of Beanfabrics to Sonatype OSS Maven Repo:
-*  ./gradlew clean uploadArchives
+*  ./gradlew clean publish
 *
+* To publish a new release of Beanfabrics to the local maven repo (filesystem):
+*  ./gradlew clean publishToMavenLocal
 */
-
-task wrapper(type: Wrapper) { gradleVersion = '2.0' }
-
-def jvm = org.gradle.internal.jvm.Jvm.current()
-def os = System.getProperty("os.name").toLowerCase()
-def arch = System.getProperty("os.arch").toLowerCase()
-def javaHome = System.getProperty("java.home").toLowerCase()
 
 if (!project.hasProperty('ossrhUsername') || !project.hasProperty('ossrhPassword')) {
   println 'OSS repository hosting username or password not set'
@@ -26,43 +21,40 @@ if (!project.hasProperty('ossrhUsername') || !project.hasProperty('ossrhPassword
 subprojects {
   apply plugin: 'java'
   apply plugin: 'eclipse'
-  apply plugin: 'maven'
+  apply plugin: 'maven-publish'
   apply plugin: 'signing'
 
   group = 'org.beanfabrics'
-  version = '1.5.0-SNAPSHOT'
-  sourceCompatibility = 1.6
-  targetCompatibility = 1.6
-
-  ext {
-    isReleaseVersion = !version.endsWith('SNAPSHOT')
-  }
-
-  eclipse {
-    // Workaround for setting a convenient JRE container for eclipse. See https://issues.gradle.org/browse/GRADLE-3100
-    classpath {
-         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6'
+  version = '1.5.0'
+  java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(6)
     }
   }
 
-  repositories {
+  ext {
+    isReleaseVersion = !version.endsWith('SNAPSHOT')
+    buildDate = new Date().format("yyyy-MM-dd HH:mm:ss")
+  }
+
+  repositories {    
     mavenCentral()
+    mavenLocal()
   }
 
   dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.1'
-    testCompile group: 'junit', name: 'junit', version:'4.10'
-    testCompile group: 'ch.qos.logback', name: 'logback-classic', version:'1.0.7'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.1'
+    testImplementation group: 'junit', name: 'junit', version: '4.10'
+    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.0.7'
   }
 
   task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+    archiveClassifier = 'sources'
     from sourceSets.main.allSource
   }
 
   task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from javadoc.destinationDir
   }
 
@@ -75,73 +67,80 @@ subprojects {
     manifest {
       attributes(
         'Implementation-Title': 'Beanfabrics',
-        'Implementation-Version': version
+        'Implementation-Version': version,
+        "Created-Date": buildDate
       )
     }
   }
 
-  artifacts {
-    archives jar, sourcesJar, javadocJar
-  }
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        from components.java
 
-  signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask('uploadArchives') }
-    sign configurations.archives
-  }
+        artifact tasks.sourcesJar
+        artifact tasks.javadocJar
 
-  uploadArchives {
-    repositories {
-      mavenDeployer {
-        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-        beforeDeployment {
-          if ( project.ossrhUsername == "" || project.ossrhPassword == "")
-            throw new GradleException('Missing ossrhUsername or ossrhPassword');
-        }
-
-        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-          authentication(userName: project.ossrhUsername, password: project.ossrhPassword)
-        }
-
-        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-          authentication(userName: project.ossrhUsername, password: project.ossrhPassword)
-        }
-
-        pom.project {
-          name 'Beanfabrics'
-          packaging 'jar'
-          description 'Beanfabrics is a component framework for building Java desktop applications according to the Presentation Model Pattern with Swing.'
-          url 'http://github.com/mkarneim/beanfabrics'
+        pom {
+          name = 'Beanfabrics'
+          description = 'Beanfabrics is a component framework for building Java desktop applications according to the Presentation Model Pattern with Swing.'
+          url = 'http://github.com/mkarneim/beanfabrics'
+          packaging = 'jar'
 
           scm {
-            url 'git@github.com:mkarneim/beanfabrics.git'
-            connection 'scm:git:git@github.com:mkarneim/beanfabrics.git'
-            developerConnection 'scm:git:git@github.com:mkarneim/beanfabrics.git'
-            tag 'HEAD'
+            url = 'git@github.com:mkarneim/beanfabrics.git'
+            connection = 'scm:git:git@github.com:mkarneim/beanfabrics.git'
+            developerConnection = 'scm:git:git@github.com:mkarneim/beanfabrics.git'
+            tag = 'HEAD'
           }
+
           licenses {
             license {
-              name 'GNU Lesser General Public License, Version 3'
-              url 'http://github.com/mkarneim/beanfabrics/blob/master/licence.txt'
-              distribution 'repo'
+              name = 'GNU Lesser General Public License, Version 3'
+              url = 'http://github.com/mkarneim/beanfabrics/blob/master/licence.txt'
+              distribution = 'repo'
             }
           }
+
           developers {
             developer {
-              id 'mkarneim'
-              name 'Michael Karneim'
-              url 'http://www.karneim.net'
-              timezone 'GMT+1'
+              id = 'mkarneim'
+              name = 'Michael Karneim'
+              url = 'http://www.karneim.net'
+              timezone = 'GMT+1'
             }
             developer {
-              id 'max.gensthaler'
-              name 'Max Gensthaler'
-              url 'http://www.gensthaler.de'
-              timezone 'GMT+1'
+              id = 'max.gensthaler'
+              name = 'Max Gensthaler'
+              url = 'http://www.gensthaler.de'
+              timezone = 'GMT+1'
             }
           }
         }
       }
     }
+
+    repositories {
+      // If this is a release build, push to the release URL; else snapshots
+      maven {
+        name = "sonatype"
+        url = isReleaseVersion
+            ? uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            : uri("https://oss.sonatype.org/content/repositories/snapshots/")
+        credentials {
+          username = project.ossrhUsername
+          password = project.ossrhPassword
+        }
+      }
+    }
+  }
+
+  tasks.withType(Sign) {
+	onlyIf { isReleaseVersion }
+  }
+
+  signing {
+    sign publishing.publications.mavenJava
   }
 }
 
@@ -152,91 +151,46 @@ project('beanfabrics-core') {
 project('beanfabrics-swing') {
   description = 'Beanfabrics Swing'
 
-  configurations {
-    designCompile.extendsFrom compile
-  }
-
-  sourceSets {
-    main {
-      java {
-        srcDir 'src/main/design'
-      }
-    }
-  }
+  sourceSets.main.java.srcDir 'src/main/design'
 
   dependencies {
-    compile project(':beanfabrics-core')
+    implementation project(':beanfabrics-core')
   }
 
   jar {
     manifest {
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/table/BnTable.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnPasswordField.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnButton.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnMenuItem.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnIconLabel.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnTextField.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/list/BnList.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnLabel.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnRadioButton.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnAction.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnCheckBox.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnComboBox.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnTextArea.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnMouseClickAction.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnProgressBar.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/BnToggleButton.class'
-      )
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/table/BnTable.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnPasswordField.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnButton.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnMenuItem.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnIconLabel.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnTextField.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/list/BnList.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnLabel.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnRadioButton.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnAction.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnCheckBox.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnComboBox.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnTextArea.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnMouseClickAction.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnProgressBar.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/BnToggleButton.class')
     }
   }
 }
 
 project('beanfabrics-swing-goodies') {
   description = 'Beanfabrics Swing Goodies'
+
   dependencies {
-    compile project(':beanfabrics-core')
-    compile project(':beanfabrics-swing')
+    implementation project(':beanfabrics-core')
+    implementation project(':beanfabrics-swing')
   }
 
   jar {
     manifest {
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/goodies/calendar/BnCalendarChooser.class'
-      )
-      attributes(
-        ['Java-Bean': 'true'], 'org/beanfabrics/swing/goodies/calendar/BnCalendarChooserButton.class'
-      )
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/goodies/calendar/BnCalendarChooser.class')
+      attributes(['Java-Bean': 'true'], 'org/beanfabrics/swing/goodies/calendar/BnCalendarChooserButton.class')
     }
   }
 }
@@ -244,51 +198,63 @@ project('beanfabrics-swing-goodies') {
 project('beanfabrics-swing-samples') {
   description = 'Beanfabrics Swing Samples'
   dependencies {
-    compile project(':beanfabrics-core')
-    compile project(':beanfabrics-swing')
+    implementation project(':beanfabrics-core')
+    implementation project(':beanfabrics-swing')
   }
-  uploadArchives.onlyIf { false }
+  tasks.withType(Sign) { enabled = false }
+  tasks.withType(PublishToMavenLocal) { enabled = false }
+  tasks.withType(PublishToMavenRepository) { enabled = false }
+}
+
+ext {
+  def os = System.getProperty("os.name").toLowerCase()
+  def arch = System.getProperty("os.arch").toLowerCase()
+  // This makes the dependency on the SWT library platform-dependent
+  def swtVersion = '3.3.0-v3346'
+  if (os.contains('linux') && arch.contains('amd64')) {
+    ext.swtGroup = 'org.eclipse.swt.gtk.linux'
+    ext.swtName = 'x86_64'
+  } else if (os.contains('linux') && (arch.contains('x86') || arch.contains('i386'))) {
+    ext.swtGroup = 'org.eclipse.swt.gtk.linux'
+    ext.swtName = 'x86'
+  } else if (os.contains('mac os x')) {
+    ext.swtGroup = 'org.eclipse.swt.carbon'
+    ext.swtName = 'macosx'
+  } else if (os.contains('windows') && arch.contains('amd64')) {
+    //throw new GradleException("Unsupported values for os=${os}, arch=${arch} since no SWT artifact for version ${swtVersion} is available on Maven Central.")
+    ext.swtGroup = 'org.eclipse.swt.win32.win32'
+    ext.swtName = 'x86'
+  } else if (os.contains('windows') && (arch.contains('x86') || arch.contains('i386'))) {
+    ext.swtGroup = 'org.eclipse.swt.win32.win32'
+    ext.swtName = 'x86'
+  } else {
+    throw new GradleException("Unexpected values for os=${os}, arch=${arch}")
+  }
+  ext.swtVersion = swtVersion
 }
 
 project('beanfabrics-swt') {
   description = 'Beanfabrics SWT'
-  ext {
-    // this makes the dependency on the SWT library plattform-dependent
-    swtVersion = '3.3.0-v3346'
-    if (os.contains('linux') && arch.contains('amd64')) {
-      swtGroup = 'org.eclipse.swt.gtk.linux'
-      swtName = 'x86_64'
-    } else if (os.contains('linux') && (arch.contains('x86') || arch.contains('i386')) ) {
-      swtGroup = 'org.eclipse.swt.gtk.linux'
-      swtName = 'x86'
-    } else if (os.contains('mac os x')) {
-      swtGroup = 'org.eclipse.swt.carbon'
-      swtName = 'macosx'
-    } else if (os.contains('windows') && arch.contains('amd64')) {
-      // see http://code.google.com/p/piccolo2d/issues/detail?id=203
-      throw new GradleException("Unsupported values for os and arch: os=${os}, arch=${arch} since no SWT artifact for version ${swtVersion} is available on Maven Central. Please consider to compile it with a 32bit JDK!");
-    } else if (os.contains('windows') && (arch.contains('x86') || arch.contains('i386')) ) {
-      swtGroup = 'org.eclipse.swt.win32.win32'
-      swtName = 'x86'
-    } else throw new GradleException("Unexpected values for os and arch: os=${os}, arch=${arch}");
-  }
   dependencies {
-    compile project(':beanfabrics-core')
-    compile group: swtGroup, name: swtName, version:swtVersion
+    implementation project(':beanfabrics-core')
+    compileOnly group: swtGroup, name: swtName, version: swtVersion
   }
 }
 
 project('beanfabrics-swt-samples') {
   description = 'Beanfabrics SWT Samples'
   dependencies {
-    compile project(':beanfabrics-core')
-    compile project(':beanfabrics-swt')
+    implementation project(':beanfabrics-core')
+    implementation project(':beanfabrics-swt')
+    compileOnly group: swtGroup, name: swtName, version: swtVersion
   }
-  uploadArchives.onlyIf { false }
+  tasks.withType(Sign) { enabled = false }
+  tasks.withType(PublishToMavenLocal) { enabled = false }
+  tasks.withType(PublishToMavenRepository) { enabled = false }
 }
 
 task javadocDir(type: Javadoc) {
-  source subprojects.collect {project -> project.sourceSets.main.allJava }
-  classpath = files(subprojects.collect {project -> project.sourceSets.main.compileClasspath})
+  source subprojects.collect { project -> project.sourceSets.main.allJava }
+  classpath = files(subprojects.collect { project -> project.sourceSets.main.compileClasspath })
   destinationDir = file("${project.buildDir}/docs")
 }
